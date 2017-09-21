@@ -1,13 +1,12 @@
 ---
 layout: page
-title: 文档
+title: 链接
 ---
 
-我常用的文档
+常用的链接
 
 Java
 ----
-
 - [Spring](/spring-doc.html)
 - [Java8](https://docs.oracle.com/javase/8/docs/api/)
 - [JavaEE7](https://docs.oracle.com/javaee/7/api/)
@@ -23,13 +22,16 @@ JavaScript
 - [lodash](https://lodash.com)
 - [JQuery](http://www.jquery123.com/)
 
+
 HTTP
 ----
 - [HTTP Status Codes](http://www.restapitutorial.com/httpstatuscodes.html)
 
+
 数据库
 ----
 - [mysql数据库方法](https://dev.mysql.com/doc/refman/5.7/en/func-op-summary-ref.html)
+
 
 其他
 ---
