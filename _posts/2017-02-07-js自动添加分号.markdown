@@ -1,0 +1,24 @@
+---
+layout: post
+title: js自动添加分号
+categories: javascript
+tags: ["js","fixmyjs"]
+---
+
+团队协作，有些人没有加分号的习惯，久而久之，会有大量的文件具有此类问题，然后找到一个工具叫fixmyjs，可以自动给js加分号。但是加完别忘检查一下，有些不应该加的他也加了。
+
+<!-- more -->
+
+## 安装fixmyjs
+`npm install fixmyjs -g`
+
+## 创建fixmyjs-config文件
+一定要创建在项目目录下，在里面加入下面内容
+`{ "asi": false }`
+
+## 执行命令
+`fixmyjs --config fixmyjs-config --legacy app/**/*.js`
+如果在执行过程中遇到“Too many errors reported by JSHint.”的异常，
+那么在异常的js文件第一行加注释`/*jshint maxerr: 10000 */`
+
+

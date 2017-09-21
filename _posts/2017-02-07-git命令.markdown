@@ -1,0 +1,28 @@
+---
+title: git命令
+layout: post
+categories: git
+tags: ['git','git命令']
+excerpt: 记录我在工作中学到的git命令，随时补充
+---
+
+持续更新
+
+### `git cherry-pick [commit号]`
+把一个commit应用到当前分支，等于重新commit了一次，将会产生新的commit号。
+
+<!-- more -->
+
+### `git reflog`
+HEAD曾经指向过的commit的历史。
+
+### `git push origin :[分支号]`
+删除某个分支
+
+### `git --amend --author='zhangsan'`
+修改commit的author
+
+### `git rebase -i [commit号]`
+通过修改commit列表rebase
+
+

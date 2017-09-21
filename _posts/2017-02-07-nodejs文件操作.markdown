@@ -1,0 +1,39 @@
+---
+layout: post
+title: nodejs文件操作
+categories: nodejs
+excerpt: nodejs文件操作
+---
+# nodejs文件操作
+
+获取文件操作对象`const fs from 'fs'`
+
+## 写文件
+`fs.writeFile([path], [data], [charset], [callback]);`
+
+#### path
+文件路径
+
+#### data
+写入的数据
+
+#### charset
+字符集，默认utf8
+
+#### callback(err)
+完成后的回调函数
+
+--------------------------------------------------------
+
+## 读文件
+`fs.readFile([path], [charset], [callback])`
+
+#### path
+文件路径
+
+#### charset
+字符集
+
+#### callback(err, data)
+读取后的回调
+

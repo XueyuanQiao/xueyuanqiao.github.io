@@ -1,0 +1,80 @@
+---
+layout: post
+title: "spring使用经验"
+categories: java
+excerpt: 记录一些平时在开发中使用spring遇到的问题。
+---
+
+spring经验
+====
+Spring可真是坑啊！
+
+<!-- more -->
+我的时间全部浪费在研究如何注入这些技术难题上了。
+
+不过没办法，用其他的只怕是更慢。
+
+## 1.如何注入Map，Set，List等等这些Collection
+
+```java
+//注册Bean
+@Bean(name="protectedResource")
+public Map<String,String> protectedResource(){
+    return ImmutableMap.of(
+            "/admin/**","admin",
+            "/api/**", "client"
+    );
+}
+
+//注入
+@Value("#{protectedResource}")
+private Map<String,String> protectedResource;
+```
+
+## 2.如何将抛出的异常显示为网页
+
+```java
+//在interceptor里抛出异常，controller同理
+public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    URL url = new URL(request.getRequestURL().toString());
+    String subDomain = url.getHost().split("\\.")[0];
+    if (groupDao.countBySubDomain(subDomain) > 0) {
+        request.setAttribute(Common.PARAM_SUB_DOMAIN, subDomain);
+        return true;
+    }
+
+    throw new GroupNotFoundException(subDomain);
+}
+
+//一个专门的类，用来处理所有的异常
+@ControllerAdvice
+public class ExceptionController {
+    @ExceptionHandler(GroupNotFoundException.class)
+    public String groupNotFound() {
+        return "exception/groupNotFound";
+    }
+}
+```
+
+## 3.定义action的参数为request的attribute
+```java
+@Controller 
+class MyController
+{
+    @ModelAttribute("user")
+    public User getUser(HttpServletRequest request) 
+    {
+        return (User) request.getAttribute("user");
+    }
+
+    @RequestMapping(value = "someurl", method = RequestMethod.GET)
+    public String HandleSomeUrl(@ModelAttribute("user") User user)  
+    {
+        // ... do some stuff
+    }
+}
+```
+
+
+
+

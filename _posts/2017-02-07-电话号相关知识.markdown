@@ -1,0 +1,47 @@
+---
+title: 电话号码相关知识
+categories: 其他
+excerpt: 电话号码相关知识
+layout: post
+---
+# 电话号相关知识
+
+<!-- more -->
+### 电话类型
+
+代号      |意思
+----|----
+FIXED_LINE|固话
+MOBILE    |手机
+FIXED_LINE_OR_MOBILE|固话或者手机
+TOLL_FREE|800电话，被叫付费
+PREMIUM_RATE|+979 International Premium Rate Service 国际额外费率业务
+SHARED_COST|400电话，被叫与主叫分摊费用
+VOIP|网际协议通话技术
+PERSONAL_NUMBER|瑞典身份证号
+PAGER|寻呼机
+UAN|
+VOICEMAIL|语音邮箱
+UNKNOWN|未知
+
+### 电话资料网址
+https://zh.wikipedia.org/wiki/Category:%E7%94%B5%E8%AF%9D%E5%8F%B7%E7%A0%81%E5%88%86%E7%B1%BB
+
+https://en.wikipedia.org/wiki/Category:Telephone_numbers
+
+https://countrycode.org/southkorea
+
+
+### 正确的电话格式方式
+```javascript
+//按照E164方式格式化
+currectPhoneNumber = phoneUtil.format(phoneNumber, libphonenumber.PhoneNumberFormat.E164);
+currectPhoneNumber = currectPhoneNumber.replace(/ +/g, '');
+currectPhoneNumber = currectPhoneNumber.replace(/\+/g, '00');
+```
+
+### 在家中猫里找到的电话格式
+`110|119|120|122|01[34578]xxxxxxxxx|1[3458]xxxxxxxxx|17[0678]xxxxxxxx|5[1-36-9]xxxxxx|6[1-9]xxxxxx|60[1-9]xxxxx|8[1-9]xxxxxx|80[1-9]xxxxx|800[68]xxxxxx|[*#][*#0-9][0-9*].#|[*#][*#0-9][0-9*].S|##|**xx|x.S|x.#`
+
+
+

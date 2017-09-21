@@ -1,0 +1,40 @@
+---
+layout: post
+title: 'maven相关内容'
+categories: maven
+excerpt: 平时用maven遇到问题，或者学习到了什么东西，都记录在这里。
+---
+
+# maven 相关知识记录
+
+### 靠谱镜像
+中央仓库巨慢，常用的镜像repo2.maven.org/maven2也很慢，在网上搜了一圈找到一个靠谱的
+
+```
+ <mirror>
+      <id>alimaven</id>
+      <name>aliyun maven</name>
+      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+      <mirrorOf>central</mirrorOf>
+    </mirror>
+<mirror>
+```
+
+### `packagingExcludes`和`warSourceExcludes`的区别
+
+maven-war-plugin可以排除一些不想要的文件，配置如下
+
+```
+<plugin>
+     <artifactId>maven-war-plugin</artifactId>
+     <version>2.3</version>
+     <configuration>
+         <packagingExcludes>WEB-INF/test</packagingExcludes>
+         <warSourceExcludes>WEB-INF/npm-debug.log,WEB-INF/package.json,WEB-INF/node_modules/,WEB-INF/webpack.config.js</warSourceExcludes>
+     </configuration>
+</plugin>
+```
+
+`packagingExcludes`是在复制webapp目录时要排除的文件。
+`warSourceExcludes`是在打包时要排除的文件。
+

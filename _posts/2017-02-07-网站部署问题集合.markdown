@@ -1,0 +1,40 @@
+---
+layout: post
+title: "网站部署问题集合"
+categories: 其他
+excerpt: 平时部署网站遇到的问题
+---
+# 网站部署问题集合
+## mysql字符集问题
+第一安装上，请马上修改/etc/my.cnf，加入下面代码
+
+```
+[client]
+default-character-set=utf8
+
+[mysql]
+default-character-set=utf8
+
+[mysqld]
+collation-server = utf8_unicode_ci
+init-connect='SET NAMES utf8'
+character-set-server = utf8
+```
+然后重新启动mysql
+
+`systemctl restart mysqld.service`
+
+## java.lang.OutOfMemoryError: PermGen space
+意思是永久区域内存不足
+解决方法：
+在tomcat的bin目录里创建setenv.sh，写入下面内容
+
+```
+export CATALINA_OPTS="$CATALINA_OPTS -XX:MaxPermSize=256m"
+export CATALINA_OPTS="$CATALINA_OPTS -XX:PermSize=128m"
+```
+
+
+
+
+

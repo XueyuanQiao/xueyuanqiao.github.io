@@ -1,0 +1,20 @@
+---
+layout: post
+title: "vim学习"
+categories: vim
+excerpt: vim学习
+---
+# vim学习
+
+### nerdtree插件
+
+`t`  打开一个新tab并切换过去
+`T`  打开一个新tab但是不切换过去
+`gt` 下一个tab
+`gT` 上一个tab
+`ctrl + w + h`    光标 focus 左侧树形目录
+`ctrl + w + l`    光标 focus 右侧文件显示窗口
+`ctrl + w + w`    光标自动在左右侧窗口切换 #！！！
+`ctrl + w + r`    移动当前窗口的布局位置
+
+

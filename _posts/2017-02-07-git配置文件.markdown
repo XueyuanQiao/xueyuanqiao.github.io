@@ -1,0 +1,26 @@
+---
+layout: post
+title: git配置文件
+categories: git
+tags: ["git","git配置"]
+excerpt: 如何通过命令操作git的配置文件
+---
+
+### 查看配置
+
+`git config -l`查看当前的所有配置
+`git config --global -l`查看全局配置
+`git config --local -l`查看项目配置
+
+### 修改配置
+##### 通过配置文件
+`git config --global -e`修改全局git配置
+`git config --local -e`修改项目git配置
+
+##### 通过命令行
+`git config --local user.name "xiaoming"`给项目配置设置user.name属性
+`git config --local --unset user.name`删除项目配置的user.name属性
+
+
+
+

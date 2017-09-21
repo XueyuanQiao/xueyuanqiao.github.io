@@ -1,0 +1,52 @@
+---
+layout: post
+title: javascript自动格式化js代码
+categories: javascript
+tags: ["javascript","jscs"]
+---
+
+我之前写过一篇js自动加分号的文章，现在我有了更好的办法，那个方法弱爆了。
+今天的主角叫[jscs](http://jscs.info/).
+本文只做简单的介绍，更多内容请移步[jscs官方的文档](http://jscs.info/overview).
+
+<!-- more -->
+
+## 安装
+`npm install jscs -g`
+
+## 开始使用
+### 1、创建配置文件
+在你的个人目录新建.jscsrc文件,然后写入下面内容。
+```
+{
+    "preset": "jquery",
+    "requireCurlyBraces": null // or false
+}
+```
+preset配置的就是js按照何种代码风格修复，上面例子中将按照jquery推荐的代码风格修复你的代码。
+目前的preset配置项有以下这些：
+
+- Airbnb — https://github.com/airbnb/javascript
+- Crockford — http://javascript.crockford.com/code.html
+- Google — https://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml
+- Grunt — http://gruntjs.com/contributing#syntax
+- Idiomatic — https://github.com/rwaldron/idiomatic.js#idiomatic-style-manifesto
+- jQuery — https://contribute.jquery.org/style-guide/js/
+- MDCS — https://github.com/mrdoob/three.js/wiki/Mr.doob's-Code-Style™
+- node-style-guide- https://github.com/felixge/node-style-guide
+- Wikimedia — https://www.mediawiki.org/wiki/Manual:Coding_conventions/JavaScript
+- WordPress — https://make.wordpress.org/core/handbook/coding-standards/javascript/
+
+### 2、开始修复
+`jscs ~/project/**/*.js`
+这条命令会打印项目里所有js的不符合规范的地方。
+
+`jscs ~/project/**/*.js -x`
+这条命令会修复所有不符合规范的地方，并把无法自动修复的地方打印出来。
+
+
+
+
+
+
+

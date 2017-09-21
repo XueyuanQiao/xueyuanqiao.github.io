@@ -30,6 +30,10 @@ theme: minima
 plugins:
   - jekyll-feed
 
+paginate: 5
+paginate_path: "page:num"
+excerpt_separator: "<!-- more -->"
+
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.

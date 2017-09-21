@@ -1,0 +1,55 @@
+---
+layout: post
+title: "mac使用dnsmasq搭建本地dns服务器"
+categories: linux
+excerpt_separator: <!-- more -->
+---
+
+dnsmasq可以设置自己的上游dns服务器，如果dnsmasq找不到就会到上游服务器去找，
+找到以后就会缓存到本地，下次我们再请求相同地址的时候，就直接读取本地缓存的数据。
+
+<!-- more -->
+
+### 1、安装dnsmasq
+
+```
+brew install dnsmasq
+```
+
+### 2、复制配置文件
+
+```
+# 复制默认的配置文件
+cp $(brew list dnsmasq | grep /dnsmasq.conf.example$) /usr/local/etc/dnsmasq.conf
+# Copy the daemon configuration file into place.
+sudo cp $(brew list dnsmasq | grep /homebrew.mxcl.dnsmasq.plist$) /Library/LaunchDaemons/
+# 开机自启动
+sudo launchctl load /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
+```
+
+### 3、修改配置文件
+
+用编辑器打开/usr/local/etc/dnsmasq.conf
+
+加入一下配置
+
+```
+listen-address=127.0.0.1
+strict-order
+cache-size=32768
+//这里就是上游dns服务器，本地没有缓存就到下面的dns服务器上去找
+server=202.96.199.133
+server=202.106.45.151
+server=119.57.112.250
+```
+
+### 4、重启dnsmasq
+
+```
+sudo launchctl stop homebrew.mxcl.dnsmasq
+sudo launchctl start homebrew.mxcl.dnsmasq
+```
+
+### 5、配置mac
+
+![dnsmasq](/images/dnsmasq.png)
