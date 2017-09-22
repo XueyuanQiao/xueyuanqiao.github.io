@@ -33,7 +33,7 @@ paginate_path: "page:num"
 excerpt_separator: "<!-- more -->"
 
 # path
-categories_path: cate/
+categories_path: /cate/
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
