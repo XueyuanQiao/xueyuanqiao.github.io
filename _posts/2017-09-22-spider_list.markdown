@@ -3,7 +3,7 @@ layout: post
 title:  "python爬虫"
 date:   2017-09-22 16:16:13 +0800
 excerpt: "32个Python爬虫项目"
-categories: python spider
+categories: spider
 ---
 
 [WechatSogou](http://link.zhihu.com/?target=https%3A//github.com/Chyroc/WechatSogou) [1]- 微信公众号爬虫。基于搜狗微信搜索的微信公众号爬虫接口，可以扩展成基于搜狗搜索的爬虫，返回结果是列表，每一项均是公众号具体信息字典。
