@@ -14,14 +14,14 @@ a {
     }
 }
 html {
-    font-size: 10px;
+    font-size: 11px;
 }
 
 body {
     background-image: url("/images/bg.jpg");
     color: $fontColor;
-    font-weight: normal;
-    font-size: 14px;
+    font-weight: 500;
+    font-size: 16px;
     font-family: Helvetica, Tahoma, Arial, "Hiragino Sans GB", "PingFang SC", STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
     > .content {
         margin-left: $asideWidth;
