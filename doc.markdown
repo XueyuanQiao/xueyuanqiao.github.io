@@ -4,6 +4,10 @@ title: 链接
 ---
 
 
+数据库
+----
+- [mysql数据库方法](https://dev.mysql.com/doc/refman/5.7/en/func-op-summary-ref.html)
+
 
 JavaScript
 ----------
@@ -14,13 +18,3 @@ JavaScript
 HTTP
 ----
 - [HTTP Status Codes](http://www.restapitutorial.com/httpstatuscodes.html)
-
-
-数据库
-----
-- [mysql数据库方法](https://dev.mysql.com/doc/refman/5.7/en/func-op-summary-ref.html)
-
-
-其他
----
-- [文件扩展名查询](http://filext.com/)
