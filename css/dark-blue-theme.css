@@ -562,6 +562,47 @@ p a:hover {
   box-shadow: 0 0 10px rgba(59, 130, 246, 0.4) !important;
 }
 
+/* 表格样式 */
+table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 20px 0 !important;
+  overflow: hidden !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+}
+
+table th,
+table td {
+  padding: 12px 15px !important;
+  text-align: left !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  border-right: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+table th {
+  background-color: var(--bg-tertiary) !important;
+  font-weight: bold !important;
+  color: var(--accent-primary) !important;
+  border-top: 1px solid var(--border-color) !important;
+  border-left: 1px solid var(--border-color) !important;
+}
+
+table td {
+  background-color: var(--bg-secondary) !important;
+  border-left: 1px solid var(--border-color) !important;
+}
+
+table tr:last-child td {
+  border-bottom: none !important;
+}
+
+table tr:hover td {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
 /* 响应式 */
 @media (max-width: 768px) {
   .content {
