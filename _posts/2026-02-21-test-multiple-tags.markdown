@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 测试多标签文章
-date: 2026-02-22 10:00:00 +0800
+date: 2026-02-21 10:00:00 +0800
 excerpt: 这是一篇测试多标签功能的文章
 categories: test python tutorial
 ---
