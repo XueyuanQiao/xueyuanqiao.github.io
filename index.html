@@ -12,7 +12,7 @@ title: 首页
     <p>{{ post.excerpt }}</p>
     <div class="categories">
         {% for category in post.categories %}
-        <label><a href="{{category}}">{{category}}</a></label>
+        <label><a href="/{{category}}/">{{category}}</a></label>
         {% endfor %}
     </div>
 </section>

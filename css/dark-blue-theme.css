@@ -494,6 +494,59 @@ p a:hover {
   text-shadow: 0 0 5px var(--accent-primary) !important;
 }
 
+/* 分类页面样式 */
+.category-post {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  margin-bottom: 20px !important;
+  box-shadow: 0 10px 30px var(--shadow-color) !important;
+  transition: all 0.3s ease !important;
+}
+
+.category-post:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.3) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+.category-post h3 {
+  color: var(--text-primary) !important;
+  font-size: 1.5rem !important;
+  margin-bottom: 15px !important;
+  transition: all 0.3s ease !important;
+}
+
+.category-post h3 a {
+  color: var(--text-primary) !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.category-post h3 a:hover {
+  color: var(--accent-primary) !important;
+  text-shadow: 0 0 10px var(--accent-primary) !important;
+}
+
+.post-meta {
+  padding-top: 15px !important;
+  border-top: 1px solid var(--border-color) !important;
+  margin-top: 15px !important;
+}
+
+.post-meta .date {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  font-weight: bold !important;
+  padding: 4px 12px !important;
+  border-radius: 20px !important;
+  font-size: 0.9rem !important;
+  display: inline-block !important;
+  border: 2px solid var(--accent-primary) !important;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4) !important;
+}
+
 /* 响应式 */
 @media (max-width: 768px) {
   .content {
@@ -512,5 +565,14 @@ p a:hover {
   .nav li {
     width: 100% !important;
   }
+  
+  .category-post {
+    padding: 15px !important;
+  }
+  
+  .category-post h3 {
+    font-size: 1.3rem !important;
+  }
 }
+
 
