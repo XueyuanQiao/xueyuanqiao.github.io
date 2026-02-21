@@ -160,6 +160,16 @@
   }
 }
 
+/* 个人资料链接 */
+.profile-link {
+  display: inline-block;
+  text-decoration: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+}
+
 /* 涟漪效果 */
 .ripple {
   position: relative;

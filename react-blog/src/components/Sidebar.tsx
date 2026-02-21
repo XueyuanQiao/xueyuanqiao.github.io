@@ -7,7 +7,9 @@ const Sidebar: React.FC = () => {
     <aside className="sidebar shine">
       <div>
         <header className="pulse">
-          <img src="/images/head.png" alt="头像" className="ripple" />
+          <a href="/" className="profile-link">
+            <img src="/images/head.jpeg" alt="头像" className="ripple" />
+          </a>
           <h1>雪源的博客</h1>
         </header>
         <nav>
