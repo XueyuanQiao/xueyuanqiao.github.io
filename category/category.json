@@ -2,7 +2,7 @@
   "posts": [
     {
       "title": "尾递归",
-      "url": "/_posts/2017-09-22-python_tail_recursion.markdown",
+      "url": "/python/2017/09/22/python_tail_recursion.html",
       "date": "2017-09-22",
       "excerpt": "Python尾递归优化",
       "categories": [
@@ -11,7 +11,7 @@
     },
     {
       "title": "python编程陷阱",
-      "url": "/_posts/2017-09-22-python_trap.markdown",
+      "url": "/python/2017/09/22/python_trap.html",
       "date": "2017-09-22",
       "excerpt": "Python编程时要避免的3个错误",
       "categories": [
@@ -20,7 +20,7 @@
     },
     {
       "title": "python爬虫",
-      "url": "/_posts/2017-09-22-spider_list.markdown",
+      "url": "/spider/2017/09/22/spider_list.html",
       "date": "2017-09-22",
       "excerpt": "32个Python爬虫项目",
       "categories": [
@@ -29,7 +29,7 @@
     },
     {
       "title": "python多进程和多线程谁更快",
-      "url": "/_posts/2017-09-22-thread_vs_process.markdown",
+      "url": "/python/2017/09/22/thread_vs_process.html",
       "date": "2017-09-22",
       "excerpt": "对python的多进程与多线程进行简单的分析",
       "categories": [
@@ -38,7 +38,7 @@
     },
     {
       "title": "markdown语法",
-      "url": "/_posts/2017-09-23-markdown.markdown",
+      "url": "/markdown/2017/09/23/markdown.html",
       "date": "2017-09-23",
       "excerpt": "Markdown 语法和 MWeb 写作使用说明",
       "categories": [
@@ -47,7 +47,7 @@
     },
     {
       "title": "frame定位",
-      "url": "/_posts/2017-09-23-selenium_frame.markdown",
+      "url": "/selenium/2017/09/23/selenium_frame.html",
       "date": "2017-09-23",
       "excerpt": "frameset不用切，frame需层层切！",
       "categories": [
@@ -56,7 +56,7 @@
     },
     {
       "title": "selenium定位",
-      "url": "/_posts/2017-09-23-selenium_locate_ways.markdown",
+      "url": "/selenium/2017/09/23/selenium_locate_ways.html",
       "date": "2017-09-23",
       "excerpt": "selenium使用Xpath+CSS+JavaScript+jQuery的定位方法",
       "categories": [
@@ -65,7 +65,7 @@
     },
     {
       "title": "MySQL索引原理及慢查询优化",
-      "url": "/_posts/2017-10-03-mysql-index-slowquery.markdown",
+      "url": "/mysql/2017/10/03/mysql-index-slowquery.html",
       "date": "2017-10-03",
       "excerpt": "多数情况下，我们知道索引能够提高查询效率，但应该如何建立索引？索引的顺序如何？许多人却只知道大概。其实理解这些概念并不难，而且索引的原理远没有想象的那么复杂。",
       "categories": [
@@ -74,7 +74,7 @@
     },
     {
       "title": "Linux下快速获取本机外网IP",
-      "url": "/_posts/2017-10-10-curl-queryip.markdown",
+      "url": "/linux/2017/10/10/curl-queryip.html",
       "date": "2017-10-10",
       "excerpt": "通过Curl在Linux下快速获取本机外网IP的几个常用网址",
       "categories": [
@@ -83,7 +83,7 @@
     },
     {
       "title": "个人概述",
-      "url": "/_posts/2026-02-22-intro.markdown",
+      "url": "/个人介绍/2026/02/22/intro.html",
       "date": "2026-02-22",
       "excerpt": "个人技术栈与相关经历简介",
       "categories": [
@@ -92,7 +92,7 @@
     },
     {
       "title": "测试多标签文章",
-      "url": "/_posts/2026-02-22-test-multiple-tags.markdown",
+      "url": "/test/2026/02/22/test-multiple-tags.html",
       "date": "2026-02-22",
       "excerpt": "这是一篇测试多标签功能的文章",
       "categories": [

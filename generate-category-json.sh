@@ -67,9 +67,16 @@ for file in _posts/*.markdown; do
         primary_category=$(echo "$categories_json" | cut -d'"' -f2)
         
         # 生成URL路径
-        # 直接使用文件名作为URL（静态服务器下的实际路径）
-        # 在静态HTTP服务器下，我们需要指向实际的文件
-        url="/_posts/$filename"
+        # 从文件名提取标题部分
+        url_title=$(echo "$filename" | sed 's/^[0-9\-]*//;s/\.markdown$//')
+        
+        # 格式化日期为 /year/month/day/ 格式
+        year=${date_part:0:4}
+        month=${date_part:5:2}
+        day=${date_part:8:2}
+        
+        # 生成URL（使用用户要求的格式：/分类/年/月/日/标题.html）
+        url="/$primary_category/$year/$month/$day/$url_title.html"
         
         # 添加到JSON中
         if [ "$first" = true ]; then
