@@ -126,6 +126,45 @@ p {
   font-weight: bold !important;
 }
 
+/* 分类标签 */
+.categories {
+  padding-top: 15px !important;
+  border-top: 1px solid var(--border-color) !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  align-items: center !important;
+}
+
+.categories label {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  font-weight: bold !important;
+  padding: 4px 12px !important;
+  border-radius: 20px !important;
+  font-size: 0.9rem !important;
+  display: inline-block !important;
+  border: 2px solid var(--accent-primary) !important;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4) !important;
+  transition: all 0.3s ease !important;
+}
+
+.categories label:hover {
+  background: var(--accent-primary) !important;
+  color: var(--bg-primary) !important;
+  transform: translateY(-2px) !important;
+}
+
+.categories label a {
+  color: var(--text-primary) !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.categories label:hover a {
+  color: var(--bg-primary) !important;
+}
+
 /* 侧边栏 */
 aside {
   background: var(--bg-primary) !important;
