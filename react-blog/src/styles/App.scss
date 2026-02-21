@@ -1,0 +1,33 @@
+// 科技感主题颜色定义
+$primary-color: #0a0a0a;
+$secondary-color: #1a1a2e;
+$accent-color: #00d4ff;
+$accent-color-alt: #00c3ff;
+$text-color: #e6e6e6;
+$text-secondary: #b0b0b0;
+$card-bg: rgba(30, 30, 46, 0.7);
+$sidebar-bg: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+$boxShadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+$asideWidth: 300px;
+$transition: all 0.3s ease;
+
+.app {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  background-attachment: fixed;
+  color: $text-color;
+  font-weight: 400;
+  font-size: 16px;
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, "Hiragino Sans GB", "PingFang SC", STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  flex: 1;
+  margin-left: $asideWidth;
+  padding: 20px;
+  transition: $transition;
+}
