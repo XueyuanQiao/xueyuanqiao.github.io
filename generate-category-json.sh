@@ -18,7 +18,7 @@ for file in _posts/*.markdown; do
     # 检查文件名格式，跳过不符合格式的文件
     if [[ "$filename" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.*\.markdown$ ]]; then
       # 提取文件名中的日期和标题
-      date_part=${filename:0:10}
+      filename_date=${filename:0:10}
       
       # 读取文件内容
       content=$(cat "$file")
@@ -31,6 +31,16 @@ for file in _posts/*.markdown; do
       
       # 提取分类并清理空格（更严格的空格清理）
       categories_line=$(echo "$content" | grep "^categories:" | head -n 1)
+      
+      # 提取日期并清理空格
+      date_line=$(echo "$content" | grep "^date:" | head -n 1)
+      if [ -n "$date_line" ]; then
+        # 从日期行提取日期部分（YYYY-MM-DD）
+        date_part=$(echo "$date_line" | awk -F': ' '{print $2}' | xargs | cut -d' ' -f1)
+      else
+        # 如果没有日期行，使用文件名中的日期
+        date_part=$filename_date
+      fi
       
       # 确保标题和分类不为空
       if [ -n "$title" ] && [ -n "$categories_line" ]; then
