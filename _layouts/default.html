@@ -9,29 +9,47 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link href="/css/normalize.css" rel="stylesheet" type="text/css">
     <link href="/css/default.css" rel="stylesheet" type="text/css">
+    <link href="/css/animations.css" rel="stylesheet" type="text/css">
     <link href="/css/highlight/ocean.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<aside>
-    <div>
-        <header>
-            <img src="/images/head.png" alt="img"/>
-            <h1>雪源的博客</h1>
-        </header>
-        <nav>
-            <ul>
-                <li><a href="/">文章</a></li>
-                <li><a href="/cate.html">分类</a></li>
-                <li><a href="/doc.html">链接</a></li>
-                <li><a href="/about.html">关于</a></li>
-            </ul>
-        </nav>
+    <!-- 网格背景动画 -->
+    <div class="grid-bg"></div>
+    
+    <aside class="shine">
+        <div>
+            <header class="pulse">
+                <img src="/images/head.png" alt="img" class="ripple"/>
+                <h1>雪源的博客</h1>
+            </header>
+            <nav>
+                <ul>
+                    <li><a href="/" class="shine">文章</a></li>
+                    <li><a href="/cate.html" class="shine">分类</a></li>
+                    <li><a href="/doc.html" class="shine">链接</a></li>
+                    <li><a href="/about.html" class="shine">关于</a></li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+    <div class="content fade-in">
+        {{content}}
     </div>
-</aside>
-<div class="content">
-    {{content}}
-</div>
-<script src="/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+    <script src="/js/highlight.pack.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+        
+        // 页面加载完成后添加动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('section');
+            sections.forEach((section, index) => {
+                setTimeout(() => {
+                    section.classList.add('fade-in');
+                    section.classList.add('card-hover');
+                    section.classList.add('glow');
+                }, 200 * index);
+            });
+        });
+    </script>
 </body>
 </html>
