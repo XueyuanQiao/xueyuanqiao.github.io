@@ -17,7 +17,7 @@ html, body {
   min-height: 100vh !important;
 }
 
-/* 确保内容区域可见 */
+/* 内容区域 */
 .content {
   margin-left: 300px !important;
   padding: 20px !important;
@@ -30,7 +30,7 @@ html, body {
 }
 
 /* 文章卡片 */
-.content section {
+section {
   background: #1a1a2e !important;
   border: 1px solid #333 !important;
   border-radius: 12px !important;
@@ -46,24 +46,24 @@ html, body {
 }
 
 /* 文章标题 */
-.content section h2 {
+h2 {
   color: #ffffff !important;
   font-size: 1.8rem !important;
   margin-bottom: 15px !important;
   font-weight: bold !important;
 }
 
-.content section h2 a {
+h2 a {
   color: #ffffff !important;
   text-decoration: none !important;
 }
 
-.content section h2 a:hover {
+h2 a:hover {
   color: #00d4ff !important;
 }
 
 /* 文章摘要 */
-.content section p {
+p {
   color: #e6e6e6 !important;
   font-size: 1.1rem !important;
   line-height: 1.6 !important;
@@ -71,12 +71,12 @@ html, body {
 }
 
 /* 时间标签 */
-.content section .time {
+.time {
   padding-top: 15px !important;
   border-top: 1px solid #333 !important;
 }
 
-.content section .time label {
+.time label {
   background: #00d4ff !important;
   color: #0a0a0a !important;
   font-weight: bold !important;
@@ -86,7 +86,7 @@ html, body {
   display: inline-block !important;
 }
 
-.content section .time label time {
+.time label time {
   color: #0a0a0a !important;
   font-weight: bold !important;
 }
@@ -162,21 +162,18 @@ aside nav ul li a:hover {
 }
 
 /* 分页 */
-.content .pagination {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 10px !important;
+.pagination {
+  display: block !important;
+  text-align: center !important;
   background: #1a1a2e !important;
   border: 1px solid #333 !important;
   border-radius: 12px !important;
   padding: 15px !important;
   margin-bottom: 20px !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-  display: block !important;
 }
 
-.content .pagination a, .content .pagination em {
+.pagination a, .pagination em {
   display: inline-block !important;
   padding: 10px 20px !important;
   background: #222 !important;
@@ -187,12 +184,12 @@ aside nav ul li a:hover {
   margin: 0 5px !important;
 }
 
-.content .pagination a:hover {
+.pagination a:hover {
   background: #00d4ff !important;
   color: #0a0a0a !important;
 }
 
-.content .pagination em {
+.pagination em {
   background: #00d4ff !important;
   color: #0a0a0a !important;
   font-weight: bold !important;
@@ -212,25 +209,23 @@ aside nav ul li a:hover {
   background-size: 40px 40px !important;
 }
 
-/* 动画效果 */
+/* 移除可能导致问题的动画效果 */
 .fade-in {
-  animation: fadeIn 0.8s ease forwards !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0 !important;
-    transform: translateY(20px) !important;
-  }
-  to {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-  }
+.card-hover {
+  transition: all 0.3s ease !important;
 }
 
 .card-hover:hover {
   transform: translateY(-10px) !important;
   box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3) !important;
+}
+
+.glow {
+  /* 移除可能导致问题的发光效果 */
 }
 
 /* 响应式 */
