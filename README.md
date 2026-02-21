@@ -19,8 +19,9 @@
 
 ## 🛠 技术栈
 
-- **框架**：Jekyll静态网站生成器
+- **框架**：Jekyll 4.3 + minima主题
 - **样式**：SCSS + CSS3动画
+- **插件**：jekyll-feed, jekyll-sitemap, jekyll-seo-tag
 - **特效**：纯CSS3实现的各种动画效果
 - **适配**：响应式设计，支持移动端
 
@@ -32,5 +33,9 @@
 - 自动化测试
 - 数据库优化
 - 前端技术
+
+## 🚀 开发与部署
+
+本项目同时提供React重构版本，位于`react-blog/`目录中，具有相同的设计风格和功能。
 
 访问地址：https://xueyuanqiao.github.io
