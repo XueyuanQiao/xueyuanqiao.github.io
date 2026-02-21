@@ -68,6 +68,7 @@ for file in _posts/*.markdown; do
         
         # 生成分类数组的JSON字符串
         categories_json=""
+        category_path=""
         first_category=true
         for cat in "${category_array[@]}"; do
           if [ -n "$cat" ]; then
@@ -78,8 +79,10 @@ for file in _posts/*.markdown; do
                 first_category=false
               else
                 categories_json="$categories_json,"
+                category_path="$category_path/"
               fi
               categories_json="$categories_json\"$clean_cat\""
+              category_path="$category_path$clean_cat"
             fi
           fi
         done
@@ -88,9 +91,6 @@ for file in _posts/*.markdown; do
         if [ -z "$categories_json" ]; then
           continue
         fi
-        
-        # 使用第一个分类作为URL路径的一部分
-        primary_category=$(echo "$categories_json" | cut -d'"' -f2)
         
         # 生成URL路径
         # 从文件名提取标题部分
@@ -101,8 +101,8 @@ for file in _posts/*.markdown; do
         month=${date_part:5:2}
         day=${date_part:8:2}
         
-        # 生成URL（使用用户要求的格式：/分类/年/月/日/标题.html）
-        url="/$primary_category/$year/$month/$day/$url_title.html"
+        # 生成URL（使用用户要求的格式：/标签1/标签2/标签3/年/月/日/标题.html）
+        url="/$category_path/$year/$month/$day/$url_title.html"
         
         # 添加到JSON中
         if [ "$first" = true ]; then
