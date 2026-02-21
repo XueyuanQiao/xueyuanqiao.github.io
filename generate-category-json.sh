@@ -30,24 +30,53 @@ for file in _posts/*.markdown; do
       excerpt=$(echo "$content" | grep "^excerpt:" | head -n 1 | awk -F': ' '{print $2}' | xargs)
       
       # 提取分类并清理空格（更严格的空格清理）
-      categories=$(echo "$content" | grep "^categories:" | head -n 1 | awk -F': ' '{print $2}' | xargs)
+      categories_line=$(echo "$content" | grep "^categories:" | head -n 1)
       
       # 确保标题和分类不为空
-      if [ -n "$title" ] && [ -n "$categories" ]; then
-        # 清理分类名称并转换为小写
-        category_lower=$(echo "$categories" | tr '[:upper:]' '[:lower:]' | xargs)
+      if [ -n "$title" ] && [ -n "$categories_line" ]; then
+        # 解析分类（支持多种格式：空格分隔、YAML数组等）
+        categories=$(echo "$categories_line" | awk -F': ' '{print $2}' | xargs)
+        
+        # 处理分类，支持多个标签
+        IFS=' ' read -ra category_array <<< "$categories"
+        
+        # 生成分类数组的JSON字符串
+        categories_json=""
+        first_category=true
+        for cat in "${category_array[@]}"; do
+          if [ -n "$cat" ]; then
+            # 清理分类名称并转换为小写
+            clean_cat=$(echo "$cat" | tr '[:upper:]' '[:lower:]' | xargs | sed 's/"//g' | sed 's/\[//g' | sed 's/\]//g' | sed 's/,//g')
+            if [ -n "$clean_cat" ]; then
+              if [ "$first_category" = true ]; then
+                first_category=false
+              else
+                categories_json="$categories_json,"
+              fi
+              categories_json="$categories_json\"$clean_cat\""
+            fi
+          fi
+        done
+        
+        # 如果没有有效分类，跳过
+        if [ -z "$categories_json" ]; then
+          continue
+        fi
+        
+        # 使用第一个分类作为URL路径的一部分
+        primary_category=$(echo "$categories_json" | cut -d'"' -f2)
         
         # 生成URL路径
         # 从文件名提取标题部分
         url_title=$(echo "$filename" | sed 's/^[0-9\-]*//;s/\.markdown$//')
         
-        # 格式化日期为 Jekyll 默认格式（/year/month/day/）
+        # 格式化日期为 /year/month/day/ 格式
         year=${date_part:0:4}
         month=${date_part:5:2}
         day=${date_part:8:2}
         
-        # 生成URL（使用 Jekyll 默认格式）
-        url="/$year/$month/$day/$url_title.html"
+        # 生成URL（使用包含主要分类的格式）
+        url="/$primary_category/$year/$month/$day/$url_title.html"
         
         # 添加到JSON中
         if [ "$first" = true ]; then
@@ -61,7 +90,7 @@ for file in _posts/*.markdown; do
         clean_excerpt=$(echo "$excerpt" | sed 's/"/\\"/g')
         
         # 生成紧凑的JSON格式
-        json="$json{\"title\":\"$clean_title\",\"url\":\"$url\",\"date\":\"$date_part\",\"excerpt\":\"$clean_excerpt\",\"categories\":[\"$category_lower\"]}"
+        json="$json{\"title\":\"$clean_title\",\"url\":\"$url\",\"date\":\"$date_part\",\"excerpt\":\"$clean_excerpt\",\"categories\":[$categories_json]}"
       fi
     fi
   fi
