@@ -34,13 +34,22 @@
 
 1. 运行生成脚本：
    ```bash
-   ./generate-category-json.sh
+   bash generate-category-json.sh
    ```
 
 2. 脚本会自动：
-   - 遍历 `_posts` 目录下的所有文章
-   - 提取文章的标题、摘要、分类和日期信息
-   - 生成 `category.json` 文件
+   - 遍历 `_posts` 目录下的所有文章文件
+   - 解析每个文件的 YAML 前置元数据（标题、摘要、分类、日期）
+   - 清理数据中的多余空格
+   - 统一分类名称为小写
+   - 生成格式正确的 `category.json` 文件
+   - 使用 Python 格式化 JSON，确保中文显示正确
+
+3. 脚本特点：
+   - 自动跳过不符合命名格式的文件
+   - 只处理包含完整 YAML 元数据的文章
+   - 生成的 JSON 文件格式美观，便于阅读
+   - 支持中文内容，不会将中文编码为 Unicode
 
 ### 添加新文章
 
@@ -49,14 +58,14 @@
    YYYY-MM-DD-文章标题.markdown
    ```
 
-2. 添加YAML前置元数据：
+2. 添加YAML前置元数据（注意：不要使用引号）：
    ```yaml
    ---
    layout: post
    title: 文章标题
    date: 2026-02-22 03:22:04 +0800
    excerpt: 文章摘要
-   categories: 分类1 分类2
+   categories: 分类名
    ---
    ```
 
@@ -64,7 +73,7 @@
 
 4. 运行生成脚本更新分类数据：
    ```bash
-   ./generate-category-json.sh
+   bash generate-category-json.sh
    ```
 
 ## 本地预览
