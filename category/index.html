@@ -31,9 +31,11 @@ if (tag) {
           // 清空容器
           postsContainer.innerHTML = '';
           
-          // 筛选该分类的文章
+          // 筛选该分类的文章（不区分大小写）
           const filteredPosts = data.posts.filter(post => 
-            post.categories.includes(tag)
+            post.categories.some(category => 
+              category.toLowerCase() === tag.toLowerCase()
+            )
           );
           
           // 显示文章列表
