@@ -41,8 +41,13 @@ for file in _posts/*.markdown; do
         # 从文件名提取标题部分
         url_title=$(echo "$filename" | sed 's/^[0-9\-]*//;s/\.markdown$//')
         
-        # 生成URL（确保没有多余空格）
-        url="/$category_lower/$date_part/$url_title.html"
+        # 格式化日期为 Jekyll 默认格式（/year/month/day/）
+        year=${date_part:0:4}
+        month=${date_part:5:2}
+        day=${date_part:8:2}
+        
+        # 生成URL（使用 Jekyll 默认格式）
+        url="/$year/$month/$day/$url_title.html"
         
         # 添加到JSON中
         if [ "$first" = true ]; then
