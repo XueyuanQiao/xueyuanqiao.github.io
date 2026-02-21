@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "python多进程和多线程谁更快"
-date:   2017-09-22 12:06:13 +0800
-excerpt: "对python的多进程与多线程进行简单的分析"
+title: python多进程和多线程谁更快
+date: 2017-09-22 12:06:13 +0800
+excerpt: 对python的多进程与多线程进行简单的分析
 categories: python
 ---
 

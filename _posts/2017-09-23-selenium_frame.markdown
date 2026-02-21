@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "frame定位"
-date:   2017-09-23 15:30:13 +0800
-excerpt: "frameset不用切，frame需层层切！"
+title: frame定位
+date: 2017-09-23 15:30:13 +0800
+excerpt: frameset不用切，frame需层层切！
 categories: selenium
 ---
 

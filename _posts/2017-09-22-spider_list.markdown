@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "python爬虫"
-date:   2017-09-22 16:16:13 +0800
-excerpt: "32个Python爬虫项目"
+title: python爬虫
+date: 2017-09-22 16:16:13 +0800
+excerpt: 32个Python爬虫项目
 categories: spider
 ---
 

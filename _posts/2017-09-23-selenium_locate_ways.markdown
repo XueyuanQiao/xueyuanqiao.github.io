@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "selenium定位"
-date:   2017-09-23 13:50:13 +0800
-excerpt: "selenium使用Xpath+CSS+JavaScript+jQuery的定位方法"
+title: selenium定位
+date: 2017-09-23 13:50:13 +0800
+excerpt: selenium使用Xpath+CSS+JavaScript+jQuery的定位方法
 categories: selenium
 ---
 

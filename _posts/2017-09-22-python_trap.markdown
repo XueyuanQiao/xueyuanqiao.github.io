@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "python编程陷阱"
-date:   2017-09-22 17:05:13 +0800
-excerpt: "Python编程时要避免的3个错误"
-categories: python 
+title: python编程陷阱
+date: 2017-09-22 17:05:13 +0800
+excerpt: Python编程时要避免的3个错误
+categories: python
 ---
 
 # 1、 可变数据类型作为函数定义中的默认参数

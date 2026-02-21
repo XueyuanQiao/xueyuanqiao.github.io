@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "尾递归"
-date:   2017-09-22 17:26:13 +0800
-excerpt: "Python尾递归优化"
-categories: python 
+title: 尾递归
+date: 2017-09-22 17:26:13 +0800
+excerpt: Python尾递归优化
+categories: python
 ---
 
 fact(n)用递归的方式写出来就是：
