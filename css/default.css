@@ -1,100 +1,74 @@
-/* 全局重置和基础样式 */
+/* 全局重置 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 科技感主题颜色定义 */
-:root {
-  --primary-color: #0a0a0a;
-  --secondary-color: #1a1a2e;
-  --accent-color: #00d4ff;
-  --accent-color-alt: #00c3ff;
-  --text-color: #ffffff;
-  --text-secondary: #e6e6e6;
-  --card-bg: #1a1a2e;
-  --sidebar-bg: linear-gradient(135deg, #0a0a0a, #1a1a2e);
-  --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  --aside-width: 300px;
-  --transition: all 0.3s ease;
-}
-
-/* 确保整个页面使用深色背景 */
+/* 基本样式 */
 html, body {
-  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e) !important;
-  background-attachment: fixed !important;
-  color: var(--text-color) !important;
-  font-weight: 400 !important;
+  background: #0f0c29 !important;
+  color: #ffffff !important;
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
   font-size: 16px !important;
-  font-family: 'Segoe UI', 'Helvetica Neue', Arial, "Hiragino Sans GB", "PingFang SC", STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif !important;
   line-height: 1.6 !important;
   margin: 0 !important;
   padding: 0 !important;
   min-height: 100vh !important;
 }
 
-/* 确保内容区域样式正确 */
+/* 内容区域 */
 .content {
-  margin-left: var(--aside-width) !important;
-  padding: 5px !important;
-  transition: var(--transition) !important;
+  margin-left: 300px !important;
+  padding: 10px !important;
   min-height: 100vh !important;
-  position: relative !important;
-  z-index: 1 !important;
 }
 
-/* 确保文章卡片使用深色背景 */
-.content > section {
-  background: var(--card-bg) !important;
-  backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: var(--box-shadow) !important;
+/* 文章卡片 */
+section {
+  background: #1a1a2e !important;
+  border: 1px solid #333 !important;
+  border-radius: 12px !important;
   padding: 20px !important;
   margin-bottom: 20px !important;
-  border-radius: 12px !important;
-  transition: var(--transition) !important;
-  color: var(--text-color) !important;
-  position: relative !important;
-  z-index: 2 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  color: #ffffff !important;
 }
 
-/* 确保文章标题清晰可见 */
-.content > section h2 {
-  color: var(--text-color) !important;
+/* 文章标题 */
+h2 {
+  color: #ffffff !important;
   font-size: 1.8rem !important;
-  margin: 0 0 15px 0 !important;
+  margin-bottom: 15px !important;
   font-weight: bold !important;
 }
 
-/* 确保文章标题链接清晰可见 */
-.content > section h2 a {
-  color: var(--text-color) !important;
+h2 a {
+  color: #ffffff !important;
   text-decoration: none !important;
 }
 
-.content > section h2 a:hover {
-  color: var(--accent-color) !important;
+h2 a:hover {
+  color: #00d4ff !important;
 }
 
-/* 确保文章摘要清晰可见 */
-.content > section p {
-  color: var(--text-secondary) !important;
+/* 文章摘要 */
+p {
+  color: #e6e6e6 !important;
   font-size: 1.1rem !important;
   line-height: 1.6 !important;
   margin-bottom: 15px !important;
-  font-weight: 400 !important;
 }
 
-/* 确保时间标签清晰可见 */
-.content > section .time {
+/* 时间标签 */
+.time {
   padding-top: 15px !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 1px solid #333 !important;
 }
 
-.content > section .time label {
-  background: var(--accent-color) !important;
-  color: var(--primary-color) !important;
+.time label {
+  background: #00d4ff !important;
+  color: #0a0a0a !important;
   font-weight: bold !important;
   padding: 4px 12px !important;
   border-radius: 20px !important;
@@ -102,24 +76,23 @@ html, body {
   display: inline-block !important;
 }
 
-.content > section .time label time {
-  color: var(--primary-color) !important;
+.time label time {
+  color: #0a0a0a !important;
   font-weight: bold !important;
 }
 
-/* 确保侧边栏样式正确 */
+/* 侧边栏 */
 aside {
-  background: var(--sidebar-bg) !important;
+  background: #0a0a0a !important;
   position: fixed !important;
   left: 0 !important;
   top: 0 !important;
   bottom: 0 !important;
-  width: var(--aside-width) !important;
-  box-shadow: var(--box-shadow) !important;
-  color: var(--text-color) !important;
+  width: 300px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  color: #ffffff !important;
   z-index: 100 !important;
-  transition: var(--transition) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-right: 1px solid #333 !important;
 }
 
 aside header {
@@ -133,20 +106,18 @@ aside header img {
   height: 80px !important;
   display: block !important;
   margin: 0 auto 15px !important;
-  border: 3px solid var(--accent-color) !important;
-  transition: var(--transition) !important;
-  animation: float 6s ease-in-out infinite !important;
+  border: 3px solid #00d4ff !important;
 }
 
 aside header h1 {
   text-align: center !important;
   font-size: 1.3rem !important;
   margin: 0 !important;
-  color: var(--text-color) !important;
+  color: #ffffff !important;
   font-weight: bold !important;
 }
 
-/* 确保导航样式正确 */
+/* 导航 */
 aside nav {
   padding: 20px 15px 15px !important;
 }
@@ -157,85 +128,63 @@ aside nav ul {
   list-style: none !important;
 }
 
-aside nav ul > li {
+aside nav ul li {
   margin-bottom: 5px !important;
 }
 
-aside nav ul > li > a {
+aside nav ul li a {
   display: block !important;
   padding: 10px 15px !important;
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: #222 !important;
   border-radius: 8px !important;
   text-align: center !important;
   font-size: 1.1rem !important;
-  transition: var(--transition) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
-  position: relative !important;
-  overflow: hidden !important;
-  color: var(--text-color) !important;
+  color: #ffffff !important;
   text-decoration: none !important;
+  border: 1px solid #333 !important;
 }
 
-aside nav ul > li > a:hover {
-  background: rgba(0, 212, 255, 0.15) !important;
+aside nav ul li a:hover {
+  background: #00d4ff !important;
+  color: #0a0a0a !important;
   transform: translateX(5px) !important;
-  color: var(--accent-color) !important;
 }
 
-/* 确保分页样式正确 */
-.content .pagination {
+/* 分页 */
+.pagination {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   gap: 10px !important;
-  background: var(--card-bg) !important;
-  backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: var(--box-shadow) !important;
+  background: #1a1a2e !important;
+  border: 1px solid #333 !important;
+  border-radius: 12px !important;
   padding: 15px !important;
   margin-bottom: 20px !important;
-  border-radius: 12px !important;
-  transition: var(--transition) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
 }
 
-.content .pagination > a, 
-.content .pagination em {
-  display: inline-block !important;
+.pagination a, .pagination em {
   padding: 10px 20px !important;
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: #222 !important;
   border-radius: 8px !important;
-  transition: var(--transition) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: var(--text-color) !important;
+  color: #ffffff !important;
   text-decoration: none !important;
+  border: 1px solid #333 !important;
 }
 
-.content .pagination > a:hover {
-  background: rgba(0, 212, 255, 0.2) !important;
-  transform: translateY(-2px) !important;
-  color: var(--accent-color) !important;
+.pagination a:hover {
+  background: #00d4ff !important;
+  color: #0a0a0a !important;
 }
 
-.content .pagination > em {
-  background: rgba(0, 212, 255, 0.3) !important;
-  color: var(--primary-color) !important;
+.pagination em {
+  background: #00d4ff !important;
+  color: #0a0a0a !important;
   font-weight: bold !important;
 }
 
-/* 背景浮动动画 */
-@keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
-}
-
-/* 网格背景动画 */
+/* 网格背景 */
 .grid-bg {
   position: fixed !important;
   top: 0 !important;
@@ -247,80 +196,37 @@ aside nav ul > li > a:hover {
     linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px) !important;
   background-size: 40px 40px !important;
-  animation: gridMove 20s linear infinite !important;
-  pointer-events: none !important;
 }
 
-@keyframes gridMove {
-  0% {
-    transform: translate(0, 0);
-  }
-  100% {
-    transform: translate(40px, 40px);
-  }
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  :root {
-    --aside-width: 250px;
-  }
-  
-  .content {
-    padding: 5px !important;
-  }
-  
-  .content > section {
-    padding: 15px !important;
-    margin-bottom: 20px !important;
-  }
-}
-
-/* 确保动画效果正确 */
+/* 动画效果 */
 .fade-in {
-  opacity: 0 !important;
-  transform: translateY(20px) !important;
-  animation: fadeInUp 0.8s forwards !important;
+  animation: fadeIn 0.8s ease forwards !important;
 }
 
-@keyframes fadeInUp {
+@keyframes fadeIn {
+  from {
+    opacity: 0 !important;
+    transform: translateY(20px) !important;
+  }
   to {
     opacity: 1 !important;
     transform: translateY(0) !important;
   }
 }
 
-.card-hover {
-  transition: all 0.3s ease !important;
-}
-
 .card-hover:hover {
-  transform: translateY(-10px) scale(1.02) !important;
+  transform: translateY(-10px) !important;
   box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3) !important;
 }
 
-/* 确保高亮样式正确 */
-.highlight {
-  background: var(--card-bg) !important;
-  color: var(--text-color) !important;
-}
-
-/* 确保代码块样式正确 */
-pre {
-  background: rgba(0, 0, 0, 0.7) !important;
-  color: #f8f8f2 !important;
-  border: 1px solid rgba(0, 212, 255, 0.4) !important;
-  border-radius: 8px !important;
-  padding: 20px !important;
-  overflow: auto !important;
-  line-height: 1.5 !important;
-  font-size: 0.9rem !important;
-}
-
-code {
-  background: rgba(0, 0, 0, 0.5) !important;
-  color: #f8f8f2 !important;
-  padding: 2px 8px !important;
-  border-radius: 4px !important;
-  border: 1px solid rgba(0, 212, 255, 0.3) !important;
+/* 响应式 */
+@media (max-width: 768px) {
+  .content {
+    margin-left: 0 !important;
+    padding: 10px !important;
+  }
+  
+  aside {
+    display: none !important;
+  }
 }
