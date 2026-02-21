@@ -35,8 +35,24 @@ for file in _posts/*.markdown; do
       # 提取日期并清理空格
       date_line=$(echo "$content" | grep "^date:" | head -n 1)
       if [ -n "$date_line" ]; then
-        # 从日期行提取日期部分（YYYY-MM-DD）
-        date_part=$(echo "$date_line" | awk -F': ' '{print $2}' | xargs | cut -d' ' -f1)
+        # 从日期行提取日期和时间部分
+        full_date=$(echo "$date_line" | awk -F': ' '{print $2}' | xargs)
+        date_part=$(echo "$full_date" | cut -d' ' -f1)
+        time_part=$(echo "$full_date" | cut -d' ' -f2)
+        timezone=$(echo "$full_date" | cut -d' ' -f3)
+        
+        # 处理时区转换
+        # GitHub Pages会将北京时间（+0800）的凌晨时间转换为UTC的前一天
+        # 所以如果时间在00:00:00到07:59:59之间，日期需要减一天
+        if [[ "$timezone" == "+0800" || "$timezone" == "CST" ]]; then
+          hour=$(echo "$time_part" | cut -d':' -f1)
+          if [[ "$hour" -ge 0 && "$hour" -lt 8 ]]; then
+            # 日期减一天
+            # 使用Python进行日期计算
+            adjusted_date=$(python3 -c "from datetime import datetime, timedelta; d = datetime.strptime('$date_part', '%Y-%m-%d'); print((d - timedelta(days=1)).strftime('%Y-%m-%d'))")
+            date_part=$adjusted_date
+          fi
+        fi
       else
         # 如果没有日期行，使用文件名中的日期
         date_part=$filename_date
