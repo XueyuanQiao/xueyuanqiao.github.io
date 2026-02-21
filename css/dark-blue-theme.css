@@ -1,26 +1,22 @@
+/* 科技感深蓝色调主题 - 强制覆盖所有默认样式 */
+:root {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #0f172a;
+  --bg-tertiary: #1e293b;
+  --text-primary: #ffffff;
+  --text-secondary: #e2e8f0;
+  --text-tertiary: #7f8c8d;
+  --accent-primary: #3b82f6;
+  --accent-secondary: #2563eb;
+  --border-color: #334155;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
 /* 全局重置 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-/* 科技感深蓝色调主题 - 强制覆盖所有默认样式 */
-:root {
-  --bg-primary: #0a0a0a !important;
-  --bg-secondary: #0f172a !important;
-  --bg-tertiary: #1e293b !important;
-  --text-primary: #ffffff !important;
-  --text-secondary: #e2e8f0 !important;
-  --text-tertiary: #7f8c8d !important;
-  --accent-primary: #3b82f6 !important;
-  --accent-secondary: #2563eb !important;
-  --border-color: #334155 !important;
-  --shadow-color: rgba(0, 0, 0, 0.5) !important;
-}
-
-/* 强制重置所有可能的默认样式 */
-* {
   background-color: transparent !important;
   color: inherit !important;
   border-color: inherit !important;
@@ -290,25 +286,6 @@ aside nav ul li a:hover::before {
   100% {
     transform: translate(40px, 40px) !important;
   }
-}
-
-/* 移除可能导致问题的动画效果 */
-.fade-in {
-  opacity: 1 !important;
-  transform: translateY(0) !important;
-}
-
-.card-hover {
-  transition: all 0.3s ease !important;
-}
-
-.card-hover:hover {
-  transform: translateY(-10px) !important;
-  box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3) !important;
-}
-
-.glow {
-  /* 移除可能导致问题的发光效果 */
 }
 
 /* 响应式 */
