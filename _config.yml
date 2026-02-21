@@ -24,11 +24,12 @@ github_username:  XueyuanQiao
 
 # Build settings
 markdown: kramdown
-theme: minima
+# theme: minima  # 移除默认主题，使用自定义样式
 plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
+  - jekyll-paginate
 
 paginate: 5
 paginate_path: "page:num"
