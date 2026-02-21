@@ -17,15 +17,20 @@ html, body {
   min-height: 100vh !important;
 }
 
-/* 内容区域 */
+/* 确保内容区域可见 */
 .content {
   margin-left: 300px !important;
-  padding: 10px !important;
+  padding: 20px !important;
   min-height: 100vh !important;
+  position: relative !important;
+  z-index: 1 !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* 文章卡片 */
-section {
+.content section {
   background: #1a1a2e !important;
   border: 1px solid #333 !important;
   border-radius: 12px !important;
@@ -33,27 +38,32 @@ section {
   margin-bottom: 20px !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
   color: #ffffff !important;
+  position: relative !important;
+  z-index: 2 !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* 文章标题 */
-h2 {
+.content section h2 {
   color: #ffffff !important;
   font-size: 1.8rem !important;
   margin-bottom: 15px !important;
   font-weight: bold !important;
 }
 
-h2 a {
+.content section h2 a {
   color: #ffffff !important;
   text-decoration: none !important;
 }
 
-h2 a:hover {
+.content section h2 a:hover {
   color: #00d4ff !important;
 }
 
 /* 文章摘要 */
-p {
+.content section p {
   color: #e6e6e6 !important;
   font-size: 1.1rem !important;
   line-height: 1.6 !important;
@@ -61,12 +71,12 @@ p {
 }
 
 /* 时间标签 */
-.time {
+.content section .time {
   padding-top: 15px !important;
   border-top: 1px solid #333 !important;
 }
 
-.time label {
+.content section .time label {
   background: #00d4ff !important;
   color: #0a0a0a !important;
   font-weight: bold !important;
@@ -76,7 +86,7 @@ p {
   display: inline-block !important;
 }
 
-.time label time {
+.content section .time label time {
   color: #0a0a0a !important;
   font-weight: bold !important;
 }
@@ -93,6 +103,7 @@ aside {
   color: #ffffff !important;
   z-index: 100 !important;
   border-right: 1px solid #333 !important;
+  display: block !important;
 }
 
 aside header {
@@ -151,7 +162,7 @@ aside nav ul li a:hover {
 }
 
 /* 分页 */
-.pagination {
+.content .pagination {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
@@ -162,23 +173,26 @@ aside nav ul li a:hover {
   padding: 15px !important;
   margin-bottom: 20px !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  display: block !important;
 }
 
-.pagination a, .pagination em {
+.content .pagination a, .content .pagination em {
+  display: inline-block !important;
   padding: 10px 20px !important;
   background: #222 !important;
   border-radius: 8px !important;
   color: #ffffff !important;
   text-decoration: none !important;
   border: 1px solid #333 !important;
+  margin: 0 5px !important;
 }
 
-.pagination a:hover {
+.content .pagination a:hover {
   background: #00d4ff !important;
   color: #0a0a0a !important;
 }
 
-.pagination em {
+.content .pagination em {
   background: #00d4ff !important;
   color: #0a0a0a !important;
   font-weight: bold !important;
