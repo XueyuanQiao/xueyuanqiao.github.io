@@ -288,6 +288,115 @@ aside nav ul li a:hover::before {
   }
 }
 
+/* 页面内容样式 */
+.page-content {
+  margin-top: 20px !important;
+  line-height: 1.8 !important;
+}
+
+/* 分类页面样式 */
+.list-container {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  margin-bottom: 20px !important;
+  box-shadow: 0 10px 30px var(--shadow-color) !important;
+}
+
+.nav {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+}
+
+.nav li {
+  margin: 0 !important;
+}
+
+.nav a {
+  display: block !important;
+  padding: 10px 15px !important;
+  background: var(--bg-tertiary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  color: var(--text-secondary) !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.nav a:hover {
+  background: var(--accent-primary) !important;
+  color: var(--bg-primary) !important;
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5) !important;
+}
+
+.tab-content {
+  margin-top: 20px !important;
+}
+
+.tab-pane h2 {
+  color: var(--text-primary) !important;
+  margin-bottom: 15px !important;
+}
+
+.list-unstyled {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.list-unstyled li {
+  margin-bottom: 10px !important;
+  padding: 10px !important;
+  background: var(--bg-tertiary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.list-unstyled li:hover {
+  transform: translateX(5px) !important;
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.3) !important;
+}
+
+.list-unstyled a {
+  color: var(--text-secondary) !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.list-unstyled a:hover {
+  color: var(--accent-primary) !important;
+  text-shadow: 0 0 5px var(--accent-primary) !important;
+}
+
+.text-muted {
+  color: var(--text-tertiary) !important;
+}
+
+/* 链接页面样式 */
+p {
+  margin-bottom: 15px !important;
+}
+
+p a {
+  color: var(--accent-primary) !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+  border-bottom: 1px solid transparent !important;
+}
+
+p a:hover {
+  border-bottom-color: var(--accent-primary) !important;
+  text-shadow: 0 0 5px var(--accent-primary) !important;
+}
+
 /* 响应式 */
 @media (max-width: 768px) {
   .content {
@@ -298,4 +407,13 @@ aside nav ul li a:hover::before {
   aside {
     display: none !important;
   }
+  
+  .nav {
+    flex-direction: column !important;
+  }
+  
+  .nav li {
+    width: 100% !important;
+  }
 }
+
