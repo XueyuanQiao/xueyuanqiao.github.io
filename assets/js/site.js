@@ -132,7 +132,127 @@
 
     // Code block enhancements
     enhanceCodeBlocks();
+
+    // Article-only enhancements
+    enhanceArticle();
   });
+
+  function enhanceArticle() {
+    var content = doc.querySelector('.article-content');
+    if (!content) return;
+
+    // 1) Wrap tables for horizontal scrolling
+    content.querySelectorAll('table').forEach(function (table) {
+      if (table.parentElement && table.parentElement.classList.contains('table-wrap')) return;
+      var wrap = doc.createElement('div');
+      wrap.className = 'table-wrap';
+      table.parentNode.insertBefore(wrap, table);
+      wrap.appendChild(table);
+    });
+
+    // 2) Slugify + anchor + collect TOC
+    var headings = content.querySelectorAll('h2, h3, h4');
+    var slugCount = {};
+    var tocItems = [];
+    headings.forEach(function (h) {
+      var text = (h.textContent || '').trim();
+      if (!text) return;
+      var slug = h.id || slugify(text);
+      if (slugCount[slug]) {
+        slugCount[slug] += 1;
+        slug = slug + '-' + slugCount[slug];
+      } else {
+        slugCount[slug] = 1;
+      }
+      h.id = slug;
+
+      var a = doc.createElement('a');
+      a.className = 'anchor';
+      a.href = '#' + slug;
+      a.setAttribute('aria-label', '锚点链接');
+      a.textContent = '#';
+      h.appendChild(a);
+
+      tocItems.push({ id: slug, level: h.tagName, text: text });
+    });
+
+    // 3) Build TOC if there are >= 2 headings
+    var tocEl = doc.querySelector('[data-toc]');
+    var tocList = doc.querySelector('[data-toc-list]');
+    if (tocEl && tocList && tocItems.length >= 2) {
+      tocList.innerHTML = tocItems.map(function (it) {
+        var cls = 'toc-' + it.level.toLowerCase();
+        return '<li class="' + cls + '"><a href="#' + it.id + '">' + escapeHTML(it.text) + '</a></li>';
+      }).join('');
+      tocEl.hidden = false;
+
+      // Spy active heading
+      var links = tocEl.querySelectorAll('a');
+      var byId = {};
+      links.forEach(function (l) {
+        byId[l.getAttribute('href').slice(1)] = l;
+      });
+      if ('IntersectionObserver' in window) {
+        var spy = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            var link = byId[e.target.id];
+            if (!link) return;
+            if (e.isIntersecting) {
+              links.forEach(function (l) { l.classList.remove('is-active'); });
+              link.classList.add('is-active');
+            }
+          });
+        }, { rootMargin: '-30% 0px -65% 0px', threshold: 0 });
+        headings.forEach(function (h) { spy.observe(h); });
+      }
+
+      // Collapse toggle
+      var toggle = doc.querySelector('[data-toc-toggle]');
+      if (toggle) {
+        toggle.addEventListener('click', function () {
+          var collapsed = tocEl.getAttribute('data-collapsed') === 'true';
+          tocEl.setAttribute('data-collapsed', collapsed ? 'false' : 'true');
+        });
+      }
+    }
+
+    // 4) Image lightbox
+    var lb = null;
+    content.querySelectorAll('img').forEach(function (img) {
+      img.addEventListener('click', function () {
+        if (!lb) {
+          lb = doc.createElement('div');
+          lb.className = 'lightbox';
+          lb.innerHTML = '<img alt="">';
+          doc.body.appendChild(lb);
+          lb.addEventListener('click', function () { lb.classList.remove('is-open'); });
+        }
+        var inner = lb.querySelector('img');
+        inner.src = img.currentSrc || img.src;
+        inner.alt = img.alt || '';
+        requestAnimationFrame(function () { lb.classList.add('is-open'); });
+      });
+    });
+    doc.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && lb) lb.classList.remove('is-open');
+    });
+  }
+
+  function slugify(text) {
+    return String(text)
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\u3000]+/g, '-')
+      .replace(/[^\w\u4e00-\u9fa5\-]+/g, '')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '') || 'section';
+  }
+
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, function (m) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
+    });
+  }
 
   function enhanceCodeBlocks() {
     var blocks = doc.querySelectorAll("pre > code, figure.highlight pre code");
