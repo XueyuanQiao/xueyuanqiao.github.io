@@ -1,66 +1,79 @@
 ---
 layout: page
 title: 分类
-excerpt: 文章分类
-header: Posts By Category
+excerpt: 按主题浏览全部文章
+permalink: /cate.html
 ---
 
-<!-- <h1>分类</h1> -->
-<!-- {% for category in site.categories %}
-<ul>
-    <li><a href="{{ site.baseurl}}/category/{{ category.first }}.html">{{category.first}}（{{category.last.size}}）</a></li>
-</ul>
-{% endfor %} -->
-<!-- <br/>
+<div class="cate-cloud">
+    <button class="cate-chip is-active" data-cate="__all__">
+        全部 <span class="count">{{ site.posts.size }}</span>
+    </button>
+    {% for category in site.categories %}
+    <button class="cate-chip" data-cate="{{ category[0] }}">
+        {{ category[0] }} <span class="count">{{ category[1].size }}</span>
+    </button>
+    {% endfor %}
+</div>
+
 {% for category in site.categories %}
-    <h3>{{category[0]}}({{category | last | size}})</h3>
+<section class="cate-group" data-cate-group="{{ category[0] }}">
+    <h2 class="section-title">{{ category[0] | capitalize }}</h2>
+    <ul class="cate-list">
         {% for post in category[1] %}
-        <p><a href="{{post.url}}">{{post.title}}</a></p>
+        <li>
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            <span class="date">{{ post.date | date: "%Y-%m-%d" }}</span>
+        </li>
         {% endfor %}
-        <br/>
-{% endfor %} -->
-
-<div class="list-container">
-    <ul class="nav nav-tabs-horizontal">
-      {% assign categories_list = site.categories %}
-      {% if categories_list.first[0] == null %}
-        {% for category in categories_list %}
-            <li>
-                <a href="#{{ category | replace:' ','-' }}-ref" data-toggle="tab">
-                  {{ category | capitalize }} <span class="badge pull-right">({{ site.categories[category].size }})</span>
-               </a>
-            </li>
-        {% endfor %}
-      {% else %}
-        {% for category in categories_list %}
-            <li>
-                <a href="#{{ category[0] | replace:' ','-' }}-ref" data-toggle="tab">
-                    {{ category[0] | capitalize }} <span class="badge pull-right">({{ category[1].size }})</span>
-                </a>
-            </li>
-        {% endfor %}
-      {% endif %}
-      {% assign categories_list = nil %}
     </ul>
-</div>
-<!-- Tab panes -->
-<div class="tab-content list-container">
-  {% for category in site.categories %}
-    <div class="tab-pane" id="{{ category[0] | replace:' ','-' }}-ref">
-      <h2 style="margin-top: 0px">{{ category[0] | capitalize }}</h2>
-      <ul class="list-unstyled">
-        {% assign pages_list = category[1] %}
-        {% for node in pages_list %}
-          {% if node.title != null %}
-            {% if group == null or group == node.group %}
-            <li style="line-height: 35px;"><span class="text-muted">{{ node.date | date: "%Y-%m-%d" }} &nbsp;&nbsp;&nbsp; </span><a href="{{ site.BASE_PATH }}{{node.url}}">{{node.title}}</a></li>
-            {% endif %}
-          {% endif %}
-        {% endfor %}
-        {% assign pages_list = nil %}
-      </ul>
-    </div>
-  {% endfor %}
-</div>
+</section>
+{% endfor %}
 
-<div class="clearfix"></div>
+<script>
+(function () {
+  var chips = document.querySelectorAll('.cate-chip');
+  var groups = document.querySelectorAll('.cate-group');
+
+  function show(cate) {
+    chips.forEach(function (c) {
+      c.classList.toggle('is-active', c.dataset.cate === cate);
+    });
+    groups.forEach(function (g) {
+      var match = (cate === '__all__') || (g.dataset.cateGroup === cate);
+      g.style.display = match ? '' : 'none';
+      if (match) {
+        g.style.animation = 'none';
+        // force reflow then re-apply for fade
+        void g.offsetWidth;
+        g.style.animation = 'cate-fade 360ms cubic-bezier(0.22,1,0.36,1)';
+      }
+    });
+  }
+
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () { show(c.dataset.cate); });
+  });
+
+  // Honor ?tag= in URL for compatibility
+  var params = new URLSearchParams(location.search);
+  var tag = params.get('tag');
+  if (tag) {
+    var matched = false;
+    chips.forEach(function (c) {
+      if (c.dataset.cate && c.dataset.cate.toLowerCase() === tag.toLowerCase()) {
+        show(c.dataset.cate);
+        matched = true;
+      }
+    });
+    if (!matched) show('__all__');
+  }
+})();
+</script>
+
+<style>
+@keyframes cate-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>

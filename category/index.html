@@ -1,77 +1,94 @@
 ---
-layout: default
-title: 文章分类
+layout: page
+title: 分类
+excerpt: 按标签查看文章
 ---
 
+<p class="page-intro">从首页或分类页选择标签可在此查看相关文章。</p>
+
+<div class="cate-cloud" data-cloud></div>
+
+<ul class="cate-list" data-list></ul>
+
+<p class="cate-empty" data-empty hidden>该分类下暂无文章。</p>
+
 <script>
-// 获取URL参数中的tag值
-const urlParams = new URLSearchParams(window.location.search);
-const tag = urlParams.get('tag');
+(function () {
+  var params = new URLSearchParams(location.search);
+  var tag = params.get('tag') || '';
+  var cloud = document.querySelector('[data-cloud]');
+  var list = document.querySelector('[data-list]');
+  var empty = document.querySelector('[data-empty]');
+  var heading = document.querySelector('.page-header h1');
 
-// 如果有tag参数，更新页面内容
-if (tag) {
-  document.addEventListener('DOMContentLoaded', function() {
-    const titleElement = document.querySelector('h2');
-    const introElement = document.querySelector('p.intro');
-    const postsContainer = document.querySelector('.posts-container');
-    
-    if (titleElement) {
-      titleElement.textContent = tag;
-    }
-    
-    if (introElement) {
-      introElement.textContent = `以下是分类 "${tag}" 的所有文章：`;
-    }
-    
-    // 发送请求获取该分类的文章
-    fetch('/category/category.json')
-      .then(response => response.json())
-      .then(data => {
-        if (postsContainer) {
-          // 清空容器
-          postsContainer.innerHTML = '';
-          
-          // 筛选该分类的文章（不区分大小写）
-          const filteredPosts = data.posts.filter(post => 
-            post.categories.some(category => 
-              category.toLowerCase() === tag.toLowerCase()
-            )
-          );
-          
-          // 显示文章列表
-          if (filteredPosts.length > 0) {
-            filteredPosts.forEach(post => {
-              const postElement = document.createElement('div');
-              postElement.className = 'category-post';
-              postElement.innerHTML = `
-                <h3><a href="${post.url}">${post.title}</a></h3>
-                <p>${post.excerpt}</p>
-                <div class="post-meta">
-                  <span class="date">${post.date}</span>
-                </div>
-              `;
-              postsContainer.appendChild(postElement);
-            });
-          } else {
-            postsContainer.innerHTML = '<p>该分类下暂无文章</p>';
-          }
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching posts:', error);
-        if (postsContainer) {
-          postsContainer.innerHTML = '<p>加载文章失败</p>';
-        }
+  fetch('{{ "/category/category.json" | relative_url }}', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      var posts = (data && data.posts) || [];
+      var counts = {};
+      posts.forEach(function (p) {
+        (p.categories || []).forEach(function (c) {
+          var k = String(c).toLowerCase();
+          counts[k] = counts[k] || { name: c, n: 0 };
+          counts[k].n += 1;
+        });
       });
-  });
-}
-</script>
 
-<section>
-    <h2>文章分类</h2>
-    <p class="intro">请从首页选择一个分类标签查看相关文章</p>
-    
-    <div class="posts-container">
-        <!-- 文章列表将通过JavaScript动态生成 -->
-    </div>
-</section>
+      var keys = Object.keys(counts).sort();
+      var allBtn = '<button class="cate-chip ' + (tag ? '' : 'is-active') + '" data-c="">全部 <span class="count">' + posts.length + '</span></button>';
+      var html = allBtn + keys.map(function (k) {
+        var item = counts[k];
+        var active = tag && tag.toLowerCase() === k ? ' is-active' : '';
+        return '<button class="cate-chip' + active + '" data-c="' + encodeURIComponent(item.name) + '">' + escapeHTML(item.name) + ' <span class="count">' + item.n + '</span></button>';
+      }).join('');
+      cloud.innerHTML = html;
+
+      cloud.querySelectorAll('button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var c = decodeURIComponent(btn.dataset.c || '');
+          var url = c ? ('?tag=' + encodeURIComponent(c)) : location.pathname;
+          history.replaceState(null, '', url);
+          render(posts, c);
+          cloud.querySelectorAll('button').forEach(function (b) {
+            b.classList.toggle('is-active', (b.dataset.c || '') === (c ? encodeURIComponent(c) : ''));
+          });
+        });
+      });
+
+      render(posts, tag);
+    })
+    .catch(function () {
+      if (list) list.innerHTML = '<li class="cate-empty">加载文章失败</li>';
+    });
+
+  function render(posts, tag) {
+    var filtered = tag
+      ? posts.filter(function (p) {
+          return (p.categories || []).some(function (c) { return String(c).toLowerCase() === String(tag).toLowerCase(); });
+        })
+      : posts;
+
+    if (heading) heading.textContent = tag ? tag : '全部分类';
+
+    if (!filtered.length) {
+      list.innerHTML = '';
+      empty.hidden = false;
+      return;
+    }
+    empty.hidden = true;
+    filtered.sort(function (a, b) { return (b.date || '').localeCompare(a.date || ''); });
+    list.innerHTML = filtered.map(function (p) {
+      return '<li>' +
+        '<a href="' + p.url + '">' + escapeHTML(p.title) + '</a>' +
+        '<span class="date">' + escapeHTML(p.date || '') + '</span>' +
+        '</li>';
+    }).join('');
+  }
+
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, function (m) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
+    });
+  }
+})();
+</script>

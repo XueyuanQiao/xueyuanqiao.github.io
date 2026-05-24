@@ -1,0 +1,172 @@
+/*! Code Block - Aurora Theme
+ *  Highlight.js compatible. Adds copy button + language label + macOS-style chrome.
+ */
+
+.article-content pre,
+.page-content pre,
+.highlight pre,
+figure.highlight {
+  position: relative;
+  margin: 1.4em 0;
+  padding: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0a0e1c;
+  border: 1px solid var(--surface-border);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* macOS dots */
+.article-content pre::before,
+.page-content pre::before,
+.highlight pre::before,
+figure.highlight::before {
+  content: "";
+  display: block;
+  height: 36px;
+  background: linear-gradient(180deg, #161b2c, #11162a);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background-image:
+    radial-gradient(circle at 16px 18px, #ff5f56 5px, transparent 6px),
+    radial-gradient(circle at 38px 18px, #ffbd2e 5px, transparent 6px),
+    radial-gradient(circle at 60px 18px, #27c93f 5px, transparent 6px),
+    linear-gradient(180deg, #161b2c, #11162a);
+}
+
+.article-content pre code,
+.page-content pre code,
+.highlight pre code,
+figure.highlight pre code {
+  display: block;
+  padding: 18px 20px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #d8e0ff;
+  background: transparent;
+  overflow-x: auto;
+  border: none;
+}
+
+/* Language label (added by JS) */
+.code-lang {
+  position: absolute;
+  top: 8px;
+  right: 56px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: #8693b6;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* Copy button (added by JS) */
+.code-copy {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 36px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #c8d0e7;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  transition: all 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.code-copy:hover {
+  color: #fff;
+  background: color-mix(in srgb, var(--brand) 32%, transparent);
+  border-color: color-mix(in srgb, var(--brand) 60%, transparent);
+}
+
+.code-copy.is-copied {
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.5);
+  background: rgba(74, 222, 128, 0.12);
+}
+
+/* Highlight.js - Aurora Night */
+.hljs {
+  background: transparent !important;
+  color: #d8e0ff;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #5d6a8b;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section,
+.hljs-link {
+  color: #b888ff;
+}
+
+.hljs-function,
+.hljs-title.function_,
+.hljs-title {
+  color: #59e3ff;
+}
+
+.hljs-string,
+.hljs-attr,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-meta-string {
+  color: #7cffb4;
+}
+
+.hljs-number,
+.hljs-regexp,
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #ffb86c;
+}
+
+.hljs-name,
+.hljs-tag,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #7c8cff;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+  color: #ff79c6;
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+  color: #59e3ff;
+}
+
+.hljs-meta,
+.hljs-deletion {
+  color: #f87171;
+}
+
+.hljs-addition {
+  color: #4ade80;
+}
+
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 700; }
+
+[data-theme="light"] .article-content pre,
+[data-theme="light"] .page-content pre,
+[data-theme="light"] .highlight pre,
+[data-theme="light"] figure.highlight {
+  background: #0e1426;
+  /* Keep code dark for readability even in light mode */
+}
