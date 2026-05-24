@@ -1,0 +1,216 @@
+# 新增文章 · 完整流程
+
+> 适用范围：本博客（Jekyll + Aurora 主题）发布在 GitHub Pages，域名 `xueyuanqiao.github.io`。
+>
+> 阅读时间：约 5 分钟。
+
+## 概览
+
+```
+┌──────────────┐    ┌────────────────┐    ┌───────────────────┐    ┌──────────────┐
+│ 1) 创建 .md  │ →  │ 2) 编辑内容    │ →  │ 3) 更新分类索引   │ →  │ 4) 推送上线  │
+│   _posts/    │    │   Frontmatter  │    │   category.json   │    │   git push   │
+└──────────────┘    └────────────────┘    └───────────────────┘    └──────────────┘
+```
+
+整个流程不依赖外部服务，本地仅需 `bash` + `python3`。
+
+---
+
+## 1. 创建文章文件
+
+在 `_posts/` 目录下创建新文件，**文件名格式必须是**：
+
+```
+YYYY-MM-DD-英文-或-拼音-标题.markdown
+```
+
+示例：
+
+```
+_posts/2026-03-15-llm-judge-pipeline.markdown
+```
+
+约定：
+
+- 日期使用 `-` 分隔，与 Frontmatter 中的 `date` 字段保持一致。
+- 文件名 slug 推荐英文或拼音、用 `-` 连接，避免空格、特殊符号。该 slug 会成为最终 URL 的一部分。
+- 扩展名固定为 `.markdown`（与历史文章保持一致），`.md` 也可被 Jekyll 识别但本仓库已统一使用 `.markdown`。
+
+> 已存在的占位/示例文件以 `origin_` 开头（如 `origin_2017-09-21-welcome-to-jekyll.markdown`），这些前缀会让 Jekyll 跳过解析，请勿用作正式文章。
+
+## 2. 写 Frontmatter
+
+文件头部必须有 YAML Frontmatter 块：
+
+```yaml
+---
+layout: post
+title: LLM-as-a-Judge 工程化实践
+date: 2026-03-15 09:30:00 +0800
+excerpt: 从评测框架选型到指标设计，落地一套可演进的 LLM 评估流水线。
+categories: ai llm test
+---
+```
+
+字段速览（详细字段见 [frontmatter.md](./frontmatter.md)）：
+
+| 字段 | 必填 | 说明 |
+| --- | --- | --- |
+| `layout` | 是 | 文章页固定使用 `post` |
+| `title` | 是 | 文章标题，**不要加引号** |
+| `date` | 是 | 推荐 `YYYY-MM-DD HH:MM:SS +0800` 北京时间格式 |
+| `excerpt` | 推荐 | 列表页/卡片摘要，控制在 80–160 字 |
+| `categories` | 是 | **空格分隔**多个分类，全小写英文或中文均可 |
+
+### 时区注意（重要）
+
+GitHub Pages 用 UTC 解析日期，**北京时间凌晨 00:00–07:59 会被算作前一天**。
+
+| YAML date | GitHub Pages 实际生成的 URL 路径 |
+| --- | --- |
+| `2026-03-15 03:22:04 +0800` | `/ai/llm/test/2026/03/14/...html`（用 14 日） |
+| `2026-03-15 09:30:00 +0800` | `/ai/llm/test/2026/03/15/...html`（用 15 日） |
+
+**实践建议**：发布时间统一写 `08:00:00 +0800` 之后，避免日期错位。`generate-category-json.sh` 已对凌晨时间做了同步降日处理，但写晚一些更省心。
+
+## 3. 撰写正文
+
+紧接 Frontmatter 之后写 Markdown 正文。常用片段（完整版见 [markdown-cheatsheet.md](./markdown-cheatsheet.md)）：
+
+````markdown
+## 一级章节
+
+正文段落。Aurora 主题会给首段加上首字下沉效果，**关键词**会自带柔和高亮，按 `Ctrl + C` 这样的字符可以用 `<kbd>Ctrl</kbd> + <kbd>C</kbd>`。
+
+> 引用块支持多行，会渲染成玻璃拟态卡片。
+
+### 代码块
+
+普通围栏：
+
+```python
+def fact(n):
+    return 1 if n <= 1 else n * fact(n - 1)
+```
+
+Jekyll 高亮（与历史文章一致，亦可用）：
+
+{% highlight python %}
+def fact(n):
+    return 1 if n <= 1 else n * fact(n - 1)
+{% endhighlight %}
+
+### 表格
+
+| 模型 | 通过率 | 漂移 |
+| --- | --- | --- |
+| GPT-4o | 92% | 0.4% |
+| Claude Sonnet | 91% | 0.6% |
+
+### 图片
+
+放在 `images/` 目录，使用相对路径：
+
+![架构图](/images/2026031501.png)
+````
+
+> 当前主题自动支持的额外能力：自动目录（≥2 个标题时显示）、标题锚点、代码块复制按钮、图片点击放大、表格横向滚动、阅读进度条。无需任何额外标记。
+
+### 摘要分隔（可选）
+
+如果不想用 Frontmatter 的 `excerpt`，可在正文中插入：
+
+```
+<!-- more -->
+```
+
+`<!-- more -->` 之前的内容会作为摘要。
+
+## 4. 更新分类索引
+
+> 这一步只有需要分类页支持时才必须。本主题的分类页（`/category/?tag=xxx`）依赖 `category/category.json` 静态数据。
+
+```bash
+bash generate-category-json.sh
+```
+
+脚本会做：
+
+- 扫描 `_posts/*.markdown`
+- 解析 Frontmatter 的 `title` / `excerpt` / `categories` / `date`
+- 处理时区降日逻辑
+- 把分类名统一转小写
+- 生成多标签 URL：`/标签1/标签2/标签3/年/月/日/slug.html`
+- 用 Python 格式化 JSON（保留中文）
+
+执行成功后会在终端打印生成内容，并覆盖 `category/category.json`。
+
+> 如果只新增标签字段、未改变文件名/日期，重新生成即可；不需要手工编辑 `category.json`。
+
+## 5. 本地预览（可选但推荐）
+
+需要 Ruby 3.x 与 Bundler 2+：
+
+```bash
+bundle install
+bundle exec jekyll serve
+```
+
+访问 `http://localhost:4000`：
+
+- 首页 landing 是否正常加载（神经网络背景、终端动画）
+- `/archive.html` 能否看到新文章
+- 点击文章卡片进入文章详情，目录/锚点/代码复制是否生效
+- 分类页 `/category/?tag=你的分类` 是否能筛选到新文章
+
+> 本机如果是 Ruby 2.6 + Bundler 1.17，需要先升级。可以用 [rbenv](https://github.com/rbenv/rbenv) 或 [asdf](https://asdf-vm.com/) 装一个新版本。
+
+## 6. 提交并部署
+
+```bash
+git checkout -b post/2026-03-15-llm-judge-pipeline   # 推荐用分支
+git add _posts/2026-03-15-llm-judge-pipeline.markdown \
+        category/category.json \
+        images/2026031501.png                         # 如有新增图片
+git commit -m "post: LLM-as-a-Judge 工程化实践"
+git push -u origin post/2026-03-15-llm-judge-pipeline
+```
+
+合并到 `main` 后，GitHub Pages 会在数十秒内重新构建并发布。Pages 构建状态可以在仓库的 `Actions` 页查看。
+
+## 完整 Checklist
+
+- [ ] 文件名是 `YYYY-MM-DD-slug.markdown`，放在 `_posts/`
+- [ ] Frontmatter 含 `layout / title / date / excerpt / categories`
+- [ ] `date` 时间 ≥ `08:00:00 +0800`，避免时区降日
+- [ ] `categories` 用空格分隔、全小写
+- [ ] 正文图片放在 `images/`，引用使用 `/images/xxx.ext`
+- [ ] 运行 `bash generate-category-json.sh` 更新分类
+- [ ] 本地预览或至少肉眼检查 Frontmatter
+- [ ] 提交时附上 `category/category.json`
+- [ ] 推送后在 Actions 中确认构建成功
+
+---
+
+## 附录：URL 规则
+
+文章最终 URL 由 Jekyll 默认 permalink 决定（项目未自定义 `permalink`）：
+
+```
+/<categories|"/" 连接>/<YYYY>/<MM>/<DD>/<slug>.html
+```
+
+比如 `categories: ai test llm`、`date: 2026-02-21 03:22:04 +0800`，最终 URL 是：
+
+```
+/ai/test/llm/2026/02/20/ai-test.html
+```
+
+`category.json` 中的 `url` 字段会与之保持一致。
+
+## 附录：脚本与工具
+
+- `generate-category-json.sh`：分类索引生成
+- 项目根 `README.md`：项目结构与运行说明
+- `doc/`：本文档目录

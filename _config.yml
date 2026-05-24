@@ -47,3 +47,4 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
   - react-blog/
+  - doc/
