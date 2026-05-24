@@ -1,32 +1,20 @@
 ---
 layout: default
-title: 首页
+title: 文章
+permalink: /archive.html
 ---
 
 <section class="hero">
-    <span class="hero-eyebrow"><span class="dot"></span>Welcome · 欢迎</span>
-    <h1>{{ site.title | default: "雪源的博客" }}</h1>
-    <p>{{ site.description | strip_html | strip_newlines }}</p>
-    <div class="hero-stats">
-        <div class="stat">
-            <span class="num">{{ site.posts.size }}</span>
-            <span class="label">Articles</span>
-        </div>
-        <div class="stat">
-            <span class="num">{{ site.categories.size }}</span>
-            <span class="label">Categories</span>
-        </div>
-        <div class="stat">
-            <span class="num">{{ site.posts.first.date | date: "%Y-%m-%d" }}</span>
-            <span class="label">Latest</span>
-        </div>
-    </div>
+    <span class="hero-eyebrow"><span class="dot"></span>Archive · 文章库</span>
+    <h1>所有文章</h1>
+    <p>共 {{ site.posts.size }} 篇 · 涵盖 {{ site.categories.size }} 个主题</p>
 </section>
 
-<h2 class="section-title">Latest Posts</h2>
-
+{% assign posts_by_year = site.posts | group_by_exp: "p", "p.date | date: '%Y'" %}
+{% for group in posts_by_year %}
+<h2 class="section-title">{{ group.name }}</h2>
 <div class="post-list">
-{% for post in paginator.posts %}
+    {% for post in group.items %}
     <article class="post-card">
         <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
         <p class="excerpt">{{ post.excerpt | strip_html | strip_newlines | truncate: 160 }}</p>
@@ -42,27 +30,6 @@ title: 首页
             {% endif %}
         </div>
     </article>
-{% endfor %}
-</div>
-
-{% if paginator.total_pages > 1 %}
-<nav class="pagination" aria-label="分页">
-    {% if paginator.previous_page %}
-    <a href="{{ paginator.previous_page_path | relative_url }}" rel="prev">‹ 上一页</a>
-    {% else %}<span aria-disabled="true">‹</span>{% endif %}
-
-    {% for p in (1..paginator.total_pages) %}
-        {% if p == paginator.page %}
-            <em>{{ p }}</em>
-        {% elsif p == 1 %}
-            <a href="{{ '/' | relative_url }}">{{ p }}</a>
-        {% else %}
-            <a href="{{ site.paginate_path | relative_url | replace: ':num', p }}">{{ p }}</a>
-        {% endif %}
     {% endfor %}
-
-    {% if paginator.next_page %}
-    <a href="{{ paginator.next_page_path | relative_url }}" rel="next">下一页 ›</a>
-    {% else %}<span aria-disabled="true">›</span>{% endif %}
-</nav>
-{% endif %}
+</div>
+{% endfor %}

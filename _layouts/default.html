@@ -34,7 +34,8 @@
     {% feed_meta %}
     {% seo %}
 </head>
-<body>
+<body class="{% if page.layout == 'landing' or page.is_landing %}is-landing{% endif %}">
+    <canvas class="bg-neural" aria-hidden="true"></canvas>
     <div class="bg-aurora" aria-hidden="true"></div>
     <div class="bg-grid" aria-hidden="true"></div>
     <div class="read-progress" aria-hidden="true"></div>
@@ -57,6 +58,10 @@
             <nav>
                 <ul class="nav">
                     <li><a href="{{ '/' | relative_url }}">
+                        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>
+                        首页
+                    </a></li>
+                    <li><a href="{{ '/archive.html' | relative_url }}">
                         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v9a2 2 0 0 1-2 2h-3v-7H9v7H6a2 2 0 0 1-2-2z"/></svg>
                         文章
                     </a></li>
