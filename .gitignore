@@ -2,3 +2,11 @@ _site
 .sass-cache
 .jekyll-metadata
 .idea/
+.vscode/
+
+# Local dependency lockfile — GitHub Pages doesn't use it,
+# and tracking it triggers spurious Dependabot alerts.
+Gemfile.lock
+
+# Node / build artifacts (just in case)
+node_modules/

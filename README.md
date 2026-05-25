@@ -1,138 +1,242 @@
-# 雪源的博客
+# 雪源的博客 · Aurora
 
-一个基于Jekyll的个人技术博客，使用深蓝色科技感主题。
+> Building AI-native quality at scale.
+
+基于 Jekyll 的个人技术博客，自研 **Aurora** 主题：玻璃拟态 + 极光渐变 + 微交互，零运行时依赖，原生 ES。
+
+- 在线访问：<https://xueyuanqiao.github.io>
+- 主题风格：暗 / 亮双主题，跟随系统并支持手动切换
+- 设备支持：桌面、平板、手机（含刘海屏 / 安全区）
+
+## 目录
+
+- [功能特性](#功能特性)
+- [目录结构](#目录结构)
+- [本地预览](#本地预览)
+- [写一篇新文章](#写一篇新文章)
+- [分类系统](#分类系统)
+- [移动端适配](#移动端适配)
+- [主题与可定制项](#主题与可定制项)
+- [部署](#部署)
+- [依赖与安全](#依赖与安全)
+- [技术栈](#技术栈)
+- [维护清单](#维护清单)
 
 ## 功能特性
 
-- 科技感深蓝色调主题
-- 响应式设计，适配不同屏幕尺寸
-- 分类系统，支持按标签浏览文章
-- 平滑的动画效果和过渡
-- 卡片式布局设计
+- **Aurora 自研主题**：极光渐变背景、玻璃拟态卡片、神经网络动效（Landing 页）
+- **响应式布局**：单栏 / 双栏自动切换，桌面 ≥ 921px、平板 / 手机 ≤ 920px、极窄 ≤ 520px 三档断点
+- **主题切换**：暗色为默认，跟随 `prefers-color-scheme`，支持点击切换并记忆到 `localStorage`
+- **阅读体验**：阅读进度条、文章 TOC（移动端默认折叠）、回到顶部、图片 lightbox、代码一键复制 + 语言标签
+- **首页着陆区**：动态打字效果、统计计数器、3D Tilt 卡片、霓虹滚动 marquee
+- **SEO 友好**：`jekyll-seo-tag`、`jekyll-sitemap`、`jekyll-feed` 内置
+- **触屏优化**：自动禁用 hover 残留态、3D Tilt、神经网络背景，节省电量与 GPU
+- **无障碍**：尊重 `prefers-reduced-motion`、键盘可达、菜单 Esc 关闭
 
 ## 目录结构
 
-- `_posts/` - 博客文章目录
-- `_layouts/` - 页面布局模板
-- `css/` - 样式文件
-- `category/` - 分类页面和数据
-- `images/` - 图片资源
+```
+.
+├── _config.yml              站点配置
+├── _layouts/                布局模板
+│   ├── default.html         全站基础骨架（侧栏 / 主内容）
+│   ├── landing.html         首页着陆页
+│   ├── page.html            通用页（about / doc / cate）
+│   └── post.html            文章详情页（含 TOC）
+├── _posts/                  Markdown 文章源
+├── assets/
+│   ├── css/aurora.css       主题样式（含移动端适配）
+│   ├── css/code.css         代码块样式
+│   └── js/site.js           主题交互逻辑（零依赖）
+├── category/
+│   ├── index.html           动态分类页（按 ?tag= 过滤）
+│   └── category.json        文章索引数据（脚本生成）
+├── css/highlight/           highlight.js 代码高亮主题
+├── images/                  图片资源
+├── doc/                     工程文档（不参与构建）
+├── 404.html                 自定义 404 页
+├── about.markdown           关于
+├── cate.html                按主题归档
+├── doc.markdown             链接收藏
+├── home.html                文章存档
+├── index.html               首页（landing）
+├── generate-category-json.sh  分类索引生成脚本
+└── Gemfile                  Ruby 依赖
+```
 
-## 分类系统
+## 本地预览
 
-### 工作原理
+```bash
+# 安装依赖（首次）
+bundle install
 
-本博客使用通用分类页面 `category/index.html` 来处理所有分类请求：
+# 启动本地服务，监听文件变化
+bundle exec jekyll serve
 
-1. 点击首页的分类标签，会跳转到 `category/?tag=标签名`
-2. 通用分类页面会根据URL参数中的 `tag` 值显示对应的文章列表
-3. 文章数据存储在 `category/category.json` 文件中
+# 打开浏览器
+open http://localhost:4000
+```
 
-### 自动更新分类数据
+调试移动端体验：
 
-当添加新文章或修改现有文章时，需要更新 `category.json` 文件：
+- 使用 Chrome / Safari DevTools 的 Device Emulation
+- 真机访问可在终端用 `bundle exec jekyll serve --host 0.0.0.0`，然后通过局域网 IP 访问
 
-1. 运行生成脚本：
-   ```bash
-   bash generate-category-json.sh
-   ```
+## 写一篇新文章
 
-2. 脚本会自动：
-   - 遍历 `_posts` 目录下的所有文章文件
-   - 解析每个文件的 YAML 前置元数据（标题、摘要、分类、日期）
-   - 清理数据中的多余空格
-   - 统一分类名称为小写
-   - 处理时区转换（见下方说明）
-   - 生成格式正确的 `category.json` 文件
-   - 使用 Python 格式化 JSON，确保中文显示正确
+1. 在 `_posts/` 下新建文件，命名为 `YYYY-MM-DD-slug.markdown`
+2. 添加 YAML Frontmatter（**不要加引号**）：
 
-3. 脚本特点：
-   - 自动跳过不符合命名格式的文件
-   - 只处理包含完整 YAML 元数据的文章
-   - 生成的 JSON 文件格式美观，便于阅读
-   - 支持中文内容，不会将中文编码为 Unicode
-   - 支持多标签文章，生成包含所有标签的路径
-
-### 时区转换说明
-
-**重要**：GitHub Pages 使用 UTC 时区处理日期，这会影响生成的 URL 路径。
-
-#### 为什么会有这个问题？
-- 当设置日期为 `2026-02-21 03:22:04 +0800`（北京时间）时
-- GitHub Pages 会将其转换为 UTC 时间：`2026-02-20 19:22:04`
-- 因此生成的链接使用了 20 日，而不是 21 日
-
-#### 脚本如何处理？
-- 脚本会检测北京时间（+0800 或 CST）的凌晨时间（00:00-07:59）
-- 对于这些时间，脚本会将日期减一天，与 GitHub Pages 的行为保持一致
-- 这样生成的 URL 就会与 GitHub Pages 实际生成的 URL 一致
-
-#### 示例
-- YAML 日期：`2026-02-21 03:22:04 +0800`（北京时间凌晨）
-- GitHub Pages 生成的 URL：`/个人介绍/2026/02/20/intro.html`（使用 20 日）
-- 脚本生成的 URL：`/个人介绍/2026/02/20/intro.html`（同样使用 20 日）
-
-### 添加新文章
-
-1. 在 `_posts` 目录下创建新文件，命名格式为：
-   ```
-   YYYY-MM-DD-文章标题.markdown
-   ```
-
-2. 添加YAML前置元数据（注意：不要使用引号）：
    ```yaml
    ---
    layout: post
    title: 文章标题
    date: 2026-02-22 16:00:00 +0800
-   excerpt: 文章摘要
-   categories: 标签1 标签2 标签3
+   excerpt: 一句话摘要，会出现在列表与 SEO 中
+   categories: AI Testing 工程化
    ---
    ```
 
-3. 编写文章内容（使用Markdown格式）
+3. 写正文（kramdown / GFM 语法），代码块会自动应用语言标签 + 复制按钮
+4. 更新分类索引：
 
-4. 运行生成脚本更新分类数据：
    ```bash
    bash generate-category-json.sh
    ```
 
-#### 注意事项
+更详细的写法、字段与最佳实践见 [`doc/`](./doc/) 目录。
 
-- **多标签支持**：可以在 `categories` 字段中添加多个标签，用空格分隔
-- **时区注意**：为避免时区转换导致的日期差异，建议使用北京时间 8:00 以后的时间
-- **URL 格式**：脚本会自动生成包含所有标签的 URL 路径，例如：`/标签1/标签2/标签3/2026/02/22/文章标题.html`
+## 分类系统
 
-## 本地预览
+### 工作原理
 
-1. 安装依赖：
-   ```bash
-   bundle install
-   ```
+- 任何位置点击分类标签（如 `AI`），都会跳转到 `/category/?tag=AI`
+- `category/index.html` 读取 `category/category.json`，按 `tag` 过滤后渲染列表
+- 列表为前端动态渲染，不需要为每个分类生成静态页
 
-2. 启动本地服务器：
-   ```bash
-   bundle exec jekyll serve
-   ```
+### 更新索引
 
-3. 访问预览：
-   ```
-   http://localhost:4000
-   ```
+```bash
+bash generate-category-json.sh
+```
+
+脚本会：
+
+- 遍历 `_posts/`，跳过命名不规范的文件
+- 解析 YAML frontmatter（标题、摘要、分类、日期）
+- 将分类统一小写、清理多余空格
+- 处理北京时间 → UTC 的时区差异（与 GitHub Pages 行为对齐）
+- 生成格式化、UTF-8 友好的 `category/category.json`
+
+### 时区注意
+
+GitHub Pages 在 UTC 时区下生成 URL。例如 `2026-02-21 03:22:04 +0800`（北京凌晨）会被转成 UTC `2026-02-20 19:22:04`，URL 用的是 20 日。
+
+- 脚本已自动处理这种凌晨时间偏移，与 GitHub Pages 输出一致
+- 简化办法：发文时间统一用 **北京时间 08:00 以后**，可避免日期偏移
+
+## 移动端适配
+
+桌面端（≥ 921px）视觉与交互完全保持原样；移动端做了系统性的优化：
+
+- **断点**：`920px` 单栏切换 + 抽屉侧栏，`520px` 极窄屏进一步收敛
+- **iOS 安全区**：菜单按钮、悬浮按钮、主内容、侧栏均使用 `env(safe-area-inset-*)` 避让刘海与 Home Indicator
+- **抽屉菜单**：宽度 `min(280px, 86vw)`，打开时锁定 body 滚动，支持 Esc / 点遮罩关闭
+- **触控优化**：复制按钮、菜单按钮、悬浮按钮均 ≥ 44px，符合 HIG 触控标准
+- **正文可读性**：关闭中文 `inter-character` 两端对齐避免字间空隙；行内代码取消 `nowrap` 避免横溢；首字下沉缩到 2.4em
+- **代码块**：内边距与字号收敛、横向滚动启用 `-webkit-overflow-scrolling: touch`
+- **TOC**：移动端默认折叠，节省纵向空间
+- **触屏专属**（`hover: none and pointer: coarse`）：
+  - 关闭所有 hover 位移与阴影抖动（解决 tap 后视觉残留）
+  - 隐藏标题锚点 `#`（hover 永久态会一直可见）
+  - 禁用神经网络 canvas 背景（中低端机非常耗电）
+  - 关闭 3D Tilt 卡片（避免 tap 后永久倾斜）
+- **极窄屏**：列表摘要限制 3 行，上下篇导航 ellipsis，页脚导航单列
+
+实现位置：
+
+- 样式：`assets/css/aurora.css` 末尾的 `Mobile adaptation` 章节
+- 交互：`assets/js/site.js` 中 `isTouchDevice` / `isNarrowScreen` 检测分支
+
+## 主题与可定制项
+
+### 配色
+
+`assets/css/aurora.css` 顶部 `:root` 与 `[data-theme="light"]` 暴露的 CSS 变量：
+
+| 变量 | 含义 |
+| --- | --- |
+| `--bg-0` ~ `--bg-3` | 背景层级 |
+| `--text-1` ~ `--text-mute` | 文字层级 |
+| `--brand` / `--brand-2` / `--brand-3` | 主品牌色 / 渐变副色 |
+| `--surface` / `--surface-strong` | 玻璃面板背景 |
+| `--radius-sm` ~ `--radius-xl` | 圆角档位 |
+| `--shadow-1` / `--shadow-2` | 阴影预设 |
+
+### 站点信息
+
+`_config.yml`：
+
+```yaml
+title: Xueyuan's Tech Blog
+email: 1336582921@qq.com
+description: 乔雪源.Blog.博客 - 分享编程技术与思考
+url: https://xueyuanqiao.github.io
+github_username: XueyuanQiao
+```
+
+### Landing 文案
+
+首页 `index.html` 的 typed 动画来自 `data-typed-strings` 属性，可直接编辑：
+
+```html
+<span data-typed
+      data-typed-strings='["十年质量治理实践","AI Agent · LLM-as-a-Judge"]'>
+</span>
+```
 
 ## 部署
 
-将代码推送到GitHub仓库，GitHub Pages会自动部署网站。
+推送到 `main` 分支后，GitHub Pages 自动构建并发布，无需手动操作。
+
+```bash
+git add .
+git commit -m "feat: ..."
+git push origin main
+```
+
+自定义域名通过仓库根目录的 `CNAME` 文件配置。
+
+## 依赖与安全
+
+- **GitHub Pages 运行时**：使用 GitHub 自己内置的 Jekyll，不读仓库里的 `Gemfile.lock`
+- **本地开发**：`Gemfile.lock` 不入版本库（已加入 `.gitignore`），首次 `bundle install` 会拉到最新补丁版本
+- **CVE 兜底**：`Gemfile` 里对 `rexml` / `addressable` / `public_suffix` 做了最小版本约束，避免被解析到有公开漏洞的版本
+- **Dependabot**：`.github/dependabot.yml` 每月扫一次 bundler 与 GitHub Actions 依赖，自动开 PR
+
+升级流程：
+
+```bash
+bundle install            # 首次或 Gemfile 改动后
+bundle update             # 安全更新（按月或收到 Dependabot PR 时）
+bundle exec jekyll serve  # 本地走查
+```
 
 ## 技术栈
 
-- Jekyll - 静态网站生成器
-- Markdown - 文章写作格式
-- CSS3 - 样式和动画
-- JavaScript - 分类页面交互
+- **Jekyll** — 静态站点生成器（GitHub Pages 原生支持）
+- **kramdown** — Markdown 引擎，支持 GFM、脚注、任务列表
+- **highlight.js** — 代码高亮（已内置 80+ 主题供选择）
+- **CSS3** — 自定义属性、`color-mix`、`backdrop-filter`、`mask-image`
+- **原生 ES** — 零依赖，无打包，IntersectionObserver / matchMedia 等现代 API
 
-## 维护说明
+## 维护清单
 
-- 定期运行 `./generate-category-json.sh` 脚本更新分类数据
-- 保持文章文件的命名格式和YAML前置元数据的一致性
-- 新添加分类时，不需要创建新页面，脚本会自动处理
+- [ ] 新增 / 修改文章后运行 `bash generate-category-json.sh` 更新索引
+- [ ] 文件命名严格遵循 `YYYY-MM-DD-slug.markdown`
+- [ ] Frontmatter 不使用引号，`categories` 用空格分隔
+- [ ] 发文时间避开北京凌晨 0:00–8:00（或确认时区偏移效果）
+- [ ] 重大改动前用 DevTools 切到 iPhone / Pixel 验证移动端
+- [ ] 升级依赖：`bundle update` 后本地 `bundle exec jekyll serve` 走查一遍
+
+更细的工程问题排查见 [`doc/troubleshooting.md`](./doc/troubleshooting.md)。
