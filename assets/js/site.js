@@ -122,7 +122,7 @@
             io.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
+      }, { threshold: 0, rootMargin: "0px 0px -40px 0px" });
       revealItems.forEach(function (el) { io.observe(el); });
     } else {
       revealItems.forEach(function (el) { el.classList.add("is-in"); });
