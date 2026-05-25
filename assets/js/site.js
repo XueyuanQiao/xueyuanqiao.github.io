@@ -364,7 +364,15 @@
     initCounters();
     if (!isTouchDevice) initTilt();
     if (!isTouchDevice) initSkillSpotlight();
-    if (isLanding && !isTouchDevice && !isNarrowScreen) initNeural();
+    try {
+      if (isLanding && !isTouchDevice && !isNarrowScreen) initNeural();
+    } catch (err) {
+      // 神经网络背景失败不应阻断其他交互
+      if (window.console) console.warn("[site] initNeural failed:", err);
+    }
+    try { initAvatarSpin(); } catch (err) {
+      if (window.console) console.warn("[site] initAvatarSpin failed:", err);
+    }
   }
 
   if (doc.readyState !== "loading") bootstrap();
@@ -488,8 +496,10 @@
     var rafId = 0;
 
     function resize() {
-      w = canvas.clientWidth = window.innerWidth;
-      h = canvas.clientHeight = window.innerHeight;
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -631,8 +641,10 @@
   // ========== Avatar hover spin ==========
   // 默认不动；鼠标移上去开始旋转，移开后平滑回到 0deg。
   function initAvatarSpin() {
+    if (initAvatarSpin._done) return;
     var avatar = doc.querySelector(".avatar");
     if (!avatar) return;
+    initAvatarSpin._done = true;
 
     var reduced = false;
     try {
@@ -725,8 +737,9 @@
   }
 
   if (doc.readyState === "loading") {
-    doc.addEventListener("DOMContentLoaded", initAvatarSpin);
-  } else {
-    initAvatarSpin();
+    doc.addEventListener("DOMContentLoaded", function () {
+      // 兜底：如果 bootstrap 因其他原因没跑到 avatar，这里再尝试一次
+      if (!initAvatarSpin._done) initAvatarSpin();
+    });
   }
 })();
