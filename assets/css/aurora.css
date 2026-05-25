@@ -276,8 +276,9 @@ hr {
   padding: 3px;
   background: conic-gradient(from 0deg, var(--brand), var(--brand-2), var(--brand-3), var(--brand));
   box-shadow: var(--glow-brand);
-  transition: transform var(--t-base) var(--ease-out);
-  animation: spin-slow 14s linear infinite;
+  /* 默认不旋转；JS 控制 hover 时旋转，移开后平滑回到 0deg */
+  transform: rotate(0deg);
+  will-change: transform;
 }
 
 .avatar img {
@@ -286,15 +287,6 @@ hr {
   border-radius: 50%;
   object-fit: cover;
   background: var(--bg-0);
-}
-
-.avatar:hover {
-  transform: scale(1.06);
-  animation-play-state: paused;
-}
-
-@keyframes spin-slow {
-  to { transform: rotate(360deg); }
 }
 
 .brand-name {
@@ -1775,8 +1767,7 @@ hr {
     scroll-behavior: auto !important;
   }
   .bg-aurora,
-  .bg-grid,
-  .avatar {
+  .bg-grid {
     animation: none !important;
   }
 }
@@ -2654,8 +2645,7 @@ hr {
   .article-content h3 .anchor,
   .article-content h4 .anchor { opacity: 0 !important; }
 
-  /* 头像旋转动画在低端机上耗电 */
-  .avatar { animation-duration: 28s; }
+  /* 头像旋转由 JS 控制，hover 时启动；这里无需特殊处理 */
 
   /* 神经网络背景在触屏 / 弱机型上禁用，省电省 GPU */
   .bg-neural { display: none !important; }

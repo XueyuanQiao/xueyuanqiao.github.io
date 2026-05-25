@@ -627,4 +627,106 @@
       t = setTimeout(function () { fn.apply(ctx, args); }, ms);
     };
   }
+
+  // ========== Avatar hover spin ==========
+  // 默认不动；鼠标移上去开始旋转，移开后平滑回到 0deg。
+  function initAvatarSpin() {
+    var avatar = doc.querySelector(".avatar");
+    if (!avatar) return;
+
+    var reduced = false;
+    try {
+      reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch (e) {}
+    if (reduced) return;
+
+    var angle = 0;          // 当前角度（deg，可累积）
+    var speed = 0;          // 当前角速度（deg/s）
+    var targetSpeed = 0;    // 目标角速度（deg/s）
+    var TARGET_SPEED = 360 / 14; // 与原动画一致：14s 一圈
+    var ACCEL = 90;         // 速度变化（deg/s²），影响进入/退出节奏
+    var RETURN_RATE = 6;    // 回正阶段每秒按 6 倍剩余角度衰减
+    var lastT = 0;
+    var rafId = 0;
+    var running = false;
+
+    function step(now) {
+      if (!lastT) lastT = now;
+      var dt = Math.min(0.05, (now - lastT) / 1000); // 限制单帧 dt，防卡顿后跳变
+      lastT = now;
+
+      // 平滑逼近目标角速度
+      if (speed < targetSpeed) {
+        speed = Math.min(targetSpeed, speed + ACCEL * dt);
+      } else if (speed > targetSpeed) {
+        speed = Math.max(targetSpeed, speed - ACCEL * dt);
+      }
+
+      if (speed > 0) {
+        angle = (angle + speed * dt) % 360;
+      } else if (targetSpeed === 0) {
+        // 回正：让角度沿最近方向指数衰减到 0
+        var norm = ((angle % 360) + 540) % 360 - 180; // (-180, 180]
+        if (Math.abs(norm) < 0.05) {
+          angle = 0;
+        } else {
+          angle = norm * Math.exp(-RETURN_RATE * dt);
+        }
+      }
+
+      avatar.style.transform = "rotate(" + angle.toFixed(3) + "deg)";
+
+      // 判断是否还需要继续动画
+      var atRest = (targetSpeed === 0 && speed === 0 && angle === 0);
+      if (atRest) {
+        running = false;
+        rafId = 0;
+        lastT = 0;
+        return;
+      }
+      rafId = requestAnimationFrame(step);
+    }
+
+    function ensureRunning() {
+      if (running) return;
+      running = true;
+      lastT = 0;
+      rafId = requestAnimationFrame(step);
+    }
+
+    avatar.addEventListener("mouseenter", function () {
+      targetSpeed = TARGET_SPEED;
+      ensureRunning();
+    });
+    avatar.addEventListener("mouseleave", function () {
+      targetSpeed = 0;
+      ensureRunning();
+    });
+    // 触屏 / 键盘焦点也给点反馈
+    avatar.addEventListener("focus", function () {
+      targetSpeed = TARGET_SPEED;
+      ensureRunning();
+    });
+    avatar.addEventListener("blur", function () {
+      targetSpeed = 0;
+      ensureRunning();
+    });
+
+    // 标签页隐藏时暂停，避免后台空转
+    doc.addEventListener("visibilitychange", function () {
+      if (doc.hidden) {
+        if (rafId) cancelAnimationFrame(rafId);
+        running = false;
+        lastT = 0;
+      } else if (targetSpeed !== 0 || angle !== 0 || speed !== 0) {
+        ensureRunning();
+      }
+    });
+  }
+
+  if (doc.readyState === "loading") {
+    doc.addEventListener("DOMContentLoaded", initAvatarSpin);
+  } else {
+    initAvatarSpin();
+  }
 })();
