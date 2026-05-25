@@ -102,6 +102,9 @@ html {
   scroll-behavior: smooth;
   scrollbar-color: var(--brand) transparent;
   scrollbar-width: thin;
+  /* 防止移动端任何子元素（长 URL、代码、网格列）撑开文档导致横向滚动 */
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
@@ -113,6 +116,7 @@ body {
   color: var(--text-1);
   background: var(--bg-0);
   overflow-x: hidden;
+  max-width: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -2791,4 +2795,103 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 @media (max-width: 920px) {
   /* 网格背景在小屏过密，弱化一下视觉负担 */
   .bg-grid { background-size: 36px 36px; opacity: 0.6; }
+}
+
+
+/* ==========================================================================
+   Mobile overflow hardening
+   规则：兜底解决移动端"内容比屏幕宽，需左右滑动"的问题。
+        仅作用于 ≤ 920px，桌面端视觉与交互保持不变。
+   ========================================================================== */
+@media (max-width: 920px) {
+  /* 1) 防止网格 / flex 子项被长内容（URL、代码、英文长词、终端命令）撑开
+        Grid / Flex 子项默认 min-width: auto，会被内联内容撑出视口宽度，
+        强制 min-width: 0 + min-width: 0 让其遵守容器宽度。 */
+  .app,
+  .main,
+  .landing-hero,
+  .landing-hero-inner,
+  .landing-terminal,
+  .hero-stats,
+  .skill-grid,
+  .feature-grid,
+  .feature-card,
+  .feature-card-inner,
+  .post-list,
+  .post-card,
+  .article,
+  .article-content,
+  .page,
+  .page-content,
+  .toc,
+  .cate-cloud,
+  .cate-list,
+  .link-category,
+  .post-meta,
+  .tags,
+  .hero,
+  .hero-cta,
+  .terminal-body {
+    min-width: 0;
+  }
+
+  /* 2) 主内容区与 landing 容器：不超过视口宽度（含内边距） */
+  .main,
+  .is-landing .main {
+    max-width: 100vw;
+    /* 防止 100vw 在某些浏览器把滚动条算进去 */
+    max-width: 100%;
+  }
+
+  /* 3) 长 URL / 长英文 token 在卡片、链接列表中可换行 */
+  .link-category a,
+  .article-content a,
+  .page-content a,
+  .post-card a,
+  .feature-card p,
+  .feature-card h3 {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* 4) 终端模拟块在窄屏内可换行，不再保留单行宽度 */
+  .landing-terminal { max-width: 100%; }
+  .terminal-body .t-line {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .t-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  /* 5) 媒体元素永远不超过容器 */
+  img,
+  video,
+  iframe,
+  canvas,
+  svg,
+  embed,
+  object {
+    max-width: 100%;
+    height: auto;
+  }
+  /* 神经网络背景画布除外（它需要全屏覆盖） */
+  canvas.bg-neural { height: 100%; }
+
+  /* 6) 行内代码段在窄屏可换行（之前规则已存在，这里加 break-word 兜底） */
+  .article-content :not(pre) > code,
+  .page-content :not(pre) > code {
+    overflow-wrap: anywhere;
+  }
+
+  /* 7) 装饰性 hero / landing-hero 渐变描边在窄屏下避免水平裁剪导致 1px 偏移 */
+  .hero,
+  .landing-hero,
+  .landing-cta {
+    max-width: 100%;
+  }
 }
