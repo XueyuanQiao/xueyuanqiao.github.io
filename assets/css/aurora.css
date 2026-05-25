@@ -248,9 +248,11 @@ hr {
 }
 
 .sidebar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
   align-self: start;
+  width: var(--sidebar-w);
   height: 100vh;
   padding: 28px 22px;
   display: flex;
@@ -260,7 +262,14 @@ hr {
   background: linear-gradient(180deg, color-mix(in srgb, var(--bg-1) 92%, transparent), color-mix(in srgb, var(--bg-0) 92%, transparent));
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   z-index: 50;
+}
+
+/* 在 grid 布局下，sidebar 已 fixed，确保 main 始终落在第 2 列 */
+.app > .main {
+  grid-column: 2;
 }
 
 .brand {
