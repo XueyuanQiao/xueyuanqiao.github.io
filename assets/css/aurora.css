@@ -2353,3 +2353,328 @@ hr {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ==========================================================================
+   Mobile adaptation · 移动端适配
+   规则：所有规则仅作用于 <= 920px / <= 520px / 触屏设备；
+        桌面端 (>= 921px) 视觉与交互保持不变。
+   ========================================================================== */
+
+/* ---------- iOS 安全区 ---------- */
+@supports (padding: max(0px)) {
+  @media (max-width: 920px) {
+    .menu-toggle {
+      top: max(12px, env(safe-area-inset-top));
+      left: max(12px, env(safe-area-inset-left));
+    }
+    .fab {
+      right: max(16px, env(safe-area-inset-right));
+      bottom: max(20px, env(safe-area-inset-bottom));
+    }
+    .main {
+      padding-left: max(14px, env(safe-area-inset-left));
+      padding-right: max(14px, env(safe-area-inset-right));
+      padding-bottom: max(72px, env(safe-area-inset-bottom));
+    }
+    .sidebar {
+      padding-top: max(28px, env(safe-area-inset-top));
+      padding-bottom: max(20px, env(safe-area-inset-bottom));
+    }
+  }
+}
+
+/* ---------- 通用：≤ 920px ---------- */
+@media (max-width: 920px) {
+  /* 触屏阅读体验：稍微放慢一点动画并抑制过度的悬浮位移，避免 hover 锁定后视觉残留 */
+  html { scroll-behavior: smooth; }
+
+  /* 顶栏菜单按钮预留位置，标题不被遮挡 */
+  .main { padding-top: 70px; }
+
+  /* Hero（普通页 hero 与文章页头）字号收敛 */
+  .hero { padding: 26px 20px; border-radius: var(--radius-lg); }
+  .hero h1 { font-size: clamp(1.4rem, 6vw, 1.9rem); }
+  .hero p { font-size: 0.96rem; }
+  .hero-stats { gap: 18px; }
+  .hero-stats .num { font-size: 1.2rem; }
+
+  /* 文章卡片更紧凑 */
+  .post-card { padding: 20px 18px; border-radius: var(--radius-md); }
+  .post-card h2 { font-size: 1.18rem; }
+  .post-card .excerpt { font-size: 0.94rem; margin-bottom: 12px; }
+  .post-meta { font-size: 0.82rem; gap: 8px; }
+
+  /* 文章正文 */
+  .article { padding: 24px 18px; border-radius: var(--radius-lg); }
+  .article-header { margin-bottom: 24px; padding-bottom: 18px; }
+  .article-header h1 { font-size: clamp(1.4rem, 6vw, 1.9rem); }
+  .article-content {
+    --prose-w: 100%;
+    font-size: 1rem;
+    line-height: 1.8;
+    /* 中英混排在窄屏下使用普通对齐，避免 inter-character 拉宽产生奇怪空隙 */
+    text-align: left;
+  }
+  .article-content p { text-align: left; text-justify: auto; }
+  /* 首字下沉在小屏放大太突兀，缩小 */
+  .article-content > p:first-of-type::first-letter {
+    font-size: 2.4em;
+    padding: 0.04em 0.08em 0 0;
+    margin: 0.04em 0.08em 0 0;
+  }
+  .article-content h2 { font-size: 1.32rem; margin-top: 1.8em; }
+  .article-content h3 { font-size: 1.12rem; margin-top: 1.5em; }
+  .article-content h4 { font-size: 1rem; }
+  .article-content h2::before { width: 14px; height: 14px; border-radius: 5px; }
+  .article-content blockquote { padding: 14px 16px 14px 44px; }
+  .article-content blockquote::before { font-size: 2.6em; left: 10px; top: 6px; }
+  .article-content ol > li { padding-left: 2.1em; }
+  .article-content img { margin: 1em auto; }
+
+  /* 行内代码不再 nowrap，避免水平爆框 */
+  .article-content :not(pre) > code { white-space: normal; word-break: break-word; }
+
+  /* 代码块：留白收敛、字号微调 */
+  .article-content pre code,
+  .page-content pre code,
+  .highlight pre code,
+  figure.highlight pre code {
+    padding: 14px 14px;
+    font-size: 0.82rem;
+    line-height: 1.65;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 复制按钮在窄屏上扩大触控热区，避免误触代码 */
+  .code-copy {
+    width: 44px;
+    height: 28px;
+    top: 4px;
+    right: 6px;
+    font-size: 0.72rem;
+  }
+  .code-lang { right: 60px; font-size: 0.68rem; }
+
+  /* TOC 默认折叠（由 JS 处理；样式保证折叠态紧凑） */
+  .toc { padding: 14px 16px; margin-bottom: 22px; }
+  .toc-title { font-size: 0.74rem; }
+  .toc-list .toc-h3 a { padding-left: 22px; }
+  .toc-list .toc-h4 a { padding-left: 36px; }
+
+  /* 表格容器允许触摸滚动并提示 */
+  .article-content .table-wrap {
+    margin-left: -2px;
+    margin-right: -2px;
+  }
+
+  /* 文章底部导航 */
+  .article-footer .nav-prev,
+  .article-footer .nav-next { padding: 12px 14px; }
+  .article-footer .nav-next { text-align: left; }
+
+  /* 通用页面 */
+  .page { padding: 24px 18px; border-radius: var(--radius-lg); }
+  .page-header h1 { font-size: 1.4rem; }
+  .page-content { line-height: 1.75; }
+
+  /* 链接卡片：单列，避免最小 220px 触发横向溢出 */
+  .link-category { padding: 18px; }
+  .link-category ul { grid-template-columns: 1fr; }
+
+  /* 分类页 */
+  .cate-cloud { gap: 8px; }
+  .cate-chip { padding: 7px 12px; font-size: 0.86rem; }
+  .cate-list li {
+    padding: 12px 14px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .cate-list a { flex: 1 1 100%; }
+  .cate-list .date { font-size: 0.78rem; }
+
+  /* 分页器：触控更大，间距更舒适 */
+  .pagination { padding: 10px; gap: 4px; }
+  .pagination a,
+  .pagination em,
+  .pagination span {
+    min-width: 36px;
+    padding: 8px 10px;
+    font-size: 0.86rem;
+  }
+
+  /* 侧边抽屉：宽度按视口自适应，最大 86vw 避免遮挡过多内容 */
+  .sidebar {
+    width: min(var(--sidebar-w), 86vw);
+    padding: 24px 20px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .sidebar .brand-name { font-size: 1.05rem; }
+  .sidebar .nav a { padding: 12px 14px; font-size: 1rem; }
+  .avatar { width: 80px; height: 80px; }
+
+  /* 菜单按钮触控更舒适 */
+  .menu-toggle { width: 44px; height: 44px; border-radius: 12px; }
+
+  /* 回到顶部按钮在窄屏尺寸略大、更易点击 */
+  .fab { width: 46px; height: 46px; }
+
+  /* 阅读进度条避开刘海 */
+  .read-progress { top: env(safe-area-inset-top, 0); }
+
+  /* ---------- Landing 页 ---------- */
+  .landing-hero { padding: 36px 20px; gap: 24px; border-radius: var(--radius-lg); }
+  .landing-hero .hero-title { font-size: clamp(1.8rem, 8vw, 2.4rem); }
+  .landing-hero .hero-typed { font-size: 0.92rem; margin-bottom: 20px; }
+  .landing-hero .hero-cta { gap: 10px; }
+  .landing-hero .btn { padding: 11px 18px; font-size: 0.92rem; }
+  .landing-hero .hero-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .landing-hero .hero-stats .stat { padding: 12px 14px; }
+  .landing-hero .hero-stats .num { font-size: 1.3rem; }
+
+  /* 终端去掉 3D 透视，改为常规卡片 */
+  .landing-terminal {
+    transform: none !important;
+    font-size: 0.78rem;
+  }
+  .landing-terminal:hover { transform: none !important; }
+  .terminal-body { padding: 14px 14px 18px; line-height: 1.75; }
+
+  /* Marquee 节奏稍慢 + 更舒适字号 */
+  .marquee { font-size: 0.84rem; padding: 12px 0; }
+  .marquee-track { animation-duration: 56s; }
+
+  .landing-section { margin: 40px 0; }
+  .section-head { gap: 8px; margin-bottom: 16px; }
+  .section-head h2 { font-size: clamp(1.2rem, 5vw, 1.6rem); }
+  .section-eyebrow { font-size: 0.72rem; }
+  .section-more { padding: 6px 12px; font-size: 0.84rem; }
+
+  /* Skill / feature 网格：单列，移除 minmax 强制最小宽度 */
+  .skill-grid { grid-template-columns: 1fr; gap: 12px; }
+  .feature-grid { grid-template-columns: 1fr; gap: 14px; }
+  .skill-card { padding: 18px 16px; }
+  .feature-card-inner { padding: 18px 16px 14px; }
+
+  .landing-cta { padding: 40px 20px; margin-top: 48px; }
+  .landing-cta h2 { font-size: clamp(1.3rem, 6vw, 1.8rem); }
+
+  /* 1:1 网格中 hero 状态使用半角分隔避免文字偏黑 */
+  .post-meta .sep { opacity: 0.6; }
+}
+
+/* ---------- 极窄屏：≤ 520px ---------- */
+@media (max-width: 520px) {
+  body { font-size: 15.5px; }
+  .main { padding: 64px 12px 72px; }
+
+  .hero { padding: 22px 16px; }
+  .hero-eyebrow { font-size: 0.7rem; letter-spacing: 0.14em; }
+  .hero h1 { font-size: 1.5rem; }
+
+  .post-card { padding: 16px 14px; }
+  .post-card h2 { font-size: 1.08rem; }
+  .post-card .excerpt {
+    font-size: 0.9rem;
+    /* 摘要限制 3 行避免列表过长 */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .article { padding: 20px 14px; }
+  .article-header h1 { font-size: 1.4rem; line-height: 1.25; }
+  .article-content { font-size: 0.96rem; }
+  .article-content h2 { font-size: 1.2rem; }
+  .article-content h3 { font-size: 1.05rem; }
+  .article-content > p:first-of-type::first-letter {
+    font-size: 2em;
+  }
+
+  .page { padding: 20px 14px; }
+
+  .pagination a,
+  .pagination em,
+  .pagination span {
+    min-width: 32px;
+    padding: 6px 9px;
+  }
+
+  /* 文章底部上下篇文字不溢出 */
+  .article-footer .nav-prev span,
+  .article-footer .nav-next span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Landing */
+  .landing-hero { padding: 28px 16px; }
+  .landing-hero .hero-title { font-size: clamp(1.6rem, 9vw, 2rem); }
+  .landing-hero .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  .landing-cta { padding: 32px 18px; }
+  .marquee { font-size: 0.78rem; }
+
+  /* 缩短 sidebar 内边距，给主内容更多宽度 */
+  .sidebar { padding: 22px 16px; }
+
+  /* 浮动按钮位置避免遮挡内容尾部 */
+  .fab { right: 14px; bottom: 18px; }
+}
+
+/* ---------- 触屏设备：移除 hover 副作用 + 关闭 3D tilt ---------- */
+@media (hover: none) and (pointer: coarse) {
+  /* 卡片在 touch 上不需要悬浮位移 / 阴影抖动 */
+  .post-card:hover,
+  .feature-card:hover,
+  .skill-card:hover,
+  .link-category:hover,
+  .cate-list li:hover,
+  .cate-chip:hover,
+  .icon-btn:hover,
+  .pagination a:hover,
+  .article-footer .nav-prev:hover,
+  .article-footer .nav-next:hover,
+  .article-content img:hover {
+    transform: none !important;
+    box-shadow: var(--shadow-1) !important;
+  }
+
+  /* 标签 / 链接保留色彩反馈，但不抖动位置 */
+  .nav a:hover { transform: none !important; }
+  .tag:hover { transform: none !important; }
+
+  /* 触屏不显示锚点（hover 永久态会让 # 一直可见） */
+  .article-content h2 .anchor,
+  .article-content h3 .anchor,
+  .article-content h4 .anchor { opacity: 0 !important; }
+
+  /* 头像旋转动画在低端机上耗电 */
+  .avatar { animation-duration: 28s; }
+
+  /* 神经网络背景在触屏 / 弱机型上禁用，省电省 GPU */
+  .bg-neural { display: none !important; }
+
+  /* 关闭 3D 透视类卡片倾斜（JS 也已禁用，这里兜底） */
+  .feature-card { transform: none !important; }
+  .feature-grid { perspective: none; }
+}
+
+/* ---------- 横屏小屏：例如 iPhone landscape ---------- */
+@media (max-width: 920px) and (orientation: landscape) and (max-height: 480px) {
+  .main { padding-top: 60px; }
+  .landing-hero { padding: 24px 18px; }
+  .landing-hero .hero-stats { grid-template-columns: repeat(4, 1fr); }
+  .hero { padding: 18px 18px; }
+}
+
+/* ---------- 高分辨率小屏 / 暗角处理 ---------- */
+@media (max-width: 920px) {
+  /* 网格背景在小屏过密，弱化一下视觉负担 */
+  .bg-grid { background-size: 36px 36px; opacity: 0.6; }
+}

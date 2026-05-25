@@ -63,16 +63,32 @@
     // Mobile menu toggle
     var menuBtn = doc.querySelector(".menu-toggle");
     var scrim = doc.querySelector(".scrim");
-    function closeMenu() { body.classList.remove("is-menu-open"); }
-    function openMenu() { body.classList.add("is-menu-open"); }
+    function lockScroll(lock) {
+      // 仅在窄屏时锁定 body，避免桌面模式被误锁
+      if (window.innerWidth > 920) return;
+      doc.documentElement.style.overflow = lock ? "hidden" : "";
+      body.style.overflow = lock ? "hidden" : "";
+    }
+    function closeMenu() {
+      body.classList.remove("is-menu-open");
+      lockScroll(false);
+    }
+    function openMenu() {
+      body.classList.add("is-menu-open");
+      lockScroll(true);
+    }
     if (menuBtn) {
       menuBtn.addEventListener("click", function () {
-        body.classList.toggle("is-menu-open");
+        if (body.classList.contains("is-menu-open")) closeMenu();
+        else openMenu();
       });
     }
     if (scrim) scrim.addEventListener("click", closeMenu);
     doc.querySelectorAll(".sidebar a").forEach(function (a) {
       a.addEventListener("click", closeMenu);
+    });
+    doc.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && body.classList.contains("is-menu-open")) closeMenu();
     });
     window.addEventListener("resize", function () {
       if (window.innerWidth > 920) closeMenu();
@@ -187,6 +203,10 @@
         return '<li class="' + cls + '"><a href="#' + it.id + '">' + escapeHTML(it.text) + '</a></li>';
       }).join('');
       tocEl.hidden = false;
+
+      // 移动端默认折叠目录，节省纵向空间
+      var isNarrow = window.matchMedia && window.matchMedia('(max-width: 920px)').matches;
+      if (isNarrow) tocEl.setAttribute('data-collapsed', 'true');
 
       // Spy active heading
       var links = tocEl.querySelectorAll('a');
@@ -332,14 +352,19 @@
   var doc = document;
   var prefersReducedMotion =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // 触屏 / 粗指针设备：不启用 3D tilt 与神经网络背景，避免性能浪费与残留态
+  var isTouchDevice =
+    (window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches) ||
+    ("ontouchstart" in window && navigator.maxTouchPoints > 0);
+  var isNarrowScreen = window.matchMedia && window.matchMedia("(max-width: 920px)").matches;
 
   function bootstrap() {
     var isLanding = doc.body.classList.contains("is-landing");
     initTyped();
     initCounters();
-    initTilt();
-    initSkillSpotlight();
-    if (isLanding) initNeural();
+    if (!isTouchDevice) initTilt();
+    if (!isTouchDevice) initSkillSpotlight();
+    if (isLanding && !isTouchDevice && !isNarrowScreen) initNeural();
   }
 
   if (doc.readyState !== "loading") bootstrap();
