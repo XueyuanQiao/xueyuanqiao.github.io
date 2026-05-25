@@ -12,15 +12,14 @@
     <link rel="canonical" href="{{ page.url | absolute_url }}">
 
     <!-- Apply theme before paint to avoid flash -->
+    <!-- 默认暗色：仅在用户显式选择 light 时切换为亮色 -->
     <script>
       (function () {
+        var t = 'dark';
         try {
-          var t = localStorage.getItem('aurora-theme');
-          if (!t) {
-            t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
-          }
-          if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+          if (localStorage.getItem('aurora-theme') === 'light') t = 'light';
         } catch (e) {}
+        document.documentElement.setAttribute('data-theme', t);
       })();
     </script>
 
@@ -90,10 +89,20 @@
                     <a class="icon-btn" href="{{ '/feed.xml' | relative_url }}" aria-label="RSS">
                         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3v3a15 15 0 0 1 15 15h3A18 18 0 0 0 5 3zm0 7v3a8 8 0 0 1 8 8h3a11 11 0 0 0-11-11zm1.5 8a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/></svg>
                     </a>
-                    <button class="icon-btn" type="button" data-theme-toggle aria-label="切换主题">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-                    </button>
                 </div>
+                <button class="theme-switch" type="button" data-theme-toggle aria-label="切换主题（暗色 / 亮色）" title="切换暗色 / 亮色主题">
+                    <span class="theme-switch__track" aria-hidden="true">
+                        <span class="theme-switch__icon theme-switch__icon--moon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+                        </span>
+                        <span class="theme-switch__icon theme-switch__icon--sun">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                        </span>
+                        <span class="theme-switch__thumb"></span>
+                    </span>
+                    <span class="theme-switch__label" data-theme-label-dark>暗色模式</span>
+                    <span class="theme-switch__label" data-theme-label-light>亮色模式</span>
+                </button>
             </div>
         </aside>
 

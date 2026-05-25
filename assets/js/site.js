@@ -17,21 +17,30 @@
 
   // ========== Theme ==========
   function applyTheme(theme) {
-    if (theme === "light") {
-      root.setAttribute("data-theme", "light");
-    } else {
-      root.removeAttribute("data-theme");
-    }
+    var t = theme === "light" ? "light" : "dark";
+    root.setAttribute("data-theme", t);
+    syncThemeToggle(t);
+  }
+
+  function syncThemeToggle(theme) {
+    var btns = doc.querySelectorAll("[data-theme-toggle]");
+    btns.forEach(function (btn) {
+      var isLight = theme === "light";
+      btn.setAttribute("aria-pressed", isLight ? "true" : "false");
+      // 让屏幕阅读器读出"切换到亮/暗色"，更具行动指向性
+      btn.setAttribute(
+        "aria-label",
+        isLight ? "切换到暗色模式" : "切换到亮色模式"
+      );
+    });
   }
 
   function initTheme() {
     var saved;
     try { saved = localStorage.getItem(STORE_KEY); } catch (e) {}
-    if (!saved) {
-      var prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
-      saved = prefersLight ? "light" : "dark";
-    }
-    applyTheme(saved);
+    // 默认暗色：仅在用户显式保存为 light 时使用亮色
+    var theme = saved === "light" ? "light" : "dark";
+    applyTheme(theme);
   }
 
   function toggleTheme() {
@@ -94,9 +103,12 @@
       if (window.innerWidth > 920) closeMenu();
     });
 
-    // Theme toggle button
-    var themeBtn = doc.querySelector("[data-theme-toggle]");
-    if (themeBtn) themeBtn.addEventListener("click", toggleTheme);
+    // Theme toggle button(s)
+    doc.querySelectorAll("[data-theme-toggle]").forEach(function (btn) {
+      btn.addEventListener("click", toggleTheme);
+    });
+    // 初始挂载后再同步一次按钮状态（applyTheme 在 DOM 解析前就调用过）
+    syncThemeToggle(root.getAttribute("data-theme") === "light" ? "light" : "dark");
 
     // Reveal on scroll
     var revealItems = doc.querySelectorAll(".post-card, .article, .page, .pagination, .hero, .link-category, .cate-cloud, .cate-list");
