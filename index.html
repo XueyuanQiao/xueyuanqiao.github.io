@@ -20,13 +20,17 @@ permalink: /
         </p>
 
         <div class="hero-cta">
-            <a class="btn btn-primary" href="#latest">
+            <a class="btn btn-primary" href="{{ '/个人介绍/2026/02/21/intro.html' | relative_url }}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+                个人概述
+            </a>
+            <a class="btn btn-ghost" href="#latest">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12l7 7 7-7"/></svg>
                 探索文章
             </a>
             <a class="btn btn-ghost" href="{{ '/about.html' | relative_url }}">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                关于我
+                关于
             </a>
         </div>
 
@@ -76,6 +80,37 @@ permalink: /
         <span>{{ tokens }}{{ tokens }}{{ tokens }}</span>
     </div>
 </div>
+
+<!-- Profile spotlight -->
+<section class="landing-section profile-spotlight">
+    <a class="profile-card" href="{{ '/个人介绍/2026/02/21/intro.html' | relative_url }}">
+        <div class="profile-card-glow" aria-hidden="true"></div>
+        <div class="profile-card-inner">
+            <div class="profile-card-eyebrow">
+                <span class="dot"></span>
+                <span>// profile · 个人概述</span>
+            </div>
+            <h2 class="profile-card-title">
+                资深<span class="grad-text">全栈测试架构师</span> · AI Native Quality Engineer
+            </h2>
+            <p class="profile-card-desc">
+                十年深耕，从大搜索、金融级支付到 AI 原生产品。把 AI 作为引擎、把多语言全栈作为支点、把测试架构设计作为方法论，构建可演进的企业级质量基础设施。
+            </p>
+            <div class="profile-card-tags">
+                <span>AI Agent</span>
+                <span>LLM-as-a-Judge</span>
+                <span>测试架构</span>
+                <span>金融级稳定性</span>
+                <span>多语言白盒</span>
+                <span>混沌工程</span>
+            </div>
+            <div class="profile-card-cta">
+                阅读完整概述
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </div>
+        </div>
+    </a>
+</section>
 
 <!-- Skill matrix -->
 <section class="landing-section">
