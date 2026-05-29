@@ -7,7 +7,7 @@ permalink: /about.html
 
 ## 关于我
 
-[个人概述](/个人介绍/2026/02/21/intro.html)
+[个人概述](/about/2026/02/22/intro.html)
 
 ## 联系方式
 
