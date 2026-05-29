@@ -1291,6 +1291,93 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
     0 0 28px color-mix(in srgb, var(--brand) 18%, transparent);
 }
 
+/* Photo gallery: 2x2 grid for inline post galleries
+   用法：在 markdown 里写一段原生 HTML
+   <div class="post-gallery">
+     <figure><img src="..." alt=""><figcaption>说明</figcaption></figure>
+     ...
+   </div>
+*/
+.article-content .post-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin: 2.4em auto;
+  max-width: min(100%, 880px);
+}
+
+.article-content .post-gallery figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.article-content .post-gallery img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--surface-border);
+  background:
+    linear-gradient(var(--bg-2), var(--bg-2)) padding-box,
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--brand) 60%, transparent),
+      color-mix(in srgb, var(--brand-2) 35%, transparent) 50%,
+      color-mix(in srgb, var(--brand-3) 60%, transparent)
+    ) border-box;
+  padding: 3px;
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.4),
+    0 0 0 1px var(--surface-border);
+  transition:
+    transform var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out);
+  cursor: zoom-in;
+}
+
+.article-content .post-gallery img:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow:
+    0 24px 56px rgba(0, 0, 0, 0.55),
+    0 0 0 1px color-mix(in srgb, var(--brand) 35%, transparent),
+    0 0 28px color-mix(in srgb, var(--brand) 22%, transparent);
+}
+
+.article-content .post-gallery figcaption {
+  margin-top: 10px;
+  font-size: 0.78em;
+  color: var(--text-3);
+  letter-spacing: 0.02em;
+  text-align: center;
+  line-height: 1.5;
+}
+
+[data-theme="light"] .article-content .post-gallery img {
+  box-shadow:
+    0 12px 28px rgba(20, 30, 60, 0.12),
+    0 0 0 1px var(--surface-border);
+}
+
+[data-theme="light"] .article-content .post-gallery img:hover {
+  box-shadow:
+    0 18px 40px rgba(20, 30, 60, 0.18),
+    0 0 0 1px color-mix(in srgb, var(--brand) 30%, transparent),
+    0 0 22px color-mix(in srgb, var(--brand) 16%, transparent);
+}
+
+@media (max-width: 640px) {
+  .article-content .post-gallery {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .article-content .post-gallery img {
+    max-height: 420px;
+  }
+}
+
 /* Tables */
 .article-content .table-wrap {
   margin: 1.6em 0;
