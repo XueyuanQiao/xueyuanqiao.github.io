@@ -180,7 +180,7 @@ GitHub Pages 在 UTC 时区下生成 URL。例如 `2026-02-21 03:22:04 +0800`（
 ```yaml
 title: Xueyuan's Tech Blog
 email: 1336582921@qq.com
-description: 乔雪源.Blog.博客 - 分享编程技术与思考
+description: Xueyuan's Blog · 分享编程技术与思考
 url: https://xueyuanqiao.github.io
 github_username: XueyuanQiao
 ```
