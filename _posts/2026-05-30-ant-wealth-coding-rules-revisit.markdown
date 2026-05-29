@@ -99,16 +99,16 @@ permalink: /quality/2026/05/30/ant-wealth-coding-rules-revisit.html
     <figcaption>① 作战室门口 · 仪式感从你推门那一刻就开始了</figcaption>
   </figure>
   <figure>
-    <img src="/images/26053003.jpg" alt="双11 项目用餐保障时间表，从早 7 点到次日凌晨 1 点的深夜食堂">
-    <figcaption>② 用餐保障时间表 · 从 7:00 早餐到次日 1:00 深夜食堂</figcaption>
+    <img src="/images/26053003.jpg" alt="支付宝 2021 双11『全都满足』主题伴手礼，桌上还有一块印着 11 字样的芒果蛋糕">
+    <figcaption>② "11" 蛋糕与组织文化伴手礼 · 战役结束后的小庆祝</figcaption>
   </figure>
   <figure>
-    <img src="/images/26053004.jpg" alt="双11 值班的便当：白米饭、烤肉、煎蛋、配菜">
-    <figcaption>③ 值班便当 · 凌晨在工位上吃过的那一份</figcaption>
+    <img src="/images/26053004.jpg" alt="双11 项目用餐保障时间表，从早 7 点到次日凌晨 1 点的深夜食堂">
+    <figcaption>③ 用餐保障时间表 · 从 7:00 早餐到次日 1:00 深夜食堂</figcaption>
   </figure>
   <figure>
-    <img src="/images/26053005.jpg" alt="支付宝 2021 双11『全都满足』主题伴手礼，桌上还有一块印着 11 字样的芒果蛋糕">
-    <figcaption>④ "11" 蛋糕与组织文化伴手礼 · 战役结束后的小庆祝</figcaption>
+    <img src="/images/26053005.jpg" alt="双11 值班的便当：白米饭、烤肉、煎蛋、配菜">
+    <figcaption>④ 值班便当 · 凌晨在工位上吃过的那一份</figcaption>
   </figure>
 </div>
 
