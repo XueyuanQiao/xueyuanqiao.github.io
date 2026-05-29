@@ -10,3 +10,7 @@ Gemfile.lock
 
 # Node / build artifacts (just in case)
 node_modules/
+
+# Local image backups (kept on disk, not published)
+images/*.original.*
+images/*.bak

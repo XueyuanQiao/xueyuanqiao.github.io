@@ -87,7 +87,8 @@
       "date": "2026-02-21",
       "excerpt": "从测试工程师视角看AI原生应用测试的变化与技能栈",
       "categories": [
-        "quality"
+        "quality",
+        "ai"
       ]
     },
     {
@@ -100,39 +101,52 @@
       ]
     },
     {
-      "title": "AI 测试平台核心能力建设：从用例生成到执行优化的工程取舍",
+      "title": "AI 测试平台先做哪三件事",
       "url": "/quality/2026/05/26/ai-test-platform-capability.html",
       "date": "2026-05-26",
       "excerpt": "把 AI 当成原子化能力而不是魔法函数——拆解智能用例生成、合成数据、预测性执行三件事在真实工程里要踩的坑与可量化的产出。",
       "categories": [
-        "quality"
+        "quality",
+        "ai"
       ]
     },
     {
-      "title": "LLM 嵌入测试全生命周期：从被动验证到主动防御",
+      "title": "LLM 嵌进测试流程之后",
       "url": "/quality/2026/05/27/llm-in-test-lifecycle.html",
       "date": "2026-05-27",
       "excerpt": "把 LLM 撒进测试设计、执行、归因三个环节，能拿到的不是快一点的传统流程，而是一种范式上的位移——质量从结果验证走向过程预测。",
       "categories": [
-        "quality"
+        "quality",
+        "ai"
       ]
     },
     {
-      "title": "把经验变成护城河：AI 测试方法论沉淀与 KPI 设计",
+      "title": "AI 测试的三类资产和四个 KPI",
       "url": "/quality/2026/05/28/ai-test-methodology-and-kpi.html",
       "date": "2026-05-28",
       "excerpt": "AI 能力的复利来自资产，不是来自工具。聊聊 Prompt 库、知识图谱、Ground Truth 三件资产怎么沉淀，以及如何用四个 KPI 让 AI 测试投入可被业务老板看懂。",
       "categories": [
-        "quality"
+        "quality",
+        "ai"
       ]
     },
     {
-      "title": "业产研一体闭环：当质量保障从屏幕走向街道",
+      "title": "从屏幕走到街道",
       "url": "/quality/2026/05/29/autonomous-vehicle-quality-loop.html",
       "date": "2026-05-29",
       "excerpt": "从蚂蚁的金融级风控到九识的物理世界，质量这个词被我重新定义了三次。聊聊在 A 车型、B 车型、C 车型、私有化方案 这一整套无人车产品矩阵之上，测试开发到底在解决什么问题。",
       "categories": [
         "quality"
+      ]
+    },
+    {
+      "title": "重读蚂蚁财富编码军规",
+      "url": "/quality/career/2026/05/30/ant-wealth-coding-rules-revisit.html",
+      "date": "2026-05-30",
+      "excerpt": "那年我在蚂蚁财富做养老基金 QA Owner，第一次知道金融级系统对工程师的敬畏是怎么具象出来的。十多年过去再看那张挂在工区的军规海报，每一条都还在打我。",
+      "categories": [
+        "quality",
+        "career"
       ]
     }
   ]

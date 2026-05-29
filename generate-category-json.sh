@@ -31,6 +31,13 @@ for file in _posts/*.markdown; do
       
       # 提取分类并清理空格（更严格的空格清理）
       categories_line=$(echo "$content" | grep "^categories:" | head -n 1)
+
+      # 提取自定义 permalink（可选）
+      permalink_line=$(echo "$content" | grep "^permalink:" | head -n 1)
+      custom_permalink=""
+      if [ -n "$permalink_line" ]; then
+        custom_permalink=$(echo "$permalink_line" | awk -F': ' '{print $2}' | xargs | sed 's/"//g' | sed "s/'//g")
+      fi
       
       # 提取日期并清理空格
       date_line=$(echo "$content" | grep "^date:" | head -n 1)
@@ -45,7 +52,8 @@ for file in _posts/*.markdown; do
         # GitHub Pages会将北京时间（+0800）的凌晨时间转换为UTC的前一天
         # 所以如果时间在00:00:00到07:59:59之间，日期需要减一天
         if [[ "$timezone" == "+0800" || "$timezone" == "CST" ]]; then
-          hour=$(echo "$time_part" | cut -d':' -f1)
+          # 用 10# 强制十进制，避免 08/09 被当成八进制
+          hour=$((10#$(echo "$time_part" | cut -d':' -f1)))
           if [[ "$hour" -ge 0 && "$hour" -lt 8 ]]; then
             # 日期减一天
             # 使用Python进行日期计算
@@ -101,8 +109,12 @@ for file in _posts/*.markdown; do
         month=${date_part:5:2}
         day=${date_part:8:2}
         
-        # 生成URL（使用用户要求的格式：/标签1/标签2/标签3/年/月/日/标题.html）
-        url="/$category_path/$year/$month/$day/$url_title.html"
+        # 生成URL：优先使用 frontmatter 里的 permalink，否则按 /标签/年/月/日/标题.html 推断
+        if [ -n "$custom_permalink" ]; then
+          url="$custom_permalink"
+        else
+          url="/$category_path/$year/$month/$day/$url_title.html"
+        fi
         
         # 添加到JSON中
         if [ "$first" = true ]; then

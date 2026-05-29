@@ -686,6 +686,9 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
     box-shadow var(--t-base) var(--ease-out),
     border-color var(--t-base) var(--ease-out);
   overflow: hidden;
+  /* 性能优化：屏幕外的卡片跳过渲染，仅保留布局位（约 220px 一卡） */
+  content-visibility: auto;
+  contain-intrinsic-size: 220px;
 }
 
 .post-card::after {
@@ -1202,6 +1205,90 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   font-size: 0.86em;
   color: var(--text-3);
   text-align: center;
+}
+
+/* Hero / poster figure: 用于 markdown 里 ![alt](url){: .post-figure } */
+.article-content .post-figure,
+.article-content figure.post-figure {
+  display: block;
+  margin: 2.4em auto;
+  text-align: center;
+  max-width: min(100%, 720px);
+}
+
+/* 同时兼容 markdown 把 .post-figure 直接挂在 <p> 上的写法（kramdown 默认行为） */
+.article-content p.post-figure {
+  display: block;
+  margin: 2.4em auto;
+  text-align: center;
+  max-width: min(100%, 720px);
+}
+
+.article-content .post-figure img,
+.article-content p.post-figure img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+  border-radius: 14px;
+  border: 1px solid var(--surface-border);
+  background:
+    linear-gradient(var(--bg-2), var(--bg-2)) padding-box,
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--brand) 70%, transparent),
+      color-mix(in srgb, var(--brand-2) 40%, transparent) 50%,
+      color-mix(in srgb, var(--brand-3) 70%, transparent)
+    ) border-box;
+  padding: 4px;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.45),
+    0 0 0 1px var(--surface-border),
+    0 0 24px color-mix(in srgb, var(--brand) 14%, transparent);
+  transition:
+    transform var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out);
+  cursor: zoom-in;
+}
+
+.article-content .post-figure img:hover,
+.article-content p.post-figure img:hover {
+  transform: translateY(-3px) scale(1.005);
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.55),
+    0 0 0 1px color-mix(in srgb, var(--brand) 35%, transparent),
+    0 0 36px color-mix(in srgb, var(--brand) 22%, transparent);
+}
+
+/* 用 alt 文本自动生成图注（不需要在 markdown 里再写一行） */
+.article-content p.post-figure {
+  position: relative;
+}
+
+.article-content figure.post-figure figcaption,
+.article-content p.post-figure + .post-figure-caption {
+  display: block;
+  margin: 12px auto 0;
+  font-size: 0.84em;
+  color: var(--text-3);
+  letter-spacing: 0.02em;
+  text-align: center;
+  max-width: min(100%, 720px);
+}
+
+[data-theme="light"] .article-content .post-figure img,
+[data-theme="light"] .article-content p.post-figure img {
+  box-shadow:
+    0 16px 40px rgba(20, 30, 60, 0.14),
+    0 0 0 1px var(--surface-border),
+    0 0 18px color-mix(in srgb, var(--brand) 10%, transparent);
+}
+
+[data-theme="light"] .article-content .post-figure img:hover,
+[data-theme="light"] .article-content p.post-figure img:hover {
+  box-shadow:
+    0 22px 50px rgba(20, 30, 60, 0.2),
+    0 0 0 1px color-mix(in srgb, var(--brand) 30%, transparent),
+    0 0 28px color-mix(in srgb, var(--brand) 18%, transparent);
 }
 
 /* Tables */

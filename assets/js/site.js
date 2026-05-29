@@ -250,9 +250,15 @@
       }
     }
 
-    // 4) Image lightbox
+    // 4) Image lightbox + lazy loading
     var lb = null;
     content.querySelectorAll('img').forEach(function (img) {
+      // 性能优化：默认懒加载、异步解码（首屏图除外，避免 LCP 倒退）
+      var rect = img.getBoundingClientRect();
+      var inViewport = rect.top < (window.innerHeight || 0) && rect.bottom > 0;
+      if (!img.hasAttribute('loading') && !inViewport) img.setAttribute('loading', 'lazy');
+      if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
+
       img.addEventListener('click', function () {
         if (!lb) {
           lb = doc.createElement('div');

@@ -1,9 +1,10 @@
 ---
 layout: post
-title: 把经验变成护城河：AI 测试方法论沉淀与 KPI 设计
+title: AI 测试的三类资产和四个 KPI
 date: 2026-05-28 09:30:00 +0800
 excerpt: AI 能力的复利来自资产，不是来自工具。聊聊 Prompt 库、知识图谱、Ground Truth 三件资产怎么沉淀，以及如何用四个 KPI 让 AI 测试投入可被业务老板看懂。
-categories: quality
+categories: quality ai
+permalink: /quality/2026/05/28/ai-test-methodology-and-kpi.html
 ---
 
 聊完 AI 测试 [平台能力](/quality/2026/05/26/ai-test-platform-capability.html) 和 [流程融合](/quality/2026/05/27/llm-in-test-lifecycle.html) 之后，剩下一个绕不开的问题——**怎么让 AI 投入持续产生复利？**

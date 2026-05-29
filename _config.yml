@@ -48,3 +48,5 @@ exclude:
   - vendor/ruby/
   - doc/
   - SECURITY_UPDATE.md
+  - images/head.original.jpeg
+  - images/head.jpeg.bak
