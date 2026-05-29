@@ -5,22 +5,43 @@ excerpt: 按主题浏览全部文章
 permalink: /cate.html
 ---
 
+{%- comment -%}
+  Sort categories by the date of their newest post (descending).
+  site.categories[name] is already in reverse-chronological order, so the
+  first post is the latest. We build "<unix_ts>|||<name>" entries, sort,
+  reverse, then iterate.
+{%- endcomment -%}
+{% assign cate_entries = "" | split: "" %}
+{% for category in site.categories %}
+  {% assign latest_post = category[1] | first %}
+  {% capture cate_entry %}{{ latest_post.date | date: '%s' }}|||{{ category[0] }}{% endcapture %}
+  {% assign cate_one = cate_entry | split: "$$NOPE$$" %}
+  {% assign cate_entries = cate_entries | concat: cate_one %}
+{% endfor %}
+{% assign cate_entries = cate_entries | sort | reverse %}
+
 <div class="cate-cloud">
     <button class="cate-chip is-active" data-cate="__all__">
         全部 <span class="count">{{ site.posts.size }}</span>
     </button>
-    {% for category in site.categories %}
-    <button class="cate-chip" data-cate="{{ category[0] }}">
-        {{ category[0] }} <span class="count">{{ category[1].size }}</span>
+    {% for entry in cate_entries %}
+    {% assign parts = entry | split: "|||" %}
+    {% assign cate_name = parts[1] %}
+    {% assign cate_posts = site.categories[cate_name] %}
+    <button class="cate-chip" data-cate="{{ cate_name }}">
+        {{ cate_name }} <span class="count">{{ cate_posts.size }}</span>
     </button>
     {% endfor %}
 </div>
 
-{% for category in site.categories %}
-<section class="cate-group" data-cate-group="{{ category[0] }}">
-    <h2 class="section-title">{{ category[0] | capitalize }}</h2>
+{% for entry in cate_entries %}
+{% assign parts = entry | split: "|||" %}
+{% assign cate_name = parts[1] %}
+{% assign cate_posts = site.categories[cate_name] %}
+<section class="cate-group" data-cate-group="{{ cate_name }}">
+    <h2 class="section-title">{{ cate_name | capitalize }}</h2>
     <ul class="cate-list">
-        {% for post in category[1] %}
+        {% for post in cate_posts %}
         <li>
             <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
             <span class="date">{{ post.date | date: "%Y-%m-%d" }}</span>

@@ -29,12 +29,18 @@ excerpt: 按标签查看文章
       posts.forEach(function (p) {
         (p.categories || []).forEach(function (c) {
           var k = String(c).toLowerCase();
-          counts[k] = counts[k] || { name: c, n: 0 };
+          counts[k] = counts[k] || { name: c, n: 0, latest: '' };
           counts[k].n += 1;
+          if ((p.date || '') > counts[k].latest) counts[k].latest = p.date || '';
         });
       });
 
-      var keys = Object.keys(counts).sort();
+      // Sort categories by their latest post date (desc), then by name as tiebreaker.
+      var keys = Object.keys(counts).sort(function (a, b) {
+        var la = counts[a].latest, lb = counts[b].latest;
+        if (la !== lb) return lb.localeCompare(la);
+        return a.localeCompare(b);
+      });
       var allBtn = '<button class="cate-chip ' + (tag ? '' : 'is-active') + '" data-c="">全部 <span class="count">' + posts.length + '</span></button>';
       var html = allBtn + keys.map(function (k) {
         var item = counts[k];

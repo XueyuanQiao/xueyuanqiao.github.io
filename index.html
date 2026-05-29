@@ -207,9 +207,20 @@ permalink: /
         <h2>主题 · Topics</h2>
     </header>
     <div class="cate-cloud landing-cloud">
-        {% for category in site.categories %}
-        <a class="cate-chip" href="{{ '/category/' | relative_url }}?tag={{ category[0] | url_encode }}">
-            {{ category[0] }} <span class="count">{{ category[1].size }}</span>
+        {%- assign landing_cate_entries = "" | split: "" -%}
+        {%- for category in site.categories -%}
+          {%- assign latest_post = category[1] | first -%}
+          {%- capture cate_entry -%}{{ latest_post.date | date: '%s' }}|||{{ category[0] }}{%- endcapture -%}
+          {%- assign cate_one = cate_entry | split: "$$NOPE$$" -%}
+          {%- assign landing_cate_entries = landing_cate_entries | concat: cate_one -%}
+        {%- endfor -%}
+        {%- assign landing_cate_entries = landing_cate_entries | sort | reverse -%}
+        {% for entry in landing_cate_entries %}
+        {% assign parts = entry | split: "|||" %}
+        {% assign cate_name = parts[1] %}
+        {% assign cate_posts = site.categories[cate_name] %}
+        <a class="cate-chip" href="{{ '/category/' | relative_url }}?tag={{ cate_name | url_encode }}">
+            {{ cate_name }} <span class="count">{{ cate_posts.size }}</span>
         </a>
         {% endfor %}
     </div>
