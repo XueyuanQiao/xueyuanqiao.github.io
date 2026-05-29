@@ -34,7 +34,7 @@ permalink: /about.html
         <h1 class="about-title">
             <span class="about-title-line">你好，我是</span>
             <span class="about-title-line">
-                <span class="grad-text">乔雪源</span><span class="about-title-cursor">▍</span>
+                <span class="grad-text">Xueyuan</span><span class="about-title-cursor">▍</span>
             </span>
         </h1>
 
@@ -93,7 +93,7 @@ permalink: /about.html
             </div>
             <div class="terminal-body">
                 <div class="t-line"><span class="t-prompt">▶</span> <span class="t-cmd">whoami</span></div>
-                <div class="t-line t-out">  qiaoxueyuan · <span class="t-hl">Quality Engineer</span> @ <span class="t-arg">AI-native era</span></div>
+                <div class="t-line t-out">  xueyuan · <span class="t-hl">Quality Engineer</span> @ <span class="t-arg">AI-native era</span></div>
                 <div class="t-line"><span class="t-prompt">▶</span> <span class="t-cmd">stack.list</span> <span class="t-arg">--top 6</span></div>
                 <div class="t-line t-out">  Python · Java · Ruby · LLM · Pytest · Selenium</div>
                 <div class="t-line"><span class="t-prompt">▶</span> <span class="t-cmd">mission.show</span></div>
