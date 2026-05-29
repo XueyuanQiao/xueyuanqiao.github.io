@@ -3,7 +3,7 @@ layout: post
 title: AI 测试方向
 date: 2026-02-22 05:00:00 +0800
 excerpt: 从测试工程师视角看AI原生应用测试的变化与技能栈
-categories: ai test llm
+categories: quality
 ---
 
 从**测试工程师（QA / SDET / AI Test Engineer）**视角来看，2026年做 **AI Native 应用**（尤其是基于大模型的产品）的测试，已经和传统Web/App测试有非常明显的分野。日常工作内容、技能栈和关注点都发生了结构性变化。
