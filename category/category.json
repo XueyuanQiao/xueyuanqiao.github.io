@@ -93,7 +93,7 @@
     },
     {
       "title": "个人概述",
-      "url": "/about/2026/02/21/intro.html",
+      "url": "/about/2026/02/22/intro.html",
       "date": "2026-02-21",
       "excerpt": "资深全栈测试架构师 · AI 原生质量体系践行者 · 多语言研发与测试架构设计专家",
       "categories": [
@@ -134,14 +134,14 @@
       "title": "从屏幕走到街道",
       "url": "/quality/2026/05/29/autonomous-vehicle-quality-loop.html",
       "date": "2026-05-29",
-      "excerpt": "从蚂蚁的金融级风控到九识的物理世界，质量这个词被我重新定义了三次。聊聊在 A 车型、B 车型、C 车型、私有化方案 这一整套无人车产品矩阵之上，测试开发到底在解决什么问题。",
+      "excerpt": "从蚂蚁的金融级风控到九识的物理世界，质量这个词被我重新定义了三次。聊聊在 A 车型、B 车型、C 车型、私有化方案这一整套无人车产品矩阵之上，测试开发到底在解决什么问题。",
       "categories": [
         "quality"
       ]
     },
     {
       "title": "重读蚂蚁财富编码军规",
-      "url": "/quality/career/2026/05/30/ant-wealth-coding-rules-revisit.html",
+      "url": "/quality/2026/05/30/ant-wealth-coding-rules-revisit.html",
       "date": "2026-05-30",
       "excerpt": "那年我在蚂蚁财富做养老基金 QA Owner，第一次知道金融级系统对工程师的敬畏是怎么具象出来的。十多年过去再看那张挂在工区的军规海报，每一条都还在打我。",
       "categories": [
