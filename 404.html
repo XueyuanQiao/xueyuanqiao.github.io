@@ -6,12 +6,20 @@ permalink: /404.html
 
 <div class="notfound">
     <div class="notfound-inner">
+        <span class="hero-eyebrow notfound-eyebrow"><span class="dot"></span>// signal lost · 信号丢失</span>
         <div class="notfound-code" aria-hidden="true">404</div>
         <h1>页面走丢了</h1>
         <p>请求的页面不存在，或者已经被移走了。</p>
-        <p><a class="btn" href="{{ '/' | relative_url }}">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-            返回首页
-        </a></p>
+
+        <div class="notfound-cta">
+            <a class="btn btn-primary" href="{{ '/' | relative_url }}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>
+                返回首页
+            </a>
+            <a class="btn btn-ghost" href="{{ '/archive.html' | relative_url }}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9a2 2 0 0 1-2 2h-3v-7H9v7H6a2 2 0 0 1-2-2z"/></svg>
+                浏览文章
+            </a>
+        </div>
     </div>
 </div>

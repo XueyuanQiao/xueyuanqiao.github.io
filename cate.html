@@ -3,7 +3,14 @@ layout: page
 title: 分类
 excerpt: 按主题浏览全部文章
 permalink: /cate.html
+hide_header: true
 ---
+
+<section class="hero hero-compact">
+    <span class="hero-eyebrow"><span class="dot"></span>// topics · 主题分类</span>
+    <h1>按主题<span class="grad-text"> 浏览</span></h1>
+    <p>{{ site.categories.size }} 个分类、{{ site.posts.size }} 篇文章。点击芯片快速过滤。</p>
+</section>
 
 {%- comment -%}
   Sort categories by the date of their newest post (descending).
@@ -91,10 +98,3 @@ permalink: /cate.html
   }
 })();
 </script>
-
-<style>
-@keyframes cate-fade {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-</style>

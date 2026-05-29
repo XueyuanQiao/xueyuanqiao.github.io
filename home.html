@@ -4,10 +4,29 @@ title: 文章
 permalink: /archive.html
 ---
 
-<section class="hero">
-    <span class="hero-eyebrow"><span class="dot"></span>Archive · 文章库</span>
-    <h1>所有文章</h1>
-    <p>共 {{ site.posts.size }} 篇 · 涵盖 {{ site.categories.size }} 个主题</p>
+<section class="hero hero-compact">
+    <span class="hero-eyebrow"><span class="dot"></span>// archive · 文章库</span>
+    <h1>所有<span class="grad-text"> 文章</span></h1>
+    <p>按时间归档，{{ site.posts.size }} 篇散落在 {{ site.categories.size }} 个主题里。</p>
+
+    <div class="hero-stats">
+        <div class="stat">
+            <span class="num" data-counter="{{ site.posts.size }}">0</span>
+            <span class="label">Articles</span>
+        </div>
+        <div class="stat">
+            <span class="num" data-counter="{{ site.categories.size }}">0</span>
+            <span class="label">Topics</span>
+        </div>
+        <div class="stat">
+            <span class="num">{{ site.posts.first.date | date: "%Y-%m" }}</span>
+            <span class="label">Latest</span>
+        </div>
+        <div class="stat">
+            <span class="num">{{ site.posts.last.date | date: "%Y" }}</span>
+            <span class="label">Since</span>
+        </div>
+    </div>
 </section>
 
 {% assign posts_by_year = site.posts | group_by_exp: "p", "p.date | date: '%Y'" %}

@@ -2,13 +2,28 @@
 layout: page
 title: 分类
 excerpt: 按标签查看文章
+hide_header: true
 ---
 
-<p class="page-intro">从首页或分类页选择标签可在此查看相关文章。</p>
+<section class="hero hero-compact">
+    <span class="hero-eyebrow"><span class="dot"></span>// filter · 标签筛选</span>
+    <h1 data-cate-heading>全部<span class="grad-text"> 分类</span></h1>
+    <p>从首页或分类页选择标签可在此查看相关文章。</p>
+</section>
 
-<div class="cate-cloud" data-cloud></div>
+<div class="cate-cloud" data-cloud>
+    <span class="cate-chip is-skel"></span>
+    <span class="cate-chip is-skel"></span>
+    <span class="cate-chip is-skel"></span>
+    <span class="cate-chip is-skel"></span>
+    <span class="cate-chip is-skel"></span>
+</div>
 
-<ul class="cate-list" data-list></ul>
+<ul class="cate-list" data-list>
+    <li class="is-skel"><span class="skel-bar skel-bar-lg"></span><span class="skel-bar skel-bar-sm"></span></li>
+    <li class="is-skel"><span class="skel-bar skel-bar-lg"></span><span class="skel-bar skel-bar-sm"></span></li>
+    <li class="is-skel"><span class="skel-bar skel-bar-lg"></span><span class="skel-bar skel-bar-sm"></span></li>
+</ul>
 
 <p class="cate-empty" data-empty hidden>该分类下暂无文章。</p>
 
@@ -19,7 +34,7 @@ excerpt: 按标签查看文章
   var cloud = document.querySelector('[data-cloud]');
   var list = document.querySelector('[data-list]');
   var empty = document.querySelector('[data-empty]');
-  var heading = document.querySelector('.page-header h1');
+  var heading = document.querySelector('[data-cate-heading]');
 
   fetch('{{ "/category/category.json" | relative_url }}', { cache: 'no-store' })
     .then(function (r) { return r.json(); })
@@ -74,7 +89,11 @@ excerpt: 按标签查看文章
         })
       : posts;
 
-    if (heading) heading.textContent = tag ? tag : '全部分类';
+    if (heading) {
+      heading.innerHTML = tag
+        ? (escapeHTML(tag) + '<span class="grad-text"> · 已筛选</span>')
+        : '全部<span class="grad-text"> 分类</span>';
+    }
 
     if (!filtered.length) {
       list.innerHTML = '';
