@@ -13,7 +13,7 @@ hide_header: true
 
     <div class="hero-stats">
         <div class="stat">
-            <span class="num" data-counter="153">0</span>
+            <span class="num" data-counter="156">0</span>
             <span class="label">Links</span>
         </div>
         <div class="stat">
@@ -71,6 +71,7 @@ hide_header: true
     <li><a href="https://www.phind.com" target="_blank" rel="noopener"><span class="link-name">Phind</span><span class="link-desc">面向开发者的 AI 搜索</span></a></li>
     <li><a href="https://felo.ai" target="_blank" rel="noopener"><span class="link-name">Felo</span><span class="link-desc">多语言 AI 搜索，自动生成 PPT</span></a></li>
     <li><a href="https://elicit.com" target="_blank" rel="noopener"><span class="link-name">Elicit</span><span class="link-desc">学术论文检索与综述助手</span></a></li>
+    <li><a href="https://notebooklm.google.com" target="_blank" rel="noopener"><span class="link-name">NotebookLM</span><span class="link-desc">Google 研究伙伴，Deep Research / 视频概览一站式</span></a></li>
   </ul>
 </div>
 
@@ -78,6 +79,7 @@ hide_header: true
 <div class="link-category">
   <h2><span class="link-cate-emoji">🎨</span>AI 设计 & 图像</h2>
   <ul>
+    <li><a href="https://claude.com/design" target="_blank" rel="noopener"><span class="link-name">Claude Design</span><span class="link-desc">Anthropic Labs 出品，提示生成原型 / 演示稿 / 一页纸</span></a></li>
     <li><a href="https://www.midjourney.com" target="_blank" rel="noopener"><span class="link-name">Midjourney</span><span class="link-desc">仍然是审美在线的代表</span></a></li>
     <li><a href="https://blackforestlabs.ai" target="_blank" rel="noopener"><span class="link-name">FLUX (Black Forest Labs)</span><span class="link-desc">SD 原班团队的新一代开源底模</span></a></li>
     <li><a href="https://ideogram.ai" target="_blank" rel="noopener"><span class="link-name">Ideogram</span><span class="link-desc">海报 / 文字渲染最强的图像模型之一</span></a></li>
@@ -293,6 +295,7 @@ hide_header: true
     <li><a href="https://www.tldraw.com" target="_blank" rel="noopener"><span class="link-name">tldraw</span><span class="link-desc">无限白板 + AI 草图</span></a></li>
     <li><a href="https://www.raycast.com" target="_blank" rel="noopener"><span class="link-name">Raycast</span><span class="link-desc">Mac 启动器，已成生产力中枢</span></a></li>
     <li><a href="https://www.diabrowser.com" target="_blank" rel="noopener"><span class="link-name">Dia Browser</span><span class="link-desc">Arc 团队的 AI 原生浏览器</span></a></li>
+    <li><a href="https://www.perplexity.ai/comet" target="_blank" rel="noopener"><span class="link-name">Comet</span><span class="link-desc">Perplexity 出品的 AI 浏览器，全平台免费</span></a></li>
     <li><a href="https://codepen.io" target="_blank" rel="noopener"><span class="link-name">CodePen</span><span class="link-desc">前端片段试验场</span></a></li>
     <li><a href="https://stackblitz.com" target="_blank" rel="noopener"><span class="link-name">StackBlitz</span><span class="link-desc">浏览器里跑真实 Node 项目</span></a></li>
     <li><a href="https://regex101.com" target="_blank" rel="noopener"><span class="link-name">regex101</span><span class="link-desc">正则可视化调试</span></a></li>
