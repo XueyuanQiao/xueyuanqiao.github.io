@@ -9,11 +9,10 @@ hide_header: true
 <section class="hero hero-compact">
     <span class="hero-eyebrow"><span class="dot"></span>// links · 工具箱</span>
     <h1>AI 时代的<span class="grad-text"> 工具箱</span></h1>
-    <p>持续维护的工具与文档清单，按主题分组。侧重 <strong>AI 原生工程</strong> 与 <strong>现代 Web / 测试栈</strong>，省略已被时代淘汰的内容。</p>
 
     <div class="hero-stats">
         <div class="stat">
-            <span class="num" data-counter="156">0</span>
+            <span class="num" data-counter="157">0</span>
             <span class="label">Links</span>
         </div>
         <div class="stat">
@@ -47,7 +46,7 @@ hide_header: true
 <div class="link-category">
   <h2><span class="link-cate-emoji">⌨️</span>AI 编码助手</h2>
   <ul>
-    <li><a href="https://kiro.dev" target="_blank" rel="noopener"><span class="link-name">Kiro</span><span class="link-desc">AWS 出品，Spec / Vibe 双模式 IDE（本博客就是它写的）</span></a></li>
+    <li><a href="https://kiro.dev" target="_blank" rel="noopener"><span class="link-name">Kiro</span><span class="link-desc">AWS 出品，Spec / Vibe 双模式 IDE</span></a></li>
     <li><a href="https://cursor.com" target="_blank" rel="noopener"><span class="link-name">Cursor</span><span class="link-desc">AI 原生代码编辑器，多文件编辑能力强</span></a></li>
     <li><a href="https://github.com/features/copilot" target="_blank" rel="noopener"><span class="link-name">GitHub Copilot</span><span class="link-desc">最早把 AI 带进编辑器的产品</span></a></li>
     <li><a href="https://windsurf.com" target="_blank" rel="noopener"><span class="link-name">Windsurf</span><span class="link-desc">原 Codeium，Cascade Agent 流畅好用</span></a></li>
@@ -86,6 +85,7 @@ hide_header: true
     <li><a href="https://www.recraft.ai" target="_blank" rel="noopener"><span class="link-name">Recraft</span><span class="link-desc">支持矢量、品牌一致性强</span></a></li>
     <li><a href="https://www.krea.ai" target="_blank" rel="noopener"><span class="link-name">Krea</span><span class="link-desc">实时 AI 画板，体验流畅</span></a></li>
     <li><a href="https://www.figma.com" target="_blank" rel="noopener"><span class="link-name">Figma</span><span class="link-desc">协作式 UI 设计标杆，Make / AI 已内置</span></a></li>
+    <li><a href="https://stitch.withgoogle.com" target="_blank" rel="noopener"><span class="link-name">Stitch</span><span class="link-desc">Google Labs 出品，提示直接生成 UI 与可导出 Figma 稿</span></a></li>
     <li><a href="https://www.canva.com/magic-studio/" target="_blank" rel="noopener"><span class="link-name">Canva Magic Studio</span><span class="link-desc">面向运营 / 内容创作者的一站式设计</span></a></li>
     <li><a href="https://stability.ai" target="_blank" rel="noopener"><span class="link-name">Stability AI</span><span class="link-desc">SD / SDXL 生态官方</span></a></li>
   </ul>
