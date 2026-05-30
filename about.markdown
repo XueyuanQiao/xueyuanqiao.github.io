@@ -258,10 +258,10 @@ permalink: /about.html
             <div class="tl-card">
                 <div class="tl-meta">
                     <span class="tl-year">2026 — Now</span>
-                    <span class="tl-tag">菜鸟 &amp; 九识 · 无人车</span>
+                    <span class="tl-tag">菜鸟无人车 · L4</span>
                 </div>
                 <h3>L4 无人配送车的端到端质量</h3>
-                <p>从菜鸟智能物流走进九识智能，把过往十年沉淀的测试架构方法论与 AI 能力，带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"——在这里第一次真正理解<em>"安全是工程问题"</em>。</p>
+                <p>把过往十年沉淀的测试架构方法论与 AI 能力，带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"——在这里第一次真正理解<em>"安全是工程问题"</em>。</p>
                 <div class="tl-chips">
                     <span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>OTA</span><span>Agent Eval</span>
                 </div>
