@@ -110,6 +110,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+  min-height: 100dvh;
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.7;
@@ -245,6 +246,8 @@ hr {
   display: grid;
   grid-template-columns: var(--sidebar-w) 1fr;
   min-height: 100vh;
+  /* iOS Safari：地址栏伸缩时 100vh 不准确，用 dvh 兜底 */
+  min-height: 100dvh;
 }
 
 .sidebar {
@@ -254,6 +257,8 @@ hr {
   align-self: start;
   width: var(--sidebar-w);
   height: 100vh;
+  /* iOS Safari：100vh 比真实视口高，地址栏出现时抽屉底部会被截掉 */
+  height: 100dvh;
   padding: 28px 22px;
   display: flex;
   flex-direction: column;
@@ -2023,6 +2028,13 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
     grid-template-columns: 1fr;
   }
 
+  /* 移动端单列布局下，让 main 落回第一列；
+     桌面端 grid 是 sidebar | main 两列，main 写死了 grid-column: 2，
+     单列模式必须重置，否则浏览器会创建隐式第 2 列把内容挤到右侧 */
+  .app > .main {
+    grid-column: 1;
+  }
+
   .menu-toggle {
     display: inline-flex;
   }
@@ -2032,6 +2044,7 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
     top: 0;
     left: 0;
     height: 100vh;
+    height: 100dvh;
     width: var(--sidebar-w);
     transform: translateX(-105%);
     transition: transform var(--t-base) var(--ease-out);

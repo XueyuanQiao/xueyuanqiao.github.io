@@ -220,6 +220,18 @@
       var isNarrow = window.matchMedia && window.matchMedia('(max-width: 920px)').matches;
       if (isNarrow) tocEl.setAttribute('data-collapsed', 'true');
 
+      // 旋屏 / 缩放穿过断点时同步折叠状态，避免横屏 → 竖屏 TOC 还撑开
+      // 仅在用户没手动 toggle 过时跟随断点（dataset.userToggled 由点击设置）
+      if (window.matchMedia) {
+        var mq = window.matchMedia('(max-width: 920px)');
+        var onMq = function (e) {
+          if (tocEl.dataset.userToggled === '1') return;
+          tocEl.setAttribute('data-collapsed', e.matches ? 'true' : 'false');
+        };
+        if (mq.addEventListener) mq.addEventListener('change', onMq);
+        else if (mq.addListener) mq.addListener(onMq);
+      }
+
       // Spy active heading
       var links = tocEl.querySelectorAll('a');
       var byId = {};
@@ -246,6 +258,8 @@
         toggle.addEventListener('click', function () {
           var collapsed = tocEl.getAttribute('data-collapsed') === 'true';
           tocEl.setAttribute('data-collapsed', collapsed ? 'false' : 'true');
+          // 标记用户已手动 toggle，避免后续断点变化覆盖用户选择
+          tocEl.dataset.userToggled = '1';
         });
       }
     }
