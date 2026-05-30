@@ -257,13 +257,27 @@ permalink: /about.html
             <span class="tl-node"></span>
             <div class="tl-card">
                 <div class="tl-meta">
-                    <span class="tl-year">2025 — Now</span>
-                    <span class="tl-tag">AI Native</span>
+                    <span class="tl-year">2026 — Now</span>
+                    <span class="tl-tag">菜鸟 &amp; 九识 · 无人车</span>
                 </div>
-                <h3>从测试工程到 Agent 工程</h3>
-                <p>在 AI Native 浪潮里持续学习——读论文、跑评测、把 LLM 接进真实质量链路。把"测试"重新理解成对智能行为的<strong>持续度量</strong>。</p>
+                <h3>L4 无人配送车的端到端质量</h3>
+                <p>从菜鸟智能物流走进九识智能，把过往十年沉淀的测试架构方法论与 AI 能力，带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"——在这里第一次真正理解<em>"安全是工程问题"</em>。</p>
                 <div class="tl-chips">
-                    <span>LLM-as-a-Judge</span><span>Agent Eval</span><span>Prompt Eng.</span><span>MCP</span>
+                    <span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>OTA</span><span>Agent Eval</span>
+                </div>
+            </div>
+        </li>
+        <li class="tl-item">
+            <span class="tl-node"></span>
+            <div class="tl-card">
+                <div class="tl-meta">
+                    <span class="tl-year">2025 — 2026</span>
+                    <span class="tl-tag">海外通讯 · 同声传译</span>
+                </div>
+                <h3>第一次把 AI 跑进真实链路</h3>
+                <p>负责海外通讯同声传译产品的质量保障，深入 <strong>ASR / TTS</strong> 端到端语音链路。在这里第一次系统性接触 AI——把语音识别、机器翻译、语音合成这条流水线的<strong>语义指标</strong>纳入测试体系，从此明白 AI 系统的质量必须用"评估"而不是"断言"来衡量。</p>
+                <div class="tl-chips">
+                    <span>ASR</span><span>TTS</span><span>Speech Quality</span><span>AI Eval</span>
                 </div>
             </div>
         </li>
@@ -272,10 +286,10 @@ permalink: /about.html
             <div class="tl-card">
                 <div class="tl-meta">
                     <span class="tl-year">2021 — 2024</span>
-                    <span class="tl-tag">金融级稳定性</span>
+                    <span class="tl-tag">蚂蚁 · 金融级</span>
                 </div>
                 <h3>把质量做进金融级支付</h3>
-                <p>把"99.99% 高可用"从 PPT 落到全链路压测、容灾演练与混沌注入；带过 QA Owner 的笨功夫，也踩过一次次真实流量的雷。</p>
+                <p>担任核心业务 QA Owner，主导 <strong>个人养老金</strong> 国家级战略项目的质量护航，长期负责养老基金等核心金融业务的日常治理。把"99.99% 高可用"从 PPT 落到全链路压测、容灾演练、混沌注入与资金链路对账，踩过一次次真实流量的雷。</p>
                 <div class="tl-chips">
                     <span>Stress Test</span><span>Chaos</span><span>Risk Control</span><span>SLO</span>
                 </div>
@@ -286,12 +300,12 @@ permalink: /about.html
             <div class="tl-card">
                 <div class="tl-meta">
                     <span class="tl-year">2018 — 2020</span>
-                    <span class="tl-tag">无人车质量</span>
+                    <span class="tl-tag">百度 · 大搜索</span>
                 </div>
-                <h3>无人驾驶的质量护航</h3>
-                <p>从仿真到道路，构建多语言白盒测试体系。第一次理解什么叫<em>"安全是工程问题"</em>——它不是免责声明，是每一行代码的责任。</p>
+                <h3>大搜索体系下的稳定性</h3>
+                <p>在百度大搜索从测试起步、再向研发延伸，深度参与亿级 PV 检索链路的质量保障与核心模块演进。在这里学会了用数据说话，也第一次见识"规模"二字的分量，奠定了 <em>以研发视角重塑质量底座</em> 的方法论根基。</p>
                 <div class="tl-chips">
-                    <span>Simulation</span><span>White-Box</span><span>Multi-Language</span>
+                    <span>Search</span><span>Ranking</span><span>A/B</span><span>Test → Dev</span>
                 </div>
             </div>
         </li>
@@ -299,13 +313,13 @@ permalink: /about.html
             <span class="tl-node"></span>
             <div class="tl-card">
                 <div class="tl-meta">
-                    <span class="tl-year">2015 — 2017</span>
-                    <span class="tl-tag">大搜索</span>
+                    <span class="tl-year">2016 — 2017</span>
+                    <span class="tl-tag">SaaS · 客服系统</span>
                 </div>
-                <h3>从搜索引擎里出发</h3>
-                <p>第一份工作在大搜索，写爬虫、调相关性、做线上 A/B。在那里学会了用数据说话，也第一次见识"规模"二字的分量。</p>
+                <h3>从 SaaS 客服系统起步</h3>
+                <p>第一份工作做 SaaS 客服系统的测试，覆盖 <strong>Web 端、服务端、自动化</strong> 全链条。从一行行用例写起，把功能、接口、UI 自动化串成一张能跑得稳的网，也是从这里开始相信——好的测试不是事后补救，而是写在产品里的工程能力。</p>
                 <div class="tl-chips">
-                    <span>Crawler</span><span>Ranking</span><span>A/B</span>
+                    <span>SaaS</span><span>Web</span><span>Backend</span><span>Automation</span>
                 </div>
             </div>
         </li>
