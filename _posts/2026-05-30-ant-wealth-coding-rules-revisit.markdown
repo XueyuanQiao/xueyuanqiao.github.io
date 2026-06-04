@@ -100,7 +100,7 @@ permalink: /quality/2026/05/30/ant-wealth-coding-rules-revisit.html
   </figure>
   <figure>
     <img src="/images/26053003.jpg" alt="支付宝 2021 双11『全都满足』主题伴手礼，桌上还有一块印着 11 字样的芒果蛋糕">
-    <figcaption>② "11" 蛋糕与组织文化伴手礼 · 战役结束后的小庆祝</figcaption>
+    <figcaption>② "11" 糖饼与组织文化伴手礼 · 战役结束后的小庆祝</figcaption>
   </figure>
   <figure>
     <img src="/images/26053004.jpg" alt="双11 项目用餐保障时间表，从早 7 点到次日凌晨 1 点的深夜食堂">
