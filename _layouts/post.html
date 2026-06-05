@@ -17,10 +17,15 @@ layout: default
                 {% endfor %}
             </span>
             {% endif %}
+            {% if page.reading_meta %}
+            <span class="sep">·</span>
+            <span>{{ page.reading_meta }}</span>
+            {% else %}
             {% assign words = content | strip_html | number_of_words %}
             {% if words > 0 %}
             <span class="sep">·</span>
             <span>约 {{ words }} 字 · {{ words | divided_by: 350 | plus: 1 }} 分钟阅读</span>
+            {% endif %}
             {% endif %}
         </div>
     </header>
