@@ -14,3 +14,6 @@ node_modules/
 # Local image backups (kept on disk, not published)
 images/*.original.*
 images/*.bak
+
+# Source PDFs kept locally for reference; published copies live under assets/
+doc/*.pdf
