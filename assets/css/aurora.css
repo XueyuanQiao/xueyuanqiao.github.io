@@ -4670,3 +4670,34 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
     box-shadow: none !important;
   }
 }
+
+/* ---- 文末「下载源 PDF」按钮（无人车系列等转载文章使用） ---- */
+.article-content .pdf-actions {
+  display: flex;
+  gap: .6rem;
+  flex-wrap: wrap;
+  margin: 1.6rem 0 .4rem;
+}
+.article-content .pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .45em;
+  padding: .58rem 1.05rem;
+  border-radius: 9px;
+  font-size: .92rem;
+  line-height: 1;
+  background: #2f6fed;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: opacity .15s, transform .15s;
+}
+.article-content .pdf-btn:hover {
+  opacity: .9;
+  transform: translateY(-1px);
+}
+.article-content .pdf-btn-ghost {
+  background: transparent;
+  color: #2f6fed;
+  border-color: #2f6fed;
+}
