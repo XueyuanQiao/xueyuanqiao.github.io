@@ -4701,3 +4701,115 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   color: #2f6fed;
   border-color: #2f6fed;
 }
+
+/* ============================================================
+   转载长文排版组件（速览卡 / 关键数据 / 署名 / 要点）
+   ============================================================ */
+
+/* 署名行：作者 · 来源 */
+.article-content .post-byline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem .9rem;
+  margin: .2rem 0 1.6rem;
+  padding: .55rem .9rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--brand) 8%, transparent);
+  border: 1px solid var(--hairline);
+  font-size: .9rem;
+  color: var(--text-3);
+}
+.article-content .post-byline strong { color: var(--text-1); background: none; }
+.article-content .post-byline .sep { color: var(--text-mute); }
+
+/* 速览 / 核心摘要卡片 */
+.article-content .post-tldr {
+  margin: 1.8em 0;
+  padding: 1.1rem 1.3rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--brand) 28%, transparent);
+  border-left: 4px solid var(--brand);
+  background:
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--brand) 12%, transparent),
+      color-mix(in srgb, var(--brand-3) 7%, transparent));
+}
+.article-content .post-tldr .tldr-title {
+  display: flex;
+  align-items: center;
+  gap: .5em;
+  margin: 0 0 .7rem;
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: var(--text-1);
+  letter-spacing: .01em;
+}
+.article-content .post-tldr .tldr-title::before {
+  content: "";
+  display: inline-block;
+  width: 18px; height: 18px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, var(--brand-2), var(--brand-3));
+}
+.article-content .post-tldr ul { margin: 0; padding: 0; list-style: none; }
+.article-content .post-tldr li {
+  position: relative;
+  margin: .42rem 0;
+  padding-left: 1.35em;
+  color: var(--text-2);
+  line-height: 1.7;
+}
+.article-content .post-tldr li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--brand-2);
+  font-weight: 700;
+}
+.article-content .post-tldr li strong { color: var(--text-1); background: none; }
+
+/* 关键数据网格 */
+.article-content .post-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: .8rem;
+  margin: 1.8em 0;
+  padding: 0;
+}
+.article-content .post-stats .stat {
+  padding: 1rem 1.05rem;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--surface-border, var(--hairline));
+}
+.article-content .post-stats .num {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  background: linear-gradient(120deg, var(--brand-2), var(--brand-3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.article-content .post-stats .lbl {
+  display: block;
+  margin-top: .4rem;
+  font-size: .82rem;
+  color: var(--text-3);
+  line-height: 1.45;
+}
+
+/* 要点框（轻量提示） */
+.article-content .post-note {
+  margin: 1.6em 0;
+  padding: .9rem 1.1rem;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  color: var(--text-2);
+  font-size: .95rem;
+}
+.article-content .post-note strong { color: var(--text-1); background: none; }
