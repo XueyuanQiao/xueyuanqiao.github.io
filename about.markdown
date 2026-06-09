@@ -96,7 +96,7 @@ permalink: /about.html
         <ol class="snapshot-lines" data-snapshot-lines>
             <li class="snap-line">
                 <span class="snap-key">role</span>
-                <span class="snap-val" data-text="乔雪源 · 十年质量工程师 · 一个从测试做到研发的人"></span>
+                <span class="snap-val" data-text="乔雪源 · 十年质量工程师 · 为驶入现实世界的 AI 守住安全与信任底线的人"></span>
             </li>
             <li class="snap-line">
                 <span class="snap-key">context</span>
