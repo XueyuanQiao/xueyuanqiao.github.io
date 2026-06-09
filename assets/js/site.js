@@ -811,7 +811,7 @@
     initSnapshot();
   });
 
-  // ---------- Core profile snapshot · 逐行打字展开 + 揭示 CTA ----------
+  // ---------- Core profile snapshot · 级联滑入 + 字符解码 ----------
   function initSnapshot() {
     var section = doc.querySelector("[data-about-snapshot]");
     if (!section) return;
@@ -823,6 +823,7 @@
       lines.forEach(function (li) {
         var val = li.querySelector(".snap-val");
         if (val) val.textContent = val.getAttribute("data-text") || "";
+        li.classList.add("is-revealed");
       });
       section.classList.add("is-done");
       return;
@@ -837,33 +838,55 @@
           runSequence();
         }
       });
-    }, { threshold: 0.35 });
+    }, { threshold: 0.3 });
     io.observe(section);
 
     function runSequence() {
       section.classList.add("is-typing");
-      typeLine(0);
-    }
-
-    function typeLine(idx) {
-      if (idx >= lines.length) {
+      var stagger = 150;        // 行与行之间的启动间隔（级联，不必等上一行结束）
+      var lastEnd = 0;
+      lines.forEach(function (li, i) {
+        var startAt = i * stagger;
+        setTimeout(function () {
+          li.classList.add("is-revealed");
+          scramble(li.querySelector(".snap-val"));
+        }, startAt);
+        // 估算每行解码结束时间（解码约 28 帧 ≈ 460ms）
+        lastEnd = startAt + 520;
+      });
+      setTimeout(function () {
         section.classList.remove("is-typing");
         section.classList.add("is-done");
-        return;
+      }, lastEnd + 200);
+    }
+
+    function scramble(el) {
+      if (!el) return;
+      var full = el.getAttribute("data-text") || "";
+      var glyphs = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#%&$@/<>*=+";
+      el.classList.add("is-decoding");
+      var frame = 0;
+      // 每个字符在第 N 帧定格，制造从左到右逐渐稳定的解码感
+      var settleAt = [];
+      for (var i = 0; i < full.length; i++) {
+        settleAt.push(Math.floor(i * 0.9) + 4 + Math.floor(Math.random() * 5));
       }
-      var li = lines[idx];
-      var val = li.querySelector(".snap-val");
-      var full = (val && val.getAttribute("data-text")) || "";
-      li.classList.add("is-active");
-      var ci = 0;
-      (function step() {
-        ci++;
-        val.textContent = full.slice(0, ci);
-        if (ci < full.length) {
-          setTimeout(step, 24 + Math.random() * 34);
+      (function tick() {
+        var out = "";
+        var done = 0;
+        for (var i = 0; i < full.length; i++) {
+          var ch = full.charAt(i);
+          if (ch === " ") { out += " "; done++; continue; }
+          if (frame >= settleAt[i]) { out += ch; done++; }
+          else { out += glyphs.charAt((Math.random() * glyphs.length) | 0); }
+        }
+        el.textContent = out;
+        frame++;
+        if (done < full.length) {
+          requestAnimationFrame(tick);
         } else {
-          li.classList.remove("is-active");
-          setTimeout(function () { typeLine(idx + 1); }, 230);
+          el.textContent = full;
+          el.classList.remove("is-decoding");
         }
       })();
     }

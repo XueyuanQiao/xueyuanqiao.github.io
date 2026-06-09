@@ -3449,8 +3449,9 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 
 .snapshot-card {
   position: relative;
-  max-width: 960px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   padding: 0;
   border-radius: 20px;
   overflow: hidden;
@@ -3503,14 +3504,61 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   gap: 12px;
   padding: 7px 0;
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateX(-16px);
+  filter: blur(3px);
 }
 
-.about-snapshot.is-typing .snap-line,
-.about-snapshot.is-done .snap-line {
+.snap-line.is-revealed {
   opacity: 1;
   transform: none;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  filter: none;
+  transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), filter 0.45s ease;
+}
+
+/* 每行进入时左侧出现一道高亮扫光 */
+.snap-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 2px;
+  height: 0;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--brand), var(--brand-2));
+  box-shadow: 0 0 10px var(--brand);
+  opacity: 0;
+}
+
+.snap-line.is-revealed::before {
+  animation: snap-bar 0.6s ease forwards;
+}
+
+@keyframes snap-bar {
+  0%   { height: 0; opacity: 0; }
+  45%  { height: 100%; opacity: 1; }
+  100% { height: 100%; opacity: 0; }
+}
+
+/* 移动的扫描线，在打字阶段循环划过 */
+.snapshot-lines::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 0;
+  height: 64px;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--brand) 16%, transparent), transparent);
+  opacity: 0;
+}
+
+.about-snapshot.is-typing .snapshot-lines::after {
+  opacity: 1;
+  animation: snap-scan 1.6s linear infinite;
+}
+
+@keyframes snap-scan {
+  0%   { transform: translateY(-30px); }
+  100% { transform: translateY(420px); }
 }
 
 .snap-key {
@@ -3525,6 +3573,11 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   opacity: 0.9;
 }
 
+/* key 标签按行循环配色，增加层次感 */
+.snap-line:nth-child(3n+1) .snap-key { color: var(--brand); }
+.snap-line:nth-child(3n+2) .snap-key { color: var(--brand-2); }
+.snap-line:nth-child(3n+3) .snap-key { color: var(--brand-3); }
+
 .snap-key::before { content: "› "; opacity: 0.6; }
 
 .snap-val {
@@ -3534,12 +3587,17 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   word-break: break-word;
 }
 
-/* 正在打字的那一行末尾闪烁光标 */
-.snap-line.is-active .snap-val::after {
+/* 正在解码的那一行：高亮 + 辉光 + 末尾光标 */
+.snap-val.is-decoding {
+  color: var(--brand-2);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--brand-2) 70%, transparent);
+}
+
+.snap-val.is-decoding::after {
   content: "▍";
   margin-left: 1px;
   color: var(--brand);
-  animation: snap-caret 0.9s steps(1) infinite;
+  animation: snap-caret 0.7s steps(1) infinite;
 }
 
 @keyframes snap-caret {
@@ -3712,7 +3770,8 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 @media (prefers-reduced-motion: reduce) {
   .snapshot-cta,
   .snapshot-cta-glow { animation: none !important; }
-  .snap-line { opacity: 1; transform: none; }
+  .snap-line { opacity: 1; transform: none; filter: none; }
+  .snapshot-lines::after { display: none; }
   .snapshot-stats { opacity: 1; transform: none; }
 }
 
