@@ -111,7 +111,7 @@ permalink: /about.html
             </li>
             <li class="snap-line">
                 <span class="snap-key">ai</span>
-                <span class="snap-val" data-text="LLM-as-a-Judge · RAG · Prompt 工程 · 模型选型与端到端评估管线设计"></span>
+                <span class="snap-val" data-text="LLM-as-a-Judge · WER 评估管线 · Ragas/DeepEval/Langfuse 评测体系 · LangChain/LangGraph 框架学习"></span>
             </li>
             <li class="snap-line">
                 <span class="snap-key">fullstack</span>
@@ -131,11 +131,11 @@ permalink: /about.html
             </li>
             <li class="snap-line">
                 <span class="snap-key">ai·flow</span>
-                <span class="snap-val" data-text="Kiro · Cursor · Claude Code · Codex · Antigravity · NotebookLM 编程 Agent 协同"></span>
+                <span class="snap-val" data-text="Kiro · Cursor · Claude Code · Codex · Antigravity · Trae · NotebookLM 编程 Agent 协同"></span>
             </li>
             <li class="snap-line">
                 <span class="snap-key">proof</span>
-                <span class="snap-val" data-text="护航蚂蚁个人养老金国家级项目 · 腾展 AI Phone 测试负责人 · 菜鸟无人车质量中台"></span>
+                <span class="snap-val" data-text="护航蚂蚁个人养老金国家级项目 · 腾展 AI Phone 测试负责人(覆盖率+70%) · 菜鸟无人车质量中台"></span>
             </li>
             <li class="snap-line">
                 <span class="snap-key">creed</span>
@@ -328,9 +328,9 @@ permalink: /about.html
                     <span class="tl-tag">腾展 · AI Phone</span>
                 </div>
                 <h3>第一次把 AI 跑进真实链路</h3>
-                <p>作为 <strong>AI Phone</strong> 的测试负责人，负责 App 端 + 服务端的质量与稳定性，覆盖 <strong>VOIP / ASR / 翻译 / TTS</strong> 全链路。在这里第一次系统性接触 AI——用 <strong>LLM-as-a-Judge</strong> 把同声传译的翻译准确性做成可复用、可回归的批量验证，从此明白 AI 系统的质量必须用"评估"而不是"断言"来衡量。</p>
+                <p>作为 <strong>AI Phone</strong> 的测试负责人，负责 App 端 + 服务端的质量与稳定性，覆盖 <strong>VOIP / ASR / 翻译 / TTS</strong> 全链路。在这里第一次系统性接触 AI——构建以 <strong>WER 为核心指标</strong> 的自动化评估 pipeline，叠加 <strong>LLM-as-a-Judge</strong> 把同声传译的翻译准确性做成可复用、可回归的批量验证，从此明白 AI 系统的质量必须用"评估"而不是"断言"来衡量。工程侧主导接口框架 <strong>JUnit → Pytest</strong> 重构、引入 AI 智能断言，测试覆盖率提升 <strong>70%</strong>。</p>
                 <div class="tl-chips">
-                    <span>VOIP</span><span>ASR</span><span>TTS</span><span>LLM-as-a-Judge</span>
+                    <span>VOIP</span><span>ASR</span><span>TTS</span><span>WER</span><span>LLM-as-a-Judge</span><span>Pytest</span>
                 </div>
             </div>
         </li>
@@ -342,9 +342,9 @@ permalink: /about.html
                     <span class="tl-tag">蚂蚁 · 金融级</span>
                 </div>
                 <h3>把质量做进金融级支付</h3>
-                <p>担任核心业务 QA Owner，主导 <strong>个人养老金</strong> 国家级战略项目的质量护航，长期负责养老基金等核心金融业务的日常治理。把"99.99% 高可用"从 PPT 落到全链路压测、容灾演练、混沌注入与资金链路对账，踩过一次次真实流量的雷。</p>
+                <p>担任支付宝基金养老专区核心业务 QA Owner，主导 <strong>个人养老金</strong> 国家级战略项目的质量护航，长期负责养老基金等核心金融业务的日常治理。把"需求 → 策略 → 评审 → 演练 → 压测 → 监控 & 应急"的全生命周期管控做扎实，把"99.99% 高可用"从 PPT 落到全链路压测、容灾演练、混沌注入与资金链路对账——重点守住开户、缴存关键场景，连续保持 <strong>0 重大事故</strong>，有效支撑账户开立人数超出预期。踩过一次次真实流量的雷。</p>
                 <div class="tl-chips">
-                    <span>Stress Test</span><span>Chaos</span><span>Risk Control</span><span>SLO</span>
+                    <span>QA Owner</span><span>Stress Test</span><span>Chaos</span><span>Risk Control</span><span>SLO</span>
                 </div>
             </div>
         </li>
@@ -370,9 +370,9 @@ permalink: /about.html
                     <span class="tl-tag">SaaS · 客服系统</span>
                 </div>
                 <h3>从 SaaS 客服系统起步</h3>
-                <p>第一份工作做 SaaS 客服系统的测试，覆盖 <strong>Web 端、服务端、自动化</strong> 全链条。从一行行用例写起，把功能、接口、UI 自动化串成一张能跑得稳的网，也是从这里开始相信——好的测试不是事后补救，而是写在产品里的工程能力。</p>
+                <p>第一份工作做 SaaS 客服系统的测试，覆盖 <strong>Web 端、服务端、移动 App 端</strong> 全链条。针对 ROR 后端用 <strong>Minitest</strong> 系统补齐模型 / Service / Controller 层单测，把代码覆盖率从近乎 0 拉到 <strong>80%+</strong>；又从 0 到 1 基于 <strong>Selenium / Appium + Jenkins</strong> 搭起端到端自动化并接入 CI/CD，核心回归场景 100% 覆盖、单次回归耗时缩短 <strong>90%+</strong>。也是从这里开始相信——好的测试不是事后补救，而是写在产品里的工程能力。</p>
                 <div class="tl-chips">
-                    <span>SaaS</span><span>Web</span><span>Backend</span><span>Automation</span>
+                    <span>SaaS</span><span>Web</span><span>Backend</span><span>Minitest</span><span>Selenium/Appium</span><span>Automation</span>
                 </div>
             </div>
         </li>
