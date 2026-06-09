@@ -960,6 +960,31 @@
     if (!section) return;
     var lines = section.querySelectorAll(".snap-line");
     if (!lines.length) return;
+    var statusEl = section.querySelector("[data-snapshot-status]");
+    var statusTimer = null;
+
+    function setStatus(state) {
+      if (!statusEl) return;
+      if (statusTimer) { clearInterval(statusTimer); statusTimer = null; }
+      statusEl.classList.remove("is-thinking", "is-generating", "is-done");
+      if (state === "thinking" || state === "generating") {
+        statusEl.classList.add(state === "thinking" ? "is-thinking" : "is-generating");
+        var label = state === "thinking" ? "thinking" : "generating";
+        var step = 0;
+        var render = function () {
+          var dots = ".".repeat((step % 3) + 1);
+          statusEl.textContent = "▍ " + label + dots;
+          step++;
+        };
+        render();
+        statusTimer = setInterval(render, 380);
+      } else if (state === "done") {
+        statusEl.classList.add("is-done");
+        statusEl.textContent = "✓ done";
+      } else {
+        statusEl.textContent = "";
+      }
+    }
 
     // 减少动效偏好 / 无 IO 支持：直接呈现全部内容
     if (prefersReducedMotion || !("IntersectionObserver" in window)) {
@@ -969,6 +994,7 @@
         li.classList.add("is-revealed");
       });
       section.classList.add("is-done");
+      setStatus("done");
       return;
     }
 
@@ -986,6 +1012,13 @@
 
     function runSequence() {
       section.classList.add("is-typing");
+      // 先「思考」，再「生成」，贴近推理型大模型的两段式过程
+      setStatus("thinking");
+      setTimeout(startGenerating, 900);
+    }
+
+    function startGenerating() {
+      setStatus("generating");
       var stagger = 150;        // 行与行之间的启动间隔（级联，不必等上一行结束）
       var lastEnd = 0;
       lines.forEach(function (li, i) {
@@ -1000,6 +1033,7 @@
       setTimeout(function () {
         section.classList.remove("is-typing");
         section.classList.add("is-done");
+        setStatus("done");
       }, lastEnd + 200);
     }
 

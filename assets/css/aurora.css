@@ -3583,6 +3583,71 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   letter-spacing: 0.02em;
 }
 
+/* 终端右侧推理状态徽标：generating… → ✓ done */
+.snapshot-bar-status {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+}
+
+.snapshot-bar-status.is-generating,
+.snapshot-bar-status.is-done {
+  opacity: 1;
+  transform: none;
+}
+
+.snapshot-bar-status.is-thinking {
+  opacity: 1;
+  transform: none;
+  color: #fbbf24;
+  border-color: color-mix(in srgb, #fbbf24 40%, transparent);
+  background: color-mix(in srgb, #fbbf24 14%, transparent);
+  animation: snap-status-pulse-amber 1.1s ease-in-out infinite;
+}
+
+.snapshot-bar-status.is-generating {
+  color: var(--brand-2);
+  border-color: color-mix(in srgb, var(--brand-2) 40%, transparent);
+  background: color-mix(in srgb, var(--brand-2) 14%, transparent);
+  animation: snap-status-pulse 1.1s ease-in-out infinite;
+}
+
+.snapshot-bar-status.is-done {
+  color: #7cffb4;
+  border-color: color-mix(in srgb, #7cffb4 45%, transparent);
+  background: color-mix(in srgb, #7cffb4 14%, transparent);
+}
+
+@keyframes snap-status-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand-2) 35%, transparent); }
+  50% { box-shadow: 0 0 8px 1px color-mix(in srgb, var(--brand-2) 45%, transparent); }
+}
+
+@keyframes snap-status-pulse-amber {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, #fbbf24 35%, transparent); }
+  50% { box-shadow: 0 0 8px 1px color-mix(in srgb, #fbbf24 45%, transparent); }
+}
+
+@media (max-width: 620px) {
+  .snapshot-bar-status { font-size: 0.66rem; padding: 2px 7px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snapshot-bar-status.is-generating,
+  .snapshot-bar-status.is-thinking { animation: none; }
+}
+
 .snapshot-lines {
   position: relative;
   list-style: none;
@@ -3673,7 +3738,7 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 .snap-line:nth-child(3n+2) .snap-key { color: var(--brand-2); }
 .snap-line:nth-child(3n+3) .snap-key { color: var(--brand-3); }
 
-.snap-key::before { content: "› "; opacity: 0.6; }
+.snap-key::before { content: "# "; opacity: 0.6; }
 
 .snap-val {
   position: relative;

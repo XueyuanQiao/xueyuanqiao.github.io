@@ -79,8 +79,8 @@ permalink: /about.html
 <!-- Core profile preview · 核心概述精简展示 + 打字逐行展开 -->
 <section class="landing-section about-snapshot" data-about-snapshot>
     <header class="section-head">
-        <span class="section-eyebrow">// profile.preview</span>
-        <h2>三十秒看懂我 · Core Profile</h2>
+        <span class="section-eyebrow">// profile.prompt</span>
+        <h2>一个 Prompt 看懂我 · One Prompt</h2>
     </header>
 
     <div class="snapshot-card" data-snapshot-card>
@@ -89,56 +89,37 @@ permalink: /about.html
             <span class="t-dot t-dot-r"></span>
             <span class="t-dot t-dot-y"></span>
             <span class="t-dot t-dot-g"></span>
-            <span class="snapshot-bar-title">~/profile — cat core.profile</span>
+            <span class="snapshot-bar-title">system.prompt — describe("乔雪源")</span>
+            <span class="snapshot-bar-status" data-snapshot-status aria-live="polite"></span>
         </div>
 
         <ol class="snapshot-lines" data-snapshot-lines>
             <li class="snap-line">
-                <span class="snap-key">whoami</span>
-                <span class="snap-val" data-text="乔雪源 · 十年全栈测试开发工程师 · AI 时代全栈开发者"></span>
+                <span class="snap-key">role</span>
+                <span class="snap-val" data-text="乔雪源 · 十年质量工程师 · 一个从测试做到研发的人"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">edge</span>
-                <span class="snap-val" data-text="以研发视角重塑质量底座：QA → RD → 测试架构 的复合能力"></span>
+                <span class="snap-key">context</span>
+                <span class="snap-val" data-text="百度大搜索 → 蚂蚁金融级支付 → 腾展 AI Phone → 菜鸟 L4 无人车"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">testing</span>
-                <span class="snap-val" data-text="白盒 / 灰盒 / 黑盒 + 静态 / 动态 / 模糊 / 混沌 + 仿真 / 路测 全维度方法论"></span>
-            </li>
-            <li class="snap-line">
-                <span class="snap-key">stability</span>
-                <span class="snap-val" data-text="全链路压测 · 混沌工程 · 容灾演练 · 金融级高并发高可用稳定性"></span>
-            </li>
-            <li class="snap-line">
-                <span class="snap-key">ai</span>
-                <span class="snap-val" data-text="LLM-as-a-Judge · WER 评估管线 · Ragas/DeepEval/Langfuse 评测体系 · LangChain/LangGraph 框架学习"></span>
-            </li>
-            <li class="snap-line">
-                <span class="snap-key">fullstack</span>
-                <span class="snap-val" data-text="Stitch / Claude Design 做设计 + Vibe Coding 一体化交付前后端工程"></span>
-            </li>
-            <li class="snap-line">
-                <span class="snap-key">platform</span>
-                <span class="snap-val" data-text="从 0-1 搭测试平台 / 质量中台：CI/CD + 质量门禁 + 度量数仓 + 数据工厂"></span>
-            </li>
-            <li class="snap-line">
-                <span class="snap-key">langs</span>
-                <span class="snap-val" data-text="Python · Java · C/C++ · PHP · Go / Rust / Shell 多语言白盒能力"></span>
-            </li>
-            <li class="snap-line">
-                <span class="snap-key">infra</span>
-                <span class="snap-val" data-text="Redis / Tair · RocketMQ / Kafka · Dubbo / SOFA · JVM 深度排查 · Linux 链路诊断"></span>
-            </li>
-            <li class="snap-line">
-                <span class="snap-key">ai·flow</span>
-                <span class="snap-val" data-text="Kiro · Cursor · Claude Code · Codex · Antigravity · Trae · NotebookLM 编程 Agent 协同"></span>
+                <span class="snap-key">skills</span>
+                <span class="snap-val" data-text="以研发视角重塑质量底座——QA 也能写白盒、扛得住稳定性"></span>
             </li>
             <li class="snap-line">
                 <span class="snap-key">proof</span>
-                <span class="snap-val" data-text="护航蚂蚁个人养老金国家级项目 · 腾展 AI Phone 测试负责人(覆盖率+70%) · 菜鸟无人车质量中台"></span>
+                <span class="snap-val" data-text="金融级 99.99% 高可用，是全链路压测和混沌演练里一次次踩出来的"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">creed</span>
+                <span class="snap-key">focus</span>
+                <span class="snap-val" data-text="把 LLM 接进真实链路：用『评估』而不是『断言』衡量 AI 的质量"></span>
+            </li>
+            <li class="snap-line">
+                <span class="snap-key">task</span>
+                <span class="snap-val" data-text="在菜鸟做 L4 无人车端到端质量，把保障对象从软件扩到物理世界"></span>
+            </li>
+            <li class="snap-line">
+                <span class="snap-key">rules</span>
                 <span class="snap-val" data-text="任何新能力，必须在真实业务里跑通一次，才算『学过』"></span>
             </li>
         </ol>
