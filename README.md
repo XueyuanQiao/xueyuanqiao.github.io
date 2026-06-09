@@ -14,7 +14,9 @@
 - [目录结构](#目录结构)
 - [本地预览](#本地预览)
 - [写一篇新文章](#写一篇新文章)
+- [热门文章（首页置顶）](#热门文章首页置顶)
 - [分类系统](#分类系统)
+- [在文章中内嵌 PDF](#在文章中内嵌-pdf)
 - [移动端适配](#移动端适配)
 - [主题与可定制项](#主题与可定制项)
 - [部署](#部署)
@@ -29,6 +31,8 @@
 - **主题切换**：暗色为默认，跟随 `prefers-color-scheme`，支持点击切换并记忆到 `localStorage`
 - **阅读体验**：阅读进度条、文章 TOC（移动端默认折叠）、回到顶部、图片 lightbox、代码一键复制 + 语言标签
 - **首页着陆区**：动态打字效果、统计计数器、3D Tilt 卡片、霓虹滚动 marquee
+- **热门文章置顶**：`featured` 标记把重要文章永久透出到首页热门区
+- **PDF 内嵌阅读**：文章内可用 PDF.js 懒加载分页渲染长文档，支持在线翻阅 / 新窗口打开 / 下载
 - **SEO 友好**：`jekyll-seo-tag`、`jekyll-sitemap`、`jekyll-feed` 内置
 - **触屏优化**：自动禁用 hover 残留态、3D Tilt、神经网络背景，节省电量与 GPU
 - **无障碍**：尊重 `prefers-reduced-motion`、键盘可达、菜单 Esc 关闭
@@ -47,20 +51,29 @@
 ├── assets/
 │   ├── css/aurora.css       主题样式（含移动端适配）
 │   ├── css/code.css         代码块样式
-│   └── js/site.js           主题交互逻辑（零依赖）
+│   ├── js/site.js           主题交互逻辑（零依赖）
+│   └── pdf/                 文章内嵌 / 可下载的 PDF 原件
 ├── category/
 │   ├── index.html           动态分类页（按 ?tag= 过滤）
 │   └── category.json        文章索引数据（脚本生成）
 ├── css/highlight/           highlight.js 代码高亮主题
+├── js/highlight.pack.js     highlight.js 运行时
 ├── images/                  图片资源
 ├── doc/                     工程文档（不参与构建）
+│   ├── README.md            文档索引
+│   ├── new-post.md          发文流程
+│   ├── frontmatter.md       Frontmatter 字段说明
+│   ├── markdown-cheatsheet.md  Markdown 速查
+│   └── troubleshooting.md   常见问题排查
 ├── 404.html                 自定义 404 页
 ├── about.markdown           关于
 ├── cate.html                按主题归档
 ├── doc.markdown             链接收藏
 ├── home.html                文章存档
 ├── index.html               首页（landing）
+├── spring-doc.html          Spring 框架参考文档（静态存档页）
 ├── generate-category-json.sh  分类索引生成脚本
+├── CNAME                    自定义域名配置
 └── Gemfile                  Ruby 依赖
 ```
 
@@ -158,6 +171,33 @@ GitHub Pages 在 UTC 时区下生成 URL。例如 `2026-02-21 03:22:04 +0800`（
 - 脚本已自动处理这种凌晨时间偏移，与 GitHub Pages 输出一致
 - 简化办法：发文时间统一用 **北京时间 08:00 以后**，可避免日期偏移
 
+## 在文章中内嵌 PDF
+
+适合把图表多、排版复杂的长文档（如知乎 / 脉脉原文、行业报告）以 PDF 原件呈现，支持在线翻阅、新窗口打开与下载。
+
+1. 把 PDF 放到 `assets/pdf/`，命名与文章 `slug` 对齐，例如 `assets/pdf/robovan-commercial-inflection.pdf`
+2. 在文章正文中加入操作按钮与阅读器容器：
+
+   ```html
+   <div class="pdf-actions">
+     <a class="pdf-btn" href="/assets/pdf/your-file.pdf" target="_blank" rel="noopener">在新窗口打开</a>
+     <a class="pdf-btn pdf-btn-ghost" href="/assets/pdf/your-file.pdf" download>下载 PDF</a>
+   </div>
+
+   <div id="pdf-viewer" class="pdf-viewer" data-pdf-src="/assets/pdf/your-file.pdf">
+     <div class="pdf-loading">正在加载 PDF 阅读器…</div>
+   </div>
+   ```
+
+3. 配套的 `<style>` 与 PDF.js 懒加载脚本可参考现有文章 `_posts/2026-06-05-zhi-shen-ding-nei.markdown`
+
+说明与注意：
+
+- 阅读器基于 **PDF.js**，按需分页渲染（`IntersectionObserver` 懒加载），大文件也不会一次性吃满内存
+- 始终保留 `download` / `target="_blank"` 链接与 `<noscript>` 兜底，确保未启用 JS 时仍可访问
+- 大体积 PDF（数十 MB）建议在按钮文案中标注大小，给读者预期
+- 转载内容请在文中注明来源与版权声明
+
 ## 移动端适配
 
 桌面端（≥ 921px）视觉与交互完全保持原样；移动端做了系统性的优化：
@@ -250,6 +290,7 @@ bundle exec jekyll serve  # 本地走查
 - **Jekyll** — 静态站点生成器（GitHub Pages 原生支持）
 - **kramdown** — Markdown 引擎，支持 GFM、脚注、任务列表
 - **highlight.js** — 代码高亮（已内置 80+ 主题供选择）
+- **PDF.js** — 文章内嵌 PDF 的分页懒加载渲染
 - **CSS3** — 自定义属性、`color-mix`、`backdrop-filter`、`mask-image`
 - **原生 ES** — 零依赖，无打包，IntersectionObserver / matchMedia 等现代 API
 
