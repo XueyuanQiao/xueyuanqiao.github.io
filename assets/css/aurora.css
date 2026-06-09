@@ -3449,7 +3449,7 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 
 .snapshot-card {
   position: relative;
-  max-width: 820px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 0;
   border-radius: 20px;
@@ -3642,18 +3642,78 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   transform: translateX(5px);
 }
 
+/* ---------- Stats strip inside snapshot ---------- */
+.snapshot-stats {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  margin: 8px 18px 4px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--brand) 16%, var(--border));
+  border-radius: 14px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--brand) 14%, var(--border));
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.about-snapshot.is-typing .snapshot-stats,
+.about-snapshot.is-done .snapshot-stats {
+  opacity: 1;
+  transform: none;
+}
+
+.snap-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 14px 8px;
+  text-align: center;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+}
+
+.snap-stat-value {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(120deg, var(--brand), var(--brand-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.snap-stat-glyph { font-size: clamp(1.4rem, 3.4vw, 1.9rem); }
+
+.snap-stat-label {
+  font-size: 0.74rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
 @media (max-width: 620px) {
   .snapshot-lines { font-size: 0.86rem; padding: 16px 14px 4px; }
   .snap-key { min-width: 50px; }
   .snapshot-cta { margin: 12px 12px 16px; padding: 14px 16px; gap: 12px; }
   .snapshot-cta-sub { display: none; }
   .snapshot-cta-icon { width: 36px; height: 36px; }
+  .snapshot-stats {
+    grid-template-columns: repeat(2, 1fr);
+    margin: 8px 12px 4px;
+  }
+  .snap-stat:last-child { grid-column: 1 / -1; }
+  .snap-stat { padding: 12px 6px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .snapshot-cta,
   .snapshot-cta-glow { animation: none !important; }
   .snap-line { opacity: 1; transform: none; }
+  .snapshot-stats { opacity: 1; transform: none; }
 }
 
 /* ---------- Holographic avatar ---------- */

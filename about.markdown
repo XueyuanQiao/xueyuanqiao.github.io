@@ -93,27 +93,86 @@ permalink: /about.html
         </div>
 
         <ol class="snapshot-lines" data-snapshot-lines>
-            <li class="snap-line" style="--d:0">
-                <span class="snap-key">role</span>
-                <span class="snap-val" data-text="十年全栈测试架构师 · AI 时代全栈开发者"></span>
+            <li class="snap-line">
+                <span class="snap-key">whoami</span>
+                <span class="snap-val" data-text="乔学元 · 十年全栈测试架构师 · AI 时代全栈开发者"></span>
             </li>
-            <li class="snap-line" style="--d:1">
+            <li class="snap-line">
+                <span class="snap-key">edu</span>
+                <span class="snap-val" data-text="北京科技大学 · 计算机科学与技术（2012—2016）"></span>
+            </li>
+            <li class="snap-line">
                 <span class="snap-key">path</span>
-                <span class="snap-val" data-text="百度 → 蚂蚁金融级 → 腾展 AI Phone → 菜鸟无人车 L4"></span>
+                <span class="snap-val" data-text="百度（测试 → 研发）→ 蚂蚁金融级 → 腾展 AI Phone → 菜鸟无人车 L4"></span>
             </li>
-            <li class="snap-line" style="--d:2">
-                <span class="snap-key">ai</span>
-                <span class="snap-val" data-text="LLM-as-a-Judge 把同声传译的翻译质量做成可回归的批量验证"></span>
+            <li class="snap-line">
+                <span class="snap-key">baidu</span>
+                <span class="snap-val" data-text="大搜索亿级 PV 检索链路质量保障，从测试走向研发，奠定『研发视角重塑质量』方法论"></span>
             </li>
-            <li class="snap-line" style="--d:3">
+            <li class="snap-line">
+                <span class="snap-key">ant</span>
+                <span class="snap-val" data-text="支付宝核心 QA Owner，护航个人养老金国家级项目 + 养老基金核心资金链路"></span>
+            </li>
+            <li class="snap-line">
+                <span class="snap-key">aiphone</span>
+                <span class="snap-val" data-text="腾展 AI Phone 测试负责人，负责 App 端 + 服务端 VOIP/ASR/翻译/TTS 全链路质量"></span>
+            </li>
+            <li class="snap-line">
+                <span class="snap-key">ai·eval</span>
+                <span class="snap-val" data-text="LLM-as-a-Judge 把同声传译翻译准确性做成可复用、可回归的批量验证"></span>
+            </li>
+            <li class="snap-line">
+                <span class="snap-key">cainiao</span>
+                <span class="snap-val" data-text="深入 L4 无人配送车质量体系，学习无人车专业体系的同时持续思考与探索"></span>
+            </li>
+            <li class="snap-line">
                 <span class="snap-key">build</span>
-                <span class="snap-val" data-text="Stitch / Claude Design 做设计 + Vibe Coding 写前后端，独立交付无人车质量中台"></span>
+                <span class="snap-val" data-text="Stitch / Claude Design 做设计 + Vibe Coding 写前后端，从 0-1 独立交付无人车质量中台"></span>
             </li>
-            <li class="snap-line" style="--d:4">
+            <li class="snap-line">
+                <span class="snap-key">ci/cd</span>
+                <span class="snap-val" data-text="阿里云云效流水线打通 CI/CD，一键部署到 SAE"></span>
+            </li>
+            <li class="snap-line">
+                <span class="snap-key">stack</span>
+                <span class="snap-val" data-text="Python · Java · Ruby · LLM · Pytest · Selenium · 全链路压测 · 混沌工程"></span>
+            </li>
+            <li class="snap-line">
+                <span class="snap-key">tools</span>
+                <span class="snap-val" data-text="Kiro · Cursor · Claude Code · Codex · Antigravity · NotebookLM"></span>
+            </li>
+            <li class="snap-line">
+                <span class="snap-key">mission</span>
+                <span class="snap-val" data-text="让 AI 成为质量工程的『第一公民』，而不是事后补丁"></span>
+            </li>
+            <li class="snap-line">
                 <span class="snap-key">creed</span>
-                <span class="snap-val" data-text="任何新能力，必须在真实业务里跑通一次，才算「学过」"></span>
+                <span class="snap-val" data-text="任何新能力，必须在真实业务里跑通一次，才算『学过』"></span>
             </li>
         </ol>
+
+        <div class="snapshot-stats" data-snapshot-stats>
+            <div class="snap-stat">
+                <span class="snap-stat-value" data-counter="{{ site.posts.size }}">0</span>
+                <span class="snap-stat-label">已发布文章</span>
+            </div>
+            <div class="snap-stat">
+                <span class="snap-stat-value" data-counter="{{ site.categories.size }}">0</span>
+                <span class="snap-stat-label">主题分类</span>
+            </div>
+            <div class="snap-stat">
+                <span class="snap-stat-value" data-counter="10">0</span>
+                <span class="snap-stat-label">质量工程年限</span>
+            </div>
+            <div class="snap-stat">
+                <span class="snap-stat-value">4</span>
+                <span class="snap-stat-label">顶级业务历练</span>
+            </div>
+            <div class="snap-stat">
+                <span class="snap-stat-value snap-stat-glyph">∞</span>
+                <span class="snap-stat-label">每日咖啡续航</span>
+            </div>
+        </div>
 
         <a class="snapshot-cta" data-snapshot-cta href="{{ '/about/2026/02/22/intro.html' | relative_url }}">
             <span class="snapshot-cta-glow" aria-hidden="true"></span>
@@ -122,65 +181,12 @@ permalink: /about.html
             </span>
             <span class="snapshot-cta-text">
                 <span class="snapshot-cta-main">阅读完整个人概述</span>
-                <span class="snapshot-cta-sub">十年履历 · 技术栈 · AI 全栈实践全文</span>
+                <span class="snapshot-cta-sub">十年履历 · 完整技术栈 · AI 全栈实践全文</span>
             </span>
             <span class="snapshot-cta-arrow" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
             </span>
         </a>
-    </div>
-</section>
-
-<!-- System status / boot sequence -->
-<section class="landing-section about-system">
-    <header class="section-head">
-        <span class="section-eyebrow">// system.status</span>
-        <h2>当前频段 · System Status</h2>
-    </header>
-
-    <div class="about-system-grid">
-        <div class="about-terminal" aria-hidden="true">
-            <div class="terminal-bar">
-                <span class="t-dot t-dot-r"></span>
-                <span class="t-dot t-dot-y"></span>
-                <span class="t-dot t-dot-g"></span>
-                <span class="t-title">~/about — boot.sequence</span>
-            </div>
-            <div class="terminal-body">
-                <div class="t-line"><span class="t-prompt">▶</span> <span class="t-cmd">whoami</span></div>
-                <div class="t-line t-out">  xueyuan · <span class="t-hl">Quality Engineer</span> @ <span class="t-arg">AI-native era</span></div>
-                <div class="t-line"><span class="t-prompt">▶</span> <span class="t-cmd">stack.list</span> <span class="t-arg">--top 6</span></div>
-                <div class="t-line t-out">  Python · Java · Ruby · LLM · Pytest · Selenium</div>
-                <div class="t-line"><span class="t-prompt">▶</span> <span class="t-cmd">mission.show</span></div>
-                <div class="t-line t-out">  让 AI 成为质量工程的<span class="t-hl">第一公民</span>，而不是补丁。</div>
-                <div class="t-line"><span class="t-prompt">▶</span> <span class="t-cmd">ping</span> <span class="t-arg">latest.thoughts</span></div>
-                <div class="t-line t-out">  ✓ <span class="t-hl">{{ site.posts.size }}</span> articles · last <span class="t-hl">{{ site.posts.first.date | date: "%Y-%m-%d" }}</span></div>
-                <div class="t-line t-out">  <span class="t-dim">ready.</span> <span class="t-cursor">▍</span></div>
-            </div>
-        </div>
-
-        <div class="about-metrics">
-            <div class="about-metric">
-                <span class="m-label">Articles</span>
-                <span class="m-value" data-counter="{{ site.posts.size }}">0</span>
-                <span class="m-sub">已发布文章</span>
-            </div>
-            <div class="about-metric">
-                <span class="m-label">Categories</span>
-                <span class="m-value" data-counter="{{ site.categories.size }}">0</span>
-                <span class="m-sub">主题分类</span>
-            </div>
-            <div class="about-metric">
-                <span class="m-label">Years in QA</span>
-                <span class="m-value" data-counter="10">0</span>
-                <span class="m-sub">质量工程经验</span>
-            </div>
-            <div class="about-metric">
-                <span class="m-label">Coffee · ∞</span>
-                <span class="m-value about-metric-glyph">∞</span>
-                <span class="m-sub">每日续航来源</span>
-            </div>
-        </div>
     </div>
 </section>
 
