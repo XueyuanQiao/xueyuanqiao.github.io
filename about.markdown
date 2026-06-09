@@ -76,6 +76,61 @@ permalink: /about.html
     </div>
 </section>
 
+<!-- Core profile preview · 核心概述精简展示 + 打字逐行展开 -->
+<section class="landing-section about-snapshot" data-about-snapshot>
+    <header class="section-head">
+        <span class="section-eyebrow">// profile.preview</span>
+        <h2>三十秒看懂我 · Core Profile</h2>
+    </header>
+
+    <div class="snapshot-card" data-snapshot-card>
+        <div class="snapshot-glow" aria-hidden="true"></div>
+        <div class="snapshot-bar">
+            <span class="t-dot t-dot-r"></span>
+            <span class="t-dot t-dot-y"></span>
+            <span class="t-dot t-dot-g"></span>
+            <span class="snapshot-bar-title">~/profile — cat core.profile</span>
+        </div>
+
+        <ol class="snapshot-lines" data-snapshot-lines>
+            <li class="snap-line" style="--d:0">
+                <span class="snap-key">role</span>
+                <span class="snap-val" data-text="十年全栈测试架构师 · AI 时代全栈开发者"></span>
+            </li>
+            <li class="snap-line" style="--d:1">
+                <span class="snap-key">path</span>
+                <span class="snap-val" data-text="百度 → 蚂蚁金融级 → 腾展 AI Phone → 菜鸟无人车 L4"></span>
+            </li>
+            <li class="snap-line" style="--d:2">
+                <span class="snap-key">ai</span>
+                <span class="snap-val" data-text="LLM-as-a-Judge 把同声传译的翻译质量做成可回归的批量验证"></span>
+            </li>
+            <li class="snap-line" style="--d:3">
+                <span class="snap-key">build</span>
+                <span class="snap-val" data-text="Stitch / Claude Design 做设计 + Vibe Coding 写前后端，独立交付无人车质量中台"></span>
+            </li>
+            <li class="snap-line" style="--d:4">
+                <span class="snap-key">creed</span>
+                <span class="snap-val" data-text="任何新能力，必须在真实业务里跑通一次，才算「学过」"></span>
+            </li>
+        </ol>
+
+        <a class="snapshot-cta" data-snapshot-cta href="{{ '/about/2026/02/22/intro.html' | relative_url }}">
+            <span class="snapshot-cta-glow" aria-hidden="true"></span>
+            <span class="snapshot-cta-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M8 9h2"/></svg>
+            </span>
+            <span class="snapshot-cta-text">
+                <span class="snapshot-cta-main">阅读完整个人概述</span>
+                <span class="snapshot-cta-sub">十年履历 · 技术栈 · AI 全栈实践全文</span>
+            </span>
+            <span class="snapshot-cta-arrow" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </span>
+        </a>
+    </div>
+</section>
+
 <!-- System status / boot sequence -->
 <section class="landing-section about-system">
     <header class="section-head">
@@ -261,9 +316,9 @@ permalink: /about.html
                     <span class="tl-tag">菜鸟无人车 · L4</span>
                 </div>
                 <h3>L4 无人配送车的端到端质量</h3>
-                <p>把过往十年沉淀的测试架构方法论与 AI 能力，带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"——在这里第一次真正理解<em>"安全是工程问题"</em>。</p>
+                <p>把过往十年沉淀的测试架构方法论带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"。在系统学习无人车专业体系的同时，用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起无人车质量中台，经云效流水线 CI/CD 部署到 SAE——在这里第一次真正理解<em>"安全是工程问题"</em>。</p>
                 <div class="tl-chips">
-                    <span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>OTA</span><span>Agent Eval</span>
+                    <span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>质量中台</span><span>CI/CD</span>
                 </div>
             </div>
         </li>
@@ -272,12 +327,12 @@ permalink: /about.html
             <div class="tl-card">
                 <div class="tl-meta">
                     <span class="tl-year">2025 — 2026</span>
-                    <span class="tl-tag">海外通讯 · 同声传译</span>
+                    <span class="tl-tag">腾展 · AI Phone</span>
                 </div>
                 <h3>第一次把 AI 跑进真实链路</h3>
-                <p>负责海外通讯同声传译产品的质量保障，深入 <strong>ASR / TTS</strong> 端到端语音链路。在这里第一次系统性接触 AI——把语音识别、机器翻译、语音合成这条流水线的<strong>语义指标</strong>纳入测试体系，从此明白 AI 系统的质量必须用"评估"而不是"断言"来衡量。</p>
+                <p>作为 <strong>AI Phone</strong> 的测试负责人，负责 App 端 + 服务端的质量与稳定性，覆盖 <strong>VOIP / ASR / 翻译 / TTS</strong> 全链路。在这里第一次系统性接触 AI——用 <strong>LLM-as-a-Judge</strong> 把同声传译的翻译准确性做成可复用、可回归的批量验证，从此明白 AI 系统的质量必须用"评估"而不是"断言"来衡量。</p>
                 <div class="tl-chips">
-                    <span>ASR</span><span>TTS</span><span>Speech Quality</span><span>AI Eval</span>
+                    <span>VOIP</span><span>ASR</span><span>TTS</span><span>LLM-as-a-Judge</span>
                 </div>
             </div>
         </li>

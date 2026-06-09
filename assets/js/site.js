@@ -808,7 +808,66 @@
     initRadar();
     initTimeline();
     initManifestoSpotlight();
+    initSnapshot();
   });
+
+  // ---------- Core profile snapshot · 逐行打字展开 + 揭示 CTA ----------
+  function initSnapshot() {
+    var section = doc.querySelector("[data-about-snapshot]");
+    if (!section) return;
+    var lines = section.querySelectorAll(".snap-line");
+    if (!lines.length) return;
+
+    // 减少动效偏好 / 无 IO 支持：直接呈现全部内容
+    if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+      lines.forEach(function (li) {
+        var val = li.querySelector(".snap-val");
+        if (val) val.textContent = val.getAttribute("data-text") || "";
+      });
+      section.classList.add("is-done");
+      return;
+    }
+
+    var started = false;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting && !started) {
+          started = true;
+          io.unobserve(e.target);
+          runSequence();
+        }
+      });
+    }, { threshold: 0.35 });
+    io.observe(section);
+
+    function runSequence() {
+      section.classList.add("is-typing");
+      typeLine(0);
+    }
+
+    function typeLine(idx) {
+      if (idx >= lines.length) {
+        section.classList.remove("is-typing");
+        section.classList.add("is-done");
+        return;
+      }
+      var li = lines[idx];
+      var val = li.querySelector(".snap-val");
+      var full = (val && val.getAttribute("data-text")) || "";
+      li.classList.add("is-active");
+      var ci = 0;
+      (function step() {
+        ci++;
+        val.textContent = full.slice(0, ci);
+        if (ci < full.length) {
+          setTimeout(step, 24 + Math.random() * 34);
+        } else {
+          li.classList.remove("is-active");
+          setTimeout(function () { typeLine(idx + 1); }, 230);
+        }
+      })();
+    }
+  }
 
   // ---------- Holographic rain (matrix-style) ----------
   function initHoloRain() {
