@@ -5,6 +5,8 @@ date: 2026-02-22 03:22:04 +0800
 excerpt: 资深全栈测试架构师 · AI 原生质量体系践行者 · 多语言研发与测试架构设计专家
 categories: about
 permalink: /about/2026/02/22/intro.html
+featured: true
+featured_rank: 1
 ---
 
 > **资深全栈测试架构师 · AI Native Quality Engineer**

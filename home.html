@@ -29,26 +29,45 @@ permalink: /archive.html
     </div>
 </section>
 
-{% assign posts_by_year = site.posts | group_by_exp: "p", "p.date | date: '%Y'" %}
-{% for group in posts_by_year %}
-<h2 class="section-title">{{ group.name }}</h2>
-<div class="post-list">
-    {% for post in group.items %}
-    <article class="post-card">
-        <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
-        <p class="excerpt">{{ post.excerpt | strip_html | strip_newlines | truncate: 160 }}</p>
-        <div class="post-meta">
-            <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y-%m-%d" }}</time>
-            {% if post.categories.size > 0 %}
-            <span class="sep">·</span>
-            <span class="tags">
-                {% for category in post.categories %}
-                <a class="tag" href="{{ '/category/' | relative_url }}?tag={{ category | url_encode }}">{{ category }}</a>
-                {% endfor %}
-            </span>
-            {% endif %}
+{% assign all_posts = site.posts %}
+<div class="archive" data-archive>
+    <div class="archive-toolbar">
+        <div class="archive-summary" data-archive-summary aria-live="polite">
+            共 {{ all_posts.size }} 篇
         </div>
-    </article>
-    {% endfor %}
+        <label class="page-size">
+            <span>每页</span>
+            <span class="page-size-select">
+                <select data-page-size aria-label="每页文章数量">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </span>
+            <span>篇</span>
+        </label>
+    </div>
+
+    <div class="post-list" data-archive-list>
+        {% for post in all_posts %}
+        <article class="post-card" data-post-item data-year="{{ post.date | date: '%Y' }}">
+            <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+            <p class="excerpt">{{ post.excerpt | strip_html | strip_newlines | truncate: 160 }}</p>
+            <div class="post-meta">
+                <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y-%m-%d" }}</time>
+                {% if post.categories.size > 0 %}
+                <span class="sep">·</span>
+                <span class="tags">
+                    {% for category in post.categories %}
+                    <a class="tag" href="{{ '/category/' | relative_url }}?tag={{ category | url_encode }}">{{ category }}</a>
+                    {% endfor %}
+                </span>
+                {% endif %}
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+
+    <nav class="pagination" data-archive-pager aria-label="文章分页" hidden></nav>
 </div>
-{% endfor %}

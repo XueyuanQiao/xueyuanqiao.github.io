@@ -164,6 +164,9 @@
     // Article-only enhancements
     enhanceArticle();
 
+    // Archive pagination (文章库分页：10/20/50 每页)
+    initArchivePagination();
+
     // Landing-only enhancements run via a separate IIFE listener.
   });
 
@@ -290,6 +293,146 @@
     doc.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && lb) lb.classList.remove('is-open');
     });
+  }
+
+  // ========== Archive pagination (文章库分页) ==========
+  // 客户端分页：一次渲染全部卡片，按每页 10/20/50 显示，支持翻页。
+  function initArchivePagination() {
+    var root = doc.querySelector('[data-archive]');
+    if (!root) return;
+
+    var list = root.querySelector('[data-archive-list]');
+    var pager = root.querySelector('[data-archive-pager]');
+    var summary = root.querySelector('[data-archive-summary]');
+    var select = root.querySelector('[data-page-size]');
+    if (!list || !pager) return;
+
+    var items = Array.prototype.slice.call(list.querySelectorAll('[data-post-item]'));
+    var total = items.length;
+    var ALLOWED = [10, 20, 50];
+    var STORE_KEY = 'aurora-archive-pagesize';
+
+    // 初始每页数量：localStorage 记忆 → 默认 10
+    var pageSize = 10;
+    try {
+      var saved = parseInt(localStorage.getItem(STORE_KEY), 10);
+      if (ALLOWED.indexOf(saved) !== -1) pageSize = saved;
+    } catch (e) {}
+    if (select) select.value = String(pageSize);
+
+    var page = 1;
+
+    function totalPages() {
+      return Math.max(1, Math.ceil(total / pageSize));
+    }
+
+    function clampPage() {
+      var max = totalPages();
+      if (page > max) page = max;
+      if (page < 1) page = 1;
+    }
+
+    function render() {
+      clampPage();
+      var start = (page - 1) * pageSize;
+      var end = start + pageSize;
+
+      for (var i = 0; i < total; i++) {
+        items[i].hidden = (i < start || i >= end);
+      }
+
+      if (summary) {
+        if (total === 0) {
+          summary.textContent = '共 0 篇';
+        } else {
+          var from = start + 1;
+          var to = Math.min(end, total);
+          summary.textContent = '共 ' + total + ' 篇 · 第 ' + from + '–' + to + ' 篇';
+        }
+      }
+
+      renderPager();
+    }
+
+    function makeBtn(label, targetPage, opts) {
+      opts = opts || {};
+      var el;
+      if (opts.current) {
+        el = doc.createElement('em');
+        el.setAttribute('aria-current', 'page');
+      } else if (opts.disabled) {
+        el = doc.createElement('span');
+        el.setAttribute('aria-disabled', 'true');
+      } else {
+        el = doc.createElement('a');
+        el.href = '#';
+        el.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          page = targetPage;
+          render();
+          // 翻页后滚动到列表顶部，避免停在页面底部
+          var top = root.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        });
+      }
+      if (opts.ellipsis) el.classList.add('is-ellipsis');
+      el.textContent = label;
+      return el;
+    }
+
+    // 计算要显示的页码（首尾 + 当前页附近，过多则省略）
+    function pageWindow(max) {
+      var pages = [];
+      if (max <= 7) {
+        for (var i = 1; i <= max; i++) pages.push(i);
+        return pages;
+      }
+      pages.push(1);
+      var lo = Math.max(2, page - 1);
+      var hi = Math.min(max - 1, page + 1);
+      if (lo > 2) pages.push('…');
+      for (var j = lo; j <= hi; j++) pages.push(j);
+      if (hi < max - 1) pages.push('…');
+      pages.push(max);
+      return pages;
+    }
+
+    function renderPager() {
+      var max = totalPages();
+      pager.innerHTML = '';
+
+      // 只有一页时隐藏分页器
+      if (max <= 1) {
+        pager.hidden = true;
+        return;
+      }
+      pager.hidden = false;
+
+      pager.appendChild(makeBtn('‹ 上一页', page - 1, { disabled: page === 1 }));
+
+      pageWindow(max).forEach(function (p) {
+        if (p === '…') {
+          pager.appendChild(makeBtn('…', 0, { disabled: true, ellipsis: true }));
+        } else {
+          pager.appendChild(makeBtn(String(p), p, { current: p === page }));
+        }
+      });
+
+      pager.appendChild(makeBtn('下一页 ›', page + 1, { disabled: page === max }));
+    }
+
+    if (select) {
+      select.addEventListener('change', function () {
+        var v = parseInt(select.value, 10);
+        if (ALLOWED.indexOf(v) === -1) v = 10;
+        pageSize = v;
+        page = 1;
+        try { localStorage.setItem(STORE_KEY, String(v)); } catch (e) {}
+        render();
+      });
+    }
+
+    render();
   }
 
   function slugify(text) {
