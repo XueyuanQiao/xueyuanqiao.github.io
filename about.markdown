@@ -98,52 +98,44 @@ permalink: /about.html
                 <span class="snap-val" data-text="乔雪源 · 十年全栈测试架构师 · AI 时代全栈开发者"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">edu</span>
-                <span class="snap-val" data-text="北京科技大学 · 计算机科学与技术（2012—2016）"></span>
+                <span class="snap-key">edge</span>
+                <span class="snap-val" data-text="以研发视角重塑质量底座：QA → RD → 测试架构 的复合能力"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">path</span>
-                <span class="snap-val" data-text="百度（测试 → 研发）→ 蚂蚁金融级 → 腾展 AI Phone → 菜鸟无人车 L4"></span>
+                <span class="snap-key">testing</span>
+                <span class="snap-val" data-text="白盒 / 灰盒 / 黑盒 + 静态 / 动态 / 模糊 / 混沌 + 仿真 / 路测 全维度方法论"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">baidu</span>
-                <span class="snap-val" data-text="大搜索亿级 PV 检索链路质量保障，从测试走向研发，奠定『研发视角重塑质量』方法论"></span>
+                <span class="snap-key">stability</span>
+                <span class="snap-val" data-text="全链路压测 · 混沌工程 · 容灾演练 · 金融级高并发高可用稳定性"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">ant</span>
-                <span class="snap-val" data-text="支付宝核心 QA Owner，护航个人养老金国家级项目 + 养老基金核心资金链路"></span>
+                <span class="snap-key">ai</span>
+                <span class="snap-val" data-text="LLM-as-a-Judge · RAG · Prompt 工程 · 模型选型与端到端评估管线设计"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">aiphone</span>
-                <span class="snap-val" data-text="腾展 AI Phone 测试负责人，负责 App 端 + 服务端 VOIP/ASR/翻译/TTS 全链路质量"></span>
+                <span class="snap-key">fullstack</span>
+                <span class="snap-val" data-text="Stitch / Claude Design 做设计 + Vibe Coding 一体化交付前后端工程"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">ai·eval</span>
-                <span class="snap-val" data-text="LLM-as-a-Judge 把同声传译翻译准确性做成可复用、可回归的批量验证"></span>
+                <span class="snap-key">platform</span>
+                <span class="snap-val" data-text="从 0-1 搭测试平台 / 质量中台：CI/CD + 质量门禁 + 度量数仓 + 数据工厂"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">cainiao</span>
-                <span class="snap-val" data-text="深入 L4 无人配送车质量体系，学习无人车专业体系的同时持续思考与探索"></span>
+                <span class="snap-key">langs</span>
+                <span class="snap-val" data-text="Python · Java · C/C++ · PHP · Go / Rust / Shell 多语言白盒能力"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">build</span>
-                <span class="snap-val" data-text="Stitch / Claude Design 做设计 + Vibe Coding 写前后端，从 0-1 独立交付无人车质量中台"></span>
+                <span class="snap-key">infra</span>
+                <span class="snap-val" data-text="Redis / Tair · RocketMQ / Kafka · Dubbo / SOFA · JVM 深度排查 · Linux 链路诊断"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">ci/cd</span>
-                <span class="snap-val" data-text="阿里云云效流水线打通 CI/CD，一键部署到 SAE"></span>
+                <span class="snap-key">ai·flow</span>
+                <span class="snap-val" data-text="Kiro · Cursor · Claude Code · Codex · Antigravity · NotebookLM 编程 Agent 协同"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">stack</span>
-                <span class="snap-val" data-text="Python · Java · Ruby · LLM · Pytest · Selenium · 全链路压测 · 混沌工程"></span>
-            </li>
-            <li class="snap-line">
-                <span class="snap-key">tools</span>
-                <span class="snap-val" data-text="Kiro · Cursor · Claude Code · Codex · Antigravity · NotebookLM"></span>
-            </li>
-            <li class="snap-line">
-                <span class="snap-key">mission</span>
-                <span class="snap-val" data-text="让 AI 成为质量工程的『第一公民』，而不是事后补丁"></span>
+                <span class="snap-key">proof</span>
+                <span class="snap-val" data-text="护航蚂蚁个人养老金国家级项目 · 腾展 AI Phone 测试负责人 · 菜鸟无人车质量中台"></span>
             </li>
             <li class="snap-line">
                 <span class="snap-key">creed</span>
