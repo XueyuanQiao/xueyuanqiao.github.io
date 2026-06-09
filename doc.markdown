@@ -12,7 +12,7 @@ hide_header: true
 
     <div class="hero-stats">
         <div class="stat">
-            <span class="num" data-counter="157">0</span>
+            <span class="num" data-counter="159">0</span>
             <span class="label">Links</span>
         </div>
         <div class="stat">
@@ -49,8 +49,10 @@ hide_header: true
     <li><a href="https://kiro.dev" target="_blank" rel="noopener"><span class="link-name">Kiro</span><span class="link-desc">AWS 出品，Spec / Vibe 双模式 IDE</span></a></li>
     <li><a href="https://cursor.com" target="_blank" rel="noopener"><span class="link-name">Cursor</span><span class="link-desc">AI 原生代码编辑器，多文件编辑能力强</span></a></li>
     <li><a href="https://github.com/features/copilot" target="_blank" rel="noopener"><span class="link-name">GitHub Copilot</span><span class="link-desc">最早把 AI 带进编辑器的产品</span></a></li>
-    <li><a href="https://windsurf.com" target="_blank" rel="noopener"><span class="link-name">Windsurf</span><span class="link-desc">原 Codeium，Cascade Agent 流畅好用</span></a></li>
+    <li><a href="https://windsurf.com" target="_blank" rel="noopener"><span class="link-name">Windsurf</span><span class="link-desc">原 Codeium，已被 Cognition（Devin 团队）收购</span></a></li>
     <li><a href="https://www.anthropic.com/claude-code" target="_blank" rel="noopener"><span class="link-name">Claude Code</span><span class="link-desc">Anthropic 官方 CLI 编程代理</span></a></li>
+    <li><a href="https://openai.com/codex" target="_blank" rel="noopener"><span class="link-name">Codex</span><span class="link-desc">OpenAI 出品，CLI / 云端 / IDE 三栖编码 Agent</span></a></li>
+    <li><a href="https://antigravity.google" target="_blank" rel="noopener"><span class="link-name">Antigravity</span><span class="link-desc">Google 出品，Agent 优先的开发平台（2.0 转独立桌面端）</span></a></li>
     <li><a href="https://cline.bot" target="_blank" rel="noopener"><span class="link-name">Cline</span><span class="link-desc">开源 VS Code Agent 插件</span></a></li>
     <li><a href="https://aider.chat" target="_blank" rel="noopener"><span class="link-name">Aider</span><span class="link-desc">在终端里 pair-programming 的开源工具</span></a></li>
     <li><a href="https://www.trae.ai" target="_blank" rel="noopener"><span class="link-name">Trae</span><span class="link-desc">字节出品的 AI IDE</span></a></li>
@@ -85,7 +87,7 @@ hide_header: true
     <li><a href="https://www.recraft.ai" target="_blank" rel="noopener"><span class="link-name">Recraft</span><span class="link-desc">支持矢量、品牌一致性强</span></a></li>
     <li><a href="https://www.krea.ai" target="_blank" rel="noopener"><span class="link-name">Krea</span><span class="link-desc">实时 AI 画板，体验流畅</span></a></li>
     <li><a href="https://www.figma.com" target="_blank" rel="noopener"><span class="link-name">Figma</span><span class="link-desc">协作式 UI 设计标杆，Make / AI 已内置</span></a></li>
-    <li><a href="https://stitch.withgoogle.com" target="_blank" rel="noopener"><span class="link-name">Stitch</span><span class="link-desc">Google Labs 出品，提示直接生成 UI 与可导出 Figma 稿</span></a></li>
+    <li><a href="https://stitch.withgoogle.com" target="_blank" rel="noopener"><span class="link-name">Stitch</span><span class="link-desc">Google Labs 出品，Gemini 3 驱动，多屏无限画布生成 UI 并导出 Figma</span></a></li>
     <li><a href="https://www.canva.com/magic-studio/" target="_blank" rel="noopener"><span class="link-name">Canva Magic Studio</span><span class="link-desc">面向运营 / 内容创作者的一站式设计</span></a></li>
     <li><a href="https://stability.ai" target="_blank" rel="noopener"><span class="link-name">Stability AI</span><span class="link-desc">SD / SDXL 生态官方</span></a></li>
   </ul>
@@ -95,7 +97,7 @@ hide_header: true
 <div class="link-category">
   <h2><span class="link-cate-emoji">🎬</span>AI 视频</h2>
   <ul>
-    <li><a href="https://sora.com" target="_blank" rel="noopener"><span class="link-name">Sora</span><span class="link-desc">OpenAI 视频生成</span></a></li>
+    <li><a href="https://grok.com" target="_blank" rel="noopener"><span class="link-name">Grok Imagine</span><span class="link-desc">xAI 出品，图 / 文生视频带原生音频，Sora 退场后强势补位</span></a></li>
     <li><a href="https://runwayml.com" target="_blank" rel="noopener"><span class="link-name">Runway</span><span class="link-desc">老牌 AI 视频，Gen 系列持续更新</span></a></li>
     <li><a href="https://pika.art" target="_blank" rel="noopener"><span class="link-name">Pika</span><span class="link-desc">短片创意社区</span></a></li>
     <li><a href="https://lumalabs.ai/dream-machine" target="_blank" rel="noopener"><span class="link-name">Luma Dream Machine</span><span class="link-desc">连贯运动出色</span></a></li>
@@ -209,7 +211,7 @@ hide_header: true
     <li><a href="https://svelte.dev" target="_blank" rel="noopener"><span class="link-name">Svelte / SvelteKit</span><span class="link-desc">编译时框架，体验干净</span></a></li>
     <li><a href="https://www.solidjs.com" target="_blank" rel="noopener"><span class="link-name">SolidJS</span><span class="link-desc">细粒度响应式</span></a></li>
     <li><a href="https://astro.build" target="_blank" rel="noopener"><span class="link-name">Astro</span><span class="link-desc">内容站点首选</span></a></li>
-    <li><a href="https://remix.run" target="_blank" rel="noopener"><span class="link-name">Remix</span><span class="link-desc">原生 Web 标准 + Loader / Action</span></a></li>
+    <li><a href="https://remix.run" target="_blank" rel="noopener"><span class="link-name">Remix</span><span class="link-desc">已并入 React Router v7 framework mode</span></a></li>
     <li><a href="https://tailwindcss.com" target="_blank" rel="noopener"><span class="link-name">Tailwind CSS</span><span class="link-desc">原子化 CSS 事实标准</span></a></li>
     <li><a href="https://ui.shadcn.com" target="_blank" rel="noopener"><span class="link-name">shadcn/ui</span><span class="link-desc">"复制组件源码"型设计系统</span></a></li>
     <li><a href="https://www.radix-ui.com" target="_blank" rel="noopener"><span class="link-name">Radix UI</span><span class="link-desc">无样式可访问的底座</span></a></li>
