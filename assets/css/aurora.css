@@ -2419,6 +2419,8 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 .t-line:nth-child(5) { animation-delay: 2.1s; }
 .t-line:nth-child(6) { animation-delay: 2.5s; }
 .t-line:nth-child(7) { animation-delay: 2.9s; }
+.t-line:nth-child(8) { animation-delay: 3.3s; }
+.t-line:nth-child(9) { animation-delay: 3.7s; }
 
 @keyframes t-fade {
   from { opacity: 0; transform: translateY(4px); }

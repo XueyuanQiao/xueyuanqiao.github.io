@@ -198,7 +198,7 @@ permalink: /about.html
         <article class="manifesto-card" style="--accent: 89,227,255">
             <div class="manifesto-num">02</div>
             <h3>测试是产品力</h3>
-            <p>稳定性不是冷冰冰的数字，是用户对你产品的信任。金融级 99.99% 背后是工程审美与笨功夫。</p>
+            <p>稳定性不是冷冰冰的数字，是用户对你产品的信任。金融级 99.99% 背后，是工程审美，也是日复一日打磨出来的扎实功底。</p>
         </article>
         <article class="manifesto-card" style="--accent: 184,136,255">
             <div class="manifesto-num">03</div>
