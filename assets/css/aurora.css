@@ -1339,7 +1339,8 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 }
 
 .article-content figure.post-figure figcaption,
-.article-content p.post-figure + .post-figure-caption {
+.article-content p.post-figure + .post-figure-caption,
+.article-content .post-gallery + .post-figure-caption {
   display: block;
   margin: 12px auto 0;
   font-size: 0.84em;

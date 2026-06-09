@@ -42,6 +42,22 @@ featured_rank: 1
 - **全栈交付层**：完整掌握 AI 时代的全栈开发链路——从用 **Stitch / Claude Design** 做产品与界面设计，到借助 **Vibe Coding** 把设计稿直接转化为前端与后端工程代码，独立完成"设计 → 前端 → 后端 → 联调 → 上线"的端到端闭环。菜鸟无人车质量中台正是这套方法的产物：一个人用 AI 把过去需要设计、前端、后端多角色协作的工作量收敛到一条流水线上，让"想得到"与"做得出"之间的距离大幅缩短。
 - **业务落地层**：在 **腾展 AI Phone**（VOIP + ASR + 翻译 + TTS 全链路）的同声传译场景里，构建以 **WER 为核心指标** 的自动化评估 pipeline，并基于 **LLM-as-a-Judge** 设计翻译准确性的批量验证方案，用大模型替代易碎的硬编码 Diff，对海量译文做可复用、可回归的质量评估——这是我目前真正落到业务闭环的一次 AI 实践。在评测体系上，持续系统学习主流 Agent 评估框架（**Ragas / DeepEval / Langfuse / LangSmith**），并在实际业务中落地 **benchmark、LLM-as-a-Judge** 等智能化评测方法，推动测试流程向数据驱动与智能化演进。
 
+下面这套 **菜鸟无人车质量中台** 就是"全栈交付层"的代表作——从产品设计、登录鉴权、前端界面到后端服务与流水线，全部由我一个人借助 AI 独立完成，没有第二个人参与设计或开发：
+
+<div class="post-gallery" markdown="0">
+  <figure>
+    <img src="/images/26060901.png" alt="菜鸟无人车质量中台登录页：玻璃拟态风格的登录界面">
+    <figcaption>① 登录页 · 一个人完成的产品设计与前端实现</figcaption>
+  </figure>
+  <figure>
+    <img src="/images/26060902.png" alt="菜鸟无人车质量中台仪表盘：质量度量与测试执行的可视化总览">
+    <figcaption>② 仪表盘 · 质量度量与执行总览，前后端一体自研</figcaption>
+  </figure>
+</div>
+<p class="post-figure-caption">菜鸟无人车质量中台 · 从设计到上线由一人独立交付（Stitch 设计 + Vibe Coding 前后端 + 阿里云云效流水线部署到 SAE）</p>
+
+它的技术栈也能说明"一个人全栈"的含量——后端 **FastAPI + Python 3.11**，配 **SQLAlchemy 2.0（async）+ Alembic** 做异步 ORM 与数据库迁移，**APScheduler** 跑异步定时任务；前端 **React 18 + TypeScript + Vite 6**，**Ant Design 5** 搭管理界面、**Zustand** 管状态、**React Router 6** 管路由，并用 **Three.js / react-three-fiber** 做 3D 可视化；数据与中间件全部跑在阿里云上——**MySQL 8.0（RDS）** 做主存储、**Tair**（Redis 兼容）做缓存、**EMQX** 作 MQTT Broker 承接车端实时消息；最后 **Docker 单阶段构建 → SAE** 完成部署。一条从前端、后端、数据库到车云消息链路的完整栈，全部由我一个人选型、落地、上线。
+
 我更看重的不是"用过多少工具"，而是 **是否真的在每个项目里因为 AI 而做出了过去做不到的事**——用更小的团队覆盖更大的质量域、用更短的周期完成更复杂的验证、把原本依赖经验的判断沉淀成可复用的资产。
 
 ### 六、金融级高并发稳定性专家
