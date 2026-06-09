@@ -95,7 +95,7 @@ permalink: /about.html
         <ol class="snapshot-lines" data-snapshot-lines>
             <li class="snap-line">
                 <span class="snap-key">whoami</span>
-                <span class="snap-val" data-text="乔雪源 · 十年全栈测试架构师 · AI 时代全栈开发者"></span>
+                <span class="snap-val" data-text="乔雪源 · 十年全栈测试开发工程师 · AI 时代全栈开发者"></span>
             </li>
             <li class="snap-line">
                 <span class="snap-key">edge</span>
