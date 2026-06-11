@@ -40,7 +40,7 @@ permalink: /about.html
 
         <p class="about-typed">
             <span data-typed
-                  data-typed-strings='["十年质量工程师","AI Native 探索者","金融级稳定性玩家","Aurora 主题作者","好奇心驱动的写作者"]'>
+                  data-typed-strings='["全栈质量工程师","AI Native 探索者","金融级稳定性玩家","Aurora 主题作者","好奇心驱动的写作者"]'>
             </span><span class="caret">_</span>
         </p>
 
@@ -96,7 +96,7 @@ permalink: /about.html
         <ol class="snapshot-lines" data-snapshot-lines>
             <li class="snap-line">
                 <span class="snap-key">role</span>
-                <span class="snap-val" data-text="乔雪源 · 十年质量工程师 · 为驶入现实世界的 AI 守住安全与信任底线的人"></span>
+                <span class="snap-val" data-text="乔雪源 · 全栈质量工程师 · 为驶入现实世界的 AI 守住安全与信任底线的人"></span>
             </li>
             <li class="snap-line">
                 <span class="snap-key">context</span>
@@ -154,7 +154,7 @@ permalink: /about.html
             </span>
             <span class="snapshot-cta-text">
                 <span class="snapshot-cta-main">阅读完整个人概述</span>
-                <span class="snapshot-cta-sub">十年履历 · 完整技术栈 · AI 全栈实践全文</span>
+                <span class="snapshot-cta-sub">完整履历 · 技术栈全景 · AI 全栈实践全文</span>
             </span>
             <span class="snapshot-cta-arrow" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
@@ -283,7 +283,7 @@ permalink: /about.html
 <section class="landing-section about-timeline-section">
     <header class="section-head">
         <span class="section-eyebrow">// timeline</span>
-        <h2>这十年走过的路 · Career Trajectory</h2>
+        <h2>这些年走过的路 · Career Trajectory</h2>
     </header>
 
     <ol class="about-timeline" data-about-timeline>
@@ -295,7 +295,7 @@ permalink: /about.html
                     <span class="tl-tag">菜鸟无人车 · L4</span>
                 </div>
                 <h3>L4 无人配送车的端到端质量</h3>
-                <p>把过往十年沉淀的测试架构方法论带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"。在系统学习无人车专业体系的同时，用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起无人车质量中台，经云效流水线 CI/CD 部署到 SAE——在这里第一次真正理解<em>"安全是工程问题"</em>。</p>
+                <p>把过往沉淀的测试架构方法论带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"。无人车对我还是全新的领域，仿真 / 路测这些都才刚起步、仍在系统学习中；同时用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起无人车质量中台，经云效流水线 CI/CD 部署到 SAE——在这里第一次真正理解<em>"安全是工程问题"</em>。</p>
                 <div class="tl-chips">
                     <span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>质量中台</span><span>CI/CD</span>
                 </div>

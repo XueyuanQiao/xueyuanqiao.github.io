@@ -5,8 +5,6 @@ date: 2026-02-22 03:22:04 +0800
 excerpt: 资深全栈测试开发工程师 · AI 原生质量体系践行者 · 多语言研发与测试架构设计专家
 categories: about
 permalink: /about/2026/02/22/intro.html
-featured: true
-featured_rank: 1
 ---
 
 <div class="profile-hero" markdown="0">
@@ -30,13 +28,13 @@ featured_rank: 1
 ## 个人总结
 
 <div class="profile-panel" markdown="0" style="--accent: 124,140,255">
-  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span> 十年全栈质量治理积淀</div>
-  <p>深耕测试开发与质量工程领域十年，从 <strong>百度大搜索</strong> 起步，历经 <strong>蚂蚁集团金融级核心业务</strong>、<strong>腾展 AI Phone 全栈质量</strong> 的连续淬炼，当前在 <strong>菜鸟无人车</strong> 专注于 L4 级无人配送车的端到端质量体系建设。覆盖 Web、客户端、服务端、数据链路、算法模型、车端嵌入式六大战场，沉淀出一套完整的 <strong>白盒 / 灰盒 / 黑盒 + 静态 / 动态 / 模糊 / 混沌 + 仿真 / 路测</strong> 全维度测试方法论，能够穿透业务表象、深度参与并驱动研发全生命周期的质量治理。</p>
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span> 全栈质量治理积淀</div>
+  <p>深耕测试开发与质量工程领域多年，从 <strong>百度大搜索</strong> 起步，历经 <strong>蚂蚁集团金融级核心业务</strong>、<strong>腾展 AI Phone 全栈质量</strong> 的连续淬炼，当前在 <strong>菜鸟无人车</strong> 专注于 L4 级无人配送车的端到端质量体系建设。覆盖 Web、客户端、服务端、数据链路、算法模型、车端嵌入式六大战场，沉淀出一套完整的 <strong>白盒 / 灰盒 / 黑盒 + 静态 / 动态 / 模糊 / 混沌</strong> 全维度软件测试方法论；如今正把这套方法论延伸到无人车的 <strong>仿真 / 路测</strong> 等新场景——这一块我才刚起步，仍在系统学习中。</p>
 </div>
 
 <div class="profile-panel" markdown="0" style="--accent: 89,227,255">
   <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg></span> 教育背景 · 北京科技大学</div>
-  <p><strong>2012 — 2016 · 计算机科学与技术（本科）。</strong> 在科大计算机专业打下系统基础：数据结构与算法、操作系统、计算机网络、编译原理、数据库系统等核心课程，构建了从底层到应用的完整认知。这四年留下了 <strong>"啃硬骨头、拒绝糊弄"</strong> 的工程师底色——习惯把每个抽象概念落到代码里跑一遍才算理解，这种"动手验证"的方法论延续到了之后十年，也是我今天面对 AI、自动驾驶等复杂系统时，仍坚持"任何能力必须在真实场景里跑通一次才算学过"的源头。</p>
+  <p><strong>2012 — 2016 · 计算机科学与技术（本科）。</strong> 在科大计算机专业打下系统基础：数据结构与算法、操作系统、计算机网络、编译原理、数据库系统等核心课程，构建了从底层到应用的完整认知。这四年留下了 <strong>"啃硬骨头、拒绝糊弄"</strong> 的工程师底色——习惯把每个抽象概念落到代码里跑一遍才算理解，这种"动手验证"的方法论延续到之后的职业生涯，也是我今天面对 AI、自动驾驶等复杂系统时，仍坚持"任何能力必须在真实场景里跑通一次才算学过"的源头。</p>
 </div>
 
 <div class="pf-h" style="--accent: 124,140,255; font-size:1.18rem; margin:2.2em 0 .3em;"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span> 职业履历 · 行业级业务的实战版图</div>
@@ -46,7 +44,7 @@ featured_rank: 1
     <div class="pf-card" data-tilt>
       <div class="pf-meta"><span class="pf-year">2026 — Now</span><span class="pf-tag">菜鸟无人车 · L4</span></div>
       <h4>L4 无人配送车的端到端质量</h4>
-      <p>深入 <strong>L4 级无人配送车</strong> 这一最前沿的具身智能场景，质量保障对象从"软件系统"扩展到"软件 + 硬件 + 物理世界"。在系统性学习自动驾驶专业体系（仿真测试、路测验证、感知 / 规划 / 控制全链路质量、车云协同、OTA 灰度）的同时，用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起菜鸟无人车质量中台，经阿里云云效流水线 CI/CD 部署到 SAE——在这里第一次真正理解"安全是工程问题"。</p>
+      <p>刚踏入 <strong>L4 级无人配送车</strong> 这一最前沿的具身智能场景，质量保障对象从"软件系统"扩展到"软件 + 硬件 + 物理世界"。作为这一领域的新人，正从 0 系统学习自动驾驶专业体系（仿真测试、路测验证、感知 / 规划 / 控制全链路质量、车云协同、OTA 灰度）；与此同时，用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起菜鸟无人车质量中台，经阿里云云效流水线 CI/CD 部署到 SAE——在这里第一次真正理解"安全是工程问题"。</p>
       <div class="pf-chips"><span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>质量中台</span><span>CI/CD</span></div>
     </div>
   </li>

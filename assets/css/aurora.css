@@ -5503,14 +5503,19 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 /* ---------- 网格卡片 ---------- */
 .article-content .profile-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
+  /* 固定三列，避免出现「一行两个、一行一个」的错落感 */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
   margin: 1.4em 0;
+}
+/* 平板及以下整列堆叠，保证每张卡片都有足够阅读宽度 */
+@media (max-width: 920px) {
+  .article-content .profile-cards { grid-template-columns: 1fr; }
 }
 .article-content .profile-card {
   --accent: 124,140,255;
   position: relative;
-  padding: 1.15rem 1.2rem;
+  padding: 1.05rem 1.05rem;
   border-radius: var(--radius-md);
   background: var(--surface);
   border: 1px solid var(--surface-border);
