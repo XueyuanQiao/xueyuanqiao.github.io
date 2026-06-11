@@ -5309,3 +5309,456 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   font-size: .95rem;
 }
 .article-content .post-note strong { color: var(--text-1); background: none; }
+
+/* ============================================================
+   个人概述 · Profile components（仅作用于 .article-content）
+   玻璃卡片 + 旋转极光描边 + 扫描线 + 脉冲节点 + 时间线
+   复用通用钩子：data-counter（数字滚动）/ data-tilt（3D 悬停）
+   ============================================================ */
+
+@property --pf-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes pf-spin   { to { --pf-angle: 360deg; } }
+@keyframes pf-scan   { 0% { transform: translateY(-120%); } 100% { transform: translateY(420%); } }
+@keyframes pf-pulse  { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: .45; } }
+@keyframes pf-ring   { 0% { transform: scale(.6); opacity: .7; } 100% { transform: scale(2.4); opacity: 0; } }
+@keyframes pf-float  { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes pf-rise   { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Hero · 定义卡 ---------- */
+.article-content .profile-hero {
+  position: relative;
+  margin: 1.4em 0 2.4em;
+  padding: 1.6rem 1.7rem;
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(var(--grid-color) 1px, transparent 1px) 0 0 / 26px 26px,
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px) 0 0 / 26px 26px,
+    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--brand) 18%, transparent), transparent 55%),
+    radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--brand-2) 14%, transparent), transparent 55%),
+    var(--surface-strong);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-1);
+  overflow: hidden;
+  isolation: isolate;
+}
+/* 旋转极光描边（只显示 1px 边环，盖在背景之上） */
+.article-content .profile-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--pf-angle),
+    var(--brand), var(--brand-2), var(--brand-3), var(--brand));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: .6;
+  pointer-events: none;
+  animation: pf-spin 9s linear infinite;
+}
+.article-content .profile-hero .pf-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  font-family: var(--font-mono);
+  font-size: .76rem;
+  letter-spacing: .04em;
+  color: var(--text-3);
+  text-transform: uppercase;
+}
+.article-content .profile-hero .pf-led {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 60%, transparent);
+  position: relative;
+}
+.article-content .profile-hero .pf-led::after {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pf-ring 1.8s var(--ease-out) infinite;
+}
+.article-content .profile-hero .pf-name {
+  margin: .55rem 0 .2rem;
+  padding: 0;
+  border: 0;
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-1);
+}
+.article-content .profile-hero .pf-name::before { display: none; }
+.article-content .profile-hero .pf-grad {
+  background: linear-gradient(110deg, var(--brand-2), var(--brand), var(--brand-3));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.article-content .profile-hero .pf-roles {
+  display: flex; flex-wrap: wrap; gap: .5rem;
+  margin: .9rem 0 1.1rem;
+}
+.article-content .profile-hero .pf-role {
+  display: inline-flex; align-items: center; gap: .4em;
+  padding: .3rem .7rem;
+  font-size: .82rem;
+  font-family: var(--font-mono);
+  color: var(--text-2);
+  background: color-mix(in srgb, var(--brand) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brand) 30%, transparent);
+  border-radius: 999px;
+}
+.article-content .profile-hero .pf-desc {
+  margin: 0;
+  color: var(--text-2);
+  line-height: 1.8;
+  font-size: .98rem;
+}
+.article-content .profile-hero .pf-desc strong { color: var(--text-1); background: none; }
+
+/* ---------- Stat 数据条 ---------- */
+.article-content .profile-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: .7rem;
+  margin: 1.3rem 0 0;
+}
+.article-content .profile-stats .pf-stat {
+  position: relative;
+  padding: .85rem .9rem;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--bg-2) 60%, transparent);
+  border: 1px solid var(--surface-border);
+  text-align: center;
+  overflow: hidden;
+}
+.article-content .profile-stats .pf-num {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  background: linear-gradient(120deg, var(--brand-2), var(--brand-3));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.article-content .profile-stats .pf-lbl {
+  display: block;
+  margin-top: .3rem;
+  font-size: .76rem;
+  color: var(--text-3);
+}
+
+/* ---------- 通用面板（消除大段文字堆叠） ---------- */
+.article-content .profile-panel {
+  --accent: 124,140,255;
+  position: relative;
+  margin: 1.3em 0;
+  padding: 1.15rem 1.3rem 1.15rem 1.4rem;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-left: 3px solid rgb(var(--accent));
+  transition: transform var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out), border-color var(--t-base);
+}
+.article-content .profile-panel:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, rgb(var(--accent)) 55%, var(--surface-border));
+  box-shadow: 0 18px 40px -22px rgb(var(--accent)), var(--shadow-1);
+}
+.article-content .profile-panel > :first-child { margin-top: 0; }
+.article-content .profile-panel > :last-child  { margin-bottom: 0; }
+.article-content .profile-panel p { color: var(--text-2); }
+.article-content .profile-panel strong { color: var(--text-1); background: none; }
+
+/* 面板小标题（带图标芯片） */
+.article-content .pf-h {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  margin: 0 0 .7rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-1);
+}
+.article-content .pf-ico {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  color: #fff;
+  background: linear-gradient(135deg, rgb(var(--accent)), color-mix(in srgb, rgb(var(--accent)) 40%, var(--brand-3)));
+  box-shadow: 0 6px 16px -6px rgb(var(--accent));
+}
+.article-content .pf-ico svg { width: 19px; height: 19px; }
+
+/* ---------- 网格卡片 ---------- */
+.article-content .profile-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1.4em 0;
+}
+.article-content .profile-card {
+  --accent: 124,140,255;
+  position: relative;
+  padding: 1.15rem 1.2rem;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  overflow: hidden;
+  transition: transform var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out), border-color var(--t-base);
+  transform-style: preserve-3d;
+}
+.article-content .profile-card::after {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(180px 180px at var(--mx,50%) var(--my,0%),
+    color-mix(in srgb, rgb(var(--accent)) 22%, transparent), transparent 60%);
+  opacity: 0;
+  transition: opacity var(--t-base);
+  pointer-events: none;
+}
+.article-content .profile-card:hover {
+  border-color: color-mix(in srgb, rgb(var(--accent)) 55%, var(--surface-border));
+  box-shadow: 0 22px 46px -24px rgb(var(--accent)), var(--shadow-1);
+}
+.article-content .profile-card:hover::after { opacity: 1; }
+.article-content .profile-card .pf-h { font-size: 1rem; }
+.article-content .profile-card p { margin: 0; color: var(--text-2); font-size: .92rem; line-height: 1.7; }
+.article-content .profile-card strong { color: var(--text-1); background: none; }
+
+/* 面板 / 卡片内的要点列表 */
+.article-content .pf-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.article-content .pf-list li {
+  position: relative;
+  margin: .42rem 0;
+  padding-left: 1.3em;
+  color: var(--text-2);
+  font-size: .92rem;
+  line-height: 1.75;
+}
+.article-content .pf-list li::before {
+  content: "";
+  position: absolute;
+  left: .15em; top: .62em;
+  width: 6px; height: 6px;
+  border-radius: 2px;
+  background: linear-gradient(135deg, var(--brand-2), var(--brand-3));
+}
+.article-content .pf-list strong { color: var(--text-1); background: none; }
+
+/* ---------- 时间线 ---------- */
+.article-content .profile-timeline {
+  position: relative;
+  margin: 1.6em 0;
+  padding: 0 0 0 30px;
+  list-style: none;
+}
+.article-content .profile-timeline::before {
+  content: "";
+  position: absolute;
+  left: 7px; top: 6px; bottom: 6px;
+  width: 2px;
+  background: linear-gradient(var(--brand-2), var(--brand), var(--brand-3));
+  opacity: .55;
+}
+.article-content .profile-timeline .pf-item {
+  position: relative;
+  margin: 0 0 1.05rem;
+}
+.article-content .profile-timeline .pf-item::before {
+  content: "";
+  position: absolute;
+  left: -30px; top: 18px;
+  margin-left: 1px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--brand-2);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand-2) 22%, transparent);
+}
+.article-content .profile-timeline .pf-item::after {
+  content: "";
+  position: absolute;
+  left: -30px; top: 18px;
+  margin-left: 1px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--brand-2);
+  animation: pf-pulse 2.4s var(--ease-in-out) infinite;
+}
+.article-content .profile-timeline .pf-item:nth-child(1)::before,
+.article-content .profile-timeline .pf-item:nth-child(1)::after { background: var(--brand-2); }
+.article-content .profile-timeline .pf-card {
+  padding: 1.05rem 1.2rem;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  transition: transform var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out), border-color var(--t-base);
+}
+.article-content .profile-timeline .pf-card:hover {
+  transform: translateX(4px);
+  border-color: color-mix(in srgb, var(--brand) 50%, var(--surface-border));
+  box-shadow: 0 16px 36px -22px var(--brand), var(--shadow-1);
+}
+.article-content .pf-meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .55rem;
+  margin-bottom: .4rem;
+}
+.article-content .pf-year {
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--brand-2);
+  letter-spacing: .02em;
+}
+.article-content .pf-tag {
+  font-size: .72rem;
+  padding: .12rem .55rem;
+  border-radius: 999px;
+  color: var(--text-2);
+  background: color-mix(in srgb, var(--brand-3) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brand-3) 28%, transparent);
+}
+.article-content .pf-card h4 {
+  margin: .1rem 0 .4rem;
+  font-size: 1.04rem;
+  color: var(--text-1);
+}
+.article-content .pf-card p { margin: 0; color: var(--text-2); font-size: .92rem; line-height: 1.75; }
+.article-content .pf-card strong { color: var(--text-1); background: none; }
+.article-content .pf-chips {
+  display: flex; flex-wrap: wrap; gap: .35rem;
+  margin-top: .7rem;
+}
+.article-content .pf-chips span {
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  padding: .14rem .5rem;
+  border-radius: 6px;
+  color: var(--text-3);
+  background: color-mix(in srgb, var(--bg-3) 70%, transparent);
+  border: 1px solid var(--hairline);
+}
+
+/* ---------- 分层（AI 实践三层 / 多层） ---------- */
+.article-content .profile-layers { margin: 1.4em 0; display: grid; gap: .75rem; }
+.article-content .pf-layer {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .9rem;
+  padding: 1rem 1.15rem;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  transition: transform var(--t-base) var(--ease-out), border-color var(--t-base);
+}
+.article-content .pf-layer:hover { transform: translateX(4px); border-color: color-mix(in srgb, var(--brand-2) 45%, var(--surface-border)); }
+.article-content .pf-layer .pf-idx {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.05rem;
+  width: 2.4rem;
+  text-align: center;
+  align-self: start;
+  background: linear-gradient(120deg, var(--brand-2), var(--brand-3));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.article-content .pf-layer .pf-body { min-width: 0; }
+.article-content .pf-layer .pf-body b,
+.article-content .pf-layer .pf-name { color: var(--text-1); font-weight: 700; display: block; margin-bottom: .15rem; }
+.article-content .pf-layer p { margin: 0; color: var(--text-2); font-size: .92rem; line-height: 1.7; }
+.article-content .pf-layer strong { color: var(--text-1); background: none; }
+
+/* ---------- 技术栈 chip 云 ---------- */
+.article-content .profile-stack {
+  display: flex; flex-wrap: wrap; gap: .5rem;
+  margin: 1.3em 0;
+}
+.article-content .profile-stack .pf-skill {
+  display: inline-flex; align-items: center; gap: .45em;
+  padding: .4rem .8rem .4rem .5rem;
+  border-radius: 999px;
+  font-size: .85rem;
+  color: var(--text-2);
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  transition: transform var(--t-fast) var(--ease-out), border-color var(--t-fast), color var(--t-fast);
+  animation: pf-rise .5s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+.article-content .profile-stack .pf-skill:hover {
+  transform: translateY(-3px);
+  color: var(--text-1);
+  border-color: color-mix(in srgb, var(--brand) 55%, var(--surface-border));
+}
+.article-content .profile-stack .pf-skill .g {
+  display: grid; place-items: center;
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--brand), var(--brand-3));
+}
+
+/* ---------- 一句话定位 ---------- */
+.article-content .profile-quote {
+  position: relative;
+  margin: 1.8em 0 1em;
+  padding: 1.5rem 1.6rem 1.5rem 3.4rem;
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(120% 120% at 100% 0%, color-mix(in srgb, var(--brand-3) 16%, transparent), transparent 55%),
+    var(--surface-strong);
+  border: 1px solid var(--surface-border);
+  overflow: hidden;
+}
+.article-content .profile-quote::before {
+  content: "\201C";
+  position: absolute;
+  left: .7rem; top: .2rem;
+  font-family: Georgia, serif;
+  font-size: 4rem;
+  line-height: 1;
+  background: linear-gradient(120deg, var(--brand-2), var(--brand-3));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: .8;
+}
+.article-content .profile-quote p { margin: 0 0 .4rem; color: var(--text-2); line-height: 1.85; }
+.article-content .profile-quote p:last-child { margin-bottom: 0; }
+.article-content .profile-quote strong { color: var(--text-1); background: none; }
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 640px) {
+  .article-content .profile-hero { padding: 1.2rem 1.1rem; }
+  .article-content .profile-hero .pf-name { font-size: 1.4rem; }
+  .article-content .profile-cards { grid-template-columns: 1fr; }
+  .article-content .pf-layer { grid-template-columns: 1fr; gap: .4rem; }
+  .article-content .pf-layer .pf-idx { text-align: left; width: auto; }
+}
+
+/* ---------- 降低动效偏好 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .article-content .profile-hero::before { animation: none; }
+  .article-content .profile-timeline .pf-item::after { animation: none; }
+  .article-content .profile-hero .pf-led::after { animation: none; }
+  .article-content .profile-stack .pf-skill { animation: none; }
+}

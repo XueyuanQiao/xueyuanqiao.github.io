@@ -170,8 +170,8 @@
     },
     {
       "title": "无人物流车商业化拐点已至，谁在分享第一波红利？",
-      "url": "/robovan/2026/06/07/robovan-commercial-inflection.html",
-      "date": "2026-06-07",
+      "url": "/robovan/2026/06/06/robovan-commercial-inflection.html",
+      "date": "2026-06-06",
       "excerpt": "从 CES 到 GTC，英伟达持续加码 L4；九识、新石器 2025 年交付双双破万台，行业从\"示范运营\"迈入\"规模放量\"。当 L4 自动驾驶走到商业兑现的拐点，真正确定性最高的生意，或许是上游\"卖铲子\"的零部件赛道。",
       "categories": [
         "无人车"
@@ -179,12 +179,22 @@
     },
     {
       "title": "物理 AI 的\"先头部队\"：无人配送车这波拐点，到底意味着什么",
-      "url": "/robovan/2026/06/08/robovan-quality-cold-thinking.html",
-      "date": "2026-06-08",
+      "url": "/robovan/2026/06/07/robovan-quality-cold-thinking.html",
+      "date": "2026-06-07",
       "excerpt": "跳出资本和市占的视角，把九识投靠菜鸟与\"卖铲子\"上游这两篇热文放进\"AI 正从数字世界走向物理世界\"的大叙事里再读一遍：无人配送车真正的身份，是物理 AI 第一个跑通规模化的数据飞轮——它的拐点，远不只是成本降下来这么简单。",
       "categories": [
         "无人车",
         "ai"
+      ]
+    },
+    {
+      "title": "技术人的三十岁破局：从代码工匠到架构思想家",
+      "url": "/career/2026/06/07/tech-thirty-breakthrough.html",
+      "date": "2026-06-07",
+      "excerpt": "三十岁不是技术人生的终点，而是认知升级的最后窗口期。大多数人在这个节点遇到瓶颈，不是因为技术不够好，而是价值创造方式被锁死在写代码这一种线性模式上。这篇文章把破局拆成四个维度的认知跃迁，配上可落地的方法、真实案例和避坑清单。",
+      "categories": [
+        "career",
+        "growth"
       ]
     }
   ]

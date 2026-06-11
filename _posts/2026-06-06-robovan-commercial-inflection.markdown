@@ -1,10 +1,10 @@
 ---
 layout: post
 title: 无人物流车商业化拐点已至，谁在分享第一波红利？
-date: 2026-06-07 10:00:00 +0800
+date: 2026-06-06 11:00:00 +0800
 excerpt: 从 CES 到 GTC，英伟达持续加码 L4；九识、新石器 2025 年交付双双破万台，行业从"示范运营"迈入"规模放量"。当 L4 自动驾驶走到商业兑现的拐点，真正确定性最高的生意，或许是上游"卖铲子"的零部件赛道。
 categories: 无人车
-permalink: /robovan/2026/06/07/robovan-commercial-inflection.html
+permalink: /robovan/2026/06/06/robovan-commercial-inflection.html
 ---
 
 ![无人物流车商业化拐点已至，谁在分享第一波红利？](/images/26060701.jpg)

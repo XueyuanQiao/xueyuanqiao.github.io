@@ -9,38 +9,116 @@ featured: true
 featured_rank: 1
 ---
 
-> **资深全栈测试开发工程师 · AI Native Quality Engineer**
->
-> 十年深耕，足迹横跨 **百度（测试 → 研发）→ 蚂蚁集团 → 腾展 → 菜鸟无人车**，覆盖搜索、金融、AI Phone 全栈质量到 **L4 级自动驾驶** 多种业务形态。当前在 **菜鸟无人车** 专注于 L4 级无人配送车的端到端质量体系建设。专注于"以研发视角重塑质量底座"——把 **多语言全栈技术** 作为支点、**测试架构设计** 作为方法论，并以 **持续学习的 AI 能力** 作为长期杠杆，构建可演进、可复利的企业级质量基础设施。
+<div class="profile-hero" markdown="0">
+  <span class="pf-badge"><span class="pf-led"></span> profile · uplink established</span>
+  <div class="pf-name">乔雪源 · <span class="pf-grad">AI Native Quality Engineer</span></div>
+  <div class="pf-roles">
+    <span class="pf-role">资深全栈测试开发</span>
+    <span class="pf-role">金融级稳定性</span>
+    <span class="pf-role">L4 无人车质量</span>
+    <span class="pf-role">AI 工程化实践</span>
+  </div>
+  <p class="pf-desc">十年深耕，足迹横跨 <strong>百度（测试 → 研发）→ 蚂蚁集团 → 腾展 → 菜鸟无人车</strong>，覆盖搜索、金融、AI Phone 全栈质量到 <strong>L4 级自动驾驶</strong> 多种业务形态。当前在菜鸟无人车专注 L4 级无人配送车的端到端质量体系建设——以研发视角重塑质量底座，把多语言全栈技术作为支点、测试架构设计作为方法论，并以持续学习的 AI 能力作为长期杠杆，构建可演进、可复利的企业级质量基础设施。</p>
+  <div class="profile-stats">
+    <div class="pf-stat"><span class="pf-num"><span data-counter="10">0</span></span><span class="pf-lbl">质量工程年限</span></div>
+    <div class="pf-stat"><span class="pf-num"><span data-counter="4">0</span></span><span class="pf-lbl">顶级业务历练</span></div>
+    <div class="pf-stat"><span class="pf-num"><span data-counter="6">0</span></span><span class="pf-lbl">质量战场</span></div>
+    <div class="pf-stat"><span class="pf-num">∞</span><span class="pf-lbl">咖啡续航</span></div>
+  </div>
+</div>
 
 ## 个人总结
 
-### 一、十年全栈质量治理积淀
-深耕测试开发与质量工程领域十年，从 **百度大搜索** 起步，历经 **蚂蚁集团金融级核心业务**、**腾展 AI Phone 全栈质量** 的连续淬炼，当前在 **菜鸟无人车** 专注于 L4 级无人配送车的端到端质量体系建设。覆盖 Web、客户端、服务端、数据链路、算法模型、车端嵌入式六大战场，沉淀出一套完整的 **白盒 / 灰盒 / 黑盒 + 静态 / 动态 / 模糊 / 混沌 + 仿真 / 路测** 全维度测试方法论，能够穿透业务表象、深度参与并驱动研发全生命周期的质量治理。
+<div class="profile-panel" markdown="0" style="--accent: 124,140,255">
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span> 十年全栈质量治理积淀</div>
+  <p>深耕测试开发与质量工程领域十年，从 <strong>百度大搜索</strong> 起步，历经 <strong>蚂蚁集团金融级核心业务</strong>、<strong>腾展 AI Phone 全栈质量</strong> 的连续淬炼，当前在 <strong>菜鸟无人车</strong> 专注于 L4 级无人配送车的端到端质量体系建设。覆盖 Web、客户端、服务端、数据链路、算法模型、车端嵌入式六大战场，沉淀出一套完整的 <strong>白盒 / 灰盒 / 黑盒 + 静态 / 动态 / 模糊 / 混沌 + 仿真 / 路测</strong> 全维度测试方法论，能够穿透业务表象、深度参与并驱动研发全生命周期的质量治理。</p>
+</div>
 
-### 二、教育背景
-- **2012 — 2016 · 北京科技大学（本科）· 计算机科学与技术**
-  在科大计算机科学与技术专业打下系统的基础：数据结构与算法、操作系统、计算机网络、编译原理、数据库系统等核心课程，构建了从底层到应用的完整认知。这四年也给我留下了 **"啃硬骨头、拒绝糊弄"** 的工程师底色——习惯于把每个抽象概念落到代码里跑一遍才算理解，这种"动手验证"的方法论延续到了之后十年的测试与研发工作中，也是我今天面对 AI、自动驾驶等复杂系统时，仍然坚持"任何能力必须在真实场景里跑通一次才算学过"的源头。
+<div class="profile-panel" markdown="0" style="--accent: 89,227,255">
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg></span> 教育背景 · 北京科技大学</div>
+  <p><strong>2012 — 2016 · 计算机科学与技术（本科）。</strong> 在科大计算机专业打下系统基础：数据结构与算法、操作系统、计算机网络、编译原理、数据库系统等核心课程，构建了从底层到应用的完整认知。这四年留下了 <strong>"啃硬骨头、拒绝糊弄"</strong> 的工程师底色——习惯把每个抽象概念落到代码里跑一遍才算理解，这种"动手验证"的方法论延续到了之后十年，也是我今天面对 AI、自动驾驶等复杂系统时，仍坚持"任何能力必须在真实场景里跑通一次才算学过"的源头。</p>
+</div>
 
-### 三、职业履历 · 行业级业务的实战版图
-- **百度（测试 → 研发）**：在大搜索体系下从测试工程师起步，深度参与核心搜索 **VUI 架构** 与亿级 PV 检索链路的质量保障——用 **Python + Shell** 构建自动化 diff 验证框架并集成进 CI/CD 流水线实现自动触发，显著提升回归效率与问题前置发现率，同时推动测试左移、与研发协作探索异常场景测试与混沌工程（故障注入、依赖抖动）。随后转型研发，主导 **日历、天气** 两大垂类搜索的业务开发与架构重构，完成从老旧独立架构向 **阿拉丁统一搜索架构** 的整体迁移，并优化数据更新链路（全量 + 增量 + 实时刷新），显著提升数据新鲜度与系统稳定性。这段经历奠定了 **以研发视角重塑质量底座** 的方法论根基，也让我能够同时用"产线视角"和"质量视角"看待同一个系统。
-- **蚂蚁集团（支付宝）**：担任支付宝基金 **养老专区** 核心业务 **QA Owner**，主导 **需求分析 → 测试策略 → 用例 & 技术方案评审 → 上线演练 → 压测 → 线上监控 & 应急** 的全生命周期质量管理，确保 **0 重大事故上线**，守护资金安全与用户体验；并基于公司端到端自动化平台补全养老业务测试组件，构建 **开户、申购、赎回** 等核心链路的自动化回归体系，常态化沉淀提效工具持续抬升覆盖率与回归效率。在压测上区分两类场景常抓不懈——**日常迭代的常态化全链路压测** 守住容量基线，**大促活动的全链路压测** 验证峰值流量下的稳定性与容灾能力。其中作为 **"个人养老金接入支付宝"** 这一国家级战略项目的测试 Owner，全面负责核心系统对接、合规验证与全链路质量保障，推动项目提前完成准备，在国家个人养老金制度正式实施前实现系统就绪；政策落地后主导开闸运营活动的质量把控，重点保障开户、缴存等关键场景高稳定运行、确保 0 重大事故，有效支撑账户开立人数显著超出预期目标，助力国家养老第三支柱战略规模化落地。在合规红线、资金安全、监管审计三重高压下，沉淀出覆盖资金链路、账户体系、对账与清结算的金融级质量保障方法论。
-- **腾展（AI Phone · 测试负责人）**：作为 **AI Phone** 这款 App 的测试负责人，负责整个 **App 端 + 服务端** 的质量与稳定性，覆盖 **VOIP + ASR + 翻译 + TTS** 一整套完整业务链路的测试质量保证。针对同声传译场景，构建以 **WER 为核心指标** 的自动化评估 pipeline，高效支撑模型迭代、版本回归与多版本效果对比；并基于 **LLM-as-a-Judge** 定制专用 Prompt，从语义准确、术语专业性、语句连贯性等维度自动判定输出质量，用大模型替代脆弱的硬编码 Diff，对海量译文做可复用、可回归的质量验证，大幅降低人工评估成本并提升判准一致性。工程侧用 **AI Coding** 从 0 搭建多个 App 的接口自动化工程，并主导老旧框架 **从 JUnit 迁移到 Pytest**、统一工程规范、引入 AI 智能断言，**测试覆盖率提升 70%**，回归周期大幅缩短；同时与研发一起开发公司级别的通用测试平台。这也是我把 AI 能力第一次真正落到业务评估闭环的实践。
-- **菜鸟无人车（当前）**：深入 **L4 级无人配送车** 这一最前沿的具身智能场景，质量保障的对象从"软件系统"扩展到"软件 + 硬件 + 物理世界"。在系统性学习自动驾驶专业体系（仿真测试、路测验证、感知 / 规划 / 控制全链路质量、车云协同、OTA 灰度）的过程中持续思考与探索；工程上则从 0 到 1 用 **Stitch** 完成设计、前后端一体开发，搭建起 **菜鸟无人车质量中台**，并基于 **阿里云云效流水线** 实现 CI/CD、部署到 **SAE**，把过往十年沉淀的测试架构方法论落到无人车的端到端质量体系建设中。
+<div class="pf-h" style="--accent: 124,140,255; font-size:1.18rem; margin:2.2em 0 .3em;"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span> 职业履历 · 行业级业务的实战版图</div>
 
-### 四、跨职能技术架构视野（QA → RD → Test Architect）
-具备从 QA 工程师向 RD 成功转型、再回归测试架构的复合背景。能够 **以研发视角重塑质量底座**，从底层架构层面剖析系统风险，而不是停留在功能验证。主导过亿级 PV / TPS 量级分布式系统的架构重构、数据链路优化与稳定性建设，在 **架构降本增效** 与 **故障可观测性建设** 上落地多个标杆案例，相关方法论沉淀为团队级的研发与质量规范。
+<ol class="profile-timeline" markdown="0">
+  <li class="pf-item">
+    <div class="pf-card" data-tilt>
+      <div class="pf-meta"><span class="pf-year">2026 — Now</span><span class="pf-tag">菜鸟无人车 · L4</span></div>
+      <h4>L4 无人配送车的端到端质量</h4>
+      <p>深入 <strong>L4 级无人配送车</strong> 这一最前沿的具身智能场景，质量保障对象从"软件系统"扩展到"软件 + 硬件 + 物理世界"。在系统性学习自动驾驶专业体系（仿真测试、路测验证、感知 / 规划 / 控制全链路质量、车云协同、OTA 灰度）的同时，用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起菜鸟无人车质量中台，经阿里云云效流水线 CI/CD 部署到 SAE——在这里第一次真正理解"安全是工程问题"。</p>
+      <div class="pf-chips"><span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>质量中台</span><span>CI/CD</span></div>
+    </div>
+  </li>
+  <li class="pf-item">
+    <div class="pf-card" data-tilt>
+      <div class="pf-meta"><span class="pf-year">2025 — 2026</span><span class="pf-tag">腾展 · AI Phone</span></div>
+      <h4>第一次把 AI 跑进真实链路</h4>
+      <p>作为 <strong>AI Phone</strong> 测试负责人，负责 App 端 + 服务端的质量与稳定性，覆盖 <strong>VOIP / ASR / 翻译 / TTS</strong> 全链路。针对同声传译构建以 <strong>WER 为核心指标</strong> 的自动化评估 pipeline，叠加 <strong>LLM-as-a-Judge</strong> 把翻译准确性做成可复用、可回归的批量验证，从此明白 AI 系统的质量必须用"评估"而不是"断言"来衡量。工程侧主导 <strong>JUnit → Pytest</strong> 重构、引入 AI 智能断言，测试覆盖率提升 <strong>70%</strong>。</p>
+      <div class="pf-chips"><span>VOIP</span><span>ASR</span><span>TTS</span><span>WER</span><span>LLM-as-a-Judge</span><span>Pytest</span></div>
+    </div>
+  </li>
+  <li class="pf-item">
+    <div class="pf-card" data-tilt>
+      <div class="pf-meta"><span class="pf-year">2021 — 2024</span><span class="pf-tag">蚂蚁 · 金融级</span></div>
+      <h4>把质量做进金融级支付</h4>
+      <p>担任支付宝基金养老专区核心业务 <strong>QA Owner</strong>，主导"需求 → 策略 → 评审 → 演练 → 压测 → 监控 &amp; 应急"全生命周期质量管理。作为 <strong>个人养老金接入支付宝</strong> 国家级战略项目测试 Owner，推动系统在制度实施前就绪，政策落地后把控开闸运营、重点守住开户与缴存场景，连续保持 <strong>0 重大事故</strong>，有效支撑账户开立人数超出预期。沉淀出覆盖资金链路、账户体系、对账与清结算的金融级方法论。</p>
+      <div class="pf-chips"><span>QA Owner</span><span>全链路压测</span><span>混沌工程</span><span>资金安全</span><span>SLO</span></div>
+    </div>
+  </li>
+  <li class="pf-item">
+    <div class="pf-card" data-tilt>
+      <div class="pf-meta"><span class="pf-year">2018 — 2020</span><span class="pf-tag">百度 · 大搜索</span></div>
+      <h4>大搜索体系下的稳定性，并从测试转研发</h4>
+      <p>在大搜索体系下从测试工程师起步，深度参与核心搜索 <strong>VUI 架构</strong> 与亿级 PV 检索链路的质量保障——用 <strong>Python + Shell</strong> 构建自动化 diff 验证框架并集成进 CI/CD，推动测试左移与混沌工程。随后转型研发，主导 <strong>日历、天气</strong> 两大垂类搜索的业务开发与架构重构，完成向 <strong>阿拉丁统一搜索架构</strong> 的整体迁移并优化数据更新链路。这段经历奠定了 <strong>以研发视角重塑质量底座</strong> 的方法论根基。</p>
+      <div class="pf-chips"><span>Search</span><span>VUI</span><span>阿拉丁架构</span><span>Test → Dev</span></div>
+    </div>
+  </li>
+</ol>
 
-### 五、对 AI 的持续学习与实战落地
-对我而言，AI 不是一组工具的清单，而是 **一种持续重塑工作方式的学习习惯**。每天保留固定时间跟踪前沿（论文、X、产品发布、源码），并坚持一个朴素的原则——**任何新能力，必须在真实业务里跑通一次，才算"学过"**。
+<div class="profile-cards" markdown="0">
+  <div class="profile-card" data-tilt style="--accent: 184,136,255">
+    <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span> 跨职能技术视野</div>
+    <p>具备 QA → RD → Test Architect 的复合背景，能 <strong>以研发视角重塑质量底座</strong>，从底层架构剖析系统风险，而非停留在功能验证。主导过亿级 PV / TPS 分布式系统的架构重构、数据链路优化与稳定性建设，在架构降本增效与故障可观测性上落地多个标杆案例。</p>
+  </div>
+  <div class="profile-card" data-tilt style="--accent: 251,191,36">
+    <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span> 金融级高并发稳定性</div>
+    <p>在蚂蚁与 <strong>极高合规 + 资金安全红线 + 监管审计</strong> 三重压力共处，精通 <strong>全链路压测 / 混沌工程 / 容灾演练</strong> 三件套——既做日常迭代的常态化压测守容量基线，也做大促峰值压测验证极限流量下的稳定性，沉淀出覆盖资金链路、账户体系、对账清结算的金融级方法论。</p>
+  </div>
+  <div class="profile-card" data-tilt style="--accent: 248,113,113">
+    <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.1 2.1-2.4-.6-.6-2.4z"/></svg></span> 从 0 到 1 平台化工程</div>
+    <p>多次主导从零搭建企业级测试平台——自动化框架、CI/CD 与质量门禁、全链路压测平台、缺陷分析与质量度量数仓。早期为 SaaS 平台用 <strong>Selenium / Appium + Jenkins</strong> 打通端到端自动化，核心回归 100% 覆盖、单次回归耗时缩短 <strong>90%+</strong>；并用 <strong>Minitest</strong> 把 ROR 后端覆盖率从近乎 0 拉到 <strong>80%+</strong>。</p>
+  </div>
+</div>
 
-近一年的实践沉淀大致分三层：
+<div class="pf-h" style="--accent: 124,255,180; font-size:1.18rem; margin:2.2em 0 .3em;"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg></span> 对 AI 的持续学习与实战落地</div>
 
-- **学习与思考层**：用 **NotebookLM** 把论文、内部文档、长视频沉淀为可对话的知识库，把"读完即忘"的输入变成可复用的研究资产；新模型、新框架发布后，第一时间在小型真实场景里做 A/B 验证，再决定是否纳入工作流。
-- **研发协同层**：日常以 **Kiro / Cursor / Claude Code / Codex / Antigravity** 等编程 Agent 作为主力副驾，按场景分工——架构演进与多文件重构走 Kiro 的 Spec 流程、复杂调试用 Claude Code 与 Codex 交叉验证、原型探索用 Antigravity 的浏览器化 Agent 完成端到端闭环；同时熟练运用 **Claude Code、Trae** 做 AI Coding，掌握提示词工程，能快速准确驱动 LLM 解决复杂问题。这套协同方式让我能在有限时间内推动多个项目并行演进。
-- **Agent 学习层**：在"用 Agent"之外，也动手"拆 Agent"。为吃透框架原理，用 **LangChain** 写过一个支持 **GPT / Claude / Gemini** 多厂商动态路由的网页信息提取 demo——它本身没有实际业务价值，目的是把大模型分类、结构化提取、异常捕获与调试这套链路亲手跑通一遍；当前在用 **LangGraph** 搭一个学习性质的 AI 测试平台工程，借此摸清复杂智能体的循环控制、动态决策、多角色协作与长时记忆等机制。另外在阿里云 VPS 与本地完成 **OpenClaw** 部署、接入钉钉机器人做远程对话，理解其架构与运行原理。这些都还停留在学习与验证阶段，我不会把它们说成已落地的成果。
-- **全栈交付层**：完整掌握 AI 时代的全栈开发链路——从用 **Stitch / Claude Design** 做产品与界面设计，到借助 **Vibe Coding** 把设计稿直接转化为前端与后端工程代码，独立完成"设计 → 前端 → 后端 → 联调 → 上线"的端到端闭环。菜鸟无人车质量中台正是这套方法的产物：一个人用 AI 把过去需要设计、前端、后端多角色协作的工作量收敛到一条流水线上，让"想得到"与"做得出"之间的距离大幅缩短。
-- **业务落地层**：在 **腾展 AI Phone**（VOIP + ASR + 翻译 + TTS 全链路）的同声传译场景里，构建以 **WER 为核心指标** 的自动化评估 pipeline，并基于 **LLM-as-a-Judge** 设计翻译准确性的批量验证方案，用大模型替代易碎的硬编码 Diff，对海量译文做可复用、可回归的质量评估——这是我目前真正落到业务闭环的一次 AI 实践。在评测体系上，持续系统学习主流 Agent 评估框架（**Ragas / DeepEval / Langfuse / LangSmith**），并在实际业务中落地 **benchmark、LLM-as-a-Judge** 等智能化评测方法，推动测试流程向数据驱动与智能化演进。
+<div class="profile-panel" markdown="1" style="--accent: 124,255,180">
+对我而言，AI 不是一组工具的清单，而是 **一种持续重塑工作方式的学习习惯**。每天保留固定时间跟踪前沿（「阿里云开发者」等公众号、Perplexity、X、产品发布、GitHub），并坚持一个朴素的原则——**任何新能力，必须在真实业务里跑通一次，才算"学过"**。近一年的实践沉淀大致分五层：
+</div>
+
+<div class="profile-layers" markdown="0">
+  <div class="pf-layer">
+    <span class="pf-idx">01</span>
+    <div class="pf-body"><b>学习与思考层</b><p>用 <strong>NotebookLM</strong> 把技术文章、内部文档、长视频沉淀为可对话的知识库，把"读完即忘"的输入变成可复用的研究资产；新模型、新框架发布后，第一时间在小型真实场景里做 A/B 验证，再决定是否纳入工作流。</p></div>
+  </div>
+  <div class="pf-layer">
+    <span class="pf-idx">02</span>
+    <div class="pf-body"><b>研发协同层</b><p>日常以 <strong>Kiro / Cursor / Claude Code / Codex / Antigravity</strong> 等编程 Agent 作为主力副驾，按场景分工——架构演进与多文件重构走 Kiro 的 Spec 流程、复杂调试用 Claude Code 与 Codex 交叉验证、原型探索用 Antigravity 的浏览器化 Agent；并熟练运用 Claude Code、Trae 做 AI Coding，掌握提示词工程，快速准确驱动 LLM 解决复杂问题。</p></div>
+  </div>
+  <div class="pf-layer">
+    <span class="pf-idx">03</span>
+    <div class="pf-body"><b>Agent 学习层</b><p>在"用 Agent"之外也动手"拆 Agent"。用 <strong>LangChain</strong> 写过支持 GPT / Claude / Gemini 多厂商动态路由的网页信息提取 demo；在用 <strong>LangGraph</strong> 搭学习性质的 AI 测试平台，摸清循环控制、动态决策、多角色协作与长时记忆；在阿里云 VPS 与本地部署 <strong>OpenClaw</strong>、接入钉钉机器人。这些仍停留在学习与验证阶段，我不会把它们说成已落地的成果。</p></div>
+  </div>
+  <div class="pf-layer">
+    <span class="pf-idx">04</span>
+    <div class="pf-body"><b>全栈交付层</b><p>完整掌握 AI 时代的全栈开发链路——从 <strong>Stitch / Claude Design</strong> 做产品与界面设计，到借助 <strong>Vibe Coding</strong> 把设计稿直接转化为前后端工程代码，独立完成"设计 → 前端 → 后端 → 联调 → 上线"的端到端闭环。菜鸟无人车质量中台正是这套方法的产物。</p></div>
+  </div>
+  <div class="pf-layer">
+    <span class="pf-idx">05</span>
+    <div class="pf-body"><b>业务落地层</b><p>在 <strong>腾展 AI Phone</strong> 的同声传译场景里，构建以 <strong>WER 为核心指标</strong> 的自动化评估 pipeline，并基于 <strong>LLM-as-a-Judge</strong> 做翻译准确性的批量验证；持续系统学习主流 Agent 评估框架（<strong>Ragas / DeepEval / Langfuse / LangSmith</strong>），并在业务中落地 benchmark、LLM-as-a-Judge 等智能化评测方法。</p></div>
+  </div>
+</div>
 
 下面这套 **菜鸟无人车质量中台** 就是"全栈交付层"的代表作——从产品设计、登录鉴权、前端界面到后端服务与流水线，全部由我一个人借助 AI 独立完成，没有第二个人参与设计或开发：
 
@@ -56,64 +134,104 @@ featured_rank: 1
 </div>
 <p class="post-figure-caption">菜鸟无人车质量中台 · 从设计到上线由一人独立交付（Stitch 设计 + Vibe Coding 前后端 + 阿里云云效流水线部署到 SAE）</p>
 
+<div class="profile-panel" markdown="1" style="--accent: 89,227,255">
 它的技术栈也能说明"一个人全栈"的含量——后端 **FastAPI + Python 3.11**，配 **SQLAlchemy 2.0（async）+ Alembic** 做异步 ORM 与数据库迁移，**APScheduler** 跑异步定时任务；前端 **React 18 + TypeScript + Vite 6**，**Ant Design 5** 搭管理界面、**Zustand** 管状态、**React Router 6** 管路由，并用 **Three.js / react-three-fiber** 做 3D 可视化；数据与中间件全部跑在阿里云上——**MySQL 8.0（RDS）** 做主存储、**Tair**（Redis 兼容）做缓存、**EMQX** 作 MQTT Broker 承接车端实时消息；最后 **Docker 单阶段构建 → SAE** 完成部署。一条从前端、后端、数据库到车云消息链路的完整栈，全部由我一个人选型、落地、上线。
+</div>
 
+<div class="profile-quote" markdown="1">
 我更看重的不是"用过多少工具"，而是 **是否真的在每个项目里因为 AI 而做出了过去做不到的事**——用更小的团队覆盖更大的质量域、用更短的周期完成更复杂的验证、把原本依赖经验的判断沉淀成可复用的资产。
-
-### 六、金融级高并发稳定性专家
-在蚂蚁集团担任支付宝基金养老专区核心业务 QA Owner 期间，长期与 **极高合规要求 + 资金安全红线 + 监管级审计** 三重压力共处。落地 **需求分析 → 测试策略 → 用例 & 技术方案评审 → 上线演练 → 压测 → 线上监控 & 应急** 的全生命周期质量管理，主导 **个人养老金** 国家级战略项目的质量护航——推动系统在制度正式实施前就绪，政策落地后把控开闸运营、重点守住开户与缴存场景，连续保持 **0 重大事故**，有效支撑账户开立人数超出预期；并日常负责 **养老基金** 等核心金融业务的全生命周期质量治理。形成了一套覆盖 **资金链路、账户体系、对账与清结算** 的金融级方法论，精通 **全链路压测、混沌工程、容灾演练** 三件套——既做 **日常迭代的常态化压测** 守容量基线，也做 **大促活动的峰值全链路压测** 验证极限流量下的稳定性，在高并发、高可用分布式系统的风险防控、应急响应与故障复盘方面具备扎实的实战成果。
-
-### 七、测试架构设计与从 0 到 1 工程赋能
-具备较强的技术落地与平台化建设直觉，多次主导从零搭建企业级测试平台——自动化框架、CI/CD 与质量门禁、全链路压测平台、缺陷分析与质量度量数仓——以技术手段解决业务稳定性痛点，让"质量"从人力堆叠转化为可复用的工程基础设施。这种"从 0 到 1"的肌肉记忆很早就练成了：职业早期独立为 SaaS 平台从零搭建基于 **Selenium / Appium** 的端到端自动化框架并用 **Jenkins** 打通 CI/CD，实现核心回归 100% 自动化、单次回归时间缩短 90% 以上；同时针对 **Ruby on Rails** 后端用 **Minitest** 深入覆盖 Model / Service / Controller 层，把代码覆盖率从近乎为 0 提升到 80% 以上，从源头遏制回归缺陷。最近一次是在 **菜鸟无人车** 从 0 到 1 搭建 **质量中台**：用 **Stitch** 完成设计、独立完成前后端一体开发，并基于 **阿里云云效流水线** 打通 CI/CD、部署到 **SAE**，把平台从设计、编码到上线全流程跑通。
+</div>
 
 ## 核心技术栈
 
-### AI 工程化（持续学习方向）
-真正落地过、并能讲清楚取舍的几件事：
+<div class="profile-stack" markdown="0">
+  <span class="pf-skill" style="--i:0"><span class="g">P</span>Python</span>
+  <span class="pf-skill" style="--i:1"><span class="g">J</span>Java</span>
+  <span class="pf-skill" style="--i:2"><span class="g">R</span>Ruby on Rails</span>
+  <span class="pf-skill" style="--i:3"><span class="g">P</span>Pytest</span>
+  <span class="pf-skill" style="--i:4"><span class="g">S</span>Selenium</span>
+  <span class="pf-skill" style="--i:5"><span class="g">L</span>LangChain</span>
+  <span class="pf-skill" style="--i:6"><span class="g">L</span>LangGraph</span>
+  <span class="pf-skill" style="--i:7"><span class="g">C</span>Claude</span>
+  <span class="pf-skill" style="--i:8"><span class="g">M</span>MCP</span>
+  <span class="pf-skill" style="--i:9"><span class="g">F</span>FastAPI</span>
+  <span class="pf-skill" style="--i:10"><span class="g">S</span>Spring</span>
+  <span class="pf-skill" style="--i:11"><span class="g">M</span>MySQL</span>
+  <span class="pf-skill" style="--i:12"><span class="g">T</span>Tair / Redis</span>
+  <span class="pf-skill" style="--i:13"><span class="g">R</span>RocketMQ</span>
+  <span class="pf-skill" style="--i:14"><span class="g">K</span>Kafka</span>
+  <span class="pf-skill" style="--i:15"><span class="g">D</span>Docker</span>
+  <span class="pf-skill" style="--i:16"><span class="g">K</span>Kubernetes</span>
+  <span class="pf-skill" style="--i:17"><span class="g">P</span>Prometheus</span>
+  <span class="pf-skill" style="--i:18"><span class="g">G</span>Grafana</span>
+  <span class="pf-skill" style="--i:19"><span class="g">L</span>Linux</span>
+</div>
 
-- 在 **腾展 AI Phone**（VOIP + ASR + 翻译 + TTS 全链路）的同声传译场景，用 **WER 自动化评估 pipeline + LLM-as-a-Judge** 替代脆弱断言，建立翻译准确性的批量验证与可复用回归集
-- 用 AI Coding 从 0 搭接口自动化工程，主导 **JUnit → Pytest** 框架重构并引入 AI 智能断言，测试覆盖率提升 70%
-- 系统掌握 Agent 评估框架（**Ragas / DeepEval / Langfuse / LangSmith**），在业务中落地 benchmark、LLM-as-a-Judge 等智能化评测
-- 完整掌握 AI 时代的全栈开发：从 **Stitch / Claude Design** 做设计，到 **Vibe Coding** 实现前后端工程代码，独立打通"设计 → 前端 → 后端 → 上线"端到端闭环（菜鸟无人车质量中台即为代表作）
-- 围绕 **Kiro / Cursor / Claude Code / Codex / Antigravity / Trae / NotebookLM** 形成个人的 AI 工作流，按场景选型而非堆砌
-- 熟悉主流模型（GPT / Claude / Gemini / Qwen / DeepSeek）的能力边界与成本权衡，能设计端到端的模型 + 工具调用 + 评估方案
+<div class="profile-panel" markdown="0" style="--accent: 124,255,180">
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg></span> AI 工程化（持续学习方向）</div>
+  <ul class="pf-list">
+    <li>在 <strong>腾展 AI Phone</strong>（VOIP + ASR + 翻译 + TTS 全链路）的同声传译场景，用 <strong>WER 自动化评估 pipeline + LLM-as-a-Judge</strong> 替代脆弱断言，建立翻译准确性的批量验证与可复用回归集</li>
+    <li>用 AI Coding 从 0 搭接口自动化工程，主导 <strong>JUnit → Pytest</strong> 框架重构并引入 AI 智能断言，测试覆盖率提升 70%</li>
+    <li>系统掌握 Agent 评估框架（<strong>Ragas / DeepEval / Langfuse / LangSmith</strong>），在业务中落地 benchmark、LLM-as-a-Judge 等智能化评测</li>
+    <li>完整掌握 AI 时代全栈开发：<strong>Stitch / Claude Design</strong> 设计 → <strong>Vibe Coding</strong> 前后端 → 端到端上线（菜鸟无人车质量中台为代表作）</li>
+    <li>围绕 <strong>Kiro / Cursor / Claude Code / Codex / Antigravity / Trae / NotebookLM</strong> 形成个人 AI 工作流，按场景选型而非堆砌</li>
+    <li>熟悉主流模型（GPT / Claude / Gemini / Qwen / DeepSeek）的能力边界与成本权衡，能设计端到端的模型 + 工具调用 + 评估方案</li>
+  </ul>
+</div>
 
-保持诚实的边界：
+<div class="profile-panel" markdown="0" style="--accent: 251,191,36">
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span> 保持诚实的边界</div>
+  <p>用 <strong>LangChain</strong> 写过多厂商动态路由的网页提取 demo、在用 <strong>LangGraph</strong> 搭学习性质的测试平台、部署过 <strong>OpenClaw</strong> 接钉钉——这些都是为吃透框架原理的动手练习，尚无实际业务价值，更没有大规模生产落地；我不会把"为了学而写"的 demo 包装成已成熟的成果。</p>
+</div>
 
-- 用 **LangChain** 写过多厂商动态路由的网页提取 demo、在用 **LangGraph** 搭学习性质的测试平台、部署过 **OpenClaw** 接钉钉——这些都是为吃透框架原理的动手练习，尚无实际业务价值，更没有大规模生产落地；我不会把"为了学而写"的 demo 包装成已成熟的成果
+<div class="profile-cards" markdown="0">
+  <div class="profile-card" data-tilt style="--accent: 124,140,255">
+    <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></span> 多语言研发与白盒</div>
+    <ul class="pf-list">
+      <li><strong>Java</strong>：Spring 服务端开发与白盒测试，JVM 调优与线上诊断（Arthas）</li>
+      <li><strong>C / C++</strong>：性能与内存剖析、Fuzzing（libFuzzer / AFL++）</li>
+      <li><strong>Python</strong>：服务端、数据处理、AI 工程化与评估管线主力语言</li>
+      <li><strong>PHP</strong>：老旧系统改造与白盒覆盖（PHPUnit + Laravel）</li>
+      <li>辅助栈：Go / Rust / Shell / Ruby，按场景选用</li>
+    </ul>
+  </div>
+  <div class="profile-card" data-tilt style="--accent: 89,227,255">
+    <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span> 测试架构设计</div>
+    <ul class="pf-list">
+      <li>分层架构与契约测试，治理"冰淇淋反模式"</li>
+      <li>平台化：用例管理、调度引擎、执行集群、AI 评估管线</li>
+      <li>数据工厂：自动化数据构造、影子流量、录制回放</li>
+      <li>可观测性：OpenTelemetry / Prometheus / Grafana 质量信号</li>
+      <li>质量门禁：覆盖率、静态扫描、安全扫描（SAST / DAST）</li>
+    </ul>
+  </div>
+  <div class="profile-card" data-tilt style="--accent: 248,113,113">
+    <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span> 稳定性与质量保障</div>
+    <ul class="pf-list">
+      <li>全链路压测、容量规划与性能基线</li>
+      <li>混沌工程：故障注入、依赖抖动、网络分区、资源熔断</li>
+      <li>容灾演练与应急预案设计</li>
+      <li>区块链 / 智能合约场景的质量保障</li>
+    </ul>
+  </div>
+</div>
 
-### 多语言研发与白盒能力
-- **Java**：Spring 体系下的服务端开发与白盒测试，JVM 调优与线上诊断（Arthas）
-- **C / C++**：性能与内存剖析、Fuzzing（libFuzzer / AFL++），在终端与底层场景做白盒覆盖
-- **Python**：服务端、数据处理、AI 工程化与评估管线的主力语言
-- **PHP**：老旧系统改造与白盒覆盖，PHPUnit + Laravel 的实战经验
-- 辅助栈：Go / Rust / Shell / Ruby，按场景选用
-
-### 测试架构设计
-- 分层架构与契约测试，治理"冰淇淋反模式"
-- 平台化能力：用例管理、调度引擎、执行集群、AI 评估管线
-- 数据工厂：自动化数据构造、影子流量、流量录制回放
-- 可观测性：OpenTelemetry / Prometheus / Grafana 体系下的质量信号建设
-- 质量门禁：覆盖率、静态扫描、安全扫描（SAST / DAST）的端到端集成
-
-### 稳定性与质量保障
-- 全链路压测、容量规划与性能基线
-- 混沌工程：故障注入、依赖抖动、网络分区、资源熔断
-- 容灾演练与应急预案设计
-- 区块链 / 智能合约场景的质量保障
-
-### 中间件与分布式深度能力
-长期在金融级与高并发场景下与中间件打交道，熟悉其内部机制与典型故障模式，能在生产链路上做端到端定位：
-
-- **缓存与存储**：Redis 主从 / 集群 / 哨兵的容量与热点治理，蚂蚁自研 **Tair** 在金融级场景下的高可用与一致性实战
-- **消息中间件**：**RocketMQ**（蚂蚁 / 阿里体系）、Kafka、RabbitMQ 的顺序、堆积、重试、死信与一致性问题排查
-- **RPC 与服务治理**：**Dubbo / SOFARPC / SOFABoot** 等蚂蚁金融级中间件与微服务架构，熟悉路由、限流、熔断、灰度的稳定性建设
-- **配置与注册中心**：**Apollo / Nacos / ZooKeeper** 的多环境配置治理、动态推送与变更风险防控
-- **JVM 深度排查**：**Java coredump / hs_err / heap dump** 分析，结合 Arthas、JFR、async-profiler 做 CPU 飙高、Full GC、线程死锁、Native Crash 等线上问题的根因定位
-- **Linux 与系统层**：熟练掌握常用命令链与性能工具（top / vmstat / iostat / perf / strace / tcpdump / ss），具备从内核态到用户态的链路诊断能力
+<div class="profile-panel" markdown="0" style="--accent: 184,136,255">
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="6" rx="2"/><rect x="2" y="15" width="20" height="6" rx="2"/><path d="M6 6h.01M6 18h.01"/></svg></span> 中间件与分布式深度能力</div>
+  <p>长期在金融级与高并发场景下与中间件打交道，熟悉其内部机制与典型故障模式，能在生产链路上做端到端定位：</p>
+  <ul class="pf-list">
+    <li><strong>缓存与存储</strong>：Redis 主从 / 集群 / 哨兵的容量与热点治理，蚂蚁自研 <strong>Tair</strong> 在金融级场景下的高可用与一致性实战</li>
+    <li><strong>消息中间件</strong>：<strong>RocketMQ</strong>、Kafka、RabbitMQ 的顺序、堆积、重试、死信与一致性排查</li>
+    <li><strong>RPC 与服务治理</strong>：<strong>Dubbo / SOFARPC / SOFABoot</strong> 等金融级中间件，路由、限流、熔断、灰度的稳定性建设</li>
+    <li><strong>配置与注册中心</strong>：<strong>Apollo / Nacos / ZooKeeper</strong> 的多环境治理、动态推送与变更风险防控</li>
+    <li><strong>JVM 深度排查</strong>：coredump / hs_err / heap dump 分析，结合 Arthas、JFR、async-profiler 定位 CPU 飙高、Full GC、死锁、Native Crash</li>
+    <li><strong>Linux 与系统层</strong>：top / vmstat / iostat / perf / strace / tcpdump / ss，从内核态到用户态的链路诊断</li>
+  </ul>
+</div>
 
 ## 一句话定位
 
-> 一路从 **百度** 写到 **菜鸟无人车**，从 **测试** 走到 **研发** 再回到 **测试架构**，从 **Web 系统** 走到 **金融级核心**，又走向 **L4 级无人车**——
-> 我不只是"找 Bug 的人"，而是 **AI 时代的质量基础设施设计者**：
-> 用研发视角理解系统、用架构思维设计测试、用 AI 能力放大杠杆，让质量成为可量化、可演进、可复利的工程资产。
+<div class="profile-quote" markdown="0">
+  <p>一路从 <strong>百度</strong> 写到 <strong>菜鸟无人车</strong>，从 <strong>测试</strong> 走到 <strong>研发</strong> 再回到 <strong>测试架构</strong>，从 <strong>Web 系统</strong> 走到 <strong>金融级核心</strong>，又走向 <strong>L4 级无人车</strong>——</p>
+  <p>我不只是"找 Bug 的人"，而是 <strong>AI 时代的质量基础设施设计者</strong>：用研发视角理解系统、用架构思维设计测试、用 AI 能力放大杠杆，让质量成为可量化、可演进、可复利的工程资产。</p>
+</div>
