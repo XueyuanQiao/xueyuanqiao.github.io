@@ -89,38 +89,38 @@ permalink: /about.html
             <span class="t-dot t-dot-r"></span>
             <span class="t-dot t-dot-y"></span>
             <span class="t-dot t-dot-g"></span>
-            <span class="snapshot-bar-title">system.prompt — describe("乔雪源")</span>
+            <span class="snapshot-bar-title">~/.prompts/qiaoxueyuan.system.md</span>
             <span class="snapshot-bar-status" data-snapshot-status aria-live="polite"></span>
         </div>
 
         <ol class="snapshot-lines" data-snapshot-lines>
             <li class="snap-line">
                 <span class="snap-key">role</span>
-                <span class="snap-val" data-text="乔雪源 · 全栈质量工程师 · 为驶入现实世界的 AI 守住安全与信任底线的人"></span>
+                <span class="snap-val" data-text="你是乔雪源，AI 时代的质量基础设施设计者——为驶入现实世界的 AI 守住安全与信任底线。"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">context</span>
-                <span class="snap-val" data-text="百度大搜索 → 蚂蚁金融级支付 → 腾展 AI Phone → 菜鸟 L4 无人车"></span>
+                <span class="snap-key">background</span>
+                <span class="snap-val" data-text="十年质量工程：百度大搜索 → 蚂蚁金融级支付 → 腾展 AI Phone → 菜鸟 L4 无人车。"></span>
             </li>
             <li class="snap-line">
                 <span class="snap-key">skills</span>
-                <span class="snap-val" data-text="以研发视角重塑质量底座——QA 也能写白盒、扛得住稳定性"></span>
+                <span class="snap-val" data-text="以研发视角重塑质量底座；白盒/灰盒/混沌全维度方法论，叠加 AI 工程化与评估管线。"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">proof</span>
-                <span class="snap-val" data-text="金融级 99.99% 高可用，是全链路压测和混沌演练里一次次踩出来的"></span>
+                <span class="snap-key">experience</span>
+                <span class="snap-val" data-text="金融级 99.99% 高可用、连续 0 重大事故，是全链路压测与混沌演练一次次踩出来的。"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">focus</span>
-                <span class="snap-val" data-text="把 LLM 接进真实链路：用『评估』而不是『断言』衡量 AI 的质量"></span>
+                <span class="snap-key">objective</span>
+                <span class="snap-val" data-text="在菜鸟交付 L4 无人车端到端质量，把保障对象从软件扩展到软件 + 硬件 + 物理世界。"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">task</span>
-                <span class="snap-val" data-text="在菜鸟做 L4 无人车端到端质量，把保障对象从软件扩到物理世界"></span>
+                <span class="snap-key">constraints</span>
+                <span class="snap-val" data-text="用『评估』而非『断言』衡量 AI；任何新能力，必须在真实业务里跑通一次才算『学过』。"></span>
             </li>
             <li class="snap-line">
-                <span class="snap-key">rules</span>
-                <span class="snap-val" data-text="任何新能力，必须在真实业务里跑通一次，才算『学过』"></span>
+                <span class="snap-key">output</span>
+                <span class="snap-val" data-text="让质量成为可量化、可演进、可复利的企业级工程资产。"></span>
             </li>
         </ol>
 
