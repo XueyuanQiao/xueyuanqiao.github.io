@@ -282,7 +282,7 @@ permalink: /about.html
                     <div class="r-name">AI &amp; LLM</div>
                     <div class="r-desc">Agent · RAG · LLM-as-a-Judge · Prompt</div>
                 </div>
-                <span class="r-score">92</span>
+                <span class="r-score">94</span>
             </li>
             <li data-axis="1" style="--accent: 89,227,255">
                 <span class="dot"></span>
@@ -298,7 +298,7 @@ permalink: /about.html
                     <div class="r-name">Distributed</div>
                     <div class="r-desc">高并发 · 全链路压测 · 混沌工程</div>
                 </div>
-                <span class="r-score">85</span>
+                <span class="r-score">93</span>
             </li>
             <li data-axis="3" style="--accent: 124,255,180">
                 <span class="dot"></span>
@@ -306,7 +306,7 @@ permalink: /about.html
                     <div class="r-name">Quality Governance</div>
                     <div class="r-desc">QA Owner · 风险建模 · 测试左移 · SLO</div>
                 </div>
-                <span class="r-score">90</span>
+                <span class="r-score">95</span>
             </li>
             <li data-axis="4" style="--accent: 251,191,36">
                 <span class="dot"></span>
@@ -314,7 +314,7 @@ permalink: /about.html
                     <div class="r-name">Coding Craft</div>
                     <div class="r-desc">Python · Java · Ruby · 工程化 · 调试直觉</div>
                 </div>
-                <span class="r-score">88</span>
+                <span class="r-score">93</span>
             </li>
             <li data-axis="5" style="--accent: 248,113,113">
                 <span class="dot"></span>
@@ -322,7 +322,7 @@ permalink: /about.html
                     <div class="r-name">Writing &amp; Sharing</div>
                     <div class="r-desc">技术写作 · 分享 · 团队赋能</div>
                 </div>
-                <span class="r-score">80</span>
+                <span class="r-score">93</span>
             </li>
         </ul>
     </div>
@@ -344,7 +344,7 @@ permalink: /about.html
                     <span class="tl-tag">菜鸟无人车 → 九识 · L4</span>
                 </div>
                 <h3>L4 无人配送车的端到端质量</h3>
-                <p>入职<strong>菜鸟无人车</strong>，随业务并入<strong>九识</strong>——把过往沉淀的测试架构方法论带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"。无人车对我还是全新的领域，仿真 / 路测这些都才刚起步、仍在系统学习中；同时用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起无人车质量中台，经云效流水线 CI/CD 部署到 SAE——在这里第一次真正理解<em>"安全是工程问题"</em>。</p>
+                <p>入职<strong>菜鸟无人车</strong>，随业务并入<strong>九识</strong>——把过往沉淀的测试架构方法论带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"。无人车对我还是全新的领域，仿真 / 路测这些都才刚起步、仍在系统学习中；同时用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起无人车质量中台，经云效流水线 CI/CD 部署到 SAE——也开始慢慢体会到<em>"安全可能是个工程问题"</em>。</p>
                 <div class="tl-chips">
                     <span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>质量中台</span><span>CI/CD</span>
                 </div>

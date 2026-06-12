@@ -44,7 +44,7 @@ permalink: /about/2026/02/22/intro.html
     <div class="pf-card" data-tilt>
       <div class="pf-meta"><span class="pf-year">2026 — Now</span><span class="pf-tag">菜鸟无人车 → 九识 · L4</span></div>
       <h4>L4 无人配送车的端到端质量</h4>
-      <p>刚踏入 <strong>L4 级无人配送车</strong> 这一最前沿的具身智能场景，质量保障对象从"软件系统"扩展到"软件 + 硬件 + 物理世界"。作为这一领域的新人，正从 0 系统学习自动驾驶专业体系（仿真测试、路测验证、感知 / 规划 / 控制全链路质量、车云协同、OTA 灰度）；与此同时，用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起菜鸟无人车质量中台，经阿里云云效流水线 CI/CD 部署到 SAE——在这里第一次真正理解"安全是工程问题"。</p>
+      <p>刚踏入 <strong>L4 级无人配送车</strong> 这一最前沿的具身智能场景，质量保障对象从"软件系统"扩展到"软件 + 硬件 + 物理世界"。作为这一领域的新人，正从 0 系统学习自动驾驶专业体系（仿真测试、路测验证、感知 / 规划 / 控制全链路质量、车云协同、OTA 灰度）；与此同时，用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起菜鸟无人车质量中台，经阿里云云效流水线 CI/CD 部署到 SAE——也开始慢慢体会到"安全可能是个工程问题"。</p>
       <div class="pf-chips"><span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>质量中台</span><span>CI/CD</span></div>
     </div>
   </li>
