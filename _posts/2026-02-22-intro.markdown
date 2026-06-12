@@ -16,7 +16,7 @@ permalink: /about/2026/02/22/intro.html
     <span class="pf-role">L4 无人车质量</span>
     <span class="pf-role">AI 工程化实践</span>
   </div>
-  <p class="pf-desc">十年深耕，足迹横跨 <strong>百度（测试 → 研发）→ 蚂蚁集团 → 腾展 → 菜鸟无人车</strong>，覆盖搜索、金融、AI Phone 全栈质量到 <strong>L4 级自动驾驶</strong> 多种业务形态。当前在菜鸟无人车专注 L4 级无人配送车的端到端质量体系建设——以研发视角重塑质量底座，把多语言全栈技术作为支点、测试架构设计作为方法论，并以持续学习的 AI 能力作为长期杠杆，构建可演进、可复利的企业级质量基础设施。</p>
+  <p class="pf-desc">十年深耕，足迹横跨 <strong>百度（测试 → 研发）→ 蚂蚁集团 → 腾展 → 菜鸟无人车（并入九识）</strong>，覆盖搜索、金融、AI Phone 全栈质量到 <strong>L4 级自动驾驶</strong> 多种业务形态。当前在九识专注 L4 级无人配送车的端到端质量体系建设——以研发视角重塑质量底座，把多语言全栈技术作为支点、测试架构设计作为方法论，并以持续学习的 AI 能力作为长期杠杆，构建可演进、可复利的企业级质量基础设施。</p>
   <div class="profile-stats">
     <div class="pf-stat"><span class="pf-num"><span data-counter="10">0</span></span><span class="pf-lbl">质量工程年限</span></div>
     <div class="pf-stat"><span class="pf-num"><span data-counter="4">0</span></span><span class="pf-lbl">顶级业务历练</span></div>
@@ -29,7 +29,7 @@ permalink: /about/2026/02/22/intro.html
 
 <div class="profile-panel" markdown="0" style="--accent: 124,140,255">
   <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span> 全栈质量治理积淀</div>
-  <p>深耕测试开发与质量工程领域多年，从 <strong>百度大搜索</strong> 起步，历经 <strong>蚂蚁集团金融级核心业务</strong>、<strong>腾展 AI Phone 全栈质量</strong> 的连续淬炼，当前在 <strong>菜鸟无人车</strong> 专注于 L4 级无人配送车的端到端质量体系建设。覆盖 Web、客户端、服务端、数据链路、算法模型、车端嵌入式六大战场，沉淀出一套完整的 <strong>白盒 / 灰盒 / 黑盒 + 静态 / 动态 / 模糊 / 混沌</strong> 全维度软件测试方法论；如今正把这套方法论延伸到无人车的 <strong>仿真 / 路测</strong> 等新场景——这一块我才刚起步，仍在系统学习中。</p>
+  <p>深耕测试开发与质量工程领域多年，从 <strong>百度大搜索</strong> 起步，历经 <strong>蚂蚁集团金融级核心业务</strong>、<strong>腾展 AI Phone 全栈质量</strong> 的连续淬炼，当前在 <strong>九识无人车</strong>（原菜鸟无人车，已并入九识）专注于 L4 级无人配送车的端到端质量体系建设。覆盖 Web、客户端、服务端、数据链路、算法模型、车端嵌入式六大战场，沉淀出一套完整的 <strong>白盒 / 灰盒 / 黑盒 + 静态 / 动态 / 模糊 / 混沌</strong> 全维度软件测试方法论；如今正把这套方法论延伸到无人车的 <strong>仿真 / 路测</strong> 等新场景——这一块我才刚起步，仍在系统学习中。</p>
 </div>
 
 <div class="profile-panel" markdown="0" style="--accent: 89,227,255">
@@ -42,7 +42,7 @@ permalink: /about/2026/02/22/intro.html
 <ol class="profile-timeline" markdown="0">
   <li class="pf-item">
     <div class="pf-card" data-tilt>
-      <div class="pf-meta"><span class="pf-year">2026 — Now</span><span class="pf-tag">菜鸟无人车 · L4</span></div>
+      <div class="pf-meta"><span class="pf-year">2026 — Now</span><span class="pf-tag">菜鸟无人车 → 九识 · L4</span></div>
       <h4>L4 无人配送车的端到端质量</h4>
       <p>刚踏入 <strong>L4 级无人配送车</strong> 这一最前沿的具身智能场景，质量保障对象从"软件系统"扩展到"软件 + 硬件 + 物理世界"。作为这一领域的新人，正从 0 系统学习自动驾驶专业体系（仿真测试、路测验证、感知 / 规划 / 控制全链路质量、车云协同、OTA 灰度）；与此同时，用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起菜鸟无人车质量中台，经阿里云云效流水线 CI/CD 部署到 SAE——在这里第一次真正理解"安全是工程问题"。</p>
       <div class="pf-chips"><span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>质量中台</span><span>CI/CD</span></div>
@@ -230,6 +230,6 @@ permalink: /about/2026/02/22/intro.html
 ## 一句话定位
 
 <div class="profile-quote" markdown="0">
-  <p>一路从 <strong>百度</strong> 写到 <strong>菜鸟无人车</strong>，从 <strong>测试</strong> 走到 <strong>研发</strong> 再回到 <strong>测试架构</strong>，从 <strong>Web 系统</strong> 走到 <strong>金融级核心</strong>，又走向 <strong>L4 级无人车</strong>——</p>
+  <p>一路从 <strong>百度</strong> 写到 <strong>菜鸟无人车、再到九识</strong>，从 <strong>测试</strong> 走到 <strong>研发</strong> 再回到 <strong>测试架构</strong>，从 <strong>Web 系统</strong> 走到 <strong>金融级核心</strong>，又走向 <strong>L4 级无人车</strong>——</p>
   <p>我不只是"找 Bug 的人"，而是 <strong>AI 时代的质量基础设施设计者</strong>：用研发视角理解系统、用架构思维设计测试、用 AI 能力放大杠杆，让质量成为可量化、可演进、可复利的工程资产。</p>
 </div>

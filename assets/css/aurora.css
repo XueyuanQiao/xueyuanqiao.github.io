@@ -3722,24 +3722,49 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   100% { transform: translateY(420px); }
 }
 
-.snap-key {
-  flex: none;
-  min-width: 116px;
-  text-align: right;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--brand-2);
-  opacity: 0.9;
+/* ---- 分区式提示词：章节标题行 (# 1. 角色设定 …) ---- */
+.snap-head {
+  align-items: center;
+  gap: 8px;
+  padding: 14px 0 6px;
 }
 
-/* key 标签按行循环配色，增加层次感 */
-.snap-line:nth-child(3n+1) .snap-key { color: var(--brand); }
-.snap-line:nth-child(3n+2) .snap-key { color: var(--brand-2); }
-.snap-line:nth-child(3n+3) .snap-key { color: var(--brand-3); }
+.snap-head:first-child { padding-top: 4px; }
 
-.snap-key::before { content: "# "; opacity: 0.6; }
+.snap-hash {
+  flex: none;
+  font-weight: 800;
+  color: var(--brand);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--brand) 60%, transparent);
+}
+
+.snap-head .snap-val {
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+/* 章节标题颜色按出现顺序循环，增加层次感 */
+.snap-head:nth-of-type(3n+1) .snap-hash { color: var(--brand); }
+.snap-head:nth-of-type(3n+2) .snap-hash { color: var(--brand-2); }
+.snap-head:nth-of-type(3n+3) .snap-hash { color: var(--brand-3); }
+
+/* ---- 分区式提示词：要点行 (- 你是谁 …) ---- */
+.snap-item { padding-left: 18px; }
+
+.snap-field {
+  flex: none;
+  min-width: 64px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--brand-2);
+  opacity: 0.92;
+}
+
+.snap-field::before { content: "- "; opacity: 0.6; }
 
 .snap-val {
   position: relative;
@@ -3918,7 +3943,8 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 
 @media (max-width: 620px) {
   .snapshot-lines { font-size: 0.86rem; padding: 16px 14px 4px; }
-  .snap-key { min-width: 92px; }
+  .snap-field { min-width: 52px; }
+  .snap-item { padding-left: 12px; }
   .snapshot-cta { margin: 12px 12px 16px; padding: 14px 16px; gap: 12px; }
   .snapshot-cta-sub { display: none; }
   .snapshot-cta-icon { width: 36px; height: 36px; }

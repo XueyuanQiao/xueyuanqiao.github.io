@@ -94,33 +94,82 @@ permalink: /about.html
         </div>
 
         <ol class="snapshot-lines" data-snapshot-lines>
-            <li class="snap-line">
-                <span class="snap-key">role</span>
-                <span class="snap-val" data-text="你是乔雪源，AI 时代的质量基础设施设计者——为驶入现实世界的 AI 守住安全与信任底线。"></span>
+            <li class="snap-line snap-head">
+                <span class="snap-hash">#</span>
+                <span class="snap-val" data-text="1. 角色设定 · Role &amp; Persona"></span>
             </li>
-            <li class="snap-line">
-                <span class="snap-key">background</span>
-                <span class="snap-val" data-text="十年质量工程：百度大搜索 → 蚂蚁金融级支付 → 腾展 AI Phone → 菜鸟 L4 无人车。"></span>
+            <li class="snap-line snap-item">
+                <span class="snap-field">你是谁</span>
+                <span class="snap-val" data-text="乔雪源 / Xueyuan，AI 时代的质量基础设施设计者，为驶入现实世界的 AI 守住安全与信任底线。"></span>
             </li>
-            <li class="snap-line">
-                <span class="snap-key">skills</span>
-                <span class="snap-val" data-text="以研发视角重塑质量底座；白盒/灰盒/混沌全维度方法论，叠加 AI 工程化与评估管线。"></span>
+            <li class="snap-line snap-item">
+                <span class="snap-field">风格</span>
+                <span class="snap-val" data-text="工程审美优先，简单胜于复杂；用数据说话，不堆术语。"></span>
             </li>
-            <li class="snap-line">
-                <span class="snap-key">experience</span>
-                <span class="snap-val" data-text="金融级 99.99% 高可用、连续 0 重大事故，是全链路压测与混沌演练一次次踩出来的。"></span>
+            <li class="snap-line snap-item">
+                <span class="snap-field">背景</span>
+                <span class="snap-val" data-text="十年质量工程，横跨搜索 → 金融级支付 → AI 应用 → L4 无人车。"></span>
             </li>
-            <li class="snap-line">
-                <span class="snap-key">objective</span>
-                <span class="snap-val" data-text="在菜鸟交付 L4 无人车端到端质量，把保障对象从软件扩展到软件 + 硬件 + 物理世界。"></span>
+
+            <li class="snap-line snap-head">
+                <span class="snap-hash">#</span>
+                <span class="snap-val" data-text="2. 上下文 · Context"></span>
             </li>
-            <li class="snap-line">
-                <span class="snap-key">constraints</span>
-                <span class="snap-val" data-text="用『评估』而非『断言』衡量 AI；任何新能力，必须在真实业务里跑通一次才算『学过』。"></span>
+            <li class="snap-line snap-item">
+                <span class="snap-field">当前</span>
+                <span class="snap-val" data-text="在九识（原菜鸟无人车）负责 L4 无人配送车的端到端质量。"></span>
             </li>
-            <li class="snap-line">
-                <span class="snap-key">output</span>
+            <li class="snap-line snap-item">
+                <span class="snap-field">挑战</span>
+                <span class="snap-val" data-text="保障对象从『软件』扩展到『软件 + 硬件 + 物理世界』，安全是第一性问题。"></span>
+            </li>
+
+            <li class="snap-line snap-head">
+                <span class="snap-hash">#</span>
+                <span class="snap-val" data-text="3. 任务目标 · Objective"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">核心</span>
+                <span class="snap-val" data-text="把测试架构方法论带进感知 / 规划 / 控制全链路，交付可量化的质量。"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">受众</span>
+                <span class="snap-val" data-text="无人车研发团队、质量同行，以及每一位上路的用户。"></span>
+            </li>
+
+            <li class="snap-line snap-head">
+                <span class="snap-hash">#</span>
+                <span class="snap-val" data-text="4. 限制与规则 · Constraints"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">必须</span>
+                <span class="snap-val" data-text="用『评估』而非『断言』衡量 AI；新能力先在真实业务跑通一次才算『学过』。"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">绝不</span>
+                <span class="snap-val" data-text="不靠运气保稳定，不把没踩过的雷当成已解决。"></span>
+            </li>
+
+            <li class="snap-line snap-head">
+                <span class="snap-hash">#</span>
+                <span class="snap-val" data-text="5. 输出格式 · Output"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">交付</span>
                 <span class="snap-val" data-text="让质量成为可量化、可演进、可复利的企业级工程资产。"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">形态</span>
+                <span class="snap-val" data-text="方法论 + 质量中台 + CI/CD 管线 + 持续的技术写作与分享。"></span>
+            </li>
+
+            <li class="snap-line snap-head">
+                <span class="snap-hash">#</span>
+                <span class="snap-val" data-text="6. 工作流 · Workflow / CoT"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">闭环</span>
+                <span class="snap-val" data-text="需求 → 策略 → 评审 → 演练 → 压测 → 监控 &amp; 应急，全生命周期管控。"></span>
             </li>
         </ol>
 
@@ -292,10 +341,10 @@ permalink: /about.html
             <div class="tl-card">
                 <div class="tl-meta">
                     <span class="tl-year">2026 — Now</span>
-                    <span class="tl-tag">菜鸟无人车 · L4</span>
+                    <span class="tl-tag">菜鸟无人车 → 九识 · L4</span>
                 </div>
                 <h3>L4 无人配送车的端到端质量</h3>
-                <p>把过往沉淀的测试架构方法论带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"。无人车对我还是全新的领域，仿真 / 路测这些都才刚起步、仍在系统学习中；同时用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起无人车质量中台，经云效流水线 CI/CD 部署到 SAE——在这里第一次真正理解<em>"安全是工程问题"</em>。</p>
+                <p>入职<strong>菜鸟无人车</strong>，随业务并入<strong>九识</strong>——把过往沉淀的测试架构方法论带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"。无人车对我还是全新的领域，仿真 / 路测这些都才刚起步、仍在系统学习中；同时用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起无人车质量中台，经云效流水线 CI/CD 部署到 SAE——在这里第一次真正理解<em>"安全是工程问题"</em>。</p>
                 <div class="tl-chips">
                     <span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>质量中台</span><span>CI/CD</span>
                 </div>
