@@ -24,10 +24,10 @@ for file in _posts/*.markdown; do
       content=$(cat "$file")
       
       # 提取标题并清理空格（更严格的空格清理）
-      title=$(echo "$content" | grep "^title:" | head -n 1 | awk -F': ' '{print $2}' | xargs)
+      title=$(echo "$content" | grep "^title:" | head -n 1 | awk -F': ' '{print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
       
       # 提取摘要并清理空格（更严格的空格清理）
-      excerpt=$(echo "$content" | grep "^excerpt:" | head -n 1 | awk -F': ' '{print $2}' | xargs)
+      excerpt=$(echo "$content" | grep "^excerpt:" | head -n 1 | awk -F': ' '{print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
       
       # 提取分类并清理空格（更严格的空格清理）
       categories_line=$(echo "$content" | grep "^categories:" | head -n 1)

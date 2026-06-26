@@ -6,7 +6,7 @@ excerpt: 三十岁不是技术人生的终点，而是认知升级的最后窗�
 categories: career growth
 permalink: /career/2026/06/07/tech-thirty-breakthrough.html
 featured: true
-featured_rank: 2
+featured_rank: 1
 ---
 
 2024 年以来的互联网行业，正经历一场范式转移。当 AI 开始能写代码、做 Code Review、甚至帮你设计架构，无数技术人在深夜的显示器前陷入焦虑：我们这些以"写代码"为生的人，还有未来吗？
