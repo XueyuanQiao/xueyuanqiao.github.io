@@ -2,7 +2,7 @@
 layout: post
 title: 个人概述
 date: 2026-02-22 03:22:04 +0800
-excerpt: 资深全栈测试开发工程师 · AI 原生质量体系践行者 · 多语言研发与测试架构设计专家
+excerpt: 资深全栈测试开发工程师 · 持续精进的 AI 全栈工程师 · AI 原生质量体系践行者 · 多语言研发与测试架构设计专家
 categories: about
 permalink: /about/2026/02/22/intro.html
 ---
@@ -12,11 +12,12 @@ permalink: /about/2026/02/22/intro.html
   <div class="pf-name">乔雪源 · <span class="pf-grad">AI Native Quality Engineer</span></div>
   <div class="pf-roles">
     <span class="pf-role">资深全栈测试开发</span>
+    <span class="pf-role">持续精进的 AI 全栈工程师</span>
     <span class="pf-role">金融级稳定性</span>
     <span class="pf-role">L4 无人车质量</span>
     <span class="pf-role">AI 工程化实践</span>
   </div>
-  <p class="pf-desc">十年深耕，足迹横跨 <strong>百度（测试 → 研发）→ 蚂蚁集团 → 腾展 → 菜鸟无人车（并入九识）</strong>，覆盖搜索、金融、AI Phone 全栈质量到 <strong>L4 级自动驾驶</strong> 多种业务形态。当前在九识专注 L4 级无人配送车的端到端质量体系建设——以研发视角重塑质量底座，把多语言全栈技术作为支点、测试架构设计作为方法论，并以持续学习的 AI 能力作为长期杠杆，构建可演进、可复利的企业级质量基础设施。</p>
+  <p class="pf-desc">十年深耕，足迹横跨 <strong>百度（测试 → 研发）→ 蚂蚁集团 → 腾展 → 菜鸟无人车（并入九识）</strong>，覆盖搜索、金融、AI Phone 全栈质量到 <strong>L4 级自动驾驶</strong> 多种业务形态。当前在九识专注 L4 级无人配送车的端到端质量体系建设——以研发视角重塑质量底座，把多语言全栈技术作为支点、测试架构设计作为方法论，并以持续学习的 AI 能力作为长期杠杆，构建可演进、可复利的企业级质量基础设施。近几个月更顺应 <strong>AI Native「一人全栈」</strong> 的行业趋势，<strong>已从质量工程师转型为</strong>能独立完成 <strong>设计 → 前端 → 后端 → 部署</strong> 全链路的 <strong>AI 全栈工程师</strong>，并持续精进。</p>
   <div class="profile-stats">
     <div class="pf-stat"><span class="pf-num"><span data-counter="10">0</span></span><span class="pf-lbl">质量工程年限</span></div>
     <div class="pf-stat"><span class="pf-num"><span data-counter="4">0</span></span><span class="pf-lbl">顶级业务历练</span></div>
@@ -110,7 +111,7 @@ permalink: /about/2026/02/22/intro.html
   </div>
   <div class="pf-layer">
     <span class="pf-idx">04</span>
-    <div class="pf-body"><b>全栈交付层</b><p>完整掌握 AI 时代的全栈开发链路——从 <strong>Stitch / Claude Design</strong> 做产品与界面设计，到借助 <strong>Vibe Coding</strong> 把设计稿直接转化为前后端工程代码，独立完成"设计 → 前端 → 后端 → 联调 → 上线"的端到端闭环。菜鸟无人车质量中台正是这套方法的产物。</p></div>
+    <div class="pf-body"><b>全栈交付层</b><p>完整掌握 AI 时代的全栈开发链路——从 <strong>Stitch / Claude Design</strong> 做产品与界面设计，到借助 <strong>Vibe Coding</strong> 把设计稿直接转化为前后端工程代码，独立完成"设计 → 前端 → 后端 → 联调 → 上线"的端到端闭环。这一层也是我近几个月<strong>从质量工程师转型 AI 全栈工程师</strong>的支点：AI 编程 Agent 把过去需要一整个团队才能覆盖的全栈交付，压缩成一个具备工程审美的个体就能闭环——顺应 AI Native「一人全栈」的行业趋势，也让我第一次真正拥有"把想法直接变成上线产品"的能力，如今持续精进。菜鸟无人车质量中台正是这套方法的产物。</p></div>
   </div>
   <div class="pf-layer">
     <span class="pf-idx">05</span>
@@ -163,6 +164,10 @@ permalink: /about/2026/02/22/intro.html
   <span class="pf-skill" style="--i:17"><span class="g">P</span>Prometheus</span>
   <span class="pf-skill" style="--i:18"><span class="g">G</span>Grafana</span>
   <span class="pf-skill" style="--i:19"><span class="g">L</span>Linux</span>
+  <span class="pf-skill" style="--i:20"><span class="g">R</span>React</span>
+  <span class="pf-skill" style="--i:21"><span class="g">T</span>TypeScript</span>
+  <span class="pf-skill" style="--i:22"><span class="g">V</span>Vite</span>
+  <span class="pf-skill" style="--i:23"><span class="g">A</span>Ant Design</span>
 </div>
 
 <div class="profile-panel" markdown="0" style="--accent: 124,255,180">
@@ -231,5 +236,5 @@ permalink: /about/2026/02/22/intro.html
 
 <div class="profile-quote" markdown="0">
   <p>一路从 <strong>百度</strong> 写到 <strong>菜鸟无人车、再到九识</strong>，从 <strong>测试</strong> 走到 <strong>研发</strong> 再回到 <strong>测试架构</strong>，从 <strong>Web 系统</strong> 走到 <strong>金融级核心</strong>，又走向 <strong>L4 级无人车</strong>——</p>
-  <p>我不只是"找 Bug 的人"，而是 <strong>AI 时代的质量基础设施设计者</strong>：用研发视角理解系统、用架构思维设计测试、用 AI 能力放大杠杆，让质量成为可量化、可演进、可复利的工程资产。</p>
+  <p>我不只是"找 Bug 的人"，而是 <strong>AI 时代的质量基础设施设计者，也是持续精进的 AI 全栈工程师</strong>：用研发视角理解系统、用架构思维设计测试、用 AI 能力放大杠杆——既能守住质量底线，也能一个人把产品从设计做到上线，让质量与交付都成为可量化、可演进、可复利的工程资产。</p>
 </div>

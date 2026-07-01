@@ -40,7 +40,7 @@ permalink: /about.html
 
         <p class="about-typed">
             <span data-typed
-                  data-typed-strings='["全栈质量工程师","AI Native 探索者","金融级稳定性玩家","Aurora 主题作者","好奇心驱动的写作者"]'>
+                  data-typed-strings='["全栈质量工程师","持续精进的 AI 全栈工程师","一人全栈交付者","金融级稳定性玩家","Aurora 主题作者","好奇心驱动的写作者"]'>
             </span><span class="caret">_</span>
         </p>
 
@@ -122,6 +122,10 @@ permalink: /about.html
             <li class="snap-line snap-item">
                 <span class="snap-field">挑战</span>
                 <span class="snap-val" data-text="保障对象从『软件』扩展到『软件 + 硬件 + 物理世界』，安全是第一性问题。"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">转型</span>
+                <span class="snap-val" data-text="近几个月已从质量工程师转型 AI 全栈工程师、持续精进——用 Vibe Coding 一个人打通设计到上线。"></span>
             </li>
 
             <li class="snap-line snap-head">
@@ -312,7 +316,7 @@ permalink: /about.html
                 <span class="dot"></span>
                 <div>
                     <div class="r-name">Coding Craft</div>
-                    <div class="r-desc">Python · Java · Ruby · 工程化 · 调试直觉</div>
+                    <div class="r-desc">Python · Java · React + FastAPI 全栈 · Vibe Coding</div>
                 </div>
                 <span class="r-score">93</span>
             </li>
@@ -344,9 +348,9 @@ permalink: /about.html
                     <span class="tl-tag">菜鸟无人车 → 九识 · L4</span>
                 </div>
                 <h3>L4 无人配送车的端到端质量</h3>
-                <p>入职<strong>菜鸟无人车</strong>，随业务并入<strong>九识</strong>——把过往沉淀的测试架构方法论带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"。无人车对我还是全新的领域，仿真 / 路测这些都才刚起步、仍在系统学习中；同时用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起无人车质量中台，经云效流水线 CI/CD 部署到 SAE——也开始慢慢体会到<em>"安全可能是个工程问题"</em>。</p>
+                <p>入职<strong>菜鸟无人车</strong>，随业务并入<strong>九识</strong>——把过往沉淀的测试架构方法论带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"。无人车对我还是全新的领域，仿真 / 路测这些都才刚起步、仍在系统学习中；同时用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起无人车质量中台，经云效流水线 CI/CD 部署到 SAE——也开始慢慢体会到<em>"安全可能是个工程问题"</em>。也正是这段经历，让我近几个月顺着 <strong>AI Native「一人全栈」</strong> 的行业趋势，<strong>已从纯粹的质量工程师转型为 AI 全栈工程师</strong>——设计、前端、后端到部署的全链路一个人就能独立闭环，如今持续精进。</p>
                 <div class="tl-chips">
-                    <span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>质量中台</span><span>CI/CD</span>
+                    <span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>质量中台</span><span>全栈交付</span><span>CI/CD</span>
                 </div>
             </div>
         </li>
@@ -416,7 +420,7 @@ permalink: /about.html
         <h2>常驻工具箱 · Tech Stack</h2>
     </header>
     <div class="about-stack">
-        {%- assign stack_items = "Python|Java|Ruby on Rails|Pytest|Selenium|LangChain|Claude|MCP|FastAPI|Spring|MySQL|Redis|Kafka|Docker|Kubernetes|Prometheus|Grafana|Jenkins|GitHub Actions|Linux|VS Code|Cursor|Notion|Obsidian" | split: "|" -%}
+        {%- assign stack_items = "Python|Java|Ruby on Rails|Pytest|Selenium|LangChain|Claude|MCP|React|TypeScript|Vite|FastAPI|Spring|MySQL|Redis|Kafka|Docker|Kubernetes|Prometheus|Grafana|Jenkins|GitHub Actions|Linux|VS Code|Cursor|Notion|Obsidian" | split: "|" -%}
         {% for tag in stack_items %}
         <span class="stack-chip" style="--i: {{ forloop.index0 }}">
             <span class="chip-glyph">{{ tag | slice: 0, 1 }}</span>
