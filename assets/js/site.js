@@ -537,6 +537,7 @@
     var isLanding = doc.body.classList.contains("is-landing");
     initTyped();
     initCounters();
+    initSkillClickFeedback();
     if (!isTouchDevice) initTilt();
     if (!isTouchDevice) initSkillSpotlight();
     try {
@@ -653,6 +654,33 @@
         var r = card.getBoundingClientRect();
         card.style.setProperty("--mx", ((e.clientX - r.left) / r.width * 100) + "%");
         card.style.setProperty("--my", ((e.clientY - r.top) / r.height * 100) + "%");
+      });
+    });
+  }
+
+  // ---------- Skill card click feedback ----------
+  function initSkillClickFeedback() {
+    var cards = doc.querySelectorAll(".skill-card");
+    cards.forEach(function (card) {
+      card.addEventListener("click", function (e) {
+        var r = card.getBoundingClientRect();
+        var hasPointerPosition = e.clientX !== 0 || e.clientY !== 0;
+        var x = hasPointerPosition ? e.clientX - r.left : r.width / 2;
+        var y = hasPointerPosition ? e.clientY - r.top : r.height / 2;
+
+        card.style.setProperty("--click-x", x + "px");
+        card.style.setProperty("--click-y", y + "px");
+
+        // 连续点击时先清除再强制重排，让动画可以从头播放。
+        card.classList.remove("is-clicked");
+        void card.offsetWidth;
+        card.classList.add("is-clicked");
+      });
+
+      card.addEventListener("animationend", function (e) {
+        if (e.target === card && e.animationName === "skill-card-click") {
+          card.classList.remove("is-clicked");
+        }
       });
     });
   }

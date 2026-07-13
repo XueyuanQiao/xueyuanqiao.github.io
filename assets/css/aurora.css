@@ -2635,21 +2635,52 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 /* ---------- Skill grid ---------- */
 .skill-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 18px;
 }
 
 .skill-card {
   --accent: 124,140,255;
   position: relative;
-  padding: 22px 20px;
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "icon title"
+    "desc desc"
+    "chips chips";
+  column-gap: 14px;
+  row-gap: 15px;
+  min-width: 0;
+  min-height: 238px;
+  padding: 22px;
   border-radius: var(--radius-lg);
-  background: var(--surface);
+  background:
+    linear-gradient(145deg, rgba(var(--accent), 0.09), transparent 44%),
+    var(--surface);
   border: 1px solid var(--surface-border);
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   overflow: hidden;
-  transition: transform var(--t-base) var(--ease-out), border-color var(--t-base) var(--ease-out);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  isolation: isolate;
+  transition:
+    transform var(--t-base) var(--ease-out),
+    border-color var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out);
+}
+
+/* 三张一排时，让第二排的两张卡片保持视觉居中。 */
+.skill-card:nth-child(4) { grid-column: 2 / span 2; }
+.skill-card:nth-child(5) { grid-column: 4 / span 2; }
+
+.skill-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .skill-card::before {
@@ -2666,38 +2697,108 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 .skill-card:hover {
   transform: translateY(-4px);
   border-color: rgb(var(--accent));
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.22), 0 0 28px rgba(var(--accent), 0.08);
 }
 
 .skill-card:hover::before { opacity: 1; }
 
+.skill-card::after {
+  content: "";
+  position: absolute;
+  left: var(--click-x, 50%);
+  top: var(--click-y, 50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent), 0.48) 0%, rgba(var(--accent), 0.22) 42%, transparent 72%);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.skill-card:active {
+  transform: translateY(-1px) scale(0.985);
+  transition-duration: 90ms;
+}
+
+.skill-card.is-clicked {
+  animation: skill-card-click 620ms var(--ease-out);
+}
+
+.skill-card.is-clicked::after {
+  animation: skill-card-ripple 620ms var(--ease-out);
+}
+
+.skill-card.is-clicked .skill-icon {
+  animation: skill-icon-pop 520ms var(--ease-out);
+}
+
+.skill-card.is-clicked h3 {
+  animation: skill-title-flash 620ms var(--ease-out);
+}
+
+@keyframes skill-card-click {
+  0% { border-color: rgba(var(--accent), 0.45); }
+  36% {
+    border-color: rgb(var(--accent));
+    box-shadow: 0 22px 52px rgba(0, 0, 0, 0.24), 0 0 34px rgba(var(--accent), 0.20);
+  }
+  100% { border-color: var(--surface-border); }
+}
+
+@keyframes skill-card-ripple {
+  0% { opacity: 0.78; transform: translate(-50%, -50%) scale(0.25); }
+  72% { opacity: 0.18; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(34); }
+}
+
+@keyframes skill-icon-pop {
+  0%, 100% { transform: scale(1) rotate(0); }
+  38% { transform: scale(1.16) rotate(-6deg); }
+  68% { transform: scale(0.96) rotate(2deg); }
+}
+
+@keyframes skill-title-flash {
+  0%, 100% { color: var(--text-1); text-shadow: none; }
+  42% { color: rgb(var(--accent)); text-shadow: 0 0 18px rgba(var(--accent), 0.42); }
+}
+
 .skill-icon {
+  grid-area: icon;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: 12px;
   background: linear-gradient(135deg, rgba(var(--accent), 0.22), rgba(var(--accent), 0.06));
   color: rgb(var(--accent));
-  margin-bottom: 14px;
+  margin: 0;
   border: 1px solid rgba(var(--accent), 0.35);
 }
 
 .skill-icon svg { width: 22px; height: 22px; }
 
 .skill-card h3 {
-  margin: 0 0 6px;
-  font-size: 1.1rem;
+  grid-area: title;
+  align-self: center;
+  margin: 0;
+  font-size: 1.12rem;
   color: var(--text-1);
 }
 
 .skill-card p {
-  margin: 0 0 12px;
+  grid-area: desc;
+  margin: 0;
   color: var(--text-3);
   font-size: 0.9rem;
+  line-height: 1.7;
 }
 
 .skill-card .chips {
+  grid-area: chips;
+  align-self: end;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -2711,6 +2812,14 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   background: rgba(var(--accent), 0.10);
   border: 1px solid rgba(var(--accent), 0.25);
   color: var(--text-2);
+}
+
+/* 侧栏仍显示但内容区变窄时，改为双列，末卡居中。 */
+@media (max-width: 1180px) {
+  .skill-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .skill-card,
+  .skill-card:nth-child(4) { grid-column: span 2; }
+  .skill-card:nth-child(5) { grid-column: 2 / span 2; }
 }
 
 /* ---------- Feature grid (3D tilt cards) ---------- */
@@ -3097,8 +3206,8 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   .section-eyebrow { font-size: 0.72rem; }
   .section-more { padding: 6px 12px; font-size: 0.84rem; }
 
-  /* Skill / feature 网格：单列，移除 minmax 强制最小宽度 */
-  .skill-grid { grid-template-columns: 1fr; gap: 12px; }
+  /* Skill 网格保持双列，末卡居中；feature 卡片继续单列。 */
+  .skill-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
   .feature-grid { grid-template-columns: 1fr; gap: 14px; }
   .skill-card { padding: 18px 16px; }
   .feature-card-inner { padding: 18px 16px 14px; }
@@ -3115,6 +3224,17 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 
   /* 1:1 网格中 hero 状态使用半角分隔避免文字偏黑 */
   .post-meta .sep { opacity: 0.6; }
+}
+
+/* Skill 卡片在手机宽度回落为单列，避免标题和标签被过度挤压。 */
+@media (max-width: 640px) {
+  .skill-grid { grid-template-columns: 1fr; }
+  .skill-card,
+  .skill-card:nth-child(4),
+  .skill-card:nth-child(5) {
+    grid-column: auto;
+    min-height: 0;
+  }
 }
 
 /* ---------- 极窄屏：≤ 520px ---------- */
@@ -3194,6 +3314,11 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   .article-content img:hover {
     transform: none !important;
     box-shadow: var(--shadow-1) !important;
+  }
+
+  .skill-card:active {
+    transform: scale(0.985) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22) !important;
   }
 
   /* 标签 / 链接保留色彩反馈，但不抖动位置 */
