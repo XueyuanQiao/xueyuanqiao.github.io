@@ -123,7 +123,7 @@ permalink: /about/2026/02/22/intro.html
 
 <div class="post-gallery" markdown="0">
   <figure>
-    <img src="/images/26060901.png" alt="菜鸟无人车质量中台登录页：玻璃拟态风格的登录界面">
+    <img src="/images/20260713-140418.gif" alt="菜鸟无人车质量中台登录页：玻璃拟态风格的登录界面">
     <figcaption>① 登录页 · 一个人完成的产品设计与前端实现</figcaption>
   </figure>
   <figure>
@@ -135,6 +135,10 @@ permalink: /about/2026/02/22/intro.html
 
 <div class="profile-panel" markdown="1" style="--accent: 89,227,255">
 它的技术栈也能说明"一个人全栈"的含量——后端 **FastAPI + Python 3.11**，配 **SQLAlchemy 2.0（async）+ Alembic** 做异步 ORM 与数据库迁移，**APScheduler** 跑异步定时任务；前端 **React 18 + TypeScript + Vite 6**，**Ant Design 5** 搭管理界面、**Zustand** 管状态、**React Router 6** 管路由，并用 **Three.js / react-three-fiber** 做 3D 可视化；数据与中间件全部跑在阿里云上——**MySQL 8.0（RDS）** 做主存储、**Tair**（Redis 兼容）做缓存、**EMQX** 作 MQTT Broker 承接车端实时消息；最后 **Docker 单阶段构建 → SAE** 完成部署。一条从前端、后端、数据库到车云消息链路的完整栈，全部由我一个人选型、落地、上线。
+</div>
+
+<div class="profile-panel" markdown="1" style="--accent: 124,255,180">
+在这套中台里，我还引入了 **AI 能力对测试结果做洞察分析**——不再停留在"跑完、出报告"，而是让模型基于执行数据自动提炼失败模式、定位可疑变更、给出下一步排查建议，把原本依赖人工经验的结果解读沉淀为可复用的智能分析。更关键的是，我把它设计成 **网站层面的通用能力**而非某个页面的专属功能：当前通过 **配置不同的业务提示词（prompt）** 就能让同一套 AI 底座处理不同业务场景，无需为每个场景重复造轮子；后续再按实际需求，让它从"单轮洞察"逐步 **演进为具备工具调用与自主决策的 AI Agent**，走出一条从"AI 辅助分析"到"AI 自主执行"的可持续演进路径。
 </div>
 
 <div class="profile-quote" markdown="1">

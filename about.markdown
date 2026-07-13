@@ -348,9 +348,9 @@ permalink: /about.html
                     <span class="tl-tag">菜鸟无人车 → 九识 · L4</span>
                 </div>
                 <h3>L4 无人配送车的端到端质量</h3>
-                <p>入职<strong>菜鸟无人车</strong>，随业务并入<strong>九识</strong>——把过往沉淀的测试架构方法论带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"。无人车对我还是全新的领域，仿真 / 路测这些都才刚起步、仍在系统学习中；同时用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起无人车质量中台，经云效流水线 CI/CD 部署到 SAE——也开始慢慢体会到<em>"安全可能是个工程问题"</em>。也正是这段经历，让我近几个月顺着 <strong>AI Native「一人全栈」</strong> 的行业趋势，<strong>已从纯粹的质量工程师转型为 AI 全栈工程师</strong>——设计、前端、后端到部署的全链路一个人就能独立闭环，如今持续精进。</p>
+                <p>入职<strong>菜鸟无人车</strong>，随业务并入<strong>九识</strong>——把过往沉淀的测试架构方法论带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"。无人车对我还是全新的领域，仿真 / 路测这些都才刚起步、仍在系统学习中；同时用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起无人车质量中台，经云效流水线 CI/CD 部署到 SAE——也开始慢慢体会到<em>"安全可能是个工程问题"</em>。这套中台还引入了 <strong>AI 对测试结果做洞察分析</strong> 的能力，并把它做成网站层面的通用能力——当前通过配置不同业务提示词处理不同业务，后续按实际需求可继续演进为 <strong>AI Agent</strong>。也正是这段经历，让我近几个月顺着 <strong>AI Native「一人全栈」</strong> 的行业趋势，<strong>已从纯粹的质量工程师转型为 AI 全栈工程师</strong>——设计、前端、后端到部署的全链路一个人就能独立闭环，如今持续精进。</p>
                 <div class="tl-chips">
-                    <span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>质量中台</span><span>全栈交付</span><span>CI/CD</span>
+                    <span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>质量中台</span><span>AI 洞察分析</span><span>全栈交付</span><span>CI/CD</span>
                 </div>
             </div>
         </li>
