@@ -2674,10 +2674,6 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
     box-shadow var(--t-base) var(--ease-out);
 }
 
-/* 三张一排时，让第二排的两张卡片保持视觉居中。 */
-.skill-card:nth-child(4) { grid-column: 2 / span 2; }
-.skill-card:nth-child(5) { grid-column: 4 / span 2; }
-
 .skill-card > * {
   position: relative;
   z-index: 1;
@@ -2814,12 +2810,10 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   color: var(--text-2);
 }
 
-/* 侧栏仍显示但内容区变窄时，改为双列，末卡居中。 */
+/* 侧栏仍显示但内容区变窄时，六张卡片自然排成两列。 */
 @media (max-width: 1180px) {
   .skill-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .skill-card,
-  .skill-card:nth-child(4) { grid-column: span 2; }
-  .skill-card:nth-child(5) { grid-column: 2 / span 2; }
+  .skill-card { grid-column: span 2; }
 }
 
 /* ---------- Feature grid (3D tilt cards) ---------- */
@@ -3206,7 +3200,7 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   .section-eyebrow { font-size: 0.72rem; }
   .section-more { padding: 6px 12px; font-size: 0.84rem; }
 
-  /* Skill 网格保持双列，末卡居中；feature 卡片继续单列。 */
+  /* Skill 网格保持双列；feature 卡片继续单列。 */
   .skill-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
   .feature-grid { grid-template-columns: 1fr; gap: 14px; }
   .skill-card { padding: 18px 16px; }
@@ -3229,9 +3223,7 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 /* Skill 卡片在手机宽度回落为单列，避免标题和标签被过度挤压。 */
 @media (max-width: 640px) {
   .skill-grid { grid-template-columns: 1fr; }
-  .skill-card,
-  .skill-card:nth-child(4),
-  .skill-card:nth-child(5) {
+  .skill-card {
     grid-column: auto;
     min-height: 0;
   }
