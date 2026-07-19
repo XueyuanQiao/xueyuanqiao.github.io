@@ -1931,7 +1931,23 @@
 
     function releaseDockFromEdge() {
       if (!dock.classList.contains("is-edge-docked")) return;
-      resetDockPosition(true);
+      var side = dock.classList.contains("is-edge-left") ? "left" : "right";
+      var rect = dock.getBoundingClientRect();
+      var margin = 12;
+
+      dock.classList.remove("is-edge-docked", "is-edge-left", "is-edge-right");
+      syncEdgeToggle(false);
+      setCollapsed(false);
+
+      dock.style.top = rect.top.toFixed(1) + "px";
+      dock.style.bottom = "auto";
+      if (side === "left") {
+        dock.style.left = margin + "px";
+        dock.style.right = "auto";
+      } else {
+        dock.style.left = "auto";
+        dock.style.right = margin + "px";
+      }
     }
 
     function syncEdgeToggle(docked) {
