@@ -105,7 +105,10 @@ permalink: /about/2026/02/22/intro.html
     <figcaption>① 登录页 · 登录鉴权与前端实现</figcaption>
   </figure>
   <figure>
-    <img src="/images/26060902-1280.webp" alt="无人车质量中台仪表盘" width="1280" height="646" loading="lazy" decoding="async">
+    <video autoplay muted loop playsinline controls preload="metadata" poster="/images/20260720-main-feature-poster.jpg" width="1280" height="702" aria-label="无人车质量中台主功能演示">
+      <source src="/images/20260720-main-feature.mp4" type="video/mp4">
+      浏览器不支持视频播放，可<a href="/images/20260720-main-feature.gif">查看原始动图</a>。
+    </video>
     <figcaption>② 仪表盘 · 质量度量与测试执行总览</figcaption>
   </figure>
 </div>

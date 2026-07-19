@@ -3,6 +3,7 @@ _site
 .jekyll-metadata
 .idea/
 .vscode/
+.DS_Store
 
 # Local dependency lockfile — GitHub Pages doesn't use it,
 # and tracking it triggers spurious Dependabot alerts.

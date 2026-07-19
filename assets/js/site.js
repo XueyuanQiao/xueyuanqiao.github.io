@@ -525,6 +525,87 @@
     var lbCloseTimer = 0;
     var lbTrigger = null;
 
+    // The Mona Lisa portrait has its own lightweight petting interaction.
+    var catPortrait = content.querySelector('[data-cat-interactive]');
+    if (catPortrait) {
+      var catFigure = catPortrait.closest('.post-figure--cat-portrait');
+      var catResponse = catFigure && catFigure.querySelector('[data-cat-response]');
+      var catMessages = ['喵～', '呼噜呼噜', '喵喵收到摸摸啦', '今天也陪着你'];
+      var catMessageIndex = 0;
+      var catTimers = [];
+      var catStateTimer = 0;
+      var catParticles = [
+        { text: '♡', dx: -72, dy: -94, rotate: -18 },
+        { text: '♥', dx: -34, dy: -122, rotate: 12 },
+        { text: '✦', dx: 12, dy: -108, rotate: -8 },
+        { text: '♡', dx: 54, dy: -92, rotate: 18 },
+        { text: '🐾', dx: 82, dy: -58, rotate: 12 }
+      ];
+
+      var petCat = function (event) {
+        if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (!catFigure) return;
+        if (catStateTimer) window.clearTimeout(catStateTimer);
+
+        var figureRect = catFigure.getBoundingClientRect();
+        var imageRect = catPortrait.getBoundingClientRect();
+        var pointerTriggered = typeof event.clientX === 'number' && event.clientX > 0;
+        var originX = pointerTriggered
+          ? event.clientX - figureRect.left
+          : imageRect.left - figureRect.left + imageRect.width * 0.5;
+        var originY = pointerTriggered
+          ? event.clientY - figureRect.top
+          : imageRect.top - figureRect.top + imageRect.height * 0.56;
+
+        catPortrait.classList.remove('is-petted');
+        catFigure.classList.remove('is-purring');
+        window.requestAnimationFrame(function () {
+          catPortrait.classList.add('is-petted');
+          catFigure.classList.add('is-purring');
+        });
+
+        if (catResponse) {
+          catResponse.textContent = catMessages[catMessageIndex % catMessages.length];
+          catMessageIndex += 1;
+          catResponse.classList.add('is-visible');
+        }
+
+        catParticles.forEach(function (particle, index) {
+          var el = doc.createElement('span');
+          el.className = 'cat-particle';
+          el.setAttribute('aria-hidden', 'true');
+          el.textContent = particle.text;
+          el.style.setProperty('--cat-x', originX.toFixed(1) + 'px');
+          el.style.setProperty('--cat-y', originY.toFixed(1) + 'px');
+          el.style.setProperty('--cat-dx', particle.dx + 'px');
+          el.style.setProperty('--cat-dy', particle.dy + 'px');
+          el.style.setProperty('--cat-rotate', particle.rotate + 'deg');
+          el.style.setProperty('--cat-delay', (index * 42) + 'ms');
+          catFigure.appendChild(el);
+          catTimers.push(window.setTimeout(function () { el.remove(); }, 1250));
+        });
+
+        catStateTimer = window.setTimeout(function () {
+          catPortrait.classList.remove('is-petted');
+          catFigure.classList.remove('is-purring');
+          if (catResponse) catResponse.classList.remove('is-visible');
+          catStateTimer = 0;
+        }, 1050);
+      };
+
+      catPortrait.addEventListener('click', petCat);
+      catPortrait.addEventListener('keydown', petCat);
+      cleanupFns.push(function () {
+        catPortrait.removeEventListener('click', petCat);
+        catPortrait.removeEventListener('keydown', petCat);
+        if (catStateTimer) window.clearTimeout(catStateTimer);
+        catTimers.forEach(function (timer) { window.clearTimeout(timer); });
+        if (catFigure) catFigure.querySelectorAll('.cat-particle').forEach(function (el) { el.remove(); });
+      });
+    }
+
     function ensureLightbox() {
       if (lb) return lb;
       lb = doc.createElement('dialog');
@@ -584,6 +665,7 @@
 
       // 链接中的图片保留原链接语义，不接管点击。
       if (img.closest('a')) return;
+      if (img.hasAttribute('data-cat-interactive')) return;
       img.classList.add('image-zoom');
       img.setAttribute('tabindex', '0');
       img.setAttribute('role', 'button');
@@ -1011,6 +1093,303 @@
 
 
 /* ==========================================================================
+   Site pet · 喵喵
+   Persistent mascot with walking, sleeping, eating, petting and dragging.
+   ========================================================================== */
+(function () {
+  "use strict";
+
+  var doc = document;
+  var STORE_POSITION = "aurora-site-pet-position";
+
+  function ready(fn) {
+    if (doc.readyState !== "loading") fn();
+    else doc.addEventListener("DOMContentLoaded", fn);
+  }
+
+  ready(function initSitePet() {
+    var pet = doc.querySelector("[data-site-pet]");
+    if (!pet) return;
+
+    var touch = pet.querySelector("[data-site-pet-touch]");
+    var bubble = pet.querySelector("[data-site-pet-bubble]");
+    if (!touch) return;
+
+    var reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var currentX = 0;
+    var currentY = 0;
+    var actionTimer = 0;
+    var bubbleTimer = 0;
+    var dragPointerId = null;
+    var dragStart = null;
+    var suppressClick = false;
+    var petMessageIndex = 0;
+    var resizeTimer = 0;
+    var petMessages = ["喵～", "再摸一下", "呼噜呼噜", "我陪你逛网站"];
+
+    restorePosition();
+    window.requestAnimationFrame(function () {
+      pet.classList.add("is-ready");
+      setState("idle");
+      scheduleNext(reducedMotion ? 0 : 2200);
+    });
+
+    touch.addEventListener("click", function () {
+      if (suppressClick) {
+        suppressClick = false;
+        return;
+      }
+      reactToPetting();
+    });
+
+    touch.addEventListener("pointerdown", function (event) {
+      if (event.button !== 0 || event.isPrimary === false) return;
+      var rect = pet.getBoundingClientRect();
+      stopActivity();
+      currentX = rect.left;
+      currentY = rect.top;
+      setPosition(currentX, currentY, 0);
+      dragPointerId = event.pointerId;
+      dragStart = {
+        pointerX: event.clientX,
+        pointerY: event.clientY,
+        x: currentX,
+        y: currentY,
+        moved: false
+      };
+      try { touch.setPointerCapture(event.pointerId); } catch (e) {}
+    });
+
+    window.addEventListener("pointermove", function (event) {
+      if (!dragStart || event.pointerId !== dragPointerId) return;
+      var dx = event.clientX - dragStart.pointerX;
+      var dy = event.clientY - dragStart.pointerY;
+      if (!dragStart.moved && Math.hypot(dx, dy) < 5) return;
+      dragStart.moved = true;
+      suppressClick = true;
+      pet.classList.add("is-dragging");
+      setState("idle");
+      var point = clampPoint(dragStart.x + dx, dragStart.y + dy);
+      setPosition(point.x, point.y, 0);
+      event.preventDefault();
+    }, { passive: false });
+
+    var finishDrag = function (event) {
+      if (!dragStart || (event.pointerId != null && event.pointerId !== dragPointerId)) return;
+      var moved = dragStart.moved;
+      var pointerId = dragPointerId;
+      dragPointerId = null;
+      dragStart = null;
+      try { touch.releasePointerCapture(pointerId); } catch (e) {}
+      pet.classList.remove("is-dragging");
+      if (!moved) return;
+      savePosition();
+      setState("idle");
+      showBubble("好，我待在这里", 1700);
+      scheduleNext(reducedMotion ? 0 : 12000);
+    };
+
+    window.addEventListener("pointerup", finishDrag);
+    window.addEventListener("pointercancel", finishDrag);
+    touch.addEventListener("lostpointercapture", finishDrag);
+
+    window.addEventListener("resize", function () {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(function () {
+        var rect = pet.getBoundingClientRect();
+        var point = clampPoint(rect.left, rect.top);
+        currentX = point.x;
+        currentY = point.y;
+        setPosition(currentX, currentY, 0);
+        if (!reducedMotion) scheduleNext(1200);
+      }, 140);
+    }, { passive: true });
+
+    doc.addEventListener("visibilitychange", function () {
+      if (doc.hidden) stopActivity();
+      else scheduleNext(reducedMotion ? 0 : 900);
+    });
+
+    function setState(state) {
+      pet.setAttribute("data-pet-state", state);
+    }
+
+    function scheduleNext(delay) {
+      window.clearTimeout(actionTimer);
+      actionTimer = 0;
+      if (reducedMotion || doc.hidden) {
+        setState("idle");
+        return;
+      }
+      actionTimer = window.setTimeout(runNextActivity, Math.max(0, delay || 0));
+    }
+
+    function runNextActivity() {
+      if (doc.hidden || dragStart) return;
+      var roll = Math.random();
+      if (roll < 0.54) {
+        walkSomewhere();
+      } else if (roll < 0.73) {
+        setState("sleeping");
+        if (Math.random() > 0.55) showBubble("Zzz…", 1400);
+        scheduleNext(randomBetween(7200, 11800));
+      } else if (roll < 0.89) {
+        setState("eating");
+        showBubble("咔嚓咔嚓", 1350);
+        scheduleNext(randomBetween(4600, 7200));
+      } else {
+        setState("idle");
+        if (Math.random() > 0.5) showBubble("发会儿呆", 1300);
+        scheduleNext(randomBetween(2800, 5200));
+      }
+    }
+
+    function walkSomewhere() {
+      var bounds = getBounds();
+      var targetX = randomBetween(bounds.walkMinX, bounds.walkMaxX);
+      var targetY = bounds.walkY + randomBetween(-12, 7);
+      var distance = Math.hypot(targetX - currentX, targetY - currentY);
+      var duration = Math.round(clamp(distance * 13, 3600, 9200));
+      pet.classList.toggle("is-facing-left", targetX < currentX);
+      setState("walking");
+      setPosition(targetX, targetY, duration);
+      scheduleNext(duration + randomBetween(700, 1700));
+    }
+
+    function reactToPetting() {
+      stopActivity();
+      setState("petted");
+      showBubble(petMessages[petMessageIndex % petMessages.length], 1800);
+      petMessageIndex += 1;
+      spawnHearts();
+      scheduleNext(reducedMotion ? 0 : 2200);
+    }
+
+    function spawnHearts() {
+      var particles = [
+        { x: "-48px", y: "-72px", r: "-16deg", text: "♡" },
+        { x: "-18px", y: "-94px", r: "10deg", text: "♥" },
+        { x: "18px", y: "-88px", r: "-8deg", text: "✦" },
+        { x: "48px", y: "-66px", r: "18deg", text: "♡" }
+      ];
+      particles.forEach(function (item, index) {
+        var heart = doc.createElement("span");
+        heart.className = "site-pet-heart";
+        heart.setAttribute("aria-hidden", "true");
+        heart.textContent = item.text;
+        heart.style.setProperty("--heart-x", item.x);
+        heart.style.setProperty("--heart-y", item.y);
+        heart.style.setProperty("--heart-r", item.r);
+        heart.style.animationDelay = (index * 55) + "ms";
+        pet.appendChild(heart);
+        window.setTimeout(function () { heart.remove(); }, 1150);
+      });
+    }
+
+    function showBubble(text, duration) {
+      if (!bubble) return;
+      window.clearTimeout(bubbleTimer);
+      bubble.textContent = text;
+      bubble.classList.add("is-visible");
+      bubbleTimer = window.setTimeout(function () {
+        bubble.classList.remove("is-visible");
+        bubbleTimer = 0;
+      }, duration || 1600);
+    }
+
+    function stopActivity() {
+      window.clearTimeout(actionTimer);
+      actionTimer = 0;
+    }
+
+    function setPosition(x, y, duration) {
+      currentX = x;
+      currentY = y;
+      pet.style.setProperty("--pet-travel", Math.max(0, duration || 0) + "ms");
+      pet.style.transform = "translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px,0)";
+    }
+
+    function getBounds() {
+      var width = pet.offsetWidth || 104;
+      var height = pet.offsetHeight || 126;
+      var minX = 12;
+      var maxX = Math.max(minX, window.innerWidth - width - 12);
+      var minY = 58;
+      var maxY = Math.max(minY, window.innerHeight - height - 12);
+      var sidebar = doc.querySelector(".sidebar");
+      if (window.innerWidth > 920 && sidebar) {
+        var sidebarRect = sidebar.getBoundingClientRect();
+        minX = Math.min(maxX, Math.max(minX, sidebarRect.right + 10));
+      }
+
+      var walkMinX = minX;
+      var walkMaxX = maxX;
+      var walkY = maxY;
+      var dock = doc.querySelector("[data-music-player]");
+      if (dock) {
+        var dockRect = dock.getBoundingClientRect();
+        if (dockRect.width > 120 && window.innerWidth <= 920) {
+          walkY = Math.max(minY, Math.min(walkY, dockRect.top - height - 10));
+        } else if (dockRect.left > minX && dockRect.top < walkY + height) {
+          walkMaxX = Math.max(walkMinX, Math.min(walkMaxX, dockRect.left - width - 12));
+        }
+      }
+      return {
+        minX: minX,
+        maxX: maxX,
+        minY: minY,
+        maxY: maxY,
+        walkMinX: walkMinX,
+        walkMaxX: walkMaxX,
+        walkY: walkY
+      };
+    }
+
+    function clampPoint(x, y) {
+      var bounds = getBounds();
+      return {
+        x: clamp(x, bounds.minX, bounds.maxX),
+        y: clamp(y, bounds.minY, bounds.maxY)
+      };
+    }
+
+    function savePosition() {
+      var bounds = getBounds();
+      var availableX = Math.max(1, bounds.maxX - bounds.minX);
+      var availableY = Math.max(1, bounds.maxY - bounds.minY);
+      var state = {
+        x: clamp((currentX - bounds.minX) / availableX, 0, 1),
+        y: clamp((currentY - bounds.minY) / availableY, 0, 1)
+      };
+      try { localStorage.setItem(STORE_POSITION, JSON.stringify(state)); } catch (e) {}
+    }
+
+    function restorePosition() {
+      var bounds = getBounds();
+      var state = null;
+      try { state = JSON.parse(localStorage.getItem(STORE_POSITION) || "null"); } catch (e) {}
+      if (state && isFinite(state.x) && isFinite(state.y)) {
+        currentX = bounds.minX + clamp(state.x, 0, 1) * Math.max(0, bounds.maxX - bounds.minX);
+        currentY = bounds.minY + clamp(state.y, 0, 1) * Math.max(0, bounds.maxY - bounds.minY);
+      } else {
+        currentX = bounds.minX + Math.min(42, Math.max(0, bounds.maxX - bounds.minX));
+        currentY = bounds.walkY;
+      }
+      setPosition(currentX, currentY, 0);
+    }
+
+    function randomBetween(min, max) {
+      return min + Math.random() * Math.max(0, max - min);
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+  });
+})();
+
+
+/* ==========================================================================
    Global background music player
    Native Audio + Pointer-friendly ranges + Media Session + Web Audio visualizer
    ========================================================================== */
@@ -1039,6 +1418,7 @@
     var previous = dock.querySelector("[data-music-prev]");
     var next = dock.querySelector("[data-music-next]");
     var collapse = dock.querySelector("[data-music-collapse]");
+    var edgeToggle = dock.querySelector("[data-music-edge]");
     var dragHandle = dock.querySelector("[data-music-drag-handle]");
     var queueToggle = dock.querySelector("[data-music-queue-toggle]");
     var seek = dock.querySelector("[data-music-seek]");
@@ -1128,6 +1508,7 @@
     doc.addEventListener("click", function (event) {
       var playButton = event.target.closest && event.target.closest("[data-music-play]");
       if (playButton) {
+        if (dock.classList.contains("is-edge-docked")) releaseDockFromEdge();
         setCollapsed(false);
         playAudio(false);
         window.setTimeout(function () { toggle.focus({ preventScroll: true }); }, 0);
@@ -1136,6 +1517,7 @@
 
       var queueButton = event.target.closest && event.target.closest("[data-music-queue-open]");
       if (queueButton) {
+        if (dock.classList.contains("is-edge-docked")) releaseDockFromEdge();
         setCollapsed(false);
         setQueueOpen(true);
         window.setTimeout(function () {
@@ -1147,6 +1529,13 @@
     if (collapse) {
       collapse.addEventListener("click", function () {
         setCollapsed(!dock.classList.contains("is-collapsed"));
+      });
+    }
+
+    if (edgeToggle) {
+      edgeToggle.addEventListener("click", function () {
+        if (dock.classList.contains("is-edge-docked")) releaseDockFromEdge();
+        else dockToNearestEdge();
       });
     }
 
@@ -1634,7 +2023,8 @@
       try { localStorage.setItem(STORE_COLLAPSED, collapsed ? "1" : "0"); } catch (e) {}
       window.setTimeout(function () {
         if (!dock.classList.contains("is-positioned")) return;
-        clampDockPosition();
+        if (dock.classList.contains("is-edge-docked")) clampEdgeDockPosition();
+        else clampDockPosition();
         saveDockPosition();
       }, reducedMotion ? 0 : 440);
     }
@@ -1680,8 +2070,7 @@
         dragStart = null;
         try { dragHandle.releasePointerCapture(pointerId); } catch (e) {}
         dock.classList.remove("is-dragging");
-        clampDockPosition();
-        saveDockPosition();
+        dockToNearestEdge();
       };
 
       window.addEventListener("pointermove", moveDrag, { passive: false });
@@ -1696,7 +2085,10 @@
       window.addEventListener("resize", function () {
         window.clearTimeout(dockResizeTimer);
         dockResizeTimer = window.setTimeout(function () {
-          if (isDockDragEnabled()) restoreDockPosition();
+          if (dock.classList.contains("is-edge-docked")) {
+            clampEdgeDockPosition();
+            saveDockPosition();
+          } else if (isDockDragEnabled()) restoreDockPosition();
           else resetDockPosition(false);
         }, 120);
       }, { passive: true });
@@ -1726,12 +2118,24 @@
     }
 
     function saveDockPosition() {
-      if (!dock.classList.contains("is-positioned") || !isDockDragEnabled()) return;
+      if (!dock.classList.contains("is-positioned")) return;
       var margin = 12;
       var rect = dock.getBoundingClientRect();
+      if (dock.classList.contains("is-edge-docked")) {
+        var edgeAvailableY = Math.max(1, window.innerHeight - rect.height - margin * 2);
+        var edgeState = {
+          edge: true,
+          side: dock.classList.contains("is-edge-left") ? "left" : "right",
+          y: clamp((rect.top - margin) / edgeAvailableY, 0, 1)
+        };
+        try { localStorage.setItem(STORE_DOCK_POSITION, JSON.stringify(edgeState)); } catch (e) {}
+        return;
+      }
+      if (!isDockDragEnabled()) return;
       var availableX = Math.max(1, window.innerWidth - rect.width - margin * 2);
       var availableY = Math.max(1, window.innerHeight - rect.height - margin * 2);
       var state = {
+        edge: false,
         x: clamp((rect.left - margin) / availableX, 0, 1),
         y: clamp((rect.top - margin) / availableY, 0, 1)
       };
@@ -1739,12 +2143,19 @@
     }
 
     function restoreDockPosition() {
+      var state = null;
+      try { state = JSON.parse(localStorage.getItem(STORE_DOCK_POSITION) || "null"); } catch (e) {}
+      if (state && state.edge === true && (state.side === "left" || state.side === "right")) {
+        var edgeMargin = 12;
+        var edgeRect = dock.getBoundingClientRect();
+        var edgeAvailableY = Math.max(0, window.innerHeight - edgeRect.height - edgeMargin * 2);
+        dockToEdge(state.side, edgeMargin + clamp(state.y, 0, 1) * edgeAvailableY, false);
+        return;
+      }
       if (!isDockDragEnabled()) {
         resetDockPosition(false);
         return;
       }
-      var state = null;
-      try { state = JSON.parse(localStorage.getItem(STORE_DOCK_POSITION) || "null"); } catch (e) {}
       if (!state || !isFinite(state.x) || !isFinite(state.y)) return;
 
       var margin = 12;
@@ -1761,14 +2172,70 @@
     function resetDockPosition(removeStoredPosition) {
       dragPointerId = null;
       dragStart = null;
-      dock.classList.remove("is-positioned", "is-dragging");
+      dock.classList.remove("is-positioned", "is-dragging", "is-edge-docked", "is-edge-left", "is-edge-right");
       dock.style.removeProperty("left");
       dock.style.removeProperty("top");
       dock.style.removeProperty("right");
       dock.style.removeProperty("bottom");
+      syncEdgeToggle(false);
       if (removeStoredPosition) {
         try { localStorage.removeItem(STORE_DOCK_POSITION); } catch (e) {}
       }
+    }
+
+    function dockToNearestEdge() {
+      var rect = dock.getBoundingClientRect();
+      var side = rect.left + rect.width / 2 <= window.innerWidth / 2 ? "left" : "right";
+      dockToEdge(side, rect.top, true);
+    }
+
+    function dockToEdge(side, top, persist) {
+      side = side === "left" ? "left" : "right";
+      setCollapsed(true);
+      dock.classList.add("is-positioned", "is-edge-docked");
+      dock.classList.toggle("is-edge-left", side === "left");
+      dock.classList.toggle("is-edge-right", side === "right");
+      dock.style.top = (isFinite(top) ? top : 12).toFixed(1) + "px";
+      dock.style.bottom = "auto";
+      if (side === "left") {
+        dock.style.left = "0px";
+        dock.style.right = "auto";
+      } else {
+        dock.style.left = "auto";
+        dock.style.right = "0px";
+      }
+      syncEdgeToggle(true);
+      window.requestAnimationFrame(function () {
+        clampEdgeDockPosition();
+        if (persist !== false) saveDockPosition();
+      });
+    }
+
+    function clampEdgeDockPosition() {
+      if (!dock.classList.contains("is-edge-docked")) return;
+      var margin = 12;
+      var rect = dock.getBoundingClientRect();
+      var maxTop = Math.max(margin, window.innerHeight - rect.height - margin);
+      dock.style.top = clamp(rect.top, margin, maxTop).toFixed(1) + "px";
+      dock.style.bottom = "auto";
+      if (dock.classList.contains("is-edge-left")) {
+        dock.style.left = "0px";
+        dock.style.right = "auto";
+      } else {
+        dock.style.left = "auto";
+        dock.style.right = "0px";
+      }
+    }
+
+    function releaseDockFromEdge() {
+      if (!dock.classList.contains("is-edge-docked")) return;
+      resetDockPosition(true);
+    }
+
+    function syncEdgeToggle(docked) {
+      if (!edgeToggle) return;
+      edgeToggle.setAttribute("aria-pressed", docked ? "true" : "false");
+      edgeToggle.setAttribute("aria-label", docked ? "展开播放器" : "贴边收起播放器");
     }
 
     function seekToRange() {

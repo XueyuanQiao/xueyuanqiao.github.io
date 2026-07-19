@@ -69,15 +69,13 @@ featured_rank: 1
 
 工作一乱，最先被挤掉的常常是吃饭、睡觉和自己的生活，好像再多消耗一点，就能把局面换回来。我以前写过，不要把健康留到以后再补。轮到自己不顺时，才发现这句话也没有那么容易做到。
 
-猫猫陪着我四年多了。照片里它睁着两只圆眼睛，看起来比我平静。它不知道白天发生了什么，也不关心我有没有把事情想通。看它一会儿，脑子里的声音会小一点。就一点，也够了。
+喵喵陪着我四年多了。照片里它睁着两只圆眼睛，看起来比我平静。它不知道白天发生了什么，也不关心我有没有把事情想通。看它一会儿，脑子里的声音会小一点。就一点，也够了。
 
-<figure class="post-figure post-figure--cat-video" markdown="0">
-  <video class="post-cat-video" width="720" height="1280" autoplay muted loop playsinline preload="auto" poster="/images/26071901-cat-angel-video-poster.webp" aria-label="AI 生成的天使猫猫短片">
-    <source src="/videos/26071901-cat-angel-ai.webm" type="video/webm">
-    <source src="/videos/26071901-cat-angel-ai.mp4" type="video/mp4">
-    您的浏览器暂不支持视频播放，可<a href="/videos/26071901-cat-angel-ai.mp4">下载观看</a>。
-  </video>
-  <figcaption>陪伴我四年多的猫猫 · AI 影像</figcaption>
+<figure class="post-figure post-figure--cat-portrait" id="mona-lisa-cat" markdown="0">
+  <img class="post-cat-portrait" src="/images/26071901-cat-mona-lisa.webp" width="941" height="1672" loading="lazy" decoding="async" alt="穿着文艺复兴服饰、前爪交叠的喵喵" data-cat-interactive tabindex="0" role="button" aria-label="摸摸喵喵">
+  <span class="cat-interaction-hint" aria-hidden="true">♡ 点一点喵喵</span>
+  <span class="cat-response" data-cat-response role="status" aria-live="polite"></span>
+  <figcaption>陪伴我四年多的喵喵 · 蒙娜丽莎猫</figcaption>
 </figure>
 
 我对自己的技术实力一直有信心。做过的交付、解决过的问题、留下的结果都在那里。可“知道自己有能力”和“当下真的感觉有底气”，有时走的是两条路。心态乱了，证据摆在面前也未必看得见。
