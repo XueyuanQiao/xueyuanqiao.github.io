@@ -8,6 +8,8 @@ permalink: /life/2026/07/19/inward-search.html
 image: /images/26071901-cat-warm-share.jpg
 reading_meta: 全文约 2500 字 · 约 8 分钟阅读
 visual_theme: water
+featured: true
+featured_rank: 1
 ---
 
 最近刷抖音时，先刷到的是周星驰的一段采访。画面里，他说了一句：**Be water, my friend.**

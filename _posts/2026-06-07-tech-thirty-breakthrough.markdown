@@ -5,8 +5,6 @@ date: 2026-06-07 11:00:00 +0800
 excerpt: 三十岁不是统一的职业分水岭。比年龄更值得关注的，是能否持续解决复杂问题、承担系统责任、理解业务，并给学习和生活留下长期空间。
 categories: career growth
 permalink: /career/2026/06/07/tech-thirty-breakthrough.html
-featured: true
-featured_rank: 1
 ---
 
 技术行业喜欢把三十岁写成一道关口。有人谈管理，有人谈转型，也有人把它和淘汰联系在一起。
