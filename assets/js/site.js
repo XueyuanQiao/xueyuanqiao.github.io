@@ -1041,6 +1041,7 @@
     var durationEl = dock.querySelector("[data-music-duration]");
     var statusEl = dock.querySelector("[data-music-status]");
     var titleEl = dock.querySelector("[data-music-title]");
+    var cacheStatusEl = dock.querySelector("[data-music-cache-status]");
     var mute = dock.querySelector("[data-music-mute]");
     var volume = dock.querySelector("[data-music-volume]");
     var canvas = dock.querySelector("[data-music-visualizer]");
@@ -1079,6 +1080,10 @@
     var restoreTimeOnMetadata = true;
     var pendingTrackAutoplay = false;
     var isTrackSwitching = false;
+    var musicWorkerRegistration = null;
+    var currentTrackCached = false;
+    var cacheRequests = {};
+    var cacheStatusTimer = 0;
 
     try { resumeAfterNavigation = sessionStorage.getItem(SESSION_PLAYING) === "1"; } catch (e) {}
 
@@ -1094,6 +1099,7 @@
     audio.volume = readNumber(localStorage, STORE_VOLUME, 0.72, 0, 1);
     if (volume) volume.value = String(audio.volume);
     setVolumePaint(audio.volume);
+    initMusicCache();
 
     try {
       if (localStorage.getItem(STORE_COLLAPSED) === "1") setCollapsed(true);
@@ -1199,6 +1205,7 @@
       if (savedTime > 0 && isFinite(audio.duration)) audio.currentTime = savedTime;
       updateProgress(true);
       setupMediaSession();
+      queryCurrentTrackCache();
       var shouldPlaySelectedTrack = pendingTrackAutoplay;
       pendingTrackAutoplay = false;
       isTrackSwitching = false;
@@ -1213,7 +1220,10 @@
     audio.addEventListener("loadedmetadata", metadataReady);
 
     audio.addEventListener("durationchange", function () { updateProgress(true); });
-    audio.addEventListener("progress", updateBuffered);
+    audio.addEventListener("progress", function () {
+      updateBuffered();
+      maybeCacheCurrentTrack();
+    });
     audio.addEventListener("timeupdate", function () { if (!seeking) updateProgress(false); });
     audio.addEventListener("play", function () {
       resumeAfterNavigation = false;
@@ -1223,6 +1233,8 @@
       toggle.setAttribute("aria-label", "暂停背景音乐");
       toggle.setAttribute("aria-pressed", "true");
       setPlaybackIntent(true);
+      queryCurrentTrackCache();
+      maybeCacheCurrentTrack();
       if (navigator.mediaSession) navigator.mediaSession.playbackState = "playing";
       startRenderLoop();
     });
@@ -1239,6 +1251,7 @@
       if (!isTrackSwitching) savePosition();
     });
     audio.addEventListener("ended", function () {
+      requestCurrentTrackCache();
       if (currentTrackIndex < tracks.length - 1) {
         switchTrack(currentTrackIndex + 1, true);
         return;
@@ -1304,6 +1317,106 @@
       }, 320);
     }
 
+    function initMusicCache() {
+      if (!("serviceWorker" in navigator) || !window.isSecureContext) {
+        setCacheStatus("unavailable");
+        return;
+      }
+
+      navigator.serviceWorker.addEventListener("message", function (event) {
+        var data = event.data || {};
+        if (data.type !== "MUSIC_CACHED" && data.type !== "MUSIC_CACHE_STATUS") return;
+        var path = trackPath(currentTrackIndex);
+        if (!path || normalizedTrackPath(data.url) !== path) return;
+
+        if (data.type === "MUSIC_CACHED" || data.cached) {
+          currentTrackCached = true;
+          delete cacheRequests[path];
+          window.clearTimeout(cacheStatusTimer);
+          setCacheStatus("cached");
+        } else {
+          currentTrackCached = false;
+          setCacheStatus("available");
+        }
+      });
+
+      navigator.serviceWorker.register("/service-worker.js", {
+        scope: "/",
+        updateViaCache: "none"
+      }).then(function () {
+        return navigator.serviceWorker.ready;
+      }).then(function (registration) {
+        musicWorkerRegistration = registration;
+        queryCurrentTrackCache();
+      }).catch(function () {
+        setCacheStatus("unavailable");
+      });
+    }
+
+    function activeMusicWorker() {
+      if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        return navigator.serviceWorker.controller;
+      }
+      if (!musicWorkerRegistration) return null;
+      return musicWorkerRegistration.active || musicWorkerRegistration.waiting || musicWorkerRegistration.installing;
+    }
+
+    function queryCurrentTrackCache() {
+      var worker = activeMusicWorker();
+      var path = trackPath(currentTrackIndex);
+      if (!worker || !path) return;
+      worker.postMessage({ type: "MUSIC_CACHE_STATUS", url: path });
+    }
+
+    function maybeCacheCurrentTrack() {
+      if (audio.paused || currentTrackCached || !isFinite(audio.duration) || audio.duration <= 0) return;
+      var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      if (connection && (connection.saveData || /(^|-)2g$/i.test(connection.effectiveType || ""))) return;
+      var path = trackPath(currentTrackIndex);
+      if (!path || cacheRequests[path] || !audio.buffered || !audio.buffered.length) return;
+      var bufferedEnd = 0;
+      try { bufferedEnd = audio.buffered.end(audio.buffered.length - 1); } catch (e) { return; }
+      var bufferedAhead = bufferedEnd - audio.currentTime;
+      var bufferedRatio = bufferedEnd / audio.duration;
+      if (bufferedAhead >= 30 || bufferedRatio >= 0.85) requestCurrentTrackCache();
+    }
+
+    function requestCurrentTrackCache() {
+      var worker = activeMusicWorker();
+      var path = trackPath(currentTrackIndex);
+      if (!worker || !path || currentTrackCached || cacheRequests[path]) return;
+      cacheRequests[path] = true;
+      setCacheStatus("caching");
+      worker.postMessage({ type: "MUSIC_CACHE_TRACK", url: path });
+      window.clearTimeout(cacheStatusTimer);
+      cacheStatusTimer = window.setTimeout(function () {
+        if (trackPath(currentTrackIndex) !== path || currentTrackCached) return;
+        delete cacheRequests[path];
+        setCacheStatus("available");
+        queryCurrentTrackCache();
+      }, 20000);
+    }
+
+    function setCacheStatus(state) {
+      if (!cacheStatusEl) return;
+      var text = "智能缓存 · 跨页续播";
+      if (state === "cached") text = "已缓存 · 跨页续播";
+      else if (state === "caching") text = "缓存中 · 跨页续播";
+      else if (state === "unavailable") text = "跨页续播";
+      cacheStatusEl.textContent = text;
+      cacheStatusEl.setAttribute("data-cache-state", state);
+    }
+
+    function trackPath(index) {
+      var track = tracks[index];
+      return track ? normalizedTrackPath(track.src) : "";
+    }
+
+    function normalizedTrackPath(value) {
+      try { return new URL(value, location.href).pathname; }
+      catch (e) { return ""; }
+    }
+
     function playAudio(isContinuation) {
       var promise;
       try { promise = audio.play(); }
@@ -1343,6 +1456,8 @@
 
       isTrackSwitching = true;
       currentTrackIndex = nextIndex;
+      currentTrackCached = false;
+      setCacheStatus("available");
       restoreTimeOnMetadata = false;
       pendingTrackAutoplay = Boolean(playWhenReady);
       resumeAfterNavigation = false;
@@ -1364,6 +1479,7 @@
       dock.style.setProperty("--buffered", "0%");
       if (currentEl) currentEl.textContent = "0:00";
       audio.src = tracks[currentTrackIndex].src;
+      queryCurrentTrackCache();
       try { audio.load(); }
       catch (e) {
         isTrackSwitching = false;

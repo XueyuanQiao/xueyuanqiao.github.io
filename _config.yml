@@ -22,6 +22,7 @@ url: "https://xueyuanqiao.github.io" # the base hostname & protocol for your sit
 #twitter_username: jekyllrb
 github_username:  XueyuanQiao
 music_artist: xueyuan
+music_cache_version: 1 # 替换同名音频文件时递增，自动清理旧缓存
 music_tracks:
   - title: King Without a Crown
     file: /assets/audio/King_Without_a_Crown.mp3
