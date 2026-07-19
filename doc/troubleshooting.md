@@ -83,11 +83,11 @@ bundle exec jekyll serve
 3. 路径是否被项目自定义的 `baseurl` 影响——本项目 `baseurl: ""`，所以 `/assets/css/aurora.css` 即可
 4. GitHub Pages 部署完成需要数十秒，刚 push 不会立刻生效
 
-## RSS / Sitemap 没更新
+## Sitemap 没更新
 
-- `_config.yml` 的 plugins 必须包含 `jekyll-feed` 与 `jekyll-sitemap`（项目已配置）
-- GitHub Pages 构建完成后，访问 `/feed.xml` 与 `/sitemap.xml` 验证
-- 这两个文件是构建产物，**不要手工编辑**
+- `_config.yml` 的 plugins 必须包含 `jekyll-sitemap`（项目已配置）
+- GitHub Pages 构建完成后，访问 `/sitemap.xml` 验证
+- 该文件是构建产物，**不要手工编辑**
 
 ## 我把哪一步搞乱了？
 

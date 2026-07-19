@@ -33,7 +33,6 @@
     <link rel="stylesheet" href="{{ '/assets/css/aurora.css' | relative_url }}">
     <link rel="stylesheet" href="{{ '/assets/css/code.css' | relative_url }}">
 
-    {% feed_meta %}
     {% seo %}
 </head>
 <body class="{% if page.layout == 'landing' or page.is_landing %}is-landing{% endif %}">
@@ -106,9 +105,6 @@
                     </a>
                     <a class="icon-btn icon-btn--qqmusic" href="{{ site.qq_music_url }}" target="_blank" rel="noopener" aria-label="QQ 音乐上的 xueyuan" title="QQ 音乐 · xueyuan">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18.2V6.8l9-2.2V16"/><path d="M9 10.2l9-2.2"/><ellipse cx="6.5" cy="18.2" rx="2.5" ry="1.8"/><ellipse cx="15.5" cy="16" rx="2.5" ry="1.8"/></svg>
-                    </a>
-                    <a class="icon-btn" href="{{ '/feed.xml' | relative_url }}" aria-label="RSS">
-                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3v3a15 15 0 0 1 15 15h3A18 18 0 0 0 5 3zm0 7v3a8 8 0 0 1 8 8h3a11 11 0 0 0-11-11zm1.5 8a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/></svg>
                     </a>
                 </div>
                 <button class="theme-switch" type="button" data-theme-toggle aria-label="切换主题（暗色 / 亮色）" title="切换暗色 / 亮色主题">

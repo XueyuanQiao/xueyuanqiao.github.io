@@ -59,7 +59,7 @@ categories:
 
 ## SEO 增强（可选）
 
-模板已经接入 `jekyll-seo-tag` 与 `jekyll-feed`。如果想为某篇文章定制 OG/Twitter 卡片，可以追加：
+模板已经接入 `jekyll-seo-tag`。如果想为某篇文章定制 OG/Twitter 卡片，可以追加：
 
 ```yaml
 image: /images/2026031501.png

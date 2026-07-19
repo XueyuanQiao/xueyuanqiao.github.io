@@ -33,7 +33,7 @@
 - **首页着陆区**：动态打字效果、统计计数器、3D Tilt 卡片、霓虹滚动 marquee
 - **热门文章置顶**：`featured` 标记把重要文章永久透出到首页热门区
 - **PDF 内嵌阅读**：文章内可用 PDF.js 懒加载分页渲染长文档，支持在线翻阅 / 新窗口打开 / 下载
-- **SEO 友好**：`jekyll-seo-tag`、`jekyll-sitemap`、`jekyll-feed` 内置
+- **SEO 友好**：内置 `jekyll-seo-tag` 与 `jekyll-sitemap`
 - **触屏优化**：自动禁用 hover 残留态、3D Tilt、神经网络背景，节省电量与 GPU
 - **无障碍**：尊重 `prefers-reduced-motion`、键盘可达、菜单 Esc 关闭
 

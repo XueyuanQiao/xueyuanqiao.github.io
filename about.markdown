@@ -527,16 +527,6 @@ permalink: /about.html
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
             </div>
         </a>
-        <a class="contact-card" href="{{ '/feed.xml' | relative_url }}">
-            <div class="contact-icon">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 3v3a15 15 0 0 1 15 15h3A18 18 0 0 0 5 3zm0 7v3a8 8 0 0 1 8 8h3a11 11 0 0 0-11-11zm1.5 8a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/></svg>
-            </div>
-            <div class="contact-name">RSS</div>
-            <div class="contact-value">订阅文章更新</div>
-            <div class="contact-arrow">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-            </div>
-        </a>
     </div>
 
     <p class="about-foot">

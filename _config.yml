@@ -39,7 +39,6 @@ qq_music_url: https://c6.y.qq.com/base/fcgi-bin/u?__=GWOcn49RH2fI
 markdown: kramdown
 # theme: minima  # 移除默认主题，使用自定义样式
 plugins:
-  - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
 
