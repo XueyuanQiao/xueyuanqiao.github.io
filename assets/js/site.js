@@ -187,6 +187,8 @@
     enhanceCodeBlocks();
     var articleCleanup = enhanceArticle();
     if (articleCleanup) pageCleanups.push(articleCleanup);
+    var deferredVideoCleanup = initDeferredAutoplayVideos();
+    if (deferredVideoCleanup) pageCleanups.push(deferredVideoCleanup);
     initArchivePagination();
 
     if (notifyPageModules !== false) {
@@ -239,6 +241,40 @@
       });
     }, { threshold: 0, rootMargin: "0px 0px -40px 0px" });
     revealItems.forEach(function (el) { observer.observe(el); });
+    return function () { observer.disconnect(); };
+  }
+
+  function initDeferredAutoplayVideos() {
+    var videos = Array.prototype.slice.call(doc.querySelectorAll("video[data-autoplay-in-view]"));
+    if (!videos.length) return null;
+
+    function activate(video) {
+      if (!video || video.getAttribute("data-media-loaded") === "true") return;
+      video.setAttribute("data-media-loaded", "true");
+      video.querySelectorAll("source[data-src]").forEach(function (source) {
+        source.src = source.getAttribute("data-src") || "";
+        source.removeAttribute("data-src");
+      });
+      try { video.load(); } catch (e) {}
+      var promise;
+      try { promise = video.play(); } catch (e) { return; }
+      if (promise && promise.catch) promise.catch(function () {});
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      videos.forEach(activate);
+      return null;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        activate(entry.target);
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.01, rootMargin: "300px 0px" });
+
+    videos.forEach(function (video) { observer.observe(video); });
     return function () { observer.disconnect(); };
   }
 
@@ -1177,11 +1213,12 @@
 
     try { resumeAfterNavigation = sessionStorage.getItem(SESSION_PLAYING) === "1"; } catch (e) {}
 
-    // A new browsing session remains paused. If this tab was already playing
-    // before an internal navigation, metadataReady() resumes from that point.
+    // A cold visit remains completely idle: do not attach an audio URL until
+    // the user presses play. A real continuation still loads immediately so
+    // metadataReady() can restore the saved track and position.
     audio.pause();
     audio.loop = false;
-    if (currentTrackIndex !== 0) {
+    if (resumeAfterNavigation) {
       audio.src = tracks[currentTrackIndex].src;
       try { audio.load(); } catch (e) {}
     }
@@ -1594,6 +1631,7 @@
     }
 
     function playAudio(isContinuation) {
+      if (!audio.getAttribute("src")) audio.src = tracks[currentTrackIndex].src;
       var promise;
       try { promise = audio.play(); }
       catch (error) { handlePlayFailure(isContinuation); return; }
