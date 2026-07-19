@@ -198,10 +198,10 @@
       ]
     },
     {
-      "title": "AI 写了 75% 的代码，我们为什么没有快 75%",
+      "title": "AI 写了 75% 的代码，我们怎么没快 75%",
       "url": "/ai/engineering/2026/07/19/ai-code-productivity-paradox.html",
       "date": "2026-07-19",
-      "excerpt": "Google 的 AI 代码占比升到 75%，METR 的真实任务实验却发现资深开发者慢了 19%。AI 加速的是代码生成，真正决定交付效率的是验证、评审和工程体系。",
+      "excerpt": "AI 加速了写代码，却没有同时加速需求理解、测试、评审和上线。生成比例可以很高，整个团队仍可能被验证和返工拖慢。",
       "categories": [
         "ai",
         "engineering",
