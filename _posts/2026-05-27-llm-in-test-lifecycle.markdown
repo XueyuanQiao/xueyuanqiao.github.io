@@ -3,7 +3,7 @@ layout: post
 title: 把 LLM 接进测试流程，哪些环节值得做
 date: 2026-05-27 09:30:00 +0800
 excerpt: 从需求评审、测试设计、执行、缺陷归因到发布门禁，讨论 LLM 适合辅助什么、不适合替代什么，以及怎样保留证据和人工责任。
-categories: quality ai
+categories: 质量工程
 permalink: /quality/2026/05/27/llm-in-test-lifecycle.html
 ---
 

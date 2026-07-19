@@ -3,7 +3,7 @@ layout: post
 title: AI 写了 75% 的代码，我们怎么没快 75%
 date: 2026-07-19 22:30:00 +0800
 excerpt: AI 加速了写代码，却没有同时加速需求理解、测试、评审和上线。生成比例可以很高，整个团队仍可能被验证和返工拖慢。
-categories: ai engineering productivity
+categories: AI
 permalink: /ai/engineering/2026/07/19/ai-code-productivity-paradox.html
 ---
 

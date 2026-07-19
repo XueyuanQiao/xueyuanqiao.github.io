@@ -3,7 +3,7 @@ layout: post
 title: Python 并发选型：线程、进程、asyncio 与子解释器
 date: 2017-09-22 12:06:13 +0800
 excerpt: 以 Python 3.14 为基线，解释默认 GIL、free-threaded 构建、线程池、进程池、asyncio 和 InterpreterPoolExecutor 的适用边界。
-categories: python
+categories: Python
 ---
 
 > 本文最初写于 2017 年，2026 年按 Python 3.14 更新。Python 的并发选型已经不再是“线程还是进程”二选一，但负载特征仍然是最重要的判断依据。

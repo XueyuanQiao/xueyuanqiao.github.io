@@ -3,7 +3,7 @@ layout: post
 title: AI 测试平台先做哪三件事
 date: 2026-05-26 09:30:00 +0800
 excerpt: 与其先做用例生成大屏，不如先搭 trace 与回放、可版本化评测集、发布门禁与线上回流三项底座，让模型和工具都保持可替换。
-categories: quality ai
+categories: 质量工程
 permalink: /quality/2026/05/26/ai-test-platform-capability.html
 ---
 

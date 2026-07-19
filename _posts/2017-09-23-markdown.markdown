@@ -3,7 +3,7 @@ layout: post
 title: 在 Jekyll 中写 Markdown：语法、方言与常见问题
 date: 2017-09-23 14:26:13 +0800
 excerpt: 以本站使用的 kramdown 为例，整理 Markdown 基础语法、Jekyll Front Matter、代码块、链接图片、表格、脚注和 Liquid 冲突等实际写作问题。
-categories: devtools
+categories: 开发工具
 ---
 
 Markdown 的优点不是语法多，而是纯文本本身仍然可读。真正容易踩坑的地方，往往不是粗体和列表，而是不同渲染器对扩展语法的支持并不完全一致。

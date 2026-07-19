@@ -1269,14 +1269,7 @@
     });
     audio.addEventListener("ended", function () {
       requestCurrentTrackCache();
-      if (currentTrackIndex < tracks.length - 1) {
-        switchTrack(currentTrackIndex + 1, true);
-        return;
-      }
-      audio.currentTime = 0;
-      updateProgress(true);
-      savePosition();
-      setPlaybackIntent(false);
+      switchTrack((currentTrackIndex + 1) % tracks.length, true);
     });
     audio.addEventListener("error", function () {
       if (resumeAfterNavigation && audioLoadRetries < 3) {

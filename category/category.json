@@ -38,47 +38,47 @@
     },
     {
       "title": "在 Jekyll 中写 Markdown：语法、方言与常见问题",
-      "url": "/devtools/2017/09/23/markdown.html",
+      "url": "/开发工具/2017/09/23/markdown.html",
       "date": "2017-09-23",
       "excerpt": "以本站使用的 kramdown 为例，整理 Markdown 基础语法、Jekyll Front Matter、代码块、链接图片、表格、脚注和 Liquid 冲突等实际写作问题。",
       "categories": [
-        "devtools"
+        "开发工具"
       ]
     },
     {
       "title": "Selenium 4 中定位 iframe 的正确方式",
-      "url": "/testing/2017/09/23/selenium_frame.html",
+      "url": "/质量工程/2017/09/23/selenium_frame.html",
       "date": "2017-09-23",
       "excerpt": "解释浏览上下文、嵌套 iframe、显式等待和 Selenium 4 的 frame 切换 API，并给出定位不到元素时的排查顺序。",
       "categories": [
-        "testing"
+        "质量工程"
       ]
     },
     {
       "title": "Selenium 4 元素定位与等待策略",
-      "url": "/testing/2017/09/23/selenium_locate_ways.html",
+      "url": "/质量工程/2017/09/23/selenium_locate_ways.html",
       "date": "2017-09-23",
       "excerpt": "从稳定定位器、CSS 与 XPath 的边界、显式等待、StaleElementReferenceException 和 JavaScript 兜底等方面，整理现代 Selenium UI 自动化的基本写法。",
       "categories": [
-        "testing"
+        "质量工程"
       ]
     },
     {
       "title": "MySQL 8.4 索引与慢查询优化：一套可验证的排查方法",
-      "url": "/database/2017/10/03/mysql-index-slowquery.html",
+      "url": "/数据库/2017/10/03/mysql-index-slowquery.html",
       "date": "2017-10-03",
       "excerpt": "从访问模式和联合索引出发，结合 EXPLAIN ANALYZE、慢查询日志、Performance Schema、直方图与不可见索引，整理 MySQL 8.4 中可验证的慢查询优化流程。",
       "categories": [
-        "database"
+        "数据库"
       ]
     },
     {
       "title": "用 curl 查询公网出口 IP，并区分本机地址",
-      "url": "/devtools/2017/10/10/curl-queryip.html",
+      "url": "/开发工具/2017/10/10/curl-queryip.html",
       "date": "2017-10-10",
       "excerpt": "说明公网出口 IP、内网接口地址、IPv4/IPv6 和代理出口的区别，并给出适合交互使用与脚本使用的 curl 写法。",
       "categories": [
-        "devtools"
+        "开发工具"
       ]
     },
     {
@@ -87,8 +87,7 @@
       "date": "2026-02-21",
       "excerpt": "从测试工程师视角拆解 AI 应用的分层测试、评测集、模型裁判、工具调用、安全测试和线上反馈，不用虚构的工作占比描述新岗位。",
       "categories": [
-        "quality",
-        "ai"
+        "质量工程"
       ]
     },
     {
@@ -97,7 +96,7 @@
       "date": "2026-02-21",
       "excerpt": "质量工程、AI 全栈实践与 AI 音乐创作，现负责 L4 无人配送车端到端质量",
       "categories": [
-        "about"
+        "生活随笔"
       ]
     },
     {
@@ -106,8 +105,7 @@
       "date": "2026-05-26",
       "excerpt": "与其先做用例生成大屏，不如先搭 trace 与回放、可版本化评测集、发布门禁与线上回流三项底座，让模型和工具都保持可替换。",
       "categories": [
-        "quality",
-        "ai"
+        "质量工程"
       ]
     },
     {
@@ -116,8 +114,7 @@
       "date": "2026-05-27",
       "excerpt": "从需求评审、测试设计、执行、缺陷归因到发布门禁，讨论 LLM 适合辅助什么、不适合替代什么，以及怎样保留证据和人工责任。",
       "categories": [
-        "quality",
-        "ai"
+        "质量工程"
       ]
     },
     {
@@ -126,8 +123,7 @@
       "date": "2026-05-28",
       "excerpt": "与其统计生成了多少 Prompt 和用例，不如沉淀评测集、失败 trace、业务契约与版本配置，并用任务成功、关键失败、诊断效率和成本延迟衡量结果。",
       "categories": [
-        "quality",
-        "ai"
+        "质量工程"
       ]
     },
     {
@@ -136,7 +132,7 @@
       "date": "2026-05-29",
       "excerpt": "从金融系统转到无人配送车之后，我对质量边界的一些新认识：如何连接场景、仿真、车端、云端和线上反馈，以及哪些地方仍在学习。",
       "categories": [
-        "quality"
+        "质量工程"
       ]
     },
     {
@@ -145,8 +141,7 @@
       "date": "2026-05-30",
       "excerpt": "几年后再看财富技术部的编码军规，我记住的不是口号，而是并发、幂等、金额、核对、变更和应急这些朴素的工程要求。",
       "categories": [
-        "quality",
-        "career"
+        "质量工程"
       ]
     },
     {
@@ -155,7 +150,6 @@
       "date": "2026-06-05",
       "excerpt": "一份 105 页项目复盘的克制导读：区分作者亲历、作者判断与可继续讨论的产品问题，关注主动服务、产品定位、迭代节奏、组织成本和 Agent 落地。",
       "categories": [
-        "product",
         "ai"
       ]
     },
@@ -178,23 +172,12 @@
       ]
     },
     {
-      "title": "看无人配送车，我更关心它怎样被验证",
-      "url": "/robovan/2026/06/07/robovan-quality-cold-thinking.html",
-      "date": "2026-06-07",
-      "excerpt": "作为刚进入无人车领域的测试开发，我尝试把行业文章里的销量、成本和“轻地图”叙事还原成几个工程问题：ODD、场景覆盖、远程运营、数据回流和分层验证。",
-      "categories": [
-        "无人车",
-        "ai"
-      ]
-    },
-    {
       "title": "三十岁之后，技术人怎样继续往前走",
       "url": "/career/2026/06/07/tech-thirty-breakthrough.html",
       "date": "2026-06-07",
       "excerpt": "三十岁不是统一的职业分水岭。比年龄更值得关注的，是能否持续解决复杂问题、承担系统责任、理解业务，并给学习和生活留下长期空间。",
       "categories": [
-        "career",
-        "growth"
+        "职业成长"
       ]
     },
     {
@@ -203,9 +186,16 @@
       "date": "2026-07-19",
       "excerpt": "AI 加速了写代码，却没有同时加速需求理解、测试、评审和上线。生成比例可以很高，整个团队仍可能被验证和返工拖慢。",
       "categories": [
-        "ai",
-        "engineering",
-        "productivity"
+        "ai"
+      ]
+    },
+    {
+      "title": "向内求索：Be water, my friend.",
+      "url": "/life/2026/07/19/inward-search.html",
+      "date": "2026-07-19",
+      "excerpt": "从抖音刷到周星驰的一段采访，又追到李小龙关于水的比喻。恰逢最近工作有些不顺，借这句话记下几句：该吐槽就吐槽，该调整就调整，路还要继续走。",
+      "categories": [
+        "生活随笔"
       ]
     }
   ]

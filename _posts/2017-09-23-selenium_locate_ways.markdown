@@ -3,7 +3,7 @@ layout: post
 title: Selenium 4 元素定位与等待策略
 date: 2017-09-23 13:50:13 +0800
 excerpt: 从稳定定位器、CSS 与 XPath 的边界、显式等待、StaleElementReferenceException 和 JavaScript 兜底等方面，整理现代 Selenium UI 自动化的基本写法。
-categories: testing
+categories: 质量工程
 ---
 
 UI 自动化里，“元素定位不到”经常不是定位器语法问题，而是页面状态、浏览上下文或测试设计问题。现代 Selenium 代码应该把定位与等待放在一起考虑。

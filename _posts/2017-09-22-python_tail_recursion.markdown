@@ -3,7 +3,7 @@ layout: post
 title: Python 为什么不优化尾递归
 date: 2017-09-22 17:26:13 +0800
 excerpt: 从调用栈、尾调用优化和 CPython 的设计取舍出发，说明为什么把递归改成尾递归仍会触发 RecursionError，以及工程中更合适的替代方案。
-categories: python
+categories: Python
 ---
 
 > 本文最初写于 2017 年，2026 年按 Python 3.14 重新校订。实际项目中如果只是计算阶乘，请直接使用标准库 `math.factorial`；这里仍以阶乘为例，是为了说明递归与调用栈。

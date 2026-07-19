@@ -3,7 +3,7 @@ layout: post
 title: 三十岁之后，技术人怎样继续往前走
 date: 2026-06-07 11:00:00 +0800
 excerpt: 三十岁不是统一的职业分水岭。比年龄更值得关注的，是能否持续解决复杂问题、承担系统责任、理解业务，并给学习和生活留下长期空间。
-categories: career growth
+categories: 职业成长
 permalink: /career/2026/06/07/tech-thirty-breakthrough.html
 ---
 

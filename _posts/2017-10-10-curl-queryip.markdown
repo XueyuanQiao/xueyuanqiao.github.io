@@ -3,7 +3,7 @@ layout: post
 title: 用 curl 查询公网出口 IP，并区分本机地址
 date: 2017-10-10 12:10:13 +0800
 excerpt: 说明公网出口 IP、内网接口地址、IPv4/IPv6 和代理出口的区别，并给出适合交互使用与脚本使用的 curl 写法。
-categories: devtools
+categories: 开发工具
 ---
 
 “本机 IP”可能指完全不同的东西：

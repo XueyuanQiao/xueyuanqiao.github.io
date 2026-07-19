@@ -3,7 +3,7 @@ layout: post
 title: Selenium 4 中定位 iframe 的正确方式
 date: 2017-09-23 15:30:13 +0800
 excerpt: 解释浏览上下文、嵌套 iframe、显式等待和 Selenium 4 的 frame 切换 API，并给出定位不到元素时的排查顺序。
-categories: testing
+categories: 质量工程
 ---
 
 页面上的元素明明能在开发者工具里看到，Selenium 却报 `NoSuchElementException`，常见原因之一是元素位于 `iframe` 中。

@@ -3,7 +3,7 @@ layout: post
 title: AI 应用怎么测：从确定性测试到持续评测
 date: 2026-02-22 05:00:00 +0800
 excerpt: 从测试工程师视角拆解 AI 应用的分层测试、评测集、模型裁判、工具调用、安全测试和线上反馈，不用虚构的工作占比描述新岗位。
-categories: quality ai
+categories: 质量工程
 permalink: /quality/2026/02/21/ai-test.html
 ---
 

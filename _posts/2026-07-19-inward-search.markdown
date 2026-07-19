@@ -1,9 +1,9 @@
 ---
 layout: post
-title: 向内求索：像水一样，回到自己
+title: 向内求索：Be water, my friend.
 date: 2026-07-19 20:30:00 +0800
 excerpt: 从抖音刷到周星驰的一段采访，又追到李小龙关于水的比喻。恰逢最近工作有些不顺，借这句话记下几句：该吐槽就吐槽，该调整就调整，路还要继续走。
-categories: life reflection
+categories: 生活随笔
 permalink: /life/2026/07/19/inward-search.html
 image: /images/26071901-cat-angel-share.jpg
 reading_meta: 全文约 2500 字 · 约 8 分钟阅读

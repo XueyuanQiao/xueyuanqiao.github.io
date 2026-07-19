@@ -4,7 +4,7 @@ title: Python 可变对象的几个常见陷阱
 type: post
 date: 2017-09-22 17:05:13 +0800
 excerpt: 用对象绑定这条主线解释可变默认参数、类属性共享、浅拷贝、闭包延迟绑定和 is/== 的区别，并给出适用于现代 Python 的写法。
-categories: python
+categories: Python
 ---
 
 > 本文最初写于 2017 年，2026 年按现代 Python 语法校订。很多所谓“Python 陷阱”并不是特殊规则，它们大多可以归结为一句话：名字绑定到对象，赋值本身不会复制对象。

@@ -3,7 +3,7 @@ layout: post
 title: AI 测试真正需要沉淀的资产和指标
 date: 2026-05-28 09:30:00 +0800
 excerpt: 与其统计生成了多少 Prompt 和用例，不如沉淀评测集、失败 trace、业务契约与版本配置，并用任务成功、关键失败、诊断效率和成本延迟衡量结果。
-categories: quality ai
+categories: 质量工程
 permalink: /quality/2026/05/28/ai-test-methodology-and-kpi.html
 ---
 

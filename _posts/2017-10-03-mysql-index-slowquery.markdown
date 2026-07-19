@@ -3,7 +3,7 @@ layout: post
 title: MySQL 8.4 索引与慢查询优化：一套可验证的排查方法
 date: 2017-10-03 14:10:13 +0800
 excerpt: 从访问模式和联合索引出发，结合 EXPLAIN ANALYZE、慢查询日志、Performance Schema、直方图与不可见索引，整理 MySQL 8.4 中可验证的慢查询优化流程。
-categories: database
+categories: 数据库
 ---
 
 > 本文最初写于 2017 年。旧版内容主要基于早期 MySQL 的经验规则，部分结论过于绝对，也缺少 MySQL 8 提供的实际执行信息。2026 年重写时以 MySQL 8.4 LTS 为生产基线。

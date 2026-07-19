@@ -3,7 +3,7 @@ layout: post
 title: 《置身钉内》阅读笔记：一个 AI 办公项目的现场复盘
 date: 2026-06-05 10:00:00 +0800
 excerpt: 一份 105 页项目复盘的克制导读：区分作者亲历、作者判断与可继续讨论的产品问题，关注主动服务、产品定位、迭代节奏、组织成本和 Agent 落地。
-categories: product ai
+categories: AI
 permalink: /product/2026/06/05/zhi-shen-ding-nei.html
 reading_meta: 全文约 7.5 万字 · 105 页 · 通读约 3.5 小时
 ---

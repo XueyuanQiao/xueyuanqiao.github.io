@@ -3,7 +3,7 @@ layout: post
 title: 个人概述
 date: 2026-02-22 03:22:04 +0800
 excerpt: 质量工程、AI 全栈实践与 AI 音乐创作，现负责 L4 无人配送车端到端质量
-categories: about
+categories: 生活随笔
 permalink: /about/2026/02/22/intro.html
 ---
 

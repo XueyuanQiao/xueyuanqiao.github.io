@@ -41,11 +41,23 @@ hide_header: true
     {% endfor %}
 </div>
 
+<section class="cate-group cate-group-all" data-cate-group="__all__">
+    <h2 class="section-title">全部文章</h2>
+    <ul class="cate-list">
+        {% for post in site.posts %}
+        <li>
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            <span class="date">{{ post.date | date: "%Y-%m-%d" }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
 {% for entry in cate_entries %}
 {% assign parts = entry | split: "|||" %}
 {% assign cate_name = parts[1] %}
 {% assign cate_posts = site.categories[cate_name] %}
-<section class="cate-group" data-cate-group="{{ cate_name }}">
+<section class="cate-group" data-cate-group="{{ cate_name }}" hidden>
     <h2 class="section-title">{{ cate_name | capitalize }}</h2>
     <ul class="cate-list">
         {% for post in cate_posts %}
@@ -68,8 +80,8 @@ hide_header: true
       c.classList.toggle('is-active', c.dataset.cate === cate);
     });
     groups.forEach(function (g) {
-      var match = (cate === '__all__') || (g.dataset.cateGroup === cate);
-      g.style.display = match ? '' : 'none';
+      var match = g.dataset.cateGroup === cate;
+      g.hidden = !match;
       if (match) {
         g.style.animation = 'none';
         // force reflow then re-apply for fade
@@ -86,15 +98,14 @@ hide_header: true
   // Honor ?tag= in URL for compatibility
   var params = new URLSearchParams(location.search);
   var tag = params.get('tag');
+  var initialCate = '__all__';
   if (tag) {
-    var matched = false;
     chips.forEach(function (c) {
       if (c.dataset.cate && c.dataset.cate.toLowerCase() === tag.toLowerCase()) {
-        show(c.dataset.cate);
-        matched = true;
+        initialCate = c.dataset.cate;
       }
     });
-    if (!matched) show('__all__');
   }
+  show(initialCate);
 })();
 </script>

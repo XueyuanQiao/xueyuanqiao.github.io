@@ -3,7 +3,7 @@ layout: post
 title: 从屏幕走到街道
 date: 2026-05-29 09:30:00 +0800
 excerpt: 从金融系统转到无人配送车之后，我对质量边界的一些新认识：如何连接场景、仿真、车端、云端和线上反馈，以及哪些地方仍在学习。
-categories: quality
+categories: 质量工程
 permalink: /quality/2026/05/29/autonomous-vehicle-quality-loop.html
 ---
 
