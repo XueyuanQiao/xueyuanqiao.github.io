@@ -150,19 +150,6 @@
         </div>
     </dialog>
 
-    <aside class="site-pet" data-site-pet data-pet-state="idle" aria-label="网站猫咪喵喵">
-        <span class="site-pet__bubble" data-site-pet-bubble role="status" aria-live="polite">喵～</span>
-        <button class="site-pet__button" data-site-pet-touch type="button" aria-label="摸摸喵喵，拖动可以移动它">
-            <span class="site-pet__portrait" aria-hidden="true">
-                <img src="{{ '/images/20260720-miaomiao-pet.webp' | relative_url }}" width="540" height="960" alt="" decoding="async">
-            </span>
-            <span class="site-pet__paws" aria-hidden="true"><i></i><i></i></span>
-            <span class="site-pet__zzz" aria-hidden="true">z Z</span>
-            <span class="site-pet__bowl" aria-hidden="true"><i></i></span>
-        </button>
-        <span class="site-pet__name" aria-hidden="true">喵喵</span>
-    </aside>
-
     {% assign first_music_track = site.music_tracks | first %}
     <section class="music-dock" data-music-player aria-label="xueyuan 音乐播放器" data-track-title="{{ first_music_track.title }}" data-track-artist="{{ site.music_artist }}">
         <audio data-music-audio preload="metadata" src="{{ first_music_track.file | relative_url }}"></audio>
