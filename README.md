@@ -56,8 +56,7 @@
 ├── category/
 │   ├── index.html           动态分类页（按 ?tag= 过滤）
 │   └── category.json        文章索引数据（脚本生成）
-├── css/highlight/           highlight.js 代码高亮主题
-├── js/highlight.pack.js     highlight.js 运行时
+├── css/highlight/           历史高亮主题存档（不进入页面加载链路）
 ├── images/                  图片资源
 ├── doc/                     工程文档（不参与构建）
 │   ├── README.md            文档索引
@@ -184,17 +183,18 @@ GitHub Pages 在 UTC 时区下生成 URL。例如 `2026-02-21 03:22:04 +0800`（
      <a class="pdf-btn pdf-btn-ghost" href="/assets/pdf/your-file.pdf" download>下载 PDF</a>
    </div>
 
-   <div id="pdf-viewer" class="pdf-viewer" data-pdf-src="/assets/pdf/your-file.pdf">
-     <div class="pdf-loading">正在加载 PDF 阅读器…</div>
+   <div class="pdf-native-shell" data-pdf-src="/assets/pdf/your-file.pdf#view=FitH">
+     <button class="pdf-load-btn" type="button">加载在线阅读</button>
+     <p>PDF 仅在点击后加载。</p>
    </div>
    ```
 
-3. 配套的 `<style>` 与 PDF.js 懒加载脚本可参考现有文章 `_posts/2026-06-05-zhi-shen-ding-nei.markdown`
+3. 配套的样式与点击后创建原生 `<object>` 阅读器的脚本，可参考现有文章 `_posts/2026-06-05-zhi-shen-ding-nei.markdown`
 
 说明与注意：
 
-- 阅读器基于 **PDF.js**，按需分页渲染（`IntersectionObserver` 懒加载），大文件也不会一次性吃满内存
-- 始终保留 `download` / `target="_blank"` 链接与 `<noscript>` 兜底，确保未启用 JS 时仍可访问
+- 大文件必须由用户点击后再创建阅读器，避免打开文章时自动下载几十 MB
+- 始终保留 `download` / `target="_blank"` 链接，确保未启用 JS 时仍可访问
 - 大体积 PDF（数十 MB）建议在按钮文案中标注大小，给读者预期
 - 转载内容请在文中注明来源与版权声明
 
@@ -289,8 +289,8 @@ bundle exec jekyll serve  # 本地走查
 
 - **Jekyll** — 静态站点生成器（GitHub Pages 原生支持）
 - **kramdown** — Markdown 引擎，支持 GFM、脚注、任务列表
-- **highlight.js** — 代码高亮（已内置 80+ 主题供选择）
-- **PDF.js** — 文章内嵌 PDF 的分页懒加载渲染
+- **Rouge** — Jekyll 构建期代码高亮，页面无需下载高亮运行时
+- **浏览器原生 PDF** — 用户点击后按需创建阅读器，避免文章首开下载大文件
 - **CSS3** — 自定义属性、`color-mix`、`backdrop-filter`、`mask-image`
 - **原生 ES** — 零依赖，无打包，IntersectionObserver / matchMedia 等现代 API
 

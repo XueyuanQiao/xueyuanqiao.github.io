@@ -1,363 +1,200 @@
 ---
 layout: post
-title: markdown语法
+title: 在 Jekyll 中写 Markdown：语法、方言与常见问题
 date: 2017-09-23 14:26:13 +0800
-excerpt: Markdown 语法和 MWeb 写作使用说明
+excerpt: 以本站使用的 kramdown 为例，整理 Markdown 基础语法、Jekyll Front Matter、代码块、链接图片、表格、脚注和 Liquid 冲突等实际写作问题。
 categories: devtools
 ---
 
-# Markdown 语法和 MWeb 写作使用说明
+Markdown 的优点不是语法多，而是纯文本本身仍然可读。真正容易踩坑的地方，往往不是粗体和列表，而是不同渲染器对扩展语法的支持并不完全一致。
 
-## Markdown 的设计哲学
-
-> Markdown 的目標是實現「易讀易寫」。
-> 不過最需要強調的便是它的可讀性。一份使用 Markdown 格式撰寫的文件應該可以直接以純文字發佈，並且看起來不會像是由許多標籤或是格式指令所構成。
-> Markdown 的語法有個主要的目的：用來作為一種網路內容的*寫作*用語言。
+本站使用 Jekyll 4 和 kramdown。GitHub README 常见的是 GFM（GitHub Flavored Markdown），其它编辑器还可能使用 CommonMark、Pandoc Markdown 或自己的扩展。复制语法前，先确认最终发布环境。
 
 <!-- more -->
 
-## 本文约定
+## 一篇 Jekyll 文章的基本结构
 
-如果有写 `效果如下：`， 在 MWeb 编辑状态下只有用 `CMD + R` 预览才可以看效果。
+文件名通常使用：
+
+{% highlight text %}
+YYYY-MM-DD-slug.markdown
+{% endhighlight %}
+
+文件顶部是 YAML Front Matter：
+
+{% highlight yaml %}
+---
+layout: post
+title: 示例文章
+date: 2026-07-19 10:00:00 +0800
+excerpt: 用一句话说明文章内容
+categories: devtools
+---
+{% endhighlight %}
+
+Front Matter 中包含冒号、井号或特殊字符的值，建议加引号。日期应带时区，避免本地预览和线上构建出现日期偏移。
+
+本站使用 `<!-- more -->` 作为摘要分隔符。它属于站点约定，不是通用 Markdown 语法。
 
 ## 标题
 
-Markdown 语法：
+{% highlight markdown %}
+# 一级标题
+## 二级标题
+### 三级标题
+{% endhighlight %}
 
-```
-# 第一级标题 `<h1>` 
-## 第二级标题 `<h2>` 
-###### 第六级标题 `<h6>` 
-```
+文章模板通常已经输出页面主标题，所以正文一般从二级标题开始。标题层级应按结构递进，不要因为字号好看直接从二级跳到四级。
 
-效果如下：
+## 段落与换行
 
-# 第一级标题 `<h1>` 
-## 第二级标题 `<h2>` 
-###### 第六级标题 `<h6>` 
+空一行表示新段落。普通换行在很多 Markdown 方言中仍会合并为同一段。
 
-
+如果确实需要硬换行，可以在行尾添加两个空格，或使用 `<br>`。长文写作更推荐分段，而不是大量手工换行。
 
 ## 强调
 
-Markdown 语法：
+{% highlight markdown %}
+*斜体*
+**粗体**
+~~删除线~~
+`行内代码`
+{% endhighlight %}
 
-```
-*这些文字会生成`<em>`*
-_这些文字会生成`<u>`_
-
-**这些文字会生成`<strong>`**
-__这些文字会生成`<strong>`__
-```
-
-在 MWeb 中的快捷键为： `CMD + U`、`CMD + I`、`CMD + B`
-效果如下：
-
-*这些文字会生成`<em>`*
-_这些文字会生成`<u>`_
-
-**这些文字会生成`<strong>`**
-__这些文字会生成`<strong>`__
-
-## 换行
-
-四个及以上空格加回车。
-如果不想打这么多空格，只要回车就为换行，请勾选：`Preferences` - `Themes` - `Translate newlines to <br> tags`
+下划线并不是标准的“下划线语法”。`_text_` 通常表示斜体。需要下划线时只能使用 HTML，并先确认站点样式和可访问性是否合适。
 
 ## 列表
 
-### 无序列表
+{% highlight markdown %}
+- 第一项
+- 第二项
+  - 子项
 
-Markdown 语法：
+1. 第一步
+2. 第二步
+{% endhighlight %}
 
+子列表至少缩进两个到四个空格，具体取决于渲染器。混用 Tab 和空格容易让结构在不同编辑器中表现不一致。
+
+任务列表属于 GFM 扩展。kramdown 是否渲染成复选框取决于站点配置和插件，不应默认所有环境都支持：
+
+{% highlight markdown %}
+- [ ] 未完成
+- [x] 已完成
+{% endhighlight %}
+
+## 链接与图片
+
+{% highlight markdown %}
+[Python 文档](https://docs.python.org/3/)
+![图片替代文本](/images/example.png)
+{% endhighlight %}
+
+图片的替代文本不是装饰，它会在图片加载失败时显示，也帮助使用读屏软件的读者理解内容。不要把所有图片都写成空的 `![](...)`。
+
+站内链接可以使用绝对路径，也可以通过 Liquid 的 `relative_url` 过滤器适配 `baseurl`。如果站点将来可能部署在子路径，后者更稳妥。
+
+## 引用
+
+{% highlight markdown %}
+> 第一层引用
+>
+> 仍然属于同一段引用。
+{% endhighlight %}
+
+引用应当用于原话或明确的摘录，不要只拿来做彩色提示框。引用外部内容时注明作者和来源，并控制篇幅。
+
+## 代码
+
+短代码使用行内反引号。多行代码可以使用围栏代码块，也可以使用 Jekyll 的 highlight 标签：
+
+{% raw %}
+```liquid
+{% highlight python %}
+def hello(name: str) -> str:
+    return f"Hello, {name}"
+{% endhighlight %}
 ```
-* 项目一 无序列表 `* + 空格键`
-* 项目二
-	* 项目二的子项目一 无序列表 `TAB + * + 空格键`
-	* 项目二的子项目二
+{% endraw %}
+
+代码块应标明语言，便于高亮和辅助工具识别。示例尽量做到可运行，并说明依赖、输入和失败边界。
+
+### Markdown 中展示 Liquid
+
+{% raw %}
+Jekyll 会在 Markdown 转换前处理 Liquid。即使 Liquid 标签写在代码块里，也可能先被执行。要原样展示 `{{ ... }}` 或 `{% ... %}`，可用 `raw` 包裹：
+{% endraw %}
+
+{% raw %}
+```liquid
+{{ page.title }}
 ```
+{% endraw %}
 
-在 MWeb 中的快捷键为： `Option + U`
-效果如下：
-
-* 项目一 无序列表 `* + 空格键`
-* 项目二
-  * 项目二的子项目一 无序列表 `TAB + * + 空格键`
-  * 项目二的子项目二
-
-### 有序列表
-
-Markdown 语法：
-
-```
-1. 项目一 有序列表 `数字 + . + 空格键`
-2. 项目二 
-3. 项目三
-	1. 项目三的子项目一 有序列表 `TAB + 数字 + . + 空格键`
-	2. 项目三的子项目二
-```
-
-效果如下：
-
-1. 项目一 有序列表 `数字 + . + 空格键`
-2. 项目二 
-3. 项目三
-  1. 项目三的子项目一 有序列表 `TAB + 数字 + . + 空格键`
-  2. 项目三的子项目二
-
-### 任务列表（Task lists）
-
-Markdown 语法：
-
-```
-- [ ] 任务一 未做任务 `- + 空格 + [ ]`
-- [x] 任务二 已做任务 `- + 空格 + [x]`
-```
-
-效果如下：
-
-- [ ] 任务一 未做任务 `- + 空格 + [ ]`
-- [x] 任务二 已做任务 `- + 空格 + [x]`
-
-## 图片
-
-Markdown 语法：
-
-```
-![GitHub set up](http://zh.mweb.im/asset/img/set-up-git.gif)
-格式: ![Alt Text](url)
-```
-
-`Control + Shift + I` 可插入Markdown语法。
-如果是 MWeb 的文档库中的文档，还可以用拖放图片、`CMD + V` 粘贴、`CMD + Option + I` 导入这三种方式来增加图片。
-效果如下：
-
-![GitHub set up](http://zh.mweb.im/asset/img/set-up-git.gif)
-
-## 链接
-
-Markdown 语法：
-
-```
-email <example@example.com>
-[GitHub](http://github.com)
-自动生成连接  <http://www.github.com/>
-```
-
-`Control + Shift + L` 可插入Markdown语法。
-如果是 MWeb 的文档库中的文档，拖放或`CMD + Option + I` 导入非图片时，会生成连接。
-效果如下：
-
-Email 连接： <example@example.com>
-[连接标题Github网站](http://github.com)
-自动生成连接像： <http://www.github.com/> 这样
-
-## 区块引用
-
-Markdown 语法：
-
-```
-某某说:
-> 第一行引用
-> 第二行费用文字
-```
-
-`CMD + Shift + B` 可插入Markdown语法。
-效果如下：
-
-某某说:
-> 第一行引用
-> 第二行费用文字
-
-## 行内代码
-
-Markdown 语法：
-
-```
-像这样即可：`<addr>` `code`
-```
-
-`CMD + K` 可插入Markdown语法。
-效果如下：
-
-像这样即可：`<addr>` `code`
-
-## 多行或者一段代码
-
-Markdown 语法：
-
-	​```js
-	function fancyAlert(arg) {
-	  if(arg) {
-	    $.facebox({div:'#foo'})
-	  }
-	
-	}
-	​```
-
-`CMD + Shift + K` 可插入Markdown语法。
-效果如下：
-
-```js
-function fancyAlert(arg) {
-	if(arg) {
-		$.facebox({div:'#foo'})
-	}
-	
-}
-```
-
-## 顺序图或流程图
-
-Markdown 语法：
-
-	​```sequence
-	张三->李四: 嘿，小四儿, 写博客了没?
-	Note right of 李四: 李四愣了一下，说：
-	李四-->张三: 忙得吐血，哪有时间写。
-	​```
-	
-	​```flow
-	st=>start: 开始
-	e=>end: 结束
-	op=>operation: 我的操作
-	cond=>condition: 确认？
-	
-	st->op->cond
-	cond(yes)->e
-	cond(no)->op
-	​```
-
-效果如下（ `Preferences` - `Themes` - `Enable sequence & flow chart` 才会看到效果 ）：
-
-```sequence
-张三->李四: 嘿，小四儿, 写博客了没?
-Note right of 李四: 李四愣了一下，说：
-李四-->张三: 忙得吐血，哪有时间写。
-```
-
-```flow
-st=>start: 开始
-e=>end: 结束
-op=>operation: 我的操作
-cond=>condition: 确认？
-
-st->op->cond
-cond(yes)->e
-cond(no)->op
-```
-
-更多请参考：<http://bramp.github.io/js-sequence-diagrams/>, <http://adrai.github.io/flowchart.js/>
+这是 Jekyll 写作中比 Markdown 本身更常见的坑。
 
 ## 表格
 
-Markdown 语法：
+{% highlight markdown %}
+| 名称 | 作用 |
+| --- | --- |
+| kramdown | Markdown 渲染器 |
+| Liquid | Jekyll 模板语言 |
+{% endhighlight %}
 
-```
-第一格表头 | 第二格表头
---------- | -------------
-内容单元格 第一列第一格 | 内容单元格第二列第一格
-内容单元格 第一列第二格 多加文字 | 内容单元格第二列第二格
-```
+Markdown 表格适合字段少、内容短的数据。单元格里放长段落、复杂列表或大量代码时，移动端阅读体验很差，通常改成小节更清楚。
 
-效果如下：
+## 脚注
 
-| 第一格表头             | 第二格表头       |
-| ----------------- | ----------- |
-| 内容单元格 第一列第一格      | 内容单元格第二列第一格 |
-| 内容单元格 第一列第二格 多加文字 | 内容单元格第二列第二格 |
+kramdown 支持脚注：
 
+{% highlight markdown %}
+这是一段需要补充说明的文字。[^note]
 
-## 删除线
+[^note]: 脚注内容。
+{% endhighlight %}
 
-Markdown 语法：
+脚注属于扩展语法，在 CommonMark 基础规范中并非必选能力。文章要发布到多个平台时应实际预览。
 
-	加删除线像这样用： ~~删除这些~~
+## 数学公式、流程图和 Mermaid
 
-效果如下：
+数学公式、sequence、flow、Mermaid 都不是 Markdown 基础语法。它们需要页面额外加载 MathJax、KaTeX、Mermaid 或对应插件。
 
-加删除线像这样用： ~~删除这些~~
+写作时应区分两件事：
 
-## 分隔线
+- 编辑器能够预览；
+- 最终站点能够构建和展示。
 
-以下三种方式都可以生成分隔线：
+只有前者成立时，发布后仍可能显示为普通代码块。新增扩展语法前，应先在站点构建产物里验证。
 
-	***
+## HTML 可以用，但要克制
 
-	*****
+kramdown 允许在 Markdown 中混用 HTML。本站的图片说明、资料卡片等样式会用到这一能力。
 
-	- - -
+使用 HTML 时注意：
 
-效果如下：
+- 属性值正确转义；
+- 不重复页面已有的一级标题；
+- 交互元素具备键盘操作与可访问标签；
+- 外链使用 `rel="noopener"`；
+- 不为简单文本结构引入大段不可维护的内联样式。
 
-***
+## 发布前检查
 
-*****
+1. Front Matter 能被 YAML 正确解析；
+2. 标题层级连续；
+3. 代码块和 Liquid 标签成对闭合；
+4. 站内链接、图片路径有效；
+5. 手机宽度下表格和代码不会破坏页面；
+6. 执行 `bundle exec jekyll build`，检查构建警告；
+7. 打开生成后的页面，而不只看编辑器预览。
 
-- - -
+Markdown 负责让正文保持简单，Jekyll、kramdown 和站点样式负责把它变成网页。把这几层分清，语法问题通常就容易定位。
 
+## 参考资料
 
-## MathJax
-
-Markdown 语法：
-
-
-```
-块级公式：
-$$	x = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$
-
-\\[ \frac{1}{\Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{\frac25 \pi}} =
-1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}}
-{1+\frac{e^{-8\pi}} {1+\ldots} } } } \\]
-
-行内公式： $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$
-```
-
-效果如下（`Preferences` - `Themes` - `Enable MathJax` 才会看到效果）：
-
-块级公式：
-$$	x = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$
-
-\\[ \frac{1}{\Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{\frac25 \pi}} =
-1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}}
-{1+\frac{e^{-8\pi}} {1+\ldots} } } } \\]
-
-
-行内公式： $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$
-
-
-## 脚注（Footnote）
-
-Markdown 语法：
-
-```
-这是一个脚注：[^sample_footnote]
-```
-
-效果如下：
-
-这是一个脚注：[^sample_footnote]
-
-[^sample_footnote]: 这里是脚注信息
-
-
-## 注释和阅读更多
-
-<!-- comment -->
-<!-- more -->
-Actions->Insert Read More Comment *或者* `Command + .`
-**注** 阅读更多的功能只用在生成网站或博客时。
-
-## TOC
-
-Markdown 语法：
-
-```
-[TOC]
-```
-
-效果如下：
-
-[TOC]
-
-
+- [Markdown 原始语法说明](https://daringfireball.net/projects/markdown/syntax)
+- [CommonMark 规范](https://spec.commonmark.org/)
+- [kramdown 语法文档](https://kramdown.gettalong.org/syntax.html)
+- [Jekyll：Writing posts](https://jekyllrb.com/docs/posts/)
+- [Jekyll：Liquid](https://jekyllrb.com/docs/liquid/)

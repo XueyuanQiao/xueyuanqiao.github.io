@@ -60,48 +60,92 @@
   ready(function () {
     var body = doc.body;
 
-    // Active nav link
+    // Active nav link（文章详情归入“文章”，分类筛选页归入“分类”）
     var path = location.pathname.replace(/\/$/, "") || "/";
+    var sectionPath = path;
+    if (doc.querySelector(".article")) {
+      sectionPath = path.indexOf("/about/") === 0 ? "/about.html" : "/archive.html";
+    } else if (path.indexOf("/category") === 0) {
+      sectionPath = "/cate.html";
+    }
     doc.querySelectorAll(".nav a").forEach(function (a) {
-      var href = (a.getAttribute("href") || "").replace(/\/$/, "") || "/";
-      var current = href === path;
+      var href;
+      try { href = new URL(a.href, location.href).pathname; }
+      catch (e) { href = a.getAttribute("href") || ""; }
+      href = href.replace(/\/$/, "") || "/";
+      var current = href === sectionPath;
       if (!current && href !== "/" && path.indexOf(href) === 0) current = true;
-      if (current) a.classList.add("is-active");
+      if (current) {
+        a.classList.add("is-active");
+        a.setAttribute("aria-current", "page");
+      }
     });
 
     // Mobile menu toggle
     var menuBtn = doc.querySelector(".menu-toggle");
     var scrim = doc.querySelector(".scrim");
+    var sidebar = doc.querySelector(".sidebar");
+    var main = doc.querySelector(".main");
+    var fabRoot = doc.querySelector(".fab-top");
     function lockScroll(lock) {
       // 仅在窄屏时锁定 body，避免桌面模式被误锁
       if (window.innerWidth > 920) return;
       doc.documentElement.style.overflow = lock ? "hidden" : "";
       body.style.overflow = lock ? "hidden" : "";
     }
-    function closeMenu() {
+    function setInert(el, inert) {
+      if (!el) return;
+      if (inert) el.setAttribute("inert", "");
+      else el.removeAttribute("inert");
+    }
+    function syncMenuA11y(open) {
+      var isMobile = window.innerWidth <= 920;
+      if (menuBtn) menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (sidebar) {
+        if (isMobile && !open) {
+          sidebar.setAttribute("aria-hidden", "true");
+          setInert(sidebar, true);
+        } else {
+          sidebar.removeAttribute("aria-hidden");
+          setInert(sidebar, false);
+        }
+      }
+      setInert(main, isMobile && open);
+      setInert(fabRoot, isMobile && open);
+    }
+    function closeMenu(restoreFocus) {
       body.classList.remove("is-menu-open");
+      if (scrim) scrim.setAttribute("aria-hidden", "true");
       lockScroll(false);
+      syncMenuA11y(false);
+      if (restoreFocus && menuBtn) menuBtn.focus();
     }
     function openMenu() {
       body.classList.add("is-menu-open");
+      if (scrim) scrim.setAttribute("aria-hidden", "false");
       lockScroll(true);
+      syncMenuA11y(true);
+      var firstLink = sidebar && sidebar.querySelector(".nav a, .nav button");
+      if (firstLink) requestAnimationFrame(function () { firstLink.focus(); });
     }
     if (menuBtn) {
       menuBtn.addEventListener("click", function () {
-        if (body.classList.contains("is-menu-open")) closeMenu();
+        if (body.classList.contains("is-menu-open")) closeMenu(true);
         else openMenu();
       });
     }
-    if (scrim) scrim.addEventListener("click", closeMenu);
+    if (scrim) scrim.addEventListener("click", function () { closeMenu(true); });
     doc.querySelectorAll(".sidebar a").forEach(function (a) {
-      a.addEventListener("click", closeMenu);
+      a.addEventListener("click", function () { closeMenu(false); });
     });
     doc.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && body.classList.contains("is-menu-open")) closeMenu();
+      if (e.key === "Escape" && body.classList.contains("is-menu-open")) closeMenu(true);
     });
     window.addEventListener("resize", function () {
-      if (window.innerWidth > 920) closeMenu();
+      if (window.innerWidth > 920) closeMenu(false);
+      else syncMenuA11y(body.classList.contains("is-menu-open"));
     });
+    syncMenuA11y(false);
 
     // Theme toggle button(s)
     doc.querySelectorAll("[data-theme-toggle]").forEach(function (btn) {
@@ -128,31 +172,35 @@
       revealItems.forEach(function (el) { el.classList.add("is-in"); });
     }
 
-    // Reading progress
+    // Reading progress + back to top: share one rAF-throttled scroll handler.
     var progress = doc.querySelector(".read-progress");
-    if (progress) {
-      var ticking = false;
-      window.addEventListener("scroll", function () {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(function () {
-          var h = doc.documentElement;
-          var scrolled = h.scrollTop || body.scrollTop;
+    var hasNativeScrollTimeline = !!(window.CSS && CSS.supports && CSS.supports("animation-timeline", "scroll()"));
+    var jsProgress = progress && !hasNativeScrollTimeline ? progress : null;
+    var fab = doc.querySelector(".fab-top");
+    if (jsProgress || fab) {
+      var scrollTicking = false;
+      var updateScrollUI = function () {
+        var h = doc.documentElement;
+        var scrolled = h.scrollTop || body.scrollTop;
+        if (jsProgress) {
           var height = (h.scrollHeight - h.clientHeight) || 1;
-          var pct = Math.min(100, (scrolled / height) * 100);
-          progress.style.width = pct + "%";
-          ticking = false;
-        });
+          var ratio = Math.min(1, Math.max(0, scrolled / height));
+          jsProgress.style.transform = "scaleX(" + ratio.toFixed(4) + ")";
+        }
+        if (fab) fab.classList.toggle("is-visible", scrolled > 400);
+        scrollTicking = false;
+      };
+      window.addEventListener("scroll", function () {
+        if (scrollTicking) return;
+        scrollTicking = true;
+        requestAnimationFrame(updateScrollUI);
       }, { passive: true });
+      window.addEventListener("resize", updateScrollUI, { passive: true });
+      updateScrollUI();
     }
 
     // Back to top
-    var fab = doc.querySelector(".fab-top");
     if (fab) {
-      window.addEventListener("scroll", function () {
-        if (window.scrollY > 400) fab.classList.add("is-visible");
-        else fab.classList.remove("is-visible");
-      }, { passive: true });
       fab.addEventListener("click", function () {
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
@@ -166,6 +214,9 @@
 
     // Archive pagination (文章库分页：10/20/50 每页)
     initArchivePagination();
+
+    // Command palette search: index is fetched only when the user opens it.
+    initSearch(closeMenu);
 
     // Landing-only enhancements run via a separate IIFE listener.
   });
@@ -218,10 +269,16 @@
         return '<li class="' + cls + '"><a href="#' + it.id + '">' + escapeHTML(it.text) + '</a></li>';
       }).join('');
       tocEl.hidden = false;
+      var toggle = doc.querySelector('[data-toc-toggle]');
+
+      function setTocCollapsed(collapsed) {
+        tocEl.setAttribute('data-collapsed', collapsed ? 'true' : 'false');
+        if (toggle) toggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      }
 
       // 移动端默认折叠目录，节省纵向空间
       var isNarrow = window.matchMedia && window.matchMedia('(max-width: 920px)').matches;
-      if (isNarrow) tocEl.setAttribute('data-collapsed', 'true');
+      setTocCollapsed(Boolean(isNarrow));
 
       // 旋屏 / 缩放穿过断点时同步折叠状态，避免横屏 → 竖屏 TOC 还撑开
       // 仅在用户没手动 toggle 过时跟随断点（dataset.userToggled 由点击设置）
@@ -229,7 +286,7 @@
         var mq = window.matchMedia('(max-width: 920px)');
         var onMq = function (e) {
           if (tocEl.dataset.userToggled === '1') return;
-          tocEl.setAttribute('data-collapsed', e.matches ? 'true' : 'false');
+          setTocCollapsed(e.matches);
         };
         if (mq.addEventListener) mq.addEventListener('change', onMq);
         else if (mq.addListener) mq.addListener(onMq);
@@ -241,26 +298,31 @@
       links.forEach(function (l) {
         byId[l.getAttribute('href').slice(1)] = l;
       });
+      function setActiveToc(link) {
+        links.forEach(function (l) {
+          var active = l === link;
+          l.classList.toggle('is-active', active);
+          if (active) l.setAttribute('aria-current', 'location');
+          else l.removeAttribute('aria-current');
+        });
+      }
+      setActiveToc(byId[decodeURIComponent(location.hash.slice(1))] || links[0]);
       if ('IntersectionObserver' in window) {
         var spy = new IntersectionObserver(function (entries) {
           entries.forEach(function (e) {
             var link = byId[e.target.id];
             if (!link) return;
-            if (e.isIntersecting) {
-              links.forEach(function (l) { l.classList.remove('is-active'); });
-              link.classList.add('is-active');
-            }
+            if (e.isIntersecting) setActiveToc(link);
           });
         }, { rootMargin: '-30% 0px -65% 0px', threshold: 0 });
         headings.forEach(function (h) { spy.observe(h); });
       }
 
       // Collapse toggle
-      var toggle = doc.querySelector('[data-toc-toggle]');
       if (toggle) {
         toggle.addEventListener('click', function () {
           var collapsed = tocEl.getAttribute('data-collapsed') === 'true';
-          tocEl.setAttribute('data-collapsed', collapsed ? 'false' : 'true');
+          setTocCollapsed(!collapsed);
           // 标记用户已手动 toggle，避免后续断点变化覆盖用户选择
           tocEl.dataset.userToggled = '1';
         });
@@ -269,6 +331,58 @@
 
     // 4) Image lightbox + lazy loading
     var lb = null;
+    var lbCloseTimer = 0;
+    var lbTrigger = null;
+
+    function ensureLightbox() {
+      if (lb) return lb;
+      lb = doc.createElement('dialog');
+      lb.className = 'lightbox';
+      lb.setAttribute('aria-label', '图片预览');
+      lb.innerHTML =
+        '<button class="lightbox-close" type="button" aria-label="关闭图片预览">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>' +
+        '</button>' +
+        '<figure><img alt=""><figcaption></figcaption></figure>';
+      doc.body.appendChild(lb);
+      lb.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+      lb.addEventListener('click', function (e) {
+        if (e.target === lb) closeLightbox();
+      });
+      lb.addEventListener('cancel', function (e) {
+        e.preventDefault();
+        closeLightbox();
+      });
+      return lb;
+    }
+
+    function openLightbox(img) {
+      var dialog = ensureLightbox();
+      clearTimeout(lbCloseTimer);
+      lbTrigger = img;
+      var inner = dialog.querySelector('img');
+      var caption = dialog.querySelector('figcaption');
+      inner.src = img.currentSrc || img.src;
+      inner.alt = img.alt || '';
+      caption.textContent = img.alt || '';
+      caption.hidden = !img.alt;
+      if (!dialog.open && dialog.showModal) dialog.showModal();
+      else dialog.setAttribute('open', '');
+      root.classList.add('has-modal-open');
+      requestAnimationFrame(function () { dialog.classList.add('is-open'); });
+    }
+
+    function closeLightbox() {
+      if (!lb || !lb.open) return;
+      lb.classList.remove('is-open');
+      root.classList.remove('has-modal-open');
+      lbCloseTimer = setTimeout(function () {
+        if (lb.open && lb.close) lb.close();
+        else lb.removeAttribute('open');
+        if (lbTrigger) lbTrigger.focus();
+      }, 320);
+    }
+
     content.querySelectorAll('img').forEach(function (img) {
       // 性能优化：默认懒加载、异步解码（首屏图除外，避免 LCP 倒退）
       var rect = img.getBoundingClientRect();
@@ -276,22 +390,28 @@
       if (!img.hasAttribute('loading') && !inViewport) img.setAttribute('loading', 'lazy');
       if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
 
+      // 链接中的图片保留原链接语义，不接管点击。
+      if (img.closest('a')) return;
+      img.classList.add('image-zoom');
+      img.setAttribute('tabindex', '0');
+      img.setAttribute('role', 'button');
+      img.setAttribute('aria-haspopup', 'dialog');
+      img.setAttribute('aria-label', img.alt ? ('查看大图：' + img.alt) : '查看大图');
       img.addEventListener('click', function () {
-        if (!lb) {
-          lb = doc.createElement('div');
-          lb.className = 'lightbox';
-          lb.innerHTML = '<img alt="">';
-          doc.body.appendChild(lb);
-          lb.addEventListener('click', function () { lb.classList.remove('is-open'); });
+        openLightbox(img);
+      });
+      img.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openLightbox(img);
         }
-        var inner = lb.querySelector('img');
-        inner.src = img.currentSrc || img.src;
-        inner.alt = img.alt || '';
-        requestAnimationFrame(function () { lb.classList.add('is-open'); });
       });
     });
     doc.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && lb) lb.classList.remove('is-open');
+      if (e.key === 'Escape' && lb && lb.open) {
+        e.preventDefault();
+        closeLightbox();
+      }
     });
   }
 
@@ -433,6 +553,178 @@
     }
 
     render();
+  }
+
+  // ========== Command palette search ==========
+  function initSearch(closeMenu) {
+    var dialog = doc.querySelector('[data-search-dialog]');
+    var input = doc.querySelector('[data-search-input]');
+    var results = doc.querySelector('[data-search-results]');
+    var status = doc.querySelector('[data-search-status]');
+    var closeBtn = doc.querySelector('[data-search-close]');
+    var openBtns = doc.querySelectorAll('[data-search-open]');
+    if (!dialog || !input || !results || !openBtns.length) return;
+
+    var indexUrl = dialog.getAttribute('data-index-url');
+    var posts = null;
+    var loadPromise = null;
+    var visible = [];
+    var active = -1;
+    var lastTrigger = null;
+    var isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent || '');
+
+    doc.querySelectorAll('[data-search-shortcut]').forEach(function (kbd) {
+      kbd.textContent = isMac ? '⌘ K' : 'Ctrl K';
+    });
+
+    function loadIndex() {
+      if (posts) return Promise.resolve(posts);
+      if (loadPromise) return loadPromise;
+      loadPromise = fetch(indexUrl).then(function (response) {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.json();
+      }).then(function (data) {
+        posts = ((data && data.posts) || []).slice().sort(function (a, b) {
+          return String(b.date || '').localeCompare(String(a.date || ''));
+        });
+        return posts;
+      });
+      return loadPromise;
+    }
+
+    function openSearch() {
+      if (dialog.open) return;
+      lastTrigger = doc.activeElement;
+      if (typeof dialog.showModal === 'function') dialog.showModal();
+      else dialog.setAttribute('open', '');
+      root.classList.add('has-modal-open');
+      if (typeof closeMenu === 'function') closeMenu(false);
+      results.innerHTML = '<div class="search-empty">正在加载文章索引…</div>';
+      if (status) status.textContent = '';
+      requestAnimationFrame(function () { input.focus(); });
+
+      loadIndex().then(function () {
+        renderResults(input.value);
+      }).catch(function () {
+        results.innerHTML = '<div class="search-empty">搜索索引加载失败，请稍后重试。</div>';
+        if (status) status.textContent = '';
+      });
+    }
+
+    function closeSearch() {
+      if (typeof dialog.close === 'function' && dialog.open) dialog.close();
+      else dialog.removeAttribute('open');
+      root.classList.remove('has-modal-open');
+      active = -1;
+      input.removeAttribute('aria-activedescendant');
+    }
+
+    function scorePost(post, query) {
+      if (!query) return 1;
+      var title = String(post.title || '').toLowerCase();
+      var excerpt = String(post.excerpt || '').toLowerCase();
+      var categories = (post.categories || []).join(' ').toLowerCase();
+      var score = 0;
+      if (title.indexOf(query) === 0) score += 100;
+      else if (title.indexOf(query) !== -1) score += 60;
+      if (categories.indexOf(query) !== -1) score += 30;
+      if (excerpt.indexOf(query) !== -1) score += 10;
+      return score;
+    }
+
+    function renderResults(value) {
+      if (!posts) return;
+      var query = String(value || '').trim().toLowerCase();
+      visible = posts.map(function (post) {
+        return { post: post, score: scorePost(post, query) };
+      }).filter(function (item) {
+        return item.score > 0;
+      }).sort(function (a, b) {
+        if (a.score !== b.score) return b.score - a.score;
+        return String(b.post.date || '').localeCompare(String(a.post.date || ''));
+      }).slice(0, 8).map(function (item) { return item.post; });
+
+      active = -1;
+      input.removeAttribute('aria-activedescendant');
+      if (!visible.length) {
+        results.innerHTML = '<div class="search-empty">没有找到相关文章。</div>';
+        if (status) status.textContent = '0 条结果';
+        return;
+      }
+
+      results.innerHTML = visible.map(function (post, index) {
+        var categories = (post.categories || []).map(function (category) {
+          return '<span>#' + escapeHTML(category) + '</span>';
+        }).join('');
+        return '<a class="search-result" id="search-result-' + index + '" role="option" aria-selected="false" href="' + escapeHTML(post.url || '#') + '">' +
+          '<span class="search-result__title">' + escapeHTML(post.title || '') + '</span>' +
+          '<time class="search-result__date">' + escapeHTML(post.date || '') + '</time>' +
+          '<p class="search-result__excerpt">' + escapeHTML(post.excerpt || '') + '</p>' +
+          '<span class="search-result__meta">' + categories + '</span>' +
+          '</a>';
+      }).join('');
+      if (status) status.textContent = (query ? visible.length + ' 条匹配结果' : '最近更新的 ' + visible.length + ' 篇文章');
+    }
+
+    function setActive(next) {
+      if (!visible.length) return;
+      active = (next + visible.length) % visible.length;
+      var options = results.querySelectorAll('.search-result');
+      options.forEach(function (option, index) {
+        var selected = index === active;
+        option.classList.toggle('is-active', selected);
+        option.setAttribute('aria-selected', selected ? 'true' : 'false');
+        if (selected) option.scrollIntoView({ block: 'nearest' });
+      });
+      input.setAttribute('aria-activedescendant', 'search-result-' + active);
+    }
+
+    openBtns.forEach(function (button) { button.addEventListener('click', openSearch); });
+    if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+    input.addEventListener('input', function () { renderResults(input.value); });
+    results.addEventListener('mouseover', function (event) {
+      var option = event.target.closest && event.target.closest('.search-result');
+      if (!option) return;
+      var index = parseInt(option.id.replace('search-result-', ''), 10);
+      if (!isNaN(index)) setActive(index);
+    });
+    dialog.addEventListener('click', function (event) {
+      if (event.target === dialog) closeSearch();
+    });
+    dialog.addEventListener('close', function () {
+      root.classList.remove('has-modal-open');
+      var fallback = window.innerWidth <= 920 ? doc.querySelector('.menu-toggle') : lastTrigger;
+      if (fallback && !fallback.closest('[inert]')) {
+        requestAnimationFrame(function () { fallback.focus(); });
+      }
+    });
+
+    doc.addEventListener('keydown', function (event) {
+      var target = event.target;
+      var typing = target && (target.matches('input, textarea, select') || target.isContentEditable);
+      var shortcut = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k';
+      var slash = !typing && !event.metaKey && !event.ctrlKey && !event.altKey && event.key === '/';
+      if (shortcut || slash) {
+        event.preventDefault();
+        if (dialog.open) closeSearch();
+        else openSearch();
+        return;
+      }
+      if (!dialog.open) return;
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        setActive(active + 1);
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        setActive(active < 0 ? visible.length - 1 : active - 1);
+      } else if (event.key === 'Enter' && visible[active >= 0 ? active : 0]) {
+        event.preventDefault();
+        location.href = visible[active >= 0 ? active : 0].url;
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        closeSearch();
+      }
+    });
   }
 
   function slugify(text) {
@@ -697,6 +989,7 @@
     var nodes = [];
     var mouse = { x: -9999, y: -9999, active: false };
     var rafId = 0;
+    var running = false;
 
     function resize() {
       w = window.innerWidth;
@@ -725,6 +1018,7 @@
     }
 
     function step() {
+      if (!running || doc.hidden) return;
       ctx.clearRect(0, 0, w, h);
 
       // Read CSS variables for theme
@@ -811,6 +1105,18 @@
       rafId = requestAnimationFrame(step);
     }
 
+    function start() {
+      if (running || doc.hidden) return;
+      running = true;
+      rafId = requestAnimationFrame(step);
+    }
+
+    function stop() {
+      running = false;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+
     function onMove(e) {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
@@ -819,17 +1125,18 @@
     function onLeave() { mouse.active = false; }
 
     window.addEventListener("resize", debounce(resize, 150), { passive: true });
-    window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("mouseout", onLeave, { passive: true });
+    window.addEventListener("pointermove", onMove, { passive: true });
+    doc.documentElement.addEventListener("pointerleave", onLeave, { passive: true });
+    window.addEventListener("blur", onLeave);
 
     // Visibility pause
     doc.addEventListener("visibilitychange", function () {
-      if (doc.hidden) cancelAnimationFrame(rafId);
-      else step();
+      if (doc.hidden) stop();
+      else start();
     });
 
     resize();
-    step();
+    start();
   }
 
   function debounce(fn, ms) {
@@ -997,7 +1304,7 @@
       statusEl.classList.remove("is-thinking", "is-generating", "is-done");
       if (state === "thinking" || state === "generating") {
         statusEl.classList.add(state === "thinking" ? "is-thinking" : "is-generating");
-        var label = state === "thinking" ? "thinking" : "generating";
+        var label = state === "thinking" ? "loading" : "showing";
         var step = 0;
         var render = function () {
           var dots = ".".repeat((step % 3) + 1);
@@ -1008,7 +1315,7 @@
         statusTimer = setInterval(render, 380);
       } else if (state === "done") {
         statusEl.classList.add("is-done");
-        statusEl.textContent = "✓ done";
+        statusEl.textContent = "✓ ready";
       } else {
         statusEl.textContent = "";
       }
@@ -1040,7 +1347,7 @@
 
     function runSequence() {
       section.classList.add("is-typing");
-      // 先「思考」，再「生成」，贴近推理型大模型的两段式过程
+      // 分两段展示，避免内容同时进入造成跳动
       setStatus("thinking");
       setTimeout(startGenerating, 900);
     }
@@ -1181,11 +1488,11 @@
     });
   }
 
-  // ---------- Uptime since 2015 (career start) ----------
+  // ---------- Career time since 2016 ----------
   function initUptime() {
     var el = doc.querySelector("[data-about-uptime]");
     if (!el) return;
-    var start = new Date("2015-07-01T00:00:00+08:00");
+    var start = new Date("2016-01-01T00:00:00+08:00");
     function tick() {
       var now = new Date();
       var diff = Math.max(0, now - start);
@@ -1208,10 +1515,11 @@
     if (!svg) return;
 
     var legend = doc.querySelectorAll(".radar-legend li");
-    var labels = ["AI & LLM", "Test Auto", "Distributed", "QA Gov", "Coding", "Writing"];
+    var labels = [];
     var values = []; // out of 100
     legend.forEach(function (li) {
-      values.push(parseFloat(li.querySelector(".r-score").textContent) || 0);
+      labels.push(li.getAttribute("data-label") || "");
+      values.push(parseFloat(li.getAttribute("data-value")) || 0);
     });
     if (!values.length) return;
 

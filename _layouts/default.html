@@ -10,6 +10,7 @@
     <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 160 }}">
     {% if page.tags %}<meta name="keywords" content="{{ page.tags | join: ', ' }}">{% endif %}
     <link rel="canonical" href="{{ page.url | absolute_url }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ '/images/favicon.png' | relative_url }}">
 
     <!-- Apply theme before paint to avoid flash -->
     <!-- 默认暗色：仅在用户显式选择 light 时切换为亮色 -->
@@ -41,14 +42,19 @@
     <div class="bg-grid" aria-hidden="true"></div>
     <div class="read-progress" aria-hidden="true"></div>
 
-    <button class="menu-toggle" aria-label="切换菜单" type="button"><span></span></button>
+    <button class="menu-toggle" aria-label="切换菜单" aria-controls="site-sidebar" aria-expanded="false" type="button"><span></span></button>
     <div class="scrim" aria-hidden="true"></div>
 
     <div class="app">
-        <aside class="sidebar" aria-label="主导航">
+        <aside class="sidebar" id="site-sidebar" aria-label="主导航">
             <div class="brand">
                 <a href="{{ '/' | relative_url }}" class="avatar" aria-label="返回首页">
-                    <img src="{{ '/images/head.jpeg' | relative_url }}" alt="头像" width="96" height="96" decoding="async" fetchpriority="high">
+                    <picture>
+                        <source type="image/webp"
+                                srcset="{{ '/images/head-96.webp' | relative_url }} 96w, {{ '/images/head-160.webp' | relative_url }} 160w, {{ '/images/head-256.webp' | relative_url }} 256w"
+                                sizes="96px">
+                        <img src="{{ '/images/head.jpeg' | relative_url }}" alt="头像" width="96" height="96" loading="eager" decoding="async">
+                    </picture>
                 </a>
                 <div>
                     <div class="brand-name">{{ site.title | default: "雪源的博客" }}</div>
@@ -78,6 +84,13 @@
                         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
                         关于
                     </a></li>
+                    <li>
+                        <button class="nav-search" type="button" data-search-open aria-keyshortcuts="Meta+K Control+K /">
+                            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+                            <span>搜索</span>
+                            <kbd data-search-shortcut>⌘ K</kbd>
+                        </button>
+                    </li>
                 </ul>
             </nav>
 
@@ -113,17 +126,32 @@
         </main>
     </div>
 
+    <dialog class="search-dialog" data-search-dialog data-index-url="{{ '/category/category.json' | relative_url }}" aria-labelledby="site-search-title">
+        <div class="search-dialog__panel">
+            <header class="search-dialog__header">
+                <div>
+                    <span class="search-dialog__eyebrow">// command palette</span>
+                    <h2 id="site-search-title">搜索文章</h2>
+                </div>
+                <button class="search-dialog__close" type="button" data-search-close aria-label="关闭搜索">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+                </button>
+            </header>
+            <label class="search-box" for="site-search-input">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+                <input id="site-search-input" type="search" role="combobox" aria-autocomplete="list" aria-expanded="true" inputmode="search" autocomplete="off" placeholder="搜索标题、摘要或分类…" data-search-input aria-controls="site-search-results" aria-describedby="site-search-help">
+                <kbd>ESC</kbd>
+            </label>
+            <p class="search-dialog__help" id="site-search-help">输入关键词搜索，使用 ↑ ↓ 选择，Enter 打开。</p>
+            <div class="search-results" id="site-search-results" data-search-results role="listbox" aria-label="搜索结果"></div>
+            <p class="search-status" data-search-status aria-live="polite"></p>
+        </div>
+    </dialog>
+
     <button class="fab fab-top" aria-label="回到顶部" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
     </button>
 
-    <script src="{{ '/js/highlight.pack.js' | relative_url }}" defer></script>
-    <script defer>
-      document.addEventListener('DOMContentLoaded', function () {
-        if (window.hljs && hljs.highlightAll) hljs.highlightAll();
-        else if (window.hljs && hljs.initHighlightingOnLoad) hljs.initHighlightingOnLoad();
-      });
-    </script>
     <script src="{{ '/assets/js/site.js' | relative_url }}" defer></script>
 </body>
 </html>

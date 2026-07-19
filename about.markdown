@@ -1,7 +1,7 @@
 ---
 layout: landing
 title: 关于
-excerpt: 关于本站与作者
+excerpt: 质量工程、测试开发与无人车质量实践
 permalink: /about.html
 ---
 
@@ -19,7 +19,12 @@ permalink: /about.html
             <span class="holo-particle holo-particle-3"></span>
         </div>
         <div class="holo-avatar">
-            <img src="{{ '/images/head.jpeg' | relative_url }}" alt="头像" width="160" height="160" decoding="async">
+            <picture>
+                <source type="image/webp"
+                        srcset="{{ '/images/head-160.webp' | relative_url }} 160w, {{ '/images/head-256.webp' | relative_url }} 256w"
+                        sizes="160px">
+                <img src="{{ '/images/head.jpeg' | relative_url }}" alt="头像" width="160" height="160" loading="eager" decoding="async">
+            </picture>
             <div class="holo-scan"></div>
         </div>
         <canvas class="holo-rain" aria-hidden="true"></canvas>
@@ -28,7 +33,7 @@ permalink: /about.html
     <div class="about-hero-content">
         <div class="about-eyebrow">
             <span class="dot"></span>
-            <span class="about-eyebrow-text">// profile · uplink established</span>
+            <span class="about-eyebrow-text">// 个人说明 · 2026.07 更新</span>
         </div>
 
         <h1 class="about-title">
@@ -40,25 +45,29 @@ permalink: /about.html
 
         <p class="about-typed">
             <span data-typed
-                  data-typed-strings='["全栈质量工程师","持续精进的 AI 全栈工程师","一人全栈交付者","金融级稳定性玩家","Aurora 主题作者","好奇心驱动的写作者"]'>
+                  data-typed-strings='["质量工程与测试开发","L4 无人配送车质量","Python / FastAPI / Pytest","React / TypeScript","AI 评测：WER / LLM-as-a-Judge","CI/CD 与质量平台"]'>
             </span><span class="caret">_</span>
         </p>
 
         <div class="about-status">
             <span class="status-pill status-pill--online">
                 <span class="status-led"></span>
-                <span>在线 · Online</span>
+                <span>九识无人车</span>
             </span>
             <span class="status-pill">
-                <span class="status-key">FOCUS</span>
-                <span class="status-val">AI × QA</span>
+                <span class="status-key">当前</span>
+                <span class="status-val">端到端质量</span>
             </span>
             <span class="status-pill">
-                <span class="status-key">TZ</span>
-                <span class="status-val">UTC+8 / Hangzhou</span>
+                <span class="status-key">地点</span>
+                <span class="status-val">杭州</span>
             </span>
             <span class="status-pill">
-                <span class="status-key">UPTIME</span>
+                <span class="status-key">方向</span>
+                <span class="status-val">测试平台 / AI 评测</span>
+            </span>
+            <span class="status-pill">
+                <span class="status-key">从业计时</span>
                 <span class="status-val" data-about-uptime>—</span>
             </span>
         </div>
@@ -66,7 +75,7 @@ permalink: /about.html
         <div class="about-quick">
             <a class="btn btn-primary" href="{{ '/about/2026/02/22/intro.html' | relative_url }}">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v7H3V3h7"/></svg>
-                完整个人概述
+                查看详细经历
             </a>
             <a class="btn btn-ghost" href="mailto:{{ site.email }}">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
@@ -76,11 +85,11 @@ permalink: /about.html
     </div>
 </section>
 
-<!-- Core profile preview · 核心概述精简展示 + 打字逐行展开 -->
+<!-- Core profile preview -->
 <section class="landing-section about-snapshot" data-about-snapshot>
     <header class="section-head">
-        <span class="section-eyebrow">// profile.prompt</span>
-        <h2>一个 Prompt 看懂我 · One Prompt</h2>
+        <span class="section-eyebrow">// profile.summary</span>
+        <h2>我在做什么 · At a Glance</h2>
     </header>
 
     <div class="snapshot-card" data-snapshot-card>
@@ -89,91 +98,77 @@ permalink: /about.html
             <span class="t-dot t-dot-r"></span>
             <span class="t-dot t-dot-y"></span>
             <span class="t-dot t-dot-g"></span>
-            <span class="snapshot-bar-title">~/.prompts/qiaoxueyuan.system.md</span>
+            <span class="snapshot-bar-title">~/about/qiaoxueyuan.md</span>
             <span class="snapshot-bar-status" data-snapshot-status aria-live="polite"></span>
         </div>
 
         <ol class="snapshot-lines" data-snapshot-lines>
             <li class="snap-line snap-head">
                 <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="1. 角色设定 · Role &amp; Persona"></span>
+                <span class="snap-val" data-text="1. 当前工作"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">你是谁</span>
-                <span class="snap-val" data-text="乔雪源 / Xueyuan，AI 时代的质量基础设施设计者，为驶入现实世界的 AI 守住安全与信任底线。"></span>
+                <span class="snap-field">岗位</span>
+                <span class="snap-val" data-text="九识无人车质量工程，负责 L4 无人配送车端到端质量。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">风格</span>
-                <span class="snap-val" data-text="工程审美优先，简单胜于复杂；用数据说话，不堆术语。"></span>
+                <span class="snap-field">对象</span>
+                <span class="snap-val" data-text="车端、云端、数据链路，以及仿真和路测中的关键场景。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">背景</span>
-                <span class="snap-val" data-text="十年质量工程，横跨搜索 → 金融级支付 → AI 应用 → L4 无人车。"></span>
+                <span class="snap-field">阶段</span>
+                <span class="snap-val" data-text="软件质量经验较多；自动驾驶仿真与路测仍在系统学习。"></span>
             </li>
 
             <li class="snap-line snap-head">
                 <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="2. 上下文 · Context"></span>
+                <span class="snap-val" data-text="2. 做过的业务"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">当前</span>
-                <span class="snap-val" data-text="在九识（原菜鸟无人车）负责 L4 无人配送车的端到端质量。"></span>
+                <span class="snap-field">搜索</span>
+                <span class="snap-val" data-text="百度大搜索：检索链路测试、自动化 diff、日历和天气垂类研发。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">挑战</span>
-                <span class="snap-val" data-text="保障对象从『软件』扩展到『软件 + 硬件 + 物理世界』，安全是第一性问题。"></span>
+                <span class="snap-field">金融</span>
+                <span class="snap-val" data-text="支付宝基金养老：压测、容灾演练、资金链路与日常质量治理。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">转型</span>
-                <span class="snap-val" data-text="近几个月已从质量工程师转型 AI 全栈工程师、持续精进——用 Vibe Coding 一个人打通设计到上线。"></span>
+                <span class="snap-field">AI 应用</span>
+                <span class="snap-val" data-text="AI Phone：VOIP / ASR / 翻译 / TTS 链路与模型效果评测。"></span>
             </li>
 
             <li class="snap-line snap-head">
                 <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="3. 任务目标 · Objective"></span>
+                <span class="snap-val" data-text="3. 近期交付"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">核心</span>
-                <span class="snap-val" data-text="把测试架构方法论带进感知 / 规划 / 控制全链路，交付可量化的质量。"></span>
+                <span class="snap-field">质量中台</span>
+                <span class="snap-val" data-text="独立完成需求梳理、前后端开发、数据存储与 CI/CD 部署。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">受众</span>
-                <span class="snap-val" data-text="无人车研发团队、质量同行，以及每一位上路的用户。"></span>
+                <span class="snap-field">技术栈</span>
+                <span class="snap-val" data-text="FastAPI / React / TypeScript / MySQL / Tair / Docker / SAE。"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">AI 分析</span>
+                <span class="snap-val" data-text="根据测试数据归纳失败模式并给出排查建议，按业务配置提示词。"></span>
             </li>
 
             <li class="snap-line snap-head">
                 <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="4. 限制与规则 · Constraints"></span>
+                <span class="snap-val" data-text="4. 工作习惯"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">必须</span>
-                <span class="snap-val" data-text="用『评估』而非『断言』衡量 AI；新能力先在真实业务跑通一次才算『学过』。"></span>
+                <span class="snap-field">验证</span>
+                <span class="snap-val" data-text="先定义指标与回归集，再用数据判断效果。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">绝不</span>
-                <span class="snap-val" data-text="不靠运气保稳定，不把没踩过的雷当成已解决。"></span>
-            </li>
-
-            <li class="snap-line snap-head">
-                <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="5. 输出格式 · Output"></span>
+                <span class="snap-field">自动化</span>
+                <span class="snap-val" data-text="高频回归尽量接入流水线，保留可追溯的结果。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">交付</span>
-                <span class="snap-val" data-text="让质量成为可量化、可演进、可复利的企业级工程资产。"></span>
-            </li>
-            <li class="snap-line snap-item">
-                <span class="snap-field">形态</span>
-                <span class="snap-val" data-text="方法论 + 质量中台 + CI/CD 管线 + 持续的技术写作与分享。"></span>
-            </li>
-
-            <li class="snap-line snap-head">
-                <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="6. 工作流 · Workflow / CoT"></span>
-            </li>
-            <li class="snap-line snap-item">
-                <span class="snap-field">闭环</span>
-                <span class="snap-val" data-text="需求 → 策略 → 评审 → 演练 → 压测 → 监控 &amp; 应急，全生命周期管控。"></span>
+                <span class="snap-field">边界</span>
+                <span class="snap-val" data-text="生产实践、个人项目和学习验证分开说明。"></span>
             </li>
         </ol>
 
@@ -192,11 +187,11 @@ permalink: /about.html
             </div>
             <div class="snap-stat">
                 <span class="snap-stat-value">4</span>
-                <span class="snap-stat-label">顶级业务历练</span>
+                <span class="snap-stat-label">主要业务领域</span>
             </div>
             <div class="snap-stat">
-                <span class="snap-stat-value snap-stat-glyph">∞</span>
-                <span class="snap-stat-label">每日咖啡续航</span>
+                <span class="snap-stat-value">2016</span>
+                <span class="snap-stat-label">开始从事测试</span>
             </div>
         </div>
 
@@ -207,7 +202,7 @@ permalink: /about.html
             </span>
             <span class="snapshot-cta-text">
                 <span class="snapshot-cta-main">阅读完整个人概述</span>
-                <span class="snapshot-cta-sub">完整履历 · 技术栈全景 · AI 全栈实践全文</span>
+                <span class="snapshot-cta-sub">职业经历 · 项目实践 · 技术范围 · 学习边界</span>
             </span>
             <span class="snapshot-cta-arrow" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
@@ -216,42 +211,42 @@ permalink: /about.html
     </div>
 </section>
 
-<!-- Manifesto -->
+<!-- Working principles -->
 <section class="landing-section about-manifesto">
     <header class="section-head">
-        <span class="section-eyebrow">// manifesto</span>
-        <h2>我相信什么 · What I Build For</h2>
+        <span class="section-eyebrow">// working.notes</span>
+        <h2>做事方式 · How I Work</h2>
     </header>
 
     <div class="manifesto-grid">
         <article class="manifesto-card" style="--accent: 124,140,255">
             <div class="manifesto-num">01</div>
-            <h3>把 AI 接进真实链路</h3>
-            <p>LLM 不是 demo 的玩具，而是能被压测、能被回归、能被治理的工程组件。我做的是让它跑在 CI 里。</p>
+            <h3>先把关键链路跑通</h3>
+            <p>先识别最容易出问题、最影响用户的路径，再补自动化、数据和监控，不追求一次做全。</p>
         </article>
         <article class="manifesto-card" style="--accent: 89,227,255">
             <div class="manifesto-num">02</div>
-            <h3>测试是产品力</h3>
-            <p>稳定性不是冷冰冰的数字，是用户对你产品的信任。金融级 99.99% 背后，是工程审美，也是日复一日打磨出来的扎实功底。</p>
+            <h3>用指标代替感觉</h3>
+            <p>性能看容量基线，语音识别看 WER，模型输出看基准集；先约定口径，再讨论好坏。</p>
         </article>
         <article class="manifesto-card" style="--accent: 184,136,255">
             <div class="manifesto-num">03</div>
-            <h3>持续学习的复利</h3>
-            <p>每周读论文、写小工具、给团队做技术分享。技术栈会变，但好奇心和写作能复利。</p>
+            <h3>重复工作接入流水线</h3>
+            <p>把稳定的回归、检查和部署步骤自动化，减少手工操作，也让问题更容易复现和追踪。</p>
         </article>
         <article class="manifesto-card" style="--accent: 124,255,180">
             <div class="manifesto-num">04</div>
-            <h3>简单胜于复杂</h3>
-            <p>能用一个清晰的脚本说清楚的事情，不引入框架。能用一段对话讲明白的设计，不画 UML。</p>
+            <h3>明确经验边界</h3>
+            <p>做过的项目、个人练习和正在学习的方向分开写；不把工具使用等同于生产经验。</p>
         </article>
     </div>
 </section>
 
-<!-- Skill radar -->
+<!-- Work map -->
 <section class="landing-section about-radar-section">
     <header class="section-head">
-        <span class="section-eyebrow">// matrix.radar</span>
-        <h2>能力雷达 · Skill Radar</h2>
+        <span class="section-eyebrow">// work.map</span>
+        <h2>常做的事情 · Work Map</h2>
     </header>
 
     <div class="about-radar-wrap">
@@ -280,63 +275,64 @@ permalink: /about.html
         </div>
 
         <ul class="radar-legend">
-            <li data-axis="0" style="--accent: 124,140,255">
+            <li data-axis="0" data-label="Test Auto" data-value="90" style="--accent: 124,140,255">
                 <span class="dot"></span>
                 <div>
-                    <div class="r-name">AI &amp; LLM</div>
-                    <div class="r-desc">Agent · RAG · LLM-as-a-Judge · Prompt</div>
+                    <div class="r-name">自动化测试</div>
+                    <div class="r-desc">Pytest · Selenium · 接口 / 端到端回归</div>
                 </div>
-                <span class="r-score">94</span>
+                <span class="r-score">长期</span>
             </li>
-            <li data-axis="1" style="--accent: 89,227,255">
+            <li data-axis="1" data-label="Stability" data-value="88" style="--accent: 89,227,255">
                 <span class="dot"></span>
                 <div>
-                    <div class="r-name">Test Automation</div>
-                    <div class="r-desc">框架设计 · 白/灰盒 · CI/CD · 覆盖率治理</div>
+                    <div class="r-name">稳定性</div>
+                    <div class="r-desc">压测 · 容灾演练 · 故障注入 · 监控</div>
                 </div>
-                <span class="r-score">95</span>
+                <span class="r-score">长期</span>
             </li>
-            <li data-axis="2" style="--accent: 184,136,255">
+            <li data-axis="2" data-label="Vehicle QA" data-value="55" style="--accent: 184,136,255">
                 <span class="dot"></span>
                 <div>
-                    <div class="r-name">Distributed</div>
-                    <div class="r-desc">高并发 · 全链路压测 · 混沌工程</div>
+                    <div class="r-name">无人车质量</div>
+                    <div class="r-desc">车云链路 · OTA · 仿真 / 路测学习中</div>
                 </div>
-                <span class="r-score">93</span>
+                <span class="r-score">起步</span>
             </li>
-            <li data-axis="3" style="--accent: 124,255,180">
+            <li data-axis="3" data-label="AI Eval" data-value="68" style="--accent: 124,255,180">
                 <span class="dot"></span>
                 <div>
-                    <div class="r-name">Quality Governance</div>
-                    <div class="r-desc">QA Owner · 风险建模 · 测试左移 · SLO</div>
+                    <div class="r-name">AI 评测</div>
+                    <div class="r-desc">WER · Benchmark · LLM-as-a-Judge</div>
                 </div>
-                <span class="r-score">95</span>
+                <span class="r-score">实践</span>
             </li>
-            <li data-axis="4" style="--accent: 251,191,36">
+            <li data-axis="4" data-label="Platform" data-value="76" style="--accent: 251,191,36">
                 <span class="dot"></span>
                 <div>
-                    <div class="r-name">Coding Craft</div>
-                    <div class="r-desc">Python · Java · React + FastAPI 全栈 · Vibe Coding</div>
+                    <div class="r-name">质量平台开发</div>
+                    <div class="r-desc">FastAPI · React · TypeScript · MySQL</div>
                 </div>
-                <span class="r-score">93</span>
+                <span class="r-score">项目</span>
             </li>
-            <li data-axis="5" style="--accent: 248,113,113">
+            <li data-axis="5" data-label="Delivery" data-value="82" style="--accent: 248,113,113">
                 <span class="dot"></span>
                 <div>
-                    <div class="r-name">Writing &amp; Sharing</div>
-                    <div class="r-desc">技术写作 · 分享 · 团队赋能</div>
+                    <div class="r-name">工程交付</div>
+                    <div class="r-desc">Docker · Jenkins / 云效 · SAE · 可观测性</div>
                 </div>
-                <span class="r-score">93</span>
+                <span class="r-score">常用</span>
             </li>
         </ul>
     </div>
+    <p class="about-foot">六边形用于展示工作内容分布，标签表示经验状态，不再使用主观百分制自评。</p>
 </section>
 
 <!-- Career timeline -->
 <section class="landing-section about-timeline-section">
     <header class="section-head">
         <span class="section-eyebrow">// timeline</span>
-        <h2>这些年走过的路 · Career Trajectory</h2>
+        <h2>职业经历 · Experience</h2>
     </header>
 
     <ol class="about-timeline" data-about-timeline>
@@ -347,10 +343,10 @@ permalink: /about.html
                     <span class="tl-year">2026 — Now</span>
                     <span class="tl-tag">菜鸟无人车 → 九识 · L4</span>
                 </div>
-                <h3>L4 无人配送车的端到端质量</h3>
-                <p>入职<strong>菜鸟无人车</strong>，随业务并入<strong>九识</strong>——把过往沉淀的测试架构方法论带进 <strong>感知 / 规划 / 控制</strong> 全链路。质量保障的对象，从"软件系统"扩展到"软件 + 硬件 + 物理世界"。无人车对我还是全新的领域，仿真 / 路测这些都才刚起步、仍在系统学习中；同时用 <strong>Stitch + Vibe Coding</strong> 从 0 到 1 搭起无人车质量中台，经云效流水线 CI/CD 部署到 SAE——也开始慢慢体会到<em>"安全可能是个工程问题"</em>。这套中台还引入了 <strong>AI 对测试结果做洞察分析</strong> 的能力，并把它做成网站层面的通用能力——当前通过配置不同业务提示词处理不同业务，后续按实际需求可继续演进为 <strong>AI Agent</strong>。也正是这段经历，让我近几个月顺着 <strong>AI Native「一人全栈」</strong> 的行业趋势，<strong>已从纯粹的质量工程师转型为 AI 全栈工程师</strong>——设计、前端、后端到部署的全链路一个人就能独立闭环，如今持续精进。</p>
+                <h3>L4 无人配送车质量</h3>
+                <p>负责车端、云端和数据链路的质量工作，并开始参与仿真、路测、车云协同和 OTA 等场景。自动驾驶是新领域，当前仍在补齐感知 / 规划 / 控制相关知识。同期独立开发无人车质量中台，完成前后端、数据库和部署流水线；平台支持测试执行、质量度量，以及基于测试结果的 AI 辅助分析。</p>
                 <div class="tl-chips">
-                    <span>L4 Autonomy</span><span>Simulation</span><span>Road Test</span><span>质量中台</span><span>AI 洞察分析</span><span>全栈交付</span><span>CI/CD</span>
+                    <span>车云链路</span><span>仿真 / 路测</span><span>OTA</span><span>FastAPI</span><span>React</span><span>云效 / SAE</span>
                 </div>
             </div>
         </li>
@@ -361,8 +357,8 @@ permalink: /about.html
                     <span class="tl-year">2025 — 2026</span>
                     <span class="tl-tag">腾展 · AI Phone</span>
                 </div>
-                <h3>第一次把 AI 跑进真实链路</h3>
-                <p>作为 <strong>AI Phone</strong> 的测试负责人，负责 App 端 + 服务端的质量与稳定性，覆盖 <strong>VOIP / ASR / 翻译 / TTS</strong> 全链路。在这里第一次系统性接触 AI——构建以 <strong>WER 为核心指标</strong> 的自动化评估 pipeline，叠加 <strong>LLM-as-a-Judge</strong> 把同声传译的翻译准确性做成可复用、可回归的批量验证，从此明白 AI 系统的质量必须用"评估"而不是"断言"来衡量。工程侧主导接口框架 <strong>JUnit → Pytest</strong> 重构、引入 AI 智能断言，测试覆盖率提升 <strong>70%</strong>。</p>
+                <h3>AI Phone 测试负责人</h3>
+                <p>负责 App 与服务端质量，覆盖 <strong>VOIP / ASR / 翻译 / TTS</strong> 链路。为同声传译建立 WER 自动化评估和翻译基准集，并使用 <strong>LLM-as-a-Judge</strong> 做批量验证；同时推动接口测试从 JUnit 迁移到 Pytest，测试覆盖率提升 <strong>70%</strong>。</p>
                 <div class="tl-chips">
                     <span>VOIP</span><span>ASR</span><span>TTS</span><span>WER</span><span>LLM-as-a-Judge</span><span>Pytest</span>
                 </div>
@@ -375,8 +371,8 @@ permalink: /about.html
                     <span class="tl-year">2021 — 2024</span>
                     <span class="tl-tag">蚂蚁 · 金融级</span>
                 </div>
-                <h3>把质量做进金融级支付</h3>
-                <p>担任支付宝基金养老专区核心业务 QA Owner，主导 <strong>个人养老金</strong> 国家级战略项目的质量护航，长期负责养老基金等核心金融业务的日常治理。把"需求 → 策略 → 评审 → 演练 → 压测 → 监控 & 应急"的全生命周期管控做扎实，把"99.99% 高可用"从 PPT 落到全链路压测、容灾演练、混沌注入与资金链路对账——重点守住开户、缴存关键场景，连续保持 <strong>0 重大事故</strong>，有效支撑账户开立人数超出预期。踩过一次次真实流量的雷。</p>
+                <h3>基金与个人养老金质量治理</h3>
+                <p>担任支付宝基金养老专区 QA Owner，负责需求评审、测试策略、全链路压测、容灾演练、监控和应急预案。个人养老金项目重点覆盖开户、缴存、资金链路和对账场景，负责期间保持 <strong>0 重大事故</strong>。</p>
                 <div class="tl-chips">
                     <span>QA Owner</span><span>Stress Test</span><span>Chaos</span><span>Risk Control</span><span>SLO</span>
                 </div>
@@ -389,8 +385,8 @@ permalink: /about.html
                     <span class="tl-year">2018 — 2020</span>
                     <span class="tl-tag">百度 · 大搜索</span>
                 </div>
-                <h3>大搜索体系下的稳定性</h3>
-                <p>在百度大搜索从测试起步、再向研发延伸，深度参与亿级 PV 检索链路的质量保障与核心模块演进。在这里学会了用数据说话，也第一次见识"规模"二字的分量，奠定了 <em>以研发视角重塑质量底座</em> 的方法论根基。</p>
+                <h3>搜索质量与垂类研发</h3>
+                <p>参与核心搜索 VUI 和检索链路质量保障，使用 Python / Shell 开发自动化 diff 工具并接入 CI。后转研发，负责日历、天气垂类的业务开发和架构迁移。</p>
                 <div class="tl-chips">
                     <span>Search</span><span>Ranking</span><span>A/B</span><span>Test → Dev</span>
                 </div>
@@ -403,8 +399,8 @@ permalink: /about.html
                     <span class="tl-year">2016 — 2017</span>
                     <span class="tl-tag">SaaS · 客服系统</span>
                 </div>
-                <h3>从 SaaS 客服系统起步</h3>
-                <p>第一份工作做 SaaS 客服系统的测试，覆盖 <strong>Web 端、服务端、移动 App 端</strong> 全链条。针对 ROR 后端用 <strong>Minitest</strong> 系统补齐模型 / Service / Controller 层单测，把代码覆盖率从近乎 0 拉到 <strong>80%+</strong>；又从 0 到 1 基于 <strong>Selenium / Appium + Jenkins</strong> 搭起端到端自动化并接入 CI/CD，核心回归场景 100% 覆盖、单次回归耗时缩短 <strong>90%+</strong>。也是从这里开始相信——好的测试不是事后补救，而是写在产品里的工程能力。</p>
+                <h3>SaaS 客服系统测试</h3>
+                <p>覆盖 Web、服务端和移动 App。使用 Minitest 补齐 Ruby on Rails 后端单测，代码覆盖率提升到 <strong>80%+</strong>；使用 Selenium / Appium + Jenkins 建设端到端自动化，核心回归场景实现自动执行，单次回归耗时缩短 <strong>90%+</strong>。</p>
                 <div class="tl-chips">
                     <span>SaaS</span><span>Web</span><span>Backend</span><span>Minitest</span><span>Selenium/Appium</span><span>Automation</span>
                 </div>
@@ -417,10 +413,10 @@ permalink: /about.html
 <section class="landing-section about-stack-section">
     <header class="section-head">
         <span class="section-eyebrow">// stack</span>
-        <h2>常驻工具箱 · Tech Stack</h2>
+        <h2>常用技术 · Tech Stack</h2>
     </header>
     <div class="about-stack">
-        {%- assign stack_items = "Python|Java|Ruby on Rails|Pytest|Selenium|LangChain|Claude|MCP|React|TypeScript|Vite|FastAPI|Spring|MySQL|Redis|Kafka|Docker|Kubernetes|Prometheus|Grafana|Jenkins|GitHub Actions|Linux|VS Code|Cursor|Notion|Obsidian" | split: "|" -%}
+        {%- assign stack_items = "Python|Java|Ruby on Rails|Pytest|Selenium|FastAPI|React|TypeScript|Vite|Spring|MySQL|Redis / Tair|RocketMQ|Kafka|Docker|Kubernetes|Prometheus|Grafana|Jenkins|云效|Linux" | split: "|" -%}
         {% for tag in stack_items %}
         <span class="stack-chip" style="--i: {{ forloop.index0 }}">
             <span class="chip-glyph">{{ tag | slice: 0, 1 }}</span>
@@ -433,8 +429,8 @@ permalink: /about.html
 <!-- Contact -->
 <section class="landing-section about-contact-section">
     <header class="section-head">
-        <span class="section-eyebrow">// uplink</span>
-        <h2>联系频道 · Get in Touch</h2>
+        <span class="section-eyebrow">// contact</span>
+        <h2>联系方式 · Get in Touch</h2>
     </header>
 
     <div class="about-contact-grid">
@@ -472,6 +468,6 @@ permalink: /about.html
 
     <p class="about-foot">
         本站基于 <a href="https://jekyllrb.com/" target="_blank" rel="noopener">Jekyll</a> 构建，部署在 GitHub Pages。
-        主题 <strong>Aurora</strong> 为自研：玻璃拟态 + 极光渐变 + 微交互，零运行时依赖，原生 ES。
+        页面样式与交互由我维护，主要使用原生 CSS 和 JavaScript。
     </p>
 </section>

@@ -1,259 +1,166 @@
 ---
 layout: post
-title: Python 多线程 vs 多进程：GIL 的真相与 2026 年的新选项
+title: Python 并发选型：线程、进程、asyncio 与子解释器
 date: 2017-09-22 12:06:13 +0800
-excerpt: 从一段端口扫描脚本讲起，把 GIL 的真实行为、CPU/IO 密集型选型、以及 PEP 703 free-threaded、subinterpreters、asyncio 这些 2026 年才真正成熟的新选项一次性梳理清楚。
+excerpt: 以 Python 3.14 为基线，解释默认 GIL、free-threaded 构建、线程池、进程池、asyncio 和 InterpreterPoolExecutor 的适用边界。
 categories: python
 ---
 
-> 本文 2017 年首发，2026 年大幅校订。原文给出的端口扫描脚本里 `lock.acquire()` / `release()` 的写法在异常路径下会丢锁；GIL 的描述也过于简化。这次一并修正，并补上 Python 3.13 起 free-threaded build (PEP 703)、subinterpreters (PEP 684/734)、asyncio 这些 2026 年才真正成熟的新选项。
+> 本文最初写于 2017 年，2026 年按 Python 3.14 更新。Python 的并发选型已经不再是“线程还是进程”二选一，但负载特征仍然是最重要的判断依据。
 
-## 测试环境
+## 先区分并发和并行
 
-| 项目 | 配置 |
-| --- | --- |
-| Python | 3.6（原文）/ 3.13（2026 重测） |
-| 标准库 | `threading` / `multiprocessing` / `concurrent.futures` |
-| 硬件 | 四核 + 三星 250G 850 SSD |
+- **并发**：多个任务在一段时间内都取得进展，不要求同一时刻执行。
+- **并行**：多个任务在同一时刻运行，通常需要多个 CPU 核心或设备。
+- **I/O 密集**：大部分时间在等待网络、磁盘、数据库或外部服务。
+- **CPU 密集**：大部分时间在执行 Python 计算。
 
-## 一些定义（厘清几个常被混用的词）
+线程共享同一进程的内存，通信方便，但也带来锁、竞态和可见性问题。进程地址空间隔离更强，代价是创建、序列化和进程间通信更重。协程由事件循环调度，适合大量可异步等待的 I/O。
 
-| 概念 | 定义 |
-| --- | --- |
-| **并发**（concurrency） | 多个事件在同一时间间隔内交替推进——逻辑上"同时"，物理上不一定 |
-| **并行**（parallelism） | 多个事件在同一时刻物理上同时发生——必须有多个执行单元（多核/多机） |
-| **进程**（process） | 操作系统资源分配的最小单位，有独立地址空间 |
-| **线程**（thread） | 进程内的执行流，共享地址空间，是调度的最小单位 |
-| **协程**（coroutine） | 用户态调度的执行流，由程序自己决定何时切换，无 OS 介入 |
+## 默认 CPython 的 GIL 到底限制了什么
 
-> 关键差异：**线程之间共享内存**——这是性能优势的来源，也是同步问题的根源。
+标准 CPython 构建仍有全局解释器锁（GIL）。在同一解释器内，通常只有一个线程执行 Python 字节码。因此，纯 Python 的 CPU 密集任务很难通过增加线程获得多核加速。
 
-## GIL 到底是什么
+这不等于“Python 线程没有用”：
 
-GIL（Global Interpreter Lock）是 CPython 解释器的一把全局锁——**任何时刻只有一个线程可以执行 Python 字节码**。这意味着即使你开了 8 个线程跑在 8 核 CPU 上，**Python 字节码的部分仍然串行执行**。
+- 阻塞 I/O 通常会释放 GIL；
+- NumPy 等扩展可能在原生计算期间释放 GIL；
+- 线程共享内存，适合并发量适中、调用方式仍是同步接口的 I/O 任务。
 
-但 GIL 远比"线程没用"复杂得多——它会在以下场景**释放**：
+是否释放 GIL 取决于具体实现和扩展库，不能只看函数名推断。
 
-- 线程进入 IO 调用（read/write/recv/send 等系统调用）
-- 线程主动 `time.sleep`
-- C 扩展显式释放 GIL（NumPy/Pillow/lxml 等大量库都这么做）
-- 在 Python 3.2+ 之后，定时主动释放（默认每 5ms 一次，由 `sys.setswitchinterval` 控制）
+## I/O 任务：先考虑线程池或 asyncio
 
-> 原文里"线程进行锁竞争、切换线程，会消耗资源"是对的，但只是结果。**真正的根因是 GIL 在 CPU 密集型负载下没有可释放的间隙，所有线程必须串行抢这把锁**。
-
-这条决定了 Python 多线程/多进程的选型铁律：
-
-- **CPU 密集型**（计算、压缩、加解密、序列化）→ 多进程
-- **IO 密集型**（网络请求、磁盘读写、数据库操作）→ 多线程或 asyncio
-
-## 现实问题：为什么端口扫描多线程更快
-
-很多教程上会看到端口扫描用多线程，跑起来确实比多进程快。原文给出的代码大致如下（**这段代码有几个问题，下面会逐个修**）：
+下面是一个受控并发的端口连通性检查。只应扫描自己拥有或明确获授权的主机。
 
 {% highlight python %}
-import sys, threading
-from socket import *
+from concurrent.futures import ThreadPoolExecutor
+from socket import create_connection
 
-host = "127.0.0.1" if len(sys.argv) == 1 else sys.argv[1]
-portList = list(range(1, 1000))
-scanList = []
-lock = threading.Lock()
-
-def scanPort(port):
+def is_open(host: str, port: int, timeout: float = 0.5) -> bool:
     try:
-        tcp = socket(AF_INET, SOCK_STREAM)
-        tcp.connect((host, port))
-    except:
-        pass
-    else:
-        if lock.acquire():                  # ← 问题 1
-            print('[+]port', port, 'open')
-            lock.release()
-    finally:
-        tcp.close()
+        with create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
 
-for p in portList:
-    t = threading.Thread(target=scanPort, args=(p,))
-    scanList.append(t)
-for t in scanList:
-    t.start()
-for t in scanList:
-    t.join()
+host = "127.0.0.1"
+ports = range(1, 1000)
+
+with ThreadPoolExecutor(max_workers=64) as pool:
+    results = pool.map(lambda port: is_open(host, port), ports)
+
+for port, opened in zip(ports, results):
+    if opened:
+        print(f"{port} open")
 {% endhighlight %}
 
-**这段代码的问题**：
+线程数不是越多越好。文件描述符、对端限流、连接池大小、DNS 和网络带宽都会先成为瓶颈。应该用压测确定并发上限，而不是复制一个固定数字。
 
-1. **`lock.acquire()` 默认就是阻塞获取，永远返回 True**——这个 `if` 没有意义。如果 `print` 抛异常，锁不会被释放，剩余线程全部死锁
-2. **同时启动 999 个线程**——Linux 默认线程栈 8MB，理论上消耗 ~8GB 虚拟内存。这种规模应该用线程池而不是手撸线程
-3. **`tcp = socket(...)` 在异常时未必绑定**——`finally` 里 `tcp.close()` 可能 NameError
-
-修正版用 `with` 自动管理锁、用 `ThreadPoolExecutor` 控制并发度：
-
-{% highlight python %}
-import sys
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from socket import socket, AF_INET, SOCK_STREAM
-from threading import Lock
-
-host = "127.0.0.1" if len(sys.argv) == 1 else sys.argv[1]
-print_lock = Lock()
-
-def scan_port(port: int) -> tuple[int, bool]:
-    with socket(AF_INET, SOCK_STREAM) as tcp:
-        tcp.settimeout(0.5)
-        try:
-            tcp.connect((host, port))
-            return port, True
-        except OSError:
-            return port, False
-
-with ThreadPoolExecutor(max_workers=200) as pool:
-    futures = [pool.submit(scan_port, p) for p in range(1, 1000)]
-    for fut in as_completed(futures):
-        port, ok = fut.result()
-        if ok:
-            with print_lock:
-                print(f'[+] port {port} open')
-{% endhighlight %}
-
-**回到原问题**：为什么这种 socket 扫描多线程比多进程快？因为 `tcp.connect()` 是 IO 系统调用，**线程在等待响应时 GIL 被释放**，其他线程可以推进——这正是 IO 密集型任务的甜蜜点。多进程虽然能真并行，但进程创建/通信的开销远大于这种"等网络"的间隙价值。
-
-## CPU 密集型场景下的对比
-
-下面这段是经典 CPU 密集型 demo：
-
-{% highlight python %}
-import time
-import threading
-import multiprocessing
-
-MAX_WORKERS = 4
-
-def cpu_bound(n: int, n2: float) -> None:
-    for i in range(n):
-        for j in range(int(n * n * n * n2)):
-            _ = i * j
-
-def thread_main(n2: float) -> None:
-    threads = [threading.Thread(target=cpu_bound, args=(50, n2)) for _ in range(MAX_WORKERS)]
-    start = time.time()
-    for t in threads: t.start()
-    for t in threads: t.join()
-    print(f'  threads  use {time.time() - start:.2f}s')
-
-def process_main(n2: float) -> None:
-    with multiprocessing.Pool(MAX_WORKERS) as pool:
-        start = time.time()
-        pool.starmap(cpu_bound, [(50, n2)] * MAX_WORKERS)
-        print(f'  processes use {time.time() - start:.2f}s')
-
-if __name__ == '__main__':
-    for n2 in (0.1, 1, 10):
-        print(f'[++] n2={n2}')
-        thread_main(n2)
-        process_main(n2)
-{% endhighlight %}
-
-随 `n2` 增大，CPU 占用越来越满，**多线程版的耗时几乎线性增长**（GIL 让 4 个线程退化成串行），多进程版才开始体现真正的并行收益。
-
-## 2026 年的新选项
-
-到 Python 3.13 发布（2024 年 10 月）后，"线程 vs 进程"这个二选一的世界已经实质性地变了——下面这些**都是 2017 年原文不可能讨论到的新东西**。
-
-### 一、PEP 703：Free-Threaded CPython（无 GIL）
-
-Python 3.13 起提供了实验性的 **no-GIL build**（要么编译时开启，要么装 `python3.13t`）。这是 CPython 历史上最大的运行时改造——**真正的多线程并行**。
-
-实测在纯计算场景：
-
-| 模式 | 耗时（4 核） |
-| --- | --- |
-| 标准 3.13（带 GIL） | 100s（基线） |
-| 多进程 | ~28s |
-| 3.13 free-threaded（4 线程） | ~30s |
-
-free-threaded 的吸引力在于：**省去了多进程的创建、IPC、序列化开销**，同时获得了真并行。预计 Python 3.15 / 3.16 会成为默认构建。
-
-注意几个现实问题：
-
-- C 扩展必须显式声明支持 free-threaded（`Py_GIL_DISABLED` 编译期宏），目前 NumPy / scikit-learn 等已支持，但生态还在迁移
-- 单线程性能略有下降（~5%–10%），因为引用计数变成了原子操作
-- **它不会自动让你的代码线程安全**——共享状态依然需要锁
-
-### 二、PEP 684 / 734：Per-Interpreter GIL
-
-Subinterpreters（子解释器）是 CPython 长期演进的另一条路径——**每个子解释器有自己的 GIL，共享同一进程**。这条路径的设计哲学和 free-threaded 不同：
-
-- free-threaded：拆掉 GIL，所有线程共享所有对象
-- subinterpreters：保留 GIL，但每个子解释器独立
-
-stdlib 在 3.13 引入了 `interpreters` 模块，可以在同一进程内启动隔离的 Python 解释器，互相之间通过显式的 channel 通信（不能直接共享对象引用）。
-
-适用场景：插件系统、多租户隔离、希望 GIL 但又想真并行的服务端。
-
-### 三、asyncio：第三种选择
-
-很多 IO 密集型场景用 asyncio 比多线程更优：
+当调用链已经使用异步库、并发连接很多，`asyncio` 往往更合适：
 
 {% highlight python %}
 import asyncio
 
-async def scan_port(host: str, port: int) -> tuple[int, bool]:
-    try:
-        _, writer = await asyncio.wait_for(
-            asyncio.open_connection(host, port), timeout=0.5
-        )
-        writer.close()
-        await writer.wait_closed()
-        return port, True
-    except (OSError, asyncio.TimeoutError):
-        return port, False
+async def is_open(host: str, port: int, limit: asyncio.Semaphore) -> bool:
+    async with limit:
+        try:
+            _, writer = await asyncio.wait_for(
+                asyncio.open_connection(host, port),
+                timeout=0.5,
+            )
+            writer.close()
+            await writer.wait_closed()
+            return True
+        except (OSError, TimeoutError):
+            return False
 
-async def main(host: str) -> None:
-    tasks = [scan_port(host, p) for p in range(1, 1000)]
-    for fut in asyncio.as_completed(tasks):
-        port, ok = await fut
-        if ok:
-            print(f'[+] port {port} open')
+async def main() -> None:
+    host = "127.0.0.1"
+    ports = range(1, 1000)
+    limit = asyncio.Semaphore(200)
+    results = await asyncio.gather(
+        *(is_open(host, port, limit) for port in ports)
+    )
+    for port, opened in zip(ports, results):
+        if opened:
+            print(f"{port} open")
 
-asyncio.run(main('127.0.0.1'))
+asyncio.run(main())
 {% endhighlight %}
 
-asyncio 的优势：
+即使使用协程也要限制并发。事件循环减少了线程调度成本，并不会取消操作系统和对端服务的容量限制。
 
-- **单线程**——完全没有 GIL 争用，没有锁竞争
-- **协程切换的成本远低于线程切换**（用户态 vs 内核态）
-- **更高的并发上限**——10 万并发连接在单线程 asyncio 里完全可行，多线程做不到
+## CPU 任务：进程池仍是稳妥基线
 
-代价：
+对纯 Python 计算，`ProcessPoolExecutor` 能绕开默认 GIL，利用多个核心：
 
-- 必须用 async-aware 的库（aiohttp、asyncpg、httpx 等）
-- 调试栈复杂度高
-- "颜色函数"问题——async 会感染整个调用链
+{% highlight python %}
+from concurrent.futures import ProcessPoolExecutor
 
-## 选型决策树
+def work(limit: int) -> int:
+    return sum(value * value for value in range(limit))
 
-把上面这些选项串起来，2026 年的决策应该是：
+if __name__ == "__main__":
+    inputs = [8_000_000] * 4
+    with ProcessPoolExecutor() as pool:
+        results = list(pool.map(work, inputs))
+{% endhighlight %}
 
-```text
-  你的负载是什么？
-  ├─ IO 密集（网络、磁盘）
-  │   ├─ 并发量 < 几百   → ThreadPoolExecutor
-  │   ├─ 并发量 ≥ 几千   → asyncio
-  │   └─ 极高吞吐 + 多核 → asyncio + 多进程混合
-  │
-  ├─ CPU 密集（计算、压缩、ML 推理）
-  │   ├─ 已有 free-threaded 支持的库 → 3.13+ free-threaded build
-  │   ├─ 任务粒度大、状态简单         → multiprocessing
-  │   ├─ 需要进程隔离（插件/沙箱）     → subinterpreters
-  │   └─ 拼性能极致                    → 直接走 C 扩展 / Cython / Rust
-  │
-  └─ 混合负载
-      └─ 主进程 asyncio，CPU 密集子任务交给 ProcessPoolExecutor
-```
+被提交的函数和参数通常需要可序列化；任务太小会让进程调度和序列化成本盖过并行收益。基准测试应使用真实数据、固定输入，并同时观察吞吐、内存和尾延迟。
 
-## 一句话总结
+## Python 3.14 的两个新选择
 
-GIL 不是 Python 的缺陷——**它是一个明确的设计取舍**，让 CPython 的实现简洁、让 C 扩展易写、让单线程性能不被全局锁机制拖累。代价是 CPU 密集型多线程基本作废。
+### Free-threaded CPython
 
-但 2026 年的 Python 已经不再是 2017 年的 Python——free-threaded、subinterpreters、asyncio 三条路径并行展开，**"多线程 vs 多进程"这个老问题已经被替换成了"四种并发模型如何配合"**。今天再做这个选型，要看的不再是 GIL，而是负载特征 + 生态成熟度 + 调试复杂度的三角权衡。
+PEP 703 引入的 free-threaded 构建从 Python 3.13 开始提供，Python 3.14 按 PEP 779 进入“官方支持但仍可选”的阶段。它可以关闭 GIL，让多个线程并行执行 Python 代码，但默认构建并没有因此消失。
+
+使用前要确认：
+
+- 依赖的 C 扩展是否支持 free-threaded 构建；
+- 扩展导入时是否重新启用了 GIL；
+- 共享对象是否有正确同步；
+- 单线程性能、内存占用和部署工具链是否满足要求。
+
+free-threaded 解决的是解释器并行限制，不会自动修复数据竞争。
+
+### `InterpreterPoolExecutor`
+
+Python 3.14 新增 `concurrent.futures.InterpreterPoolExecutor`。每个工作线程拥有独立解释器和独立 GIL，因此可以在同一进程里取得多核并行。
+
+它的关键特征是**隔离**：模块状态、全局变量和大多数 Python 对象不能像普通线程那样直接共享。任务、参数和结果需要跨解释器传递，使用体验更接近进程池，而不是共享内存线程池。
+
+它适合希望获得解释器隔离、又不想创建多个操作系统进程的场景。扩展模块兼容性、序列化成本和故障隔离仍需单独验证。
+
+## 一张实用选型表
+
+| 场景 | 优先方案 | 主要注意点 |
+| --- | --- | --- |
+| 同步 SDK、数据库或少量网络并发 | `ThreadPoolExecutor` | 线程安全、连接池、超时 |
+| 大量异步网络连接 | `asyncio` | 必须使用异步库并限制并发 |
+| 纯 Python CPU 计算 | `ProcessPoolExecutor` | 序列化、启动成本、内存 |
+| 依赖已支持无 GIL 的生态 | free-threaded Python | 扩展兼容与数据竞争 |
+| 需要解释器级隔离和多核 | `InterpreterPoolExecutor` | 对象隔离、跨解释器通信 |
+| NumPy/推理等原生计算 | 先测库自身并行能力 | 避免线程池与库内线程过度嵌套 |
+| I/O 与 CPU 混合 | 事件循环或线程负责 I/O，进程/解释器池负责计算 | 背压、取消、超时和资源上限 |
+
+## 不要漏掉的工程条件
+
+无论选哪种模型，都应显式处理：
+
+- 超时、取消和重试；
+- 并发上限与背压；
+- 共享状态和幂等；
+- 任务失败、进程退出和部分结果；
+- 可观测性与基准测试；
+- 服务端或第三方接口的限流规则。
+
+并发模型只是执行手段。先说明任务在等待什么、数据如何共享、失败如何恢复，再决定线程、进程、协程或子解释器，通常比从 GIL 出发选型更可靠。
+
+## 参考资料
+
+- [Python 3.14：free-threaded Python 正式进入支持阶段](https://docs.python.org/3/whatsnew/3.14.html#free-threaded-python-is-officially-supported)
+- [Python 文档：Free-threaded Python HOWTO](https://docs.python.org/3/howto/free-threading-python.html)
+- [Python 文档：`InterpreterPoolExecutor`](https://docs.python.org/3/library/concurrent.futures.html#interpreterpoolexecutor)
+- [Python 文档：多解释器与隔离](https://docs.python.org/3/library/concurrent.interpreters.html)
+- [Python 文档：`asyncio`](https://docs.python.org/3/library/asyncio.html)

@@ -1,212 +1,182 @@
 ---
 layout: post
-title: selenium定位
+title: Selenium 4 元素定位与等待策略
 date: 2017-09-23 13:50:13 +0800
-excerpt: selenium使用Xpath+CSS+JavaScript+jQuery的定位方法
+excerpt: 从稳定定位器、CSS 与 XPath 的边界、显式等待、StaleElementReferenceException 和 JavaScript 兜底等方面，整理现代 Selenium UI 自动化的基本写法。
 categories: testing
 ---
 
-### 【第一部分】Xpath的4种定位方法
-- **第1种方法：通过绝对路径做定位**
+UI 自动化里，“元素定位不到”经常不是定位器语法问题，而是页面状态、浏览上下文或测试设计问题。现代 Selenium 代码应该把定位与等待放在一起考虑。
+
+## Selenium 4 的统一写法
 
 {% highlight python %}
-   By.xpath("html/body/div/form/input")    
-   By.xpath("//input")
+from selenium.webdriver.common.by import By
+
+username = driver.find_element(By.ID, "username")
+submit = driver.find_element(By.CSS_SELECTOR, "button[type='submit']")
 {% endhighlight %}
 
-- **第2种方法：通过元素索引定位**
+`find_element_by_id`、`find_element_by_xpath` 等旧方法已经废弃。使用 `By` 可以让定位器统一进入显式等待、Page Object 和公共组件。
+
+## 定位器优先级
+
+一个实用顺序是：
+
+1. 产品和测试共同约定的稳定属性，例如 `data-testid`；
+2. 唯一且语义稳定的 `id` 或 `name`；
+3. 简洁的 CSS 选择器；
+4. 文本关系、向上查找等 CSS 难以表达的场景再用 XPath；
+5. 索引和绝对路径只用于临时诊断。
+
+例如：
+
+{% highlight html %}
+<button data-testid="save-order" type="submit">保存</button>
+{% endhighlight %}
+
 {% highlight python %}
-By.xpath("//input[4]")
+SAVE_BUTTON = (By.CSS_SELECTOR, "[data-testid='save-order']")
 {% endhighlight %}
 
-- **第3种方法：使用xpath属性定位**
+测试专用属性不是“污染页面”，而是前端与测试之间的一份稳定契约。相比依赖样式类、DOM 层级或易变文案，它能显著减少无意义维护。
+
+## CSS 与 XPath 怎么选
+
+### CSS 适合常规属性和层级
+
 {% highlight python %}
-By.xpath("//input[@id='kw1']")    
-By.xpath("//input[@type='name' and @name='kw1']")
+(By.CSS_SELECTOR, "input[name='email']")
+(By.CSS_SELECTOR, "[data-testid='order-row'][data-status='pending']")
+(By.CSS_SELECTOR, "form#checkout > button[type='submit']")
 {% endhighlight %}
 
-- **第4种方法：使用部分属性值匹配**
+### XPath 适合文本与关系查找
+
 {% highlight python %}
-By.xpath("//input[starts-with(@id,'nice')    
-By.xpath("//input[ends-with(@id,'很漂亮')    
-By.xpath("//input[contains(@id,'那么美')]")    
+(By.XPATH, "//button[normalize-space()='保存']")
+(By.XPATH, "//label[normalize-space()='邮箱']/following::input[1]")
+(By.XPATH, "//section[@aria-label='订单']//tr[td='A-1024']")
 {% endhighlight %}
 
-- **说明**        
-  * starts-with :匹配一个属性开始位置的关键字。    
-  * contains    :匹配一个属性值中包含的字符串。     
-  * text（）    :匹配的是显示文本信息，此处也可以用来做定位用。
+浏览器 WebDriver 常用的是 XPath 1.0。旧教程里常见的 `ends-with()` 属于 XPath 2.0，不能假设可用。可以用 CSS 的属性后缀选择器：
 
-- **举例**    
-  - 查找name属性中开始位置包含'name1'关键字的页面元素:
-       
-    //input[starts-with(@name,'name1')]     
-            
-  - 查找name属性中包含na关键字的页面元素 
-              
-    //input[contains(@name,'na')]                 
-           
-  * 如:\<a href="http://www.baidu.com">百度搜索</a>，那么xpath写法为:       
-        
-    //a[text()='百度搜索']
-        
-    //a[contains(text(),"百度搜索")]
-        
-
-
-### 【第二部分】使用selenium定位时踩到的坑
-- \<span onlick="88_da_33_699999_x64_3.01.3730.spkg" name="delete" />    
-    {% highlight python %}  
-//*[contains(@onclick, 'x64_3.01.3730.spkg') and @name='delete']
-    {% endhighlight %}
-### 【第三部分】切换iframe时遇到的几个鬼
-* 在切换ifame的时候，有时iframe是含有id的，就可以直接定位使用，但是当iframe没有id信息的时候，如下:     
-
-![](/images/17092301.png)
-
-当然实际情况中会遇到没有id属性和name属性为空的情况，这时候就需要先定位iframe元素对象，这里可以通过tag先定位到，也能达到同样效果,如下代码： 
 {% highlight python %}
-iframe = driver.find_element_by_tag_name("iframe")
-driver.switch_to_frame(iframe)
-{% endhighlight %}
-切换完了之后，就可以去正常定位iframe里面的元素，driver.find_element_by_tagname(table)之类的，同时也可以用xpath的方式，例如：
-{% highlight python %}     
-Xpath=//*[contains(@src, 'sysmanage/systemupgrade.action')] 
+(By.CSS_SELECTOR, "[id$='-submit']")
 {% endhighlight %}
 
-* 如果有多个iframe标签，那你就要看看总共有iframe标签了，看看你所定位的iframe是数组中的第几个iframe元素（从0开始数起，基于JavaScript的），可以用chrome浏览器的F12的控制台（Console）就可以输入document.getElementsByTagName('iframe').length这句代码，即可打印出iframe的长度（也就是个数），然后按照从0开始数起。
+不要再用“CSS 一定比 XPath 快很多”作为选型理由。现代浏览器里，定位器是否稳定、是否易读，通常比微小的查询耗时差异重要。
 
-![](/images/17092302.png)
+## 定位之后还要等待正确状态
 
+元素进入 DOM、可见、可点击是不同状态。与其固定等待几秒，不如等待业务需要的条件：
 
-* 当iframe上的操作完后，想重新回到主页面上操作元素，这时候，就可以用switch_to_default_content()方法返回到主页面。
-如下代码：
 {% highlight python %}
-iframe = driver.find_element_by_tag_name("iframe")
-driver.switch_to_frame(iframe)
-switch_to_default_content()
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+wait = WebDriverWait(driver, 10)
+
+save = wait.until(
+    EC.element_to_be_clickable(
+        (By.CSS_SELECTOR, "[data-testid='save-order']")
+    )
+)
+save.click()
+
+wait.until(
+    EC.visibility_of_element_located(
+        (By.CSS_SELECTOR, "[role='status']")
+    )
+)
 {% endhighlight %}
 
-* 如何判断元素是否在iframe上？
-  * 定位到元素后，切换到firepath界面。
-  * 看firebug工具左上角，如果显示Top Window说明没有iframe。
-  * 如果显示iframe#xxx这样的，说明在iframe上，#后面就是它的id。
+不要混用很长的隐式等待和显式等待。两种超时叠加后，失败耗时会变得难以预测。团队最好统一一种策略，UI 测试通常以显式等待为主。
 
-### 【第四部分】selenium用javascript定位
+## frame、新窗口和 Shadow DOM
 
-因为selenium的内核引擎就是用JavaScript来驱动的，所以只要selenium自带的那些原始辣鸡方法出现定位不了的、点击不了的并发症一旦发作，就可以使用javascript大绝招，除了JavaScript，还有jQuery。
+定位器只能在当前浏览上下文工作：
 
-以下总结了5种js定位的方法
+- 元素在 `iframe` 中：先 `driver.switch_to.frame(...)`；
+- 元素在新窗口：切换 window handle；
+- 元素在 Shadow DOM 中：先取得 shadow root；
+- 单页应用重新渲染：旧元素引用可能失效。
 
-* 1.通过id获取
-document.getElementById(“id”)
-* 2.通过name获取
-document.getElementsByName(“Name”)
-* 3.通过标签名选取元素
-document.getElementsByTagName(“tag”)
-* 4.通过CLASS类选取元素
-document.getElementsByClassName(“class”)
-兼容性：IE8及其以下版本的浏览器未实现getElementsByClassName方法
-* 5.通过CSS选择器选取元素
-document.querySelectorAll(“css selector")
-兼容性：IE8及其以下版本的浏览器只支持CSS2标准的选择器语法
-* 举例:
-{% highlight javascript %}
-js = 'document.getElementById("helloId").click();'    
-driver.execute_script(js)
-js1 = 'document.getElementsByClassName("helloName")[0].value = "王大明";'   //整个HTML文档里第一个使用CSS样式类的class="helloName"属性，它的value属性的值设置为“王大明”
-driver.execute_script(js1)
-{% endhighlight %}
+因此调试 `NoSuchElementException` 时，先确认上下文，再改 XPath。把一个错误的上下文配上更复杂的定位器，只会让脚本更脆弱。
 
-### 【第五部分】selenium用jquery定位
+## 正确处理 stale element
 
-jQuery是2006年1月诞生的一个基于封装JavaScript的框架，你经常看到的美元符号带上一个圆括号$('XXX')，其实就是document.getElementBy什么什么的这个js方法，至于XXX前面带.的话，就是document.getElementByClass，带#的话，就是document.getElementById。
+React、Vue 等前端重新渲染后，之前保存的 `WebElement` 可能已经不属于当前 DOM，操作时会抛出 `StaleElementReferenceException`。
 
-![](/images/17092303.png)
+不要长期缓存易变化的元素对象。保存定位器，在操作前重新查找：
 
-- 1.Id
 {% highlight python %}
-inputTest="$('#smart_input').val('帅气的我还能再削')"
-driver.execute_script(inputTest)
+ORDER_TOTAL = (By.CSS_SELECTOR, "[data-testid='order-total']")
+
+wait.until(EC.text_to_be_present_in_element(ORDER_TOTAL, "¥99.00"))
+total = driver.find_element(*ORDER_TOTAL)
 {% endhighlight %}
-* 2.Class
-{% highlight javascript %}
-   inputTest="$('.usersearch').val('帅气的我还能再削')"
+
+如果业务动作触发整块区域刷新，可以显式等待旧元素 stale，再等待新元素出现。
+
+## JavaScript 不是默认点击方式
+
+旧教程经常在 WebDriver 点不动时直接执行：
+
+{% highlight python %}
+driver.execute_script("arguments[0].click()", element)
 {% endhighlight %}
-* 3.Type
-{% highlight javascript %}
-   inputTest="$(':text').val('帅气的我还能再削')"
+
+它会绕过一部分真实用户交互检查。元素被遮挡、不可见或尚未可用时，JavaScript 点击可能让测试“通过”，却掩盖真实页面问题。
+
+更合理的排查顺序是：
+
+1. 等待元素可点击；
+2. 检查遮罩、动画和滚动位置；
+3. 确认 frame/window 上下文；
+4. 检查元素是否 stale；
+5. 只有在产品行为明确需要、且普通用户交互并不适用时才使用 JavaScript。
+
+同理，不要假设页面已经加载 jQuery。现代站点可能根本没有它，测试脚本也不应依赖被测页面的内部前端库。
+
+## Page Object 只封装稳定语义
+
+{% highlight python %}
+class LoginPage:
+    USERNAME = (By.ID, "username")
+    PASSWORD = (By.ID, "password")
+    SUBMIT = (By.CSS_SELECTOR, "button[type='submit']")
+
+    def __init__(self, driver):
+        self.driver = driver
+        self.wait = WebDriverWait(driver, 10)
+
+    def login(self, username: str, password: str) -> None:
+        self.wait.until(
+            EC.visibility_of_element_located(self.USERNAME)
+        ).send_keys(username)
+        self.driver.find_element(*self.PASSWORD).send_keys(password)
+        self.wait.until(
+            EC.element_to_be_clickable(self.SUBMIT)
+        ).click()
 {% endhighlight %}
-* 4.层级
-{% highlight javascript %}
-  inputTest="$('#searchForm>#smart_input').val('帅气的我还能再削')"
-  inputTest="$('#searchForm #smart_input ').val('帅气的我还能再削')"   【注意两个id选择器“#searchForm #smart_input”中间是一个空格】
-  inputTest="$('#searchForm>input:first').val('帅气的我还能再削')"
-  选择最后一个input元素：
-  clickbutton="$('#searchForm>input:last').click()"
-  选择第几个input元素
-  inputTest="$('#searchForm>input:eq(0)').val('帅气的我还能再削')"    从0开始算第一个
-  inputTest="$('#searchForm>input:nth-child(1)').val('帅气的我还能再削')"   当然也可以这样，nth-child从1开始算第一个
-  
-  nth-child(N)：下标从1开始；eq(N)：下标从0开始；
-  nth-child(N)：选择多个元素；eq(N)：选择一个元素。
-{% endhighlight %}  
-* 5.其他
-{% highlight javascript %}
-  inputTest="$('input[name=query]').val('帅气的我还能再削')"
-  inputTest="$('input[id=smart_input]').val('帅气的我还能再削')"
-{% endhighlight %}
--------------------------------------------------------------------------------------------------------------------------------
 
+Page Object 的目标是表达页面行为并集中管理定位器，不是把每一次 `click` 都包成一层没有语义的方法。
 
-### 【附录1】xpath的语法使用基础
-* Xpath的使用方法： 
-  * 例子 1：html/body/div[1]/div[2]    
-    该xpath表示在 html标签下 -> body标签下 -> 第一个div标签下 -> 第二个div标签    
-  * 例子 2：.//*[@id='content']/div[2]/ul    
-    \. 代表当前路径    
-    a//b　表示：在a标签下的子孙辈b标签    
-    \* 可以是任何标签    
-    [@id='content'] 表示是 id 为 content    
-    所以这个例子的意思是： id 为 content 的任何子标签下面 -> 第二个 div标签下 -> ul 标签    
+## 一份定位器检查表
 
-* Xpath进阶:    
-　//p[text()='a']　　      :文本为 a 的p标签    
-　//p[text()='a']　　      :文本包含 a 的p标签    
-　//a[@class='abc'] 　　   :class 为 a的 p标签    
-　//p[not(@class='a')] 　　:class 不为 a的 p标签
-    
-Xpath和其他定位方式的比较（主要是和CSS定位的对比）：
-Xpath的最大好处是能向上查找，不过缺点是速度过慢。
+- 是否唯一，并且在目标页面状态下可重复定位？
+- 是否依赖自动生成 class、深层 DOM 或易变文案？
+- 是否需要等待可见、可点击或某段文本？
+- 是否跨越 iframe、窗口或 Shadow DOM？
+- 页面刷新后是否会持有 stale 元素？
+- 失败时是否保留截图、页面源码、浏览器日志和当前 URL？
 
-### 【附录2】CSS定位语法基础
+稳定的 UI 自动化通常不是写出“更强的 XPath”，而是让应用提供稳定契约，让测试等待正确状态，并在失败时留下足够证据。
 
-CSS定位速度快，功能多，但是不能向上查找，比xpath好用，执行效率比xpath来的快。    
+## 参考资料
 
-大致用法总结：    
-
-* 1、*:checked  选中*的checked元素
-* 2、 li.refined.list.group.item （如果class中间有空格，可以.+.+.全写也可以只写任意一个）
-    .checkbox[type^='check'][onclick*='Bebe'][checked$='ed'] +a
-    （开头^=   包含*=   结尾$= ）+a 是选中同级的后面的a
-* 3、 li a        ：选中 li 标签的后代 a
-* 5、 li>a       ：选中 li 标签的子元素 a
-* 4、 li,a        ：选中 li 和 a
-* 5、 li +a      ：选中 li 同级的 下一个 a
-* 6、 li ~a       ：选中 li 同级的 下面所有的 a
-* 7、 li>a:last-child  /  li>a:last-of-type  : 选中 li 下最后面一个 a
-* 8、 li:not([class*='_'])    : li 中的 calss 不含 '_' 
-      li:not(:nth-of-type(1))    : 不含第一个 li 的所有 li
-* 9、 li>a:nth-child(n)   /  li>a:nth-of-type(n) ：选中 li 下第 n 个 a       
-      li>a:nth-last-child(n)   /  li>a:nth-last-of-type(n)：选中 li 下,倒数第 n 个 a    
-      如果 n = odd 表示奇数    
-      如果 n = even 表示偶数    
-      div h2:nth-child(n) ： 当div的第n个子元素是h2的时候    
-      div h2:nth-of-type(n):   div下第n个h2子元素
-* 10、div[style]     : div中包含 属性style 
-* 11、li>a:only-child      ：li 下只有1个a的 a 标签
-
-* 参考：
-http://blog.csdn.NET/duff2016/article/details/54572718    
-http://www.cnblogs.com/zhongmeizhi/p/6296213.html    
-http://www.cnblogs.com/zhongmeizhi/p/6296266.html    
+- [Selenium 官方文档：Locator strategies](https://www.selenium.dev/documentation/webdriver/elements/locators/)
+- [Selenium 官方文档：Finding web elements](https://www.selenium.dev/documentation/webdriver/elements/finders/)
+- [Selenium 官方文档：Waiting strategies](https://www.selenium.dev/documentation/webdriver/waits/)
+- [Selenium 官方文档：Web elements](https://www.selenium.dev/documentation/webdriver/elements/)

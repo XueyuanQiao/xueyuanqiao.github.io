@@ -1,91 +1,91 @@
 {
   "posts": [
     {
-      "title": "尾递归与 Python：一个永远没被优化的承诺",
+      "title": "Python 为什么不优化尾递归",
       "url": "/python/2017/09/22/python_tail_recursion.html",
       "date": "2017-09-22",
-      "excerpt": "从 fact(n) 这个最经典的递归例子讲起，把尾递归、栈帧、TCO、trampoline 与 CPython 为什么坚持不做尾调用优化的设计哲学一次性讲透。",
+      "excerpt": "从调用栈、尾调用优化和 CPython 的设计取舍出发，说明为什么把递归改成尾递归仍会触发 RecursionError，以及工程中更合适的替代方案。",
       "categories": [
         "python"
       ]
     },
     {
-      "title": "Python 编程陷阱：可变默认值、共享引用与那些一年坑你两次的细节",
+      "title": "Python 可变对象的几个常见陷阱",
       "url": "/python/2017/09/22/python_trap.html",
       "date": "2017-09-22",
-      "excerpt": "从经典的\"可变默认参数\"到引用传递的真相，再到原文里隐藏的 if not var2 反 bug，把 Python 数据模型的几个反直觉点重新讲一遍。",
+      "excerpt": "用对象绑定这条主线解释可变默认参数、类属性共享、浅拷贝、闭包延迟绑定和 is/== 的区别，并给出适用于现代 Python 的写法。",
       "categories": [
         "python"
       ]
     },
     {
-      "title": "python爬虫",
+      "title": "Python 网页采集：从单页脚本到可维护爬虫",
       "url": "/python/2017/09/22/spider_list.html",
       "date": "2017-09-22",
-      "excerpt": "32个Python爬虫项目",
+      "excerpt": "不再罗列多年无人维护的爬虫仓库，而是从数据来源、合规边界、工具选型、限速重试、去重存储和可观测性出发，搭一套能长期运行的网页采集方案。",
       "categories": [
         "python"
       ]
     },
     {
-      "title": "Python 多线程 vs 多进程：GIL 的真相与 2026 年的新选项",
+      "title": "Python 并发选型：线程、进程、asyncio 与子解释器",
       "url": "/python/2017/09/22/thread_vs_process.html",
       "date": "2017-09-22",
-      "excerpt": "从一段端口扫描脚本讲起，把 GIL 的真实行为、CPU/IO 密集型选型、以及 PEP 703 free-threaded、subinterpreters、asyncio 这些 2026 年才真正成熟的新选项一次性梳理清楚。",
+      "excerpt": "以 Python 3.14 为基线，解释默认 GIL、free-threaded 构建、线程池、进程池、asyncio 和 InterpreterPoolExecutor 的适用边界。",
       "categories": [
         "python"
       ]
     },
     {
-      "title": "markdown语法",
+      "title": "在 Jekyll 中写 Markdown：语法、方言与常见问题",
       "url": "/devtools/2017/09/23/markdown.html",
       "date": "2017-09-23",
-      "excerpt": "Markdown 语法和 MWeb 写作使用说明",
+      "excerpt": "以本站使用的 kramdown 为例，整理 Markdown 基础语法、Jekyll Front Matter、代码块、链接图片、表格、脚注和 Liquid 冲突等实际写作问题。",
       "categories": [
         "devtools"
       ]
     },
     {
-      "title": "frame定位",
+      "title": "Selenium 4 中定位 iframe 的正确方式",
       "url": "/testing/2017/09/23/selenium_frame.html",
       "date": "2017-09-23",
-      "excerpt": "frameset不用切，frame需层层切！",
+      "excerpt": "解释浏览上下文、嵌套 iframe、显式等待和 Selenium 4 的 frame 切换 API，并给出定位不到元素时的排查顺序。",
       "categories": [
         "testing"
       ]
     },
     {
-      "title": "selenium定位",
+      "title": "Selenium 4 元素定位与等待策略",
       "url": "/testing/2017/09/23/selenium_locate_ways.html",
       "date": "2017-09-23",
-      "excerpt": "selenium使用Xpath+CSS+JavaScript+jQuery的定位方法",
+      "excerpt": "从稳定定位器、CSS 与 XPath 的边界、显式等待、StaleElementReferenceException 和 JavaScript 兜底等方面，整理现代 Selenium UI 自动化的基本写法。",
       "categories": [
         "testing"
       ]
     },
     {
-      "title": "MySQL索引原理及慢查询优化",
+      "title": "MySQL 8.4 索引与慢查询优化：一套可验证的排查方法",
       "url": "/database/2017/10/03/mysql-index-slowquery.html",
       "date": "2017-10-03",
-      "excerpt": "多数情况下，我们知道索引能够提高查询效率，但应该如何建立索引？索引的顺序如何？许多人却只知道大概。其实理解这些概念并不难，而且索引的原理远没有想象的那么复杂。",
+      "excerpt": "从访问模式和联合索引出发，结合 EXPLAIN ANALYZE、慢查询日志、Performance Schema、直方图与不可见索引，整理 MySQL 8.4 中可验证的慢查询优化流程。",
       "categories": [
         "database"
       ]
     },
     {
-      "title": "Linux下快速获取本机外网IP",
+      "title": "用 curl 查询公网出口 IP，并区分本机地址",
       "url": "/devtools/2017/10/10/curl-queryip.html",
       "date": "2017-10-10",
-      "excerpt": "通过Curl在Linux下快速获取本机外网IP的几个常用网址",
+      "excerpt": "说明公网出口 IP、内网接口地址、IPv4/IPv6 和代理出口的区别，并给出适合交互使用与脚本使用的 curl 写法。",
       "categories": [
         "devtools"
       ]
     },
     {
-      "title": "AI 测试方向",
+      "title": "AI 应用怎么测：从确定性测试到持续评测",
       "url": "/quality/2026/02/21/ai-test.html",
       "date": "2026-02-21",
-      "excerpt": "从测试工程师视角看AI原生应用测试的变化与技能栈",
+      "excerpt": "从测试工程师视角拆解 AI 应用的分层测试、评测集、模型裁判、工具调用、安全测试和线上反馈，不用虚构的工作占比描述新岗位。",
       "categories": [
         "quality",
         "ai"
@@ -95,7 +95,7 @@
       "title": "个人概述",
       "url": "/about/2026/02/22/intro.html",
       "date": "2026-02-21",
-      "excerpt": "资深全栈测试开发工程师 · 持续精进的 AI 全栈工程师 · AI 原生质量体系践行者 · 多语言研发与测试架构设计专家",
+      "excerpt": "质量工程与测试开发，现负责 L4 无人配送车端到端质量",
       "categories": [
         "about"
       ]
@@ -104,27 +104,27 @@
       "title": "AI 测试平台先做哪三件事",
       "url": "/quality/2026/05/26/ai-test-platform-capability.html",
       "date": "2026-05-26",
-      "excerpt": "把 AI 当成\"原子化能力\"而不是\"魔法函数\"——拆解智能用例生成、合成数据、预测性执行三件事在真实工程里要踩的坑与可量化的产出。",
+      "excerpt": "与其先做用例生成大屏，不如先搭 trace 与回放、可版本化评测集、发布门禁与线上回流三项底座，让模型和工具都保持可替换。",
       "categories": [
         "quality",
         "ai"
       ]
     },
     {
-      "title": "LLM 嵌进测试流程之后",
+      "title": "把 LLM 接进测试流程，哪些环节值得做",
       "url": "/quality/2026/05/27/llm-in-test-lifecycle.html",
       "date": "2026-05-27",
-      "excerpt": "把 LLM 撒进测试设计、执行、归因三个环节，能拿到的不是\"快一点\"的传统流程，而是一种范式上的位移——质量从结果验证走向过程预测。",
+      "excerpt": "从需求评审、测试设计、执行、缺陷归因到发布门禁，讨论 LLM 适合辅助什么、不适合替代什么，以及怎样保留证据和人工责任。",
       "categories": [
         "quality",
         "ai"
       ]
     },
     {
-      "title": "AI 测试的三类资产和四个 KPI",
+      "title": "AI 测试真正需要沉淀的资产和指标",
       "url": "/quality/2026/05/28/ai-test-methodology-and-kpi.html",
       "date": "2026-05-28",
-      "excerpt": "AI 能力的复利来自资产，不是来自工具。聊聊 Prompt 库、知识图谱、Ground Truth 三件资产怎么沉淀，以及如何用四个 KPI 让 AI 测试投入可被业务老板看懂。",
+      "excerpt": "与其统计生成了多少 Prompt 和用例，不如沉淀评测集、失败 trace、业务契约与版本配置，并用任务成功、关键失败、诊断效率和成本延迟衡量结果。",
       "categories": [
         "quality",
         "ai"
@@ -134,7 +134,7 @@
       "title": "从屏幕走到街道",
       "url": "/quality/2026/05/29/autonomous-vehicle-quality-loop.html",
       "date": "2026-05-29",
-      "excerpt": "从蚂蚁的金融级风控到菜鸟无人车的物理世界，质量这个词被我重新定义了两次。聊聊在 A 车型、B 车型、C 车型、私有化方案这一整套无人车产品矩阵之上，测试开发到底在解决什么问题。",
+      "excerpt": "从金融系统转到无人配送车之后，我对质量边界的一些新认识：如何连接场景、仿真、车端、云端和线上反馈，以及哪些地方仍在学习。",
       "categories": [
         "quality"
       ]
@@ -143,65 +143,65 @@
       "title": "重读蚂蚁财富编码军规",
       "url": "/quality/2026/05/30/ant-wealth-coding-rules-revisit.html",
       "date": "2026-05-30",
-      "excerpt": "那年我在蚂蚁财富做养老基金 QA Owner，第一次知道金融级系统对工程师的\"敬畏\"是怎么具象出来的。十多年过去再看那张挂在工区的\"军规海报\"，每一条都还在打我。",
+      "excerpt": "几年后再看财富技术部的编码军规，我记住的不是口号，而是并发、幂等、金额、核对、变更和应急这些朴素的工程要求。",
       "categories": [
         "quality",
         "career"
       ]
     },
     {
-      "title": "置身钉内",
+      "title": "《置身钉内》阅读笔记：一个 AI 办公项目的现场复盘",
       "url": "/product/2026/06/05/zhi-shen-ding-nei.html",
       "date": "2026-06-05",
-      "excerpt": "一名 2025 年入职钉钉的产品经理，用亲历的「ONE」项目，记录一款战略级 AI 办公产品从立项、发布、共创到收缩的完整生命周期——理想如何被翻译成目标，目标如何在组织里变形落地。",
+      "excerpt": "一份 105 页项目复盘的克制导读：区分作者亲历、作者判断与可继续讨论的产品问题，关注主动服务、产品定位、迭代节奏、组织成本和 Agent 落地。",
       "categories": [
         "product",
         "ai"
       ]
     },
     {
-      "title": "九识\"投靠\"阿里菜鸟，新石器和京东还能干得过吗？",
+      "title": "菜鸟与九识重组后，无人配送车竞争要看什么",
       "url": "/robovan/2026/06/06/jiushi-cainiao-robovan.html",
       "date": "2026-06-06",
-      "excerpt": "阿里菜鸟与九识智能深度战略重组，无人配送车赛道形成\"北新石器、南九识\"双寡头格局，再加上把无人车当\"内部水电\"的京东——这场关于技术、路权与商业化的三足鼎立之争，正在街头全面升温。",
+      "excerpt": "基于新识研究所原文做一份克制的行业阅读笔记：区分公司口径、媒体转述和作者判断，重点讨论场景、路权、运营效率、交付能力与法律争议。",
       "categories": [
         "无人车"
       ]
     },
     {
-      "title": "无人物流车商业化拐点已至，谁在分享第一波红利？",
+      "title": "无人物流车是不是到了商业化拐点",
       "url": "/robovan/2026/06/06/robovan-commercial-inflection.html",
       "date": "2026-06-06",
-      "excerpt": "从 CES 到 GTC，英伟达持续加码 L4；九识、新石器 2025 年交付双双破万台，行业从\"示范运营\"迈入\"规模放量\"。当 L4 自动驾驶走到商业兑现的拐点，真正确定性最高的生意，或许是上游\"卖铲子\"的零部件赛道。",
+      "excerpt": "对“商业化拐点”和上游“卖铲子”叙事做一次拆解：订单、交付和融资是积极信号，但还要结合复购、利用率、远程运营、总拥有成本与现金回收。",
       "categories": [
         "无人车"
       ]
     },
     {
-      "title": "无人车的质量闭环",
+      "title": "看无人配送车，我更关心它怎样被验证",
       "url": "/robovan/2026/06/07/robovan-quality-cold-thinking.html",
       "date": "2026-06-07",
-      "excerpt": "一篇讲九识投靠菜鸟的格局之变，一篇讲\"卖铲子\"上游的确定性红利。我是个刚转进无人车领域的测开，看完这两篇，最先冒出来的不是\"该买谁的股票\"，而是一个做测试的人最本能的问题——这些小车，凭什么敢大规模上路？顺着这个问题往下挖，我发现真正的拐点，藏在\"质量是怎么被保证的\"这件事里。",
+      "excerpt": "作为刚进入无人车领域的测试开发，我尝试把行业文章里的销量、成本和“轻地图”叙事还原成几个工程问题：ODD、场景覆盖、远程运营、数据回流和分层验证。",
       "categories": [
         "无人车",
         "ai"
       ]
     },
     {
-      "title": "技术人的三十岁破局：从代码工匠到架构思想家",
+      "title": "三十岁之后，技术人怎样继续往前走",
       "url": "/career/2026/06/07/tech-thirty-breakthrough.html",
       "date": "2026-06-07",
-      "excerpt": "三十岁不是技术人生的终点，而是认知升级的最后窗口期。大多数人在这个节点遇到瓶颈，不是因为技术不够好，而是价值创造方式被锁死在\"写代码\"这一种线性模式上。这篇文章把破局拆成四个维度的认知跃迁，配上可落地的方法、真实案例和避坑清单。",
+      "excerpt": "三十岁不是统一的职业分水岭。比年龄更值得关注的，是能否持续解决复杂问题、承担系统责任、理解业务，并给学习和生活留下长期空间。",
       "categories": [
         "career",
         "growth"
       ]
     },
     {
-      "title": "从软件测试开发工程师到 AI 全栈工程师：20 周转型行动计划",
+      "title": "从测试开发到 AI 全栈：一份 20 周在职计划",
       "url": "/ai/career/2026/07/11/testdev-to-ai-fullstack.html",
       "date": "2026-07-11",
-      "excerpt": "一份写给测试开发工程师的 AI 全栈成长手册：不脱产、不透支健康，用 20 周把已有的测试、云端系统与质量能力，扩展成从需求到部署的完整 AI 全栈交付闭环。以一条主线加两个卫星项目为骨架，配阶段门槛与评测体系，面向个人能力成长和内部职责演进。",
+      "excerpt": "用一个脱敏的质量事件助手贯穿前端、后端、模型调用、RAG、工具工作流、评测、部署与观测；按周交付证据，不用课程数量证明转型。",
       "categories": [
         "ai",
         "career"

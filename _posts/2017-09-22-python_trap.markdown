@@ -1,277 +1,175 @@
 ---
 layout: post
-title: Python 编程陷阱：可变默认值、共享引用与那些一年坑你两次的细节
+title: Python 可变对象的几个常见陷阱
 type: post
 date: 2017-09-22 17:05:13 +0800
-excerpt: 从经典的"可变默认参数"到引用传递的真相，再到原文里隐藏的 if not var2 反 bug，把 Python 数据模型的几个反直觉点重新讲一遍。
+excerpt: 用对象绑定这条主线解释可变默认参数、类属性共享、浅拷贝、闭包延迟绑定和 is/== 的区别，并给出适用于现代 Python 的写法。
 categories: python
 ---
 
-> 本文 2017 年首发，2026 年校订。原文 `print` 用了 Python 2 的语法，`if not var2:` 这个修复方案本身就是 bug——这次一并改正，并补上几个工程里更常见的现代陷阱（dataclass、闭包延迟绑定、字典视图等）。
+> 本文最初写于 2017 年，2026 年按现代 Python 语法校订。很多所谓“Python 陷阱”并不是特殊规则，它们大多可以归结为一句话：名字绑定到对象，赋值本身不会复制对象。
 
-Python 的语法看起来很温和，但**它的数据模型不温和**。下面三类陷阱，无论入行几年都会反复栽——因为它们的根源不是 API，而是 Python 对象与作用域的底层语义。
+## 可变默认参数只创建一次
 
-## 陷阱一：可变对象作为函数默认参数
-
-直觉写法：
+下面的默认列表在函数定义执行时创建，而不是每次调用时创建：
 
 {% highlight python %}
-def search_for_links(page, add_to=[]):
-    new_links = page.search_for_links()
-    add_to.extend(new_links)
-    return add_to
+def collect(value, items=[]):
+    items.append(value)
+    return items
+
+print(collect(1))  # [1]
+print(collect(2))  # [1, 2]
 {% endhighlight %}
 
-看起来人畜无害——调用时传 `add_to`，就用传的；不传，就给个空列表。但实际跑起来：
+如果希望每次调用都得到新列表，使用 `None` 作为哨兵：
 
 {% highlight python %}
-def fn(var1, var2=[]):
-    var2.append(var1)
-    print(var2)
-
-fn(3)
-fn(4)
-fn(5)
+def collect(value, items=None):
+    if items is None:
+        items = []
+    items.append(value)
+    return items
 {% endhighlight %}
 
-输出是：
+这里必须写 `is None`，不能写 `if not items`。后者会把调用者显式传入的空列表、空字符串或 0 一并当成“没有传值”。
 
-```text
-[3]
-[3, 4]
-[3, 4, 5]
-```
+可变默认参数并非绝对禁止。缓存、状态累积等少数场景可能会有意利用它，但这种意图应在函数名、文档和测试里说明，否则维护者很难判断共享状态是不是缺陷。
 
-而不是预期的 `[3]` `[4]` `[5]`。
+## dataclass 字段使用 default_factory
 
-**根因**：函数的默认参数对象**只在函数定义时被创建一次**，之后所有"没传该参数"的调用都共享同一个对象。这不是 bug，是 Python 数据模型的明确语义——`def` 是一个执行语句，默认值表达式在 def 执行那一刻就被求值并绑定到函数对象上。
-
-### 修复方案：用 None 哨兵 + is 判断
-
-原文给的修复是这样：
-
-{% highlight python %}
-def fn(var1, var2=None):
-    if not var2:
-        var2 = []
-    var2.append(var1)
-{% endhighlight %}
-
-> **校订**：这个修复本身就是个新 bug。`if not var2:` 在 `var2` 是空列表 `[]`、空字符串 `""`、`0`、`False` 时都成立——也就是说，**你显式传了一个空列表进来，会被静默替换成另一个空列表**。
-
-正确写法应该用 `is None` 显式判断：
-
-{% highlight python %}
-def fn(var1, var2=None):
-    if var2 is None:
-        var2 = []
-    var2.append(var1)
-    print(var2)
-{% endhighlight %}
-
-`is None` 检查的是身份（identity），不会被任何"看起来像空"的合法值误伤。**任何用 None 做哨兵的地方都应该用 `is None`，这条几乎没有例外**。
-
-### 现代写法：dataclass 的 field(default_factory=...)
-
-如果是类的字段，Python 3.7+ 推荐用 `dataclasses.field`：
+类字段也有相同问题。现代 Python 的 `dataclass` 会阻止一部分明显的可变默认值，并提供 `default_factory`：
 
 {% highlight python %}
 from dataclasses import dataclass, field
 
 @dataclass
-class URLCatcher:
+class UrlBucket:
     urls: list[str] = field(default_factory=list)
 {% endhighlight %}
 
-`default_factory=list` 表示"每次实例化时调用 `list()` 生成新对象"，而不是共享同一个。
+工厂函数会在每次实例化时调用，因此不同实例不会共享列表。
 
-> 顺带一提：**不可变类型作为默认值是安全的**，因为不可变对象天然没有"被共同修改"的可能：
+需要注意，“不可变容器”不一定意味着内部完全不可变。比如元组可以包含列表。判断默认值是否安全，要看调用者是否能通过它修改可达对象，而不只是看最外层类型。
 
-{% highlight python %}
-def func(message="my message"):
-    print(message)
-{% endhighlight %}
-
-字符串、元组、整型、`frozenset`、`None`——这些都可以放心做默认值。
-
-## 陷阱二：可变对象作为类变量
-
-很多人用类变量初始化"实例数据"：
+## 类属性与实例属性不是一回事
 
 {% highlight python %}
-class URLCatcher:
-    urls = []  # 危险！这是类变量，不是实例变量
+class UrlBucket:
+    urls = []
 
-    def add_url(self, url):
+    def add(self, url: str) -> None:
         self.urls.append(url)
 {% endhighlight %}
 
-行为：
+`urls` 定义在类体中，是所有实例共享的类属性。`self.urls.append(...)` 修改的仍是同一个列表。
+
+实例状态应该在初始化时创建：
 
 {% highlight python %}
-a = URLCatcher()
-a.add_url('http://www.google.com')
-b = URLCatcher()
-b.add_url('http://www.bbc.co.uk')
-
-print(a.urls)  # ['http://www.google.com', 'http://www.bbc.co.uk']
-print(b.urls)  # ['http://www.google.com', 'http://www.bbc.co.uk']
+class UrlBucket:
+    def __init__(self) -> None:
+        self.urls: list[str] = []
 {% endhighlight %}
 
-a 和 b 的 urls 居然一样。
+类属性适合常量、配置元数据或明确需要共享的状态。即便确实要共享可变状态，也要考虑锁、生命周期和测试隔离。
 
-**根因**：`urls = []` 写在类体里，是**类属性**，类的所有实例共享。`self.urls.append(url)` 修改的是这个共享对象，不是实例自己的属性。
-
-注意一个微妙之处——`self.urls.append(...)` 有效，但 `self.urls = [...]` **才是真正的实例属性赋值**：
+## 赋值不是复制
 
 {% highlight python %}
-a = URLCatcher()
-a.urls = ['private']  # 现在 a.urls 是 a 自己的实例属性
-print(URLCatcher.urls)  # 还是 []
-print(b.urls)  # 还是上面的共享列表
+original = {"tags": ["python"]}
+alias = original
+alias["tags"].append("testing")
+
+print(original)  # {'tags': ['python', 'testing']}
 {% endhighlight %}
 
-这种"读时退化到类、写时晋升到实例"的语义，是 Python 数据模型最容易让人犯迷糊的地方之一。
+`alias = original` 只是让两个名字指向同一个字典。
 
-### 修复：在 `__init__` 里初始化实例属性
+浅拷贝会创建新的外层容器，但仍共享内部对象：
 
 {% highlight python %}
-class URLCatcher:
-    def __init__(self):
-        self.urls = []
+copied = original.copy()
+copied["tags"].append("database")
 
-    def add_url(self, url):
-        self.urls.append(url)
+print(original["tags"])  # 内部列表仍被修改
 {% endhighlight %}
 
-或者，再次推荐 dataclass 写法：
+如果确实需要递归复制，可以使用 `copy.deepcopy`，但它不是免费的，也未必适合文件句柄、连接、锁或自定义资源对象。更稳妥的做法通常是明确数据所有权，或使用不可变数据结构和“创建新值”的更新方式。
+
+## 字典视图不是快照
+
+`dict.keys()`、`dict.values()` 和 `dict.items()` 返回动态视图：
 
 {% highlight python %}
-from dataclasses import dataclass, field
+data = {"a": 1}
+keys = data.keys()
+data["b"] = 2
 
-@dataclass
-class URLCatcher:
-    urls: list[str] = field(default_factory=list)
-
-    def add_url(self, url: str) -> None:
-        self.urls.append(url)
+print(list(keys))  # ['a', 'b']
 {% endhighlight %}
 
-## 陷阱三：赋值不是复制
+需要快照时要显式转换，例如 `list(data)` 或 `tuple(data.items())`。
+
+遍历字典时直接增删键会触发 `RuntimeError`。可以遍历键的副本，或者更直接地构造新字典：
 
 {% highlight python %}
-a = {'1': 'one', '2': 'two'}
-b = a
-b['3'] = 'three'
-
-print(a)  # {'1': 'one', '2': 'two', '3': 'three'}
-print(b)  # {'1': 'one', '2': 'two', '3': 'three'}
+filtered = {key: value for key, value in data.items() if value >= 2}
 {% endhighlight %}
 
-**根因**：Python 里 `b = a` 不是"把 a 的内容复制给 b"，而是"让 b 这个名字也指向 a 指向的同一个对象"。两个名字、一个对象——任何一方修改，对方立刻看到。
-
-不可变类型不会让你踩这个坑——`d = (4, 5)` 之后 d 重新指向了一个新元组，c 还指向原来的 (2, 3)，因为元组本身不可变，"修改"只能通过重新绑定来实现。
-
-### 浅拷贝 vs 深拷贝
-
-修复方法看起来简单：
+## 闭包读取的是调用时的变量
 
 {% highlight python %}
-b = a.copy()      # 字典浅拷贝
-b = a[:]          # 列表浅拷贝（也可以用 list(a)）
-b = list(a)       # 列表浅拷贝（更显式）
-b = dict(a)       # 字典浅拷贝（更显式）
+funcs = [lambda: index for index in range(3)]
+print([func() for func in funcs])  # [2, 2, 2]
 {% endhighlight %}
 
-**但浅拷贝只复制顶层结构**。如果元素本身是可变对象，新容器和旧容器仍然共享元素：
+闭包捕获的是变量，不是定义瞬间的值。循环结束后，三个函数读取到的都是最终的 `index`。
+
+可以通过默认参数绑定当时的值：
 
 {% highlight python %}
-a = [[1, 2], [3, 4]]
-b = a[:]
-b[0].append(99)
-print(a)  # [[1, 2, 99], [3, 4]]  ← a 也被改了！
+funcs = [lambda index=index: index for index in range(3)]
 {% endhighlight %}
 
-要彻底独立的副本，用 `copy.deepcopy`：
+复杂回调更适合用普通函数或 `functools.partial`，可读性通常比 lambda 技巧更好。
+
+## `is` 比较身份，`==` 比较值
 
 {% highlight python %}
-import copy
-b = copy.deepcopy(a)
-b[0].append(99)
-print(a)  # [[1, 2], [3, 4]]  ← a 干净
+left = []
+right = []
+
+print(left == right)  # True：内容相等
+print(left is right)  # False：不是同一个对象
 {% endhighlight %}
 
-但 `deepcopy` 不便宜——它要递归遍历整个对象图。**生产代码里 99% 的情况下你应该重新设计数据流，让"共享 vs 独占"在架构层就明确，而不是依赖 deepcopy 兜底**。
-
-### 一个 2026 年最常见的现代变体
-
-字典视图（dict views）也会让人栽跟头：
+`is` 最常见的用途是判断 `None` 或自定义哨兵：
 
 {% highlight python %}
-d = {'a': 1, 'b': 2}
-keys = d.keys()
-d['c'] = 3
-print(list(keys))  # ['a', 'b', 'c']  ← keys 是动态视图，不是快照！
+MISSING = object()
+
+def read(value=MISSING):
+    if value is MISSING:
+        ...
 {% endhighlight %}
 
-如果想要快照，必须显式 `list(d.keys())`。同理 `.values()` 和 `.items()`。
+不要用整数、字符串驻留或编译器常量折叠现象来推断身份关系；这些属于实现细节。同样，普通真假判断通常写 `if enabled` 或 `if not enabled`，不必机械地写 `is True`、`is False`。
 
-## 几个原文没提到、但工程里更高频的陷阱
+## 最后归纳
 
-### 陷阱四：闭包延迟绑定
+遇到共享状态问题时，可以依次问四个问题：
 
-{% highlight python %}
-funcs = [lambda: i for i in range(3)]
-for f in funcs:
-    print(f())
-{% endhighlight %}
+1. 这个对象在什么时候创建？
+2. 现在有多少名字或实例指向它？
+3. 当前操作是在重新绑定名字，还是原地修改对象？
+4. 调用者需要共享、浅拷贝，还是完全独立的数据？
 
-直觉输出 `0 1 2`，**实际输出 `2 2 2`**。
+把这四件事说清楚，可变默认值、类属性、浅拷贝和闭包等行为就不再神秘。
 
-原因：lambda 里的 `i` 是个**自由变量**，它在 lambda 被调用时去查当前作用域里 `i` 的值，而不是 lambda 被定义时。等三个 lambda 都被定义完，`i` 已经是 2 了。
+## 参考资料
 
-修复：用默认参数把 `i` 当时的值"冻"在函数签名里：
-
-{% highlight python %}
-funcs = [lambda i=i: i for i in range(3)]
-for f in funcs:
-    print(f())  # 0 1 2
-{% endhighlight %}
-
-或者用 `functools.partial`。
-
-### 陷阱五：迭代时修改容器
-
-{% highlight python %}
-d = {'a': 1, 'b': 2, 'c': 3}
-for k in d:
-    if d[k] < 3:
-        del d[k]
-# RuntimeError: dictionary changed size during iteration
-{% endhighlight %}
-
-修复：迭代副本，或者构造新字典：
-
-{% highlight python %}
-d = {k: v for k, v in d.items() if v >= 3}
-{% endhighlight %}
-
-### 陷阱六：`is` vs `==`
-
-{% highlight python %}
-a = 256
-b = 256
-print(a is b)  # True
-
-a = 257
-b = 257
-print(a is b)  # False（CPython 实现细节，不要依赖）
-{% endhighlight %}
-
-CPython 缓存了 [-5, 256] 范围的小整数，用 `is` 比较看起来"刚好"成立。**不要依赖这个**。比较值用 `==`，比较身份才用 `is`（最常见场景就是 `is None` / `is True` / `is False`）。
-
-## 一句话总结
-
-Python 的所有"可变陷阱"，都是同一件事的不同投影——**赋值是绑定，不是复制；可变对象的修改是原地的，会被所有持有它的名字看到**。
-
-接受了这一条，再回头看默认参数、类属性、字典视图、闭包变量——所有的反直觉行为都立刻变得可预测。这才是写 Python 多年之后最值得反复打磨的"基本功"。
+- [Python 教程：默认参数值](https://docs.python.org/3/tutorial/controlflow.html#default-argument-values)
+- [Python 文档：`dataclasses.field`](https://docs.python.org/3/library/dataclasses.html#dataclasses.field)
+- [Python 文档：浅拷贝与深拷贝](https://docs.python.org/3/library/copy.html)
+- [Python 数据模型](https://docs.python.org/3/reference/datamodel.html)

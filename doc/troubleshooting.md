@@ -50,7 +50,7 @@ title: MySQL — 索引原理     # 用全角冒号或破折号
 
 - 围栏写法 `` ```python `` 三个反引号紧贴语言名，不要有空格
 - Jekyll Liquid 风 `{% highlight python %}` 必须配对 `{% endhighlight %}`
-- 高亮用的 `js/highlight.pack.js` 来自项目根，路径要保持
+- 代码高亮由 Jekyll/Rouge 在构建期生成；浏览器端不再加载 `highlight.js`
 
 ## 图片不显示
 

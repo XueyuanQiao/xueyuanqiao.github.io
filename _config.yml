@@ -50,6 +50,7 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
   - doc/
+  - tmp/
   - SECURITY_UPDATE.md
   - images/head.original.jpeg
   - images/head.jpeg.bak
