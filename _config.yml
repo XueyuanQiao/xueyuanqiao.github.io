@@ -16,11 +16,16 @@
 title: Xueyuan's Tech Blog
 email: 1336582921@qq.com
 description: > # this means to ignore newlines until "baseurl:"
-  Xueyuan's Blog · 分享编程技术与思考
+  Xueyuan's Blog · 质量工程、AI 全栈实践与 AI 音乐创作
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://xueyuanqiao.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb
 github_username:  XueyuanQiao
+music_artist: xueyuan
+music_title: King Without a Crown
+music_file: /assets/audio/King_Without_a_Crown.mp3
+netease_music_url: https://163cn.tv/bblZtmc9
+qq_music_url: https://c6.y.qq.com/base/fcgi-bin/u?__=GWOcn49RH2fI
 
 # Build settings
 markdown: kramdown

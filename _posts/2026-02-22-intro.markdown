@@ -2,28 +2,37 @@
 layout: post
 title: 个人概述
 date: 2026-02-22 03:22:04 +0800
-excerpt: 质量工程与测试开发，现负责 L4 无人配送车端到端质量
+excerpt: 质量工程、AI 全栈实践与 AI 音乐创作，现负责 L4 无人配送车端到端质量
 categories: about
 permalink: /about/2026/02/22/intro.html
 ---
 
 <div class="profile-hero" markdown="0">
   <span class="pf-badge"><span class="pf-led"></span> 个人概述 · 2026.07 更新</span>
-  <div class="pf-name">乔雪源 · <span class="pf-grad">Quality Engineer</span></div>
+  <div class="pf-name">乔雪源 · <span class="pf-grad">Quality Engineer &amp; AI Musician</span></div>
   <div class="pf-roles">
     <span class="pf-role">L4 无人配送车质量</span>
     <span class="pf-role">测试平台开发</span>
     <span class="pf-role">压测与稳定性</span>
     <span class="pf-role">AI 评测</span>
+    <span class="pf-role">AI 音乐人 · xueyuan</span>
     <span class="pf-role">Python / Java / TypeScript</span>
   </div>
-  <p class="pf-desc">我从事质量工程和测试开发约十年，做过 SaaS 客服系统、百度搜索、支付宝基金与个人养老金、AI Phone，目前在九识负责 L4 无人配送车的端到端质量。日常工作包括测试策略、自动化、压测与稳定性、质量平台开发，以及 AI 模型和应用的效果评测。软件质量是我积累较多的领域；自动驾驶仿真、路测和算法链路仍在学习与实践中。</p>
+  <p class="pf-desc">我从事质量工程和测试开发约十年，做过 SaaS 客服系统、百度搜索、支付宝基金与个人养老金、AI Phone，目前在九识负责 L4 无人配送车的端到端质量。日常工作包括测试策略、自动化、压测与稳定性、质量平台开发，以及 AI 模型和应用的效果评测。工程之外，我以 xueyuan 的名字进行 AI 音乐创作，作品已在网易云音乐和 QQ 音乐发布。软件质量是我积累较多的领域；自动驾驶与音乐创作都仍在持续学习和实践。</p>
   <div class="profile-stats">
     <div class="pf-stat"><span class="pf-num"><span data-counter="10">0</span></span><span class="pf-lbl">质量工程年限</span></div>
     <div class="pf-stat"><span class="pf-num"><span data-counter="4">0</span></span><span class="pf-lbl">主要业务领域</span></div>
     <div class="pf-stat"><span class="pf-num"><span data-counter="5">0</span></span><span class="pf-lbl">段工作经历</span></div>
     <div class="pf-stat"><span class="pf-num">杭州</span><span class="pf-lbl">当前所在地</span></div>
   </div>
+</div>
+
+## AI 音乐创作
+
+<div class="profile-panel" markdown="0" style="--accent: 184,136,255">
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V6l10-2v12"/><path d="M9 9l10-2"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg></span> xueyuan · AI 音乐人</div>
+  <p>我把生成式 AI 作为音乐创作工具链的一部分：由人确定主题、情绪、叙事与最终取舍，再用 AI 扩展旋律、编曲和声音表达的可能性。当前作品已在 <a href="{{ site.netease_music_url }}" target="_blank" rel="noopener">网易云音乐</a>和 <a href="{{ site.qq_music_url }}" target="_blank" rel="noopener">QQ 音乐</a>上线；本站也提供《King Without a Crown》试听，默认保持暂停，不打扰阅读。</p>
+  <p><button class="btn btn-primary" type="button" data-music-play>播放《King Without a Crown》</button></p>
 </div>
 
 ## 工作概览
@@ -201,5 +210,5 @@ permalink: /about/2026/02/22/intro.html
 ## 一句话说明
 
 <div class="profile-quote" markdown="0">
-  <p>我是一名以测试开发和稳定性为主的质量工程师，目前把这些经验应用到 L4 无人配送车；也会自己开发质量工具，把高频流程接入 CI/CD，并用可复现的数据评估结果。</p>
+  <p>我是一名以测试开发和稳定性为主的质量工程师，目前把这些经验应用到 L4 无人配送车；也会自己开发质量工具，把高频流程接入 CI/CD，并用可复现的数据评估结果。工程之外，我也是 AI 音乐人 xueyuan，用另一种媒介练习叙事、审美与表达。</p>
 </div>

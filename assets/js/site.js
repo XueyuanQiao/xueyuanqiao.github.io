@@ -811,6 +811,416 @@
 
 
 /* ==========================================================================
+   Global background music player
+   Native Audio + Pointer-friendly ranges + Media Session + Web Audio visualizer
+   ========================================================================== */
+(function () {
+  "use strict";
+
+  var doc = document;
+  var STORE_VOLUME = "aurora-music-volume";
+  var STORE_COLLAPSED = "aurora-music-collapsed";
+  var SESSION_TIME = "aurora-music-time";
+
+  function ready(fn) {
+    if (doc.readyState !== "loading") fn();
+    else doc.addEventListener("DOMContentLoaded", fn);
+  }
+
+  ready(function initMusicPlayer() {
+    var dock = doc.querySelector("[data-music-player]");
+    if (!dock) return;
+
+    var audio = dock.querySelector("[data-music-audio]");
+    var toggle = dock.querySelector("[data-music-toggle]");
+    var collapse = dock.querySelector("[data-music-collapse]");
+    var seek = dock.querySelector("[data-music-seek]");
+    var currentEl = dock.querySelector("[data-music-current]");
+    var durationEl = dock.querySelector("[data-music-duration]");
+    var mute = dock.querySelector("[data-music-mute]");
+    var volume = dock.querySelector("[data-music-volume]");
+    var canvas = dock.querySelector("[data-music-visualizer]");
+    if (!audio || !toggle || !seek) return;
+
+    var seeking = false;
+    var frameId = 0;
+    var lastPositionUpdate = 0;
+    var audioContext = null;
+    var audioSource = null;
+    var audioCapture = null;
+    var silentGain = null;
+    var audioGraphPromise = null;
+    var analyser = null;
+    var frequencyData = null;
+    var canvasContext = canvas && canvas.getContext ? canvas.getContext("2d") : null;
+    var reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Explicitly keep every fresh page load paused. We only restore the position.
+    audio.pause();
+    audio.loop = false;
+    audio.volume = readNumber(localStorage, STORE_VOLUME, 0.72, 0, 1);
+    if (volume) volume.value = String(audio.volume);
+    setVolumePaint(audio.volume);
+
+    try {
+      if (localStorage.getItem(STORE_COLLAPSED) === "1") setCollapsed(true);
+    } catch (e) {}
+
+    toggle.addEventListener("click", function () {
+      if (audio.paused) playAudio();
+      else audio.pause();
+    });
+
+    doc.querySelectorAll("[data-music-play]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        setCollapsed(false);
+        playAudio();
+        window.setTimeout(function () { toggle.focus({ preventScroll: true }); }, 0);
+      });
+    });
+
+    if (collapse) {
+      collapse.addEventListener("click", function () {
+        setCollapsed(!dock.classList.contains("is-collapsed"));
+      });
+    }
+
+    seek.addEventListener("pointerdown", function () { seeking = true; });
+    seek.addEventListener("input", function () {
+      seeking = true;
+      seekToRange();
+    });
+    seek.addEventListener("change", function () {
+      seekToRange();
+      seeking = false;
+    });
+    window.addEventListener("pointerup", function () { seeking = false; }, { passive: true });
+
+    if (volume) {
+      volume.addEventListener("input", function () {
+        var next = clamp(parseFloat(volume.value), 0, 1);
+        audio.volume = next;
+        audio.muted = next === 0;
+        setVolumePaint(next);
+        syncMute();
+        try { localStorage.setItem(STORE_VOLUME, String(next)); } catch (e) {}
+      });
+    }
+
+    if (mute) {
+      mute.addEventListener("click", function () {
+        audio.muted = !audio.muted;
+        syncMute();
+      });
+    }
+
+    audio.addEventListener("loadedmetadata", function () {
+      var savedTime = readNumber(sessionStorage, SESSION_TIME, 0, 0, Math.max(0, audio.duration - 0.25));
+      if (savedTime > 0 && isFinite(audio.duration)) audio.currentTime = savedTime;
+      updateProgress(true);
+      setupMediaSession();
+    });
+
+    audio.addEventListener("durationchange", function () { updateProgress(true); });
+    audio.addEventListener("progress", updateBuffered);
+    audio.addEventListener("timeupdate", function () { if (!seeking) updateProgress(false); });
+    audio.addEventListener("play", function () {
+      dock.classList.add("is-playing");
+      dock.classList.remove("is-error");
+      toggle.setAttribute("aria-label", "暂停背景音乐");
+      toggle.setAttribute("aria-pressed", "true");
+      if (navigator.mediaSession) navigator.mediaSession.playbackState = "playing";
+      startRenderLoop();
+    });
+    audio.addEventListener("pause", function () {
+      dock.classList.remove("is-playing");
+      toggle.setAttribute("aria-label", "播放背景音乐");
+      toggle.setAttribute("aria-pressed", "false");
+      if (navigator.mediaSession) navigator.mediaSession.playbackState = "paused";
+      if (frameId) cancelAnimationFrame(frameId);
+      frameId = 0;
+      drawIdleVisualizer();
+      savePosition();
+    });
+    audio.addEventListener("ended", function () {
+      audio.currentTime = 0;
+      updateProgress(true);
+      savePosition();
+    });
+    audio.addEventListener("error", function () {
+      dock.classList.add("is-error");
+      toggle.setAttribute("aria-label", "音频加载失败，请稍后重试");
+    });
+
+    window.addEventListener("pagehide", savePosition);
+
+    if (canvas && canvasContext) {
+      var resize = function () {
+        var rect = canvas.getBoundingClientRect();
+        var ratio = Math.min(2, window.devicePixelRatio || 1);
+        canvas.width = Math.max(1, Math.round(rect.width * ratio));
+        canvas.height = Math.max(1, Math.round(rect.height * ratio));
+        canvasContext.setTransform(ratio, 0, 0, ratio, 0, 0);
+        drawIdleVisualizer();
+      };
+      if ("ResizeObserver" in window) new ResizeObserver(resize).observe(canvas);
+      else window.addEventListener("resize", resize, { passive: true });
+      resize();
+    }
+
+    updateProgress(true);
+    updateBuffered();
+    syncMute();
+
+    function playAudio() {
+      var promise = audio.play();
+      if (promise && promise.then) {
+        promise.then(function () {
+          // The visualizer is optional: only attach it after native playback has
+          // started so a suspended AudioContext can never block the track.
+          ensureAudioGraph();
+        }).catch(function () {
+          dock.classList.add("is-error");
+          toggle.setAttribute("aria-label", "播放失败，请再次点击重试");
+        });
+      } else {
+        ensureAudioGraph();
+      }
+    }
+
+    function setCollapsed(collapsed) {
+      dock.classList.toggle("is-collapsed", collapsed);
+      if (!collapse) return;
+      collapse.setAttribute("aria-expanded", collapsed ? "false" : "true");
+      collapse.setAttribute("aria-label", collapsed ? "展开播放器" : "收起播放器");
+      try { localStorage.setItem(STORE_COLLAPSED, collapsed ? "1" : "0"); } catch (e) {}
+    }
+
+    function seekToRange() {
+      if (!isFinite(audio.duration) || audio.duration <= 0) return;
+      var ratio = clamp(parseFloat(seek.value) / 1000, 0, 1);
+      audio.currentTime = ratio * audio.duration;
+      dock.style.setProperty("--seek", (ratio * 100).toFixed(3) + "%");
+      if (currentEl) currentEl.textContent = formatTime(audio.currentTime);
+      updateMediaPosition(true);
+    }
+
+    function updateProgress(forceMediaSession) {
+      var duration = isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 0;
+      var current = isFinite(audio.currentTime) ? audio.currentTime : 0;
+      var ratio = duration ? clamp(current / duration, 0, 1) : 0;
+      if (!seeking) seek.value = String(Math.round(ratio * 1000));
+      dock.style.setProperty("--seek", (ratio * 100).toFixed(3) + "%");
+      if (currentEl) currentEl.textContent = formatTime(current);
+      if (durationEl && duration) durationEl.textContent = formatTime(duration);
+      updateMediaPosition(forceMediaSession);
+    }
+
+    function updateBuffered() {
+      var duration = isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 0;
+      var end = 0;
+      if (duration && audio.buffered && audio.buffered.length) {
+        try { end = audio.buffered.end(audio.buffered.length - 1); } catch (e) {}
+      }
+      var ratio = duration ? clamp(end / duration, 0, 1) : 0;
+      dock.style.setProperty("--buffered", (ratio * 100).toFixed(3) + "%");
+    }
+
+    function setVolumePaint(value) {
+      dock.style.setProperty("--volume", (clamp(value, 0, 1) * 100).toFixed(1) + "%");
+    }
+
+    function syncMute() {
+      var muted = audio.muted || audio.volume === 0;
+      dock.classList.toggle("is-muted", muted);
+      if (mute) {
+        mute.setAttribute("aria-pressed", muted ? "true" : "false");
+        mute.setAttribute("aria-label", muted ? "取消静音" : "静音");
+      }
+    }
+
+    function savePosition() {
+      if (!isFinite(audio.currentTime)) return;
+      try { sessionStorage.setItem(SESSION_TIME, String(audio.currentTime)); } catch (e) {}
+    }
+
+    function startRenderLoop() {
+      if (frameId) cancelAnimationFrame(frameId);
+      var render = function () {
+        if (audio.paused || audio.ended) {
+          frameId = 0;
+          return;
+        }
+        if (!seeking) updateProgress(false);
+        drawActiveVisualizer();
+        frameId = requestAnimationFrame(render);
+      };
+      frameId = requestAnimationFrame(render);
+    }
+
+    function ensureAudioGraph() {
+      if (!canvasContext || audioGraphPromise) return;
+      var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+      try {
+        if (!audioContext) audioContext = new AudioContextClass();
+        var resume = audioContext.state === "suspended" ? audioContext.resume() : Promise.resolve();
+        audioGraphPromise = Promise.resolve(resume).then(function () {
+          if (audioContext.state !== "running") {
+            audioGraphPromise = null;
+            return;
+          }
+          var capture = audio.captureStream || audio.mozCaptureStream;
+          // captureStream keeps the <audio> element on its native playback
+          // path. Unlike createMediaElementSource, an unsupported/suspended
+          // visualizer therefore cannot interrupt the music.
+          if (!capture) {
+            audioGraphPromise = null;
+            return;
+          }
+          if (!audioCapture) audioCapture = capture.call(audio);
+          if (!audioSource) audioSource = audioContext.createMediaStreamSource(audioCapture);
+          if (!analyser) {
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 128;
+            analyser.smoothingTimeConstant = 0.84;
+            frequencyData = new Uint8Array(analyser.frequencyBinCount);
+            silentGain = audioContext.createGain();
+            silentGain.gain.value = 0;
+            audioSource.connect(analyser);
+            analyser.connect(silentGain);
+            silentGain.connect(audioContext.destination);
+          }
+          audioGraphPromise = null;
+        }).catch(function () {
+          audioGraphPromise = null;
+        });
+      } catch (e) {
+        audioGraphPromise = null;
+        analyser = null;
+        frequencyData = null;
+      }
+    }
+
+    function drawIdleVisualizer() {
+      if (!canvasContext || !canvas) return;
+      var width = canvas.getBoundingClientRect().width;
+      var height = canvas.getBoundingClientRect().height;
+      canvasContext.clearRect(0, 0, width, height);
+      var gradient = canvasContext.createLinearGradient(0, height, width, 0);
+      gradient.addColorStop(0, "rgba(141,124,255,0.02)");
+      gradient.addColorStop(0.55, "rgba(141,124,255,0.22)");
+      gradient.addColorStop(1, "rgba(89,227,255,0.46)");
+      canvasContext.fillStyle = gradient;
+      var count = 34;
+      var gap = 4;
+      var barWidth = Math.max(2, (width - gap * (count - 1)) / count);
+      for (var i = 0; i < count; i++) {
+        var wave = (Math.sin(i * 0.72) + 1) * 0.5;
+        var barHeight = 5 + wave * height * 0.16;
+        roundedBar(i * (barWidth + gap), height - barHeight, barWidth, barHeight, Math.min(3, barWidth / 2));
+      }
+    }
+
+    function drawActiveVisualizer() {
+      if (!canvasContext || !canvas) return;
+      if (!analyser || !frequencyData || reducedMotion) {
+        drawIdleVisualizer();
+        return;
+      }
+      analyser.getByteFrequencyData(frequencyData);
+      var width = canvas.getBoundingClientRect().width;
+      var height = canvas.getBoundingClientRect().height;
+      canvasContext.clearRect(0, 0, width, height);
+      var gradient = canvasContext.createLinearGradient(width * 0.25, height, width, 0);
+      gradient.addColorStop(0, "rgba(141,124,255,0.08)");
+      gradient.addColorStop(0.55, "rgba(141,124,255,0.58)");
+      gradient.addColorStop(1, "rgba(89,227,255,0.88)");
+      canvasContext.fillStyle = gradient;
+      var count = Math.min(42, frequencyData.length);
+      var gap = 3;
+      var barWidth = Math.max(2, (width - gap * (count - 1)) / count);
+      for (var i = 0; i < count; i++) {
+        var sample = frequencyData[Math.min(frequencyData.length - 1, Math.floor(i * 1.28))] / 255;
+        var shaped = Math.pow(sample, 1.32);
+        var barHeight = 4 + shaped * height * 0.78;
+        roundedBar(i * (barWidth + gap), height - barHeight, barWidth, barHeight, Math.min(3, barWidth / 2));
+      }
+    }
+
+    function roundedBar(x, y, width, height, radius) {
+      if (canvasContext.roundRect) {
+        canvasContext.beginPath();
+        canvasContext.roundRect(x, y, width, height, radius);
+        canvasContext.fill();
+      } else {
+        canvasContext.fillRect(x, y, width, height);
+      }
+    }
+
+    function setupMediaSession() {
+      if (!("mediaSession" in navigator)) return;
+      try {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: dock.getAttribute("data-track-title") || "King Without a Crown",
+          artist: dock.getAttribute("data-track-artist") || "xueyuan",
+          album: "xueyuan · AI Music"
+        });
+        navigator.mediaSession.setActionHandler("play", playAudio);
+        navigator.mediaSession.setActionHandler("pause", function () { audio.pause(); });
+        navigator.mediaSession.setActionHandler("seekbackward", function (details) {
+          audio.currentTime = Math.max(0, audio.currentTime - (details.seekOffset || 10));
+        });
+        navigator.mediaSession.setActionHandler("seekforward", function (details) {
+          audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + (details.seekOffset || 10));
+        });
+        navigator.mediaSession.setActionHandler("seekto", function (details) {
+          if (typeof details.seekTime === "number") audio.currentTime = details.seekTime;
+        });
+      } catch (e) {}
+    }
+
+    function updateMediaPosition(force) {
+      if (!("mediaSession" in navigator) || !navigator.mediaSession.setPositionState) return;
+      if (!isFinite(audio.duration) || audio.duration <= 0) return;
+      var now = performance.now();
+      if (!force && now - lastPositionUpdate < 1000) return;
+      lastPositionUpdate = now;
+      try {
+        navigator.mediaSession.setPositionState({
+          duration: audio.duration,
+          playbackRate: audio.playbackRate,
+          position: clamp(audio.currentTime, 0, audio.duration)
+        });
+      } catch (e) {}
+    }
+  });
+
+  function formatTime(seconds) {
+    if (!isFinite(seconds) || seconds < 0) return "0:00";
+    var whole = Math.floor(seconds);
+    var minutes = Math.floor(whole / 60);
+    var remainder = whole % 60;
+    return minutes + ":" + (remainder < 10 ? "0" : "") + remainder;
+  }
+
+  function clamp(value, min, max) {
+    if (!isFinite(value)) return min;
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function readNumber(storage, key, fallback, min, max) {
+    try {
+      var value = parseFloat(storage.getItem(key));
+      return isFinite(value) ? clamp(value, min, max) : fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+})();
+
+
+/* ==========================================================================
    Landing-only enhancements
    ========================================================================== */
 (function () {

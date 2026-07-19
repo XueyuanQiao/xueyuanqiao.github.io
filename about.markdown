@@ -1,7 +1,7 @@
 ---
 layout: landing
 title: 关于
-excerpt: 质量工程、测试开发与无人车质量实践
+excerpt: 质量工程、AI 全栈实践、无人车质量与 AI 音乐创作
 permalink: /about.html
 ---
 
@@ -45,7 +45,7 @@ permalink: /about.html
 
         <p class="about-typed">
             <span data-typed
-                  data-typed-strings='["质量工程与测试开发","L4 无人配送车质量","Python / FastAPI / Pytest","React / TypeScript","AI 评测：WER / LLM-as-a-Judge","CI/CD 与质量平台"]'>
+                  data-typed-strings='["质量工程与测试开发","L4 无人配送车质量","Python / FastAPI / Pytest","React / TypeScript","AI 评测：WER / LLM-as-a-Judge","AI 音乐人 · xueyuan","CI/CD 与质量平台"]'>
             </span><span class="caret">_</span>
         </p>
 
@@ -65,6 +65,10 @@ permalink: /about.html
             <span class="status-pill">
                 <span class="status-key">方向</span>
                 <span class="status-val">测试平台 / AI 评测</span>
+            </span>
+            <span class="status-pill">
+                <span class="status-key">创作</span>
+                <span class="status-val">AI 音乐人 · xueyuan</span>
             </span>
             <span class="status-pill">
                 <span class="status-key">从业计时</span>
@@ -109,7 +113,7 @@ permalink: /about.html
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">你是谁</span>
-                <span class="snap-val" data-text="乔雪源 / Xueyuan，一名把质量工程、测试开发与 AI 应用连接起来的工程师。"></span>
+                <span class="snap-val" data-text="乔雪源 / Xueyuan，一名连接质量工程、AI 应用与音乐创作的工程师和 AI 音乐人。"></span>
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">风格</span>
@@ -181,7 +185,7 @@ permalink: /about.html
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">形态</span>
-                <span class="snap-val" data-text="质量平台 + CI/CD 管线 + AI 评测 + 持续的技术写作。"></span>
+                <span class="snap-val" data-text="质量平台 + CI/CD 管线 + AI 评测 + 技术写作 + AI 音乐作品。"></span>
             </li>
         </ol>
 
@@ -221,6 +225,41 @@ permalink: /about.html
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
             </span>
         </a>
+    </div>
+</section>
+
+<!-- AI music identity -->
+<section class="landing-section about-music-section" id="music">
+    <header class="section-head">
+        <span class="section-eyebrow">// creative.identity</span>
+        <h2>工程之外，我也做音乐 · AI Musician</h2>
+    </header>
+
+    <div class="artist-card artist-card--about">
+        <div class="artist-card__visual" aria-hidden="true">
+            <div class="artist-orbit artist-orbit--outer"></div>
+            <div class="artist-orbit artist-orbit--inner"></div>
+            <div class="artist-disc">
+                <span>XY</span>
+                <small>AI MUSIC</small>
+            </div>
+            <div class="artist-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="artist-card__content">
+            <span class="artist-card__badge"><span></span> ARTIST PROFILE ONLINE</span>
+            <h3>xueyuan · AI 音乐人</h3>
+            <p>音乐是我在工程工作之外建立的另一条表达通道。创作时，我会先定义作品想传达的主题、情绪和画面，再使用生成式 AI 参与旋律、编曲和声音方案的探索，并通过多轮筛选与调整完成作品。这个身份与质量工程并不冲突：一个追求可验证的系统，另一个练习对感受与表达负责。</p>
+            <p class="artist-card__note">目前以 <strong>xueyuan</strong> 名义在网易云音乐与 QQ 音乐发布作品；本站提供《King Without a Crown》试听，播放器默认暂停，是否播放完全交给访问者决定。</p>
+            <div class="artist-card__actions">
+                <button class="btn btn-primary" type="button" data-music-play>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6a1 1 0 0 0 1.55.83l10.2-6.8a1 1 0 0 0 0-1.66L9.55 4.37A1 1 0 0 0 8 5.2z"/></svg>
+                    播放站内作品
+                </button>
+                <a class="btn btn-ghost" href="{{ site.netease_music_url }}" target="_blank" rel="noopener">在网易云音乐关注</a>
+                <a class="btn btn-ghost" href="{{ site.qq_music_url }}" target="_blank" rel="noopener">在 QQ 音乐关注</a>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -463,6 +502,26 @@ permalink: /about.html
             </div>
             <div class="contact-name">GitHub</div>
             <div class="contact-value">@{{ site.github_username }}</div>
+            <div class="contact-arrow">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </div>
+        </a>
+        <a class="contact-card" href="{{ site.netease_music_url }}" target="_blank" rel="noopener">
+            <div class="contact-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.2 5.5A7.2 7.2 0 1 1 5.4 8"/><path d="M6.2 3.5c4.5-.2 7.6 2.2 8.2 5.5.5 2.8-1.2 5.2-3.8 5.6-2.1.3-4-1-4.3-2.8-.2-1.5.8-2.9 2.3-3.1 1.2-.2 2.3.5 2.5 1.6"/></svg>
+            </div>
+            <div class="contact-name">NetEase Music</div>
+            <div class="contact-value">歌手 xueyuan</div>
+            <div class="contact-arrow">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </div>
+        </a>
+        <a class="contact-card" href="{{ site.qq_music_url }}" target="_blank" rel="noopener">
+            <div class="contact-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18.2V6.8l9-2.2V16"/><path d="M9 10.2l9-2.2"/><ellipse cx="6.5" cy="18.2" rx="2.5" ry="1.8"/><ellipse cx="15.5" cy="16" rx="2.5" ry="1.8"/></svg>
+            </div>
+            <div class="contact-name">QQ Music</div>
+            <div class="contact-value">歌手 xueyuan</div>
             <div class="contact-arrow">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
             </div>
