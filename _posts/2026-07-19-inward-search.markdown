@@ -16,12 +16,7 @@ featured: true
 featured_rank: 1
 ---
 
-最近刷抖音时，先刷到的是周星驰的一段采访。画面里，他说了一句：**Be water, my friend.**
-
-<figure class="post-figure" markdown="0">
-  <img src="/images/26071901-cat-angel-share.jpg" width="1080" height="720" loading="eager" fetchpriority="high" decoding="async" alt="戴着光环的喵喵，Be water 主题封面" itemprop="image">
-  <figcaption>Be water, my friend.</figcaption>
-</figure>
+<p class="water-opening">最近刷抖音时，先刷到的是周星驰的一段采访。画面里，他说了一句：<strong>Be water, my friend.</strong></p>
 
 顺着这句话查下去，才发现它来自李小龙。李小龙一直是周星驰的偶像，周星驰的电影里也留了不少向他致敬的痕迹。影响被接住以后，长出来的仍然是周星驰自己的东西：功夫、荒诞、小人物的狼狈，还有笑过以后留下的一点苦味。
 
