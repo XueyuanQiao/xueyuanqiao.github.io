@@ -1089,6 +1089,9 @@
     var currentTrackCached = false;
     var cacheRequests = {};
     var cacheStatusTimer = 0;
+    var embeddedVideoFrames = [];
+    var embeddedVideoPauseBound = false;
+    var videoPauseStatusTimer = 0;
 
     try { resumeAfterNavigation = sessionStorage.getItem(SESSION_PLAYING) === "1"; } catch (e) {}
 
@@ -1105,6 +1108,8 @@
     if (volume) volume.value = String(audio.volume);
     setVolumePaint(audio.volume);
     initMusicCache();
+    initEmbeddedVideoPause();
+    doc.addEventListener("aurora:page-ready", initEmbeddedVideoPause);
 
     var savedCollapsed = null;
     try { savedCollapsed = localStorage.getItem(STORE_COLLAPSED); } catch (e) {}
@@ -1250,7 +1255,9 @@
     });
     audio.addEventListener("pause", function () {
       dock.classList.remove("is-playing");
-      if (statusEl && !dock.classList.contains("is-resume-pending")) statusEl.textContent = defaultStatusText();
+      if (statusEl && !dock.classList.contains("is-resume-pending") && !dock.classList.contains("is-video-paused")) {
+        statusEl.textContent = defaultStatusText();
+      }
       toggle.setAttribute("aria-label", "播放背景音乐");
       toggle.setAttribute("aria-pressed", "false");
       if (!isPageLeaving && !isTrackSwitching) setPlaybackIntent(false);
@@ -1325,6 +1332,81 @@
       window.setTimeout(function () {
         if (audio.readyState === 0 && !resumeAttempted) retryAudioLoad();
       }, 320);
+    }
+
+    function initEmbeddedVideoPause() {
+      embeddedVideoFrames = Array.prototype.slice.call(doc.querySelectorAll(".post-video iframe"));
+      if (embeddedVideoPauseBound) return;
+      embeddedVideoPauseBound = true;
+
+      window.addEventListener("message", function (event) {
+        if (!isTrustedEmbeddedVideoOrigin(event.origin)) return;
+        var fromKnownPlayer = embeddedVideoFrames.some(function (frame) {
+          return frame.contentWindow === event.source;
+        });
+        if (fromKnownPlayer && isEmbeddedVideoPlayMessage(event.data)) pauseMusicForVideo();
+      });
+
+      // Cross-origin players do not consistently expose their playback state.
+      // When a user starts operating an iframe, focus moves from this window to
+      // the player. This is a dependable fallback for click/tap and keyboard play.
+      window.addEventListener("blur", function () {
+        window.setTimeout(function () {
+          var active = doc.activeElement;
+          if (active && embeddedVideoFrames.indexOf(active) !== -1) pauseMusicForVideo();
+        }, 0);
+      });
+
+      doc.addEventListener("fullscreenchange", function () {
+        if (doc.fullscreenElement && embeddedVideoFrames.indexOf(doc.fullscreenElement) !== -1) {
+          pauseMusicForVideo();
+        }
+      });
+    }
+
+    function pauseMusicForVideo() {
+      if (audio.paused || audio.ended) return;
+      dock.classList.add("is-video-paused");
+      audio.pause();
+      if (statusEl) statusEl.textContent = "视频播放中 · 音乐已暂停";
+      if (videoPauseStatusTimer) window.clearTimeout(videoPauseStatusTimer);
+      videoPauseStatusTimer = window.setTimeout(function () {
+        dock.classList.remove("is-video-paused");
+        if (statusEl && audio.paused) statusEl.textContent = defaultStatusText();
+      }, 2800);
+    }
+
+    function isTrustedEmbeddedVideoOrigin(origin) {
+      try {
+        var host = new URL(origin).hostname;
+        return host === "bilibili.com" || host.slice(-13) === ".bilibili.com";
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function isEmbeddedVideoPlayMessage(payload) {
+      if (typeof payload === "string") {
+        var trimmed = payload.trim();
+        if (!trimmed) return false;
+        try { return isEmbeddedVideoPlayMessage(JSON.parse(trimmed)); }
+        catch (e) { return isPlayStateToken(trimmed); }
+      }
+      if (!payload || typeof payload !== "object") return false;
+
+      var eventKeys = ["event", "action", "state", "status", "method", "name", "type", "cmd", "command"];
+      for (var i = 0; i < eventKeys.length; i += 1) {
+        var value = payload[eventKeys[i]];
+        if (typeof value === "string" && isPlayStateToken(value)) return true;
+      }
+      return payload.data && payload.data !== payload && isEmbeddedVideoPlayMessage(payload.data);
+    }
+
+    function isPlayStateToken(value) {
+      var token = String(value).trim().toLowerCase();
+      if (!token || /(pause|paused|progress|timeupdate|ready|seek|buffer|canplay|playback)/.test(token)) return false;
+      return token === "play" || token === "playing" || token === "onplay" ||
+        /(^|[_:.-])(play|playing)($|[_:.-])/.test(token);
     }
 
     function initMusicCache() {

@@ -5,7 +5,7 @@ date: 2026-07-19 20:30:00 +0800
 excerpt: 从抖音刷到周星驰的一段采访，又追到李小龙关于水的比喻。恰逢最近工作有些不顺，借这句话记下几句：该吐槽就吐槽，该调整就调整，路还要继续走。
 categories: life reflection
 permalink: /life/2026/07/19/inward-search.html
-image: /images/26071901-cat-warm-share.jpg
+image: /images/26071901-cat-cute-share.jpg
 reading_meta: 全文约 2500 字 · 约 8 分钟阅读
 visual_theme: water
 featured: true
@@ -94,7 +94,7 @@ featured_rank: 1
 有猫猫陪着我，已经四年多了。四年里，工作和生活换过一些章节，它一直在。它不懂我为什么烦，也不用懂。看它安安静静待着，那些急着在当晚想明白的事，好像也可以先放一放。
 
 <figure class="post-figure" markdown="0">
-  <img src="/images/26071901-cat-warm.webp" alt="陪伴我四年多的猫猫" width="1080" height="720" loading="lazy" decoding="async" data-lightbox-theme="warm">
+  <img src="/images/26071901-cat-cute.webp" alt="陪伴我四年多的猫猫" width="1080" height="720" loading="lazy" decoding="async" data-lightbox-theme="warm">
   <figcaption>陪伴我四年多的猫猫</figcaption>
 </figure>
 

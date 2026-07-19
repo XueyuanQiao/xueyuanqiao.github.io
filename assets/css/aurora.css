@@ -1841,27 +1841,29 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 /* Warm photo treatment: keep the cat portrait bright and comforting in preview. */
 .lightbox[data-theme="warm"] {
   background:
-    radial-gradient(circle at 50% 34%, rgba(255, 255, 255, 0.96) 0%, rgba(255, 244, 226, 0.94) 42%, rgba(245, 214, 180, 0.92) 100%);
-  backdrop-filter: blur(10px) saturate(0.92);
-  -webkit-backdrop-filter: blur(10px) saturate(0.92);
+    radial-gradient(circle at 24% 20%, rgba(255, 255, 255, 0.98), rgba(255, 230, 242, 0.92) 34%, transparent 62%),
+    radial-gradient(circle at 80% 18%, rgba(242, 232, 255, 0.94), transparent 52%),
+    linear-gradient(145deg, rgba(255, 247, 251, 0.96), rgba(255, 222, 235, 0.93) 58%, rgba(239, 231, 255, 0.94));
+  backdrop-filter: blur(10px) saturate(1.02);
+  -webkit-backdrop-filter: blur(10px) saturate(1.02);
 }
 
 .lightbox[data-theme="warm"] img {
   box-shadow:
-    0 28px 72px rgba(123, 73, 42, 0.26),
+    0 28px 72px rgba(150, 70, 110, 0.2),
     0 0 0 1px rgba(255, 255, 255, 0.72),
-    0 0 42px rgba(239, 161, 89, 0.16);
+    0 0 48px rgba(220, 145, 255, 0.19);
 }
 
 .lightbox[data-theme="warm"] figcaption {
-  color: rgba(102, 61, 43, 0.82);
+  color: rgba(112, 55, 83, 0.84);
 }
 
 .lightbox[data-theme="warm"] .lightbox-close {
-  color: #6c402f;
-  background: rgba(255, 250, 242, 0.78);
-  border-color: rgba(142, 88, 58, 0.2);
-  box-shadow: 0 8px 24px rgba(116, 66, 38, 0.14);
+  color: #934b6b;
+  background: rgba(255, 249, 252, 0.84);
+  border-color: rgba(194, 96, 141, 0.22);
+  box-shadow: 0 8px 24px rgba(151, 72, 112, 0.15);
 }
 
 .article-content img.image-zoom {
@@ -7422,23 +7424,84 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
    Water essay visual theme
    Scoped through `visual_theme: water` so other posts keep their own tone.
    ========================================================================== */
+body:has(.article-theme-water) .bg-aurora {
+  background:
+    radial-gradient(56% 46% at 10% 5%, rgba(255, 162, 198, 0.36), transparent 66%),
+    radial-gradient(50% 42% at 90% 10%, rgba(190, 164, 248, 0.3), transparent 66%),
+    radial-gradient(58% 48% at 55% 104%, rgba(255, 205, 169, 0.3), transparent 66%),
+    linear-gradient(180deg, #fff8fb 0%, #f8f0ff 52%, #fff8f2 100%);
+  filter: saturate(1.04);
+}
+
+body:has(.article-theme-water) .bg-grid {
+  background-image:
+    linear-gradient(rgba(224, 128, 173, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(160, 125, 211, 0.05) 1px, transparent 1px);
+  opacity: 0.62;
+}
+
+body:has(.article-theme-water) .menu-toggle {
+  --text-1: #744967;
+  border-color: rgba(226, 129, 174, 0.28);
+  background: rgba(255, 249, 252, 0.9);
+  box-shadow: 0 10px 28px rgba(127, 75, 116, 0.14);
+}
+
+body:has(.article-theme-water) .sidebar {
+  --bg-0: #fff8fb;
+  --bg-1: #f9f0fa;
+  --bg-2: #fffdfd;
+  --bg-3: #fff0f6;
+  --surface: rgba(255, 250, 252, 0.82);
+  --surface-strong: rgba(255, 252, 253, 0.95);
+  --surface-border: rgba(216, 130, 171, 0.22);
+  --hairline: rgba(159, 104, 145, 0.12);
+  --text-1: #4b344f;
+  --text-2: #68536a;
+  --text-3: #8d748d;
+  --text-mute: #a68fa5;
+  --brand: #e86fa5;
+  --brand-2: #8c67d4;
+  --brand-3: #ff967e;
+  border-right-color: rgba(222, 133, 176, 0.22);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 182, 212, 0.3), transparent 17rem),
+    linear-gradient(180deg, rgba(255, 251, 252, 0.96), rgba(248, 239, 251, 0.96));
+  box-shadow: 18px 0 48px rgba(109, 68, 104, 0.08);
+}
+
 .article-theme-water {
-  --water-cyan: #55e8ff;
-  --water-blue: #5b7cff;
-  --water-violet: #ad63ff;
-  --water-peach: #ffc889;
+  --water-cyan: #f07caf;
+  --water-blue: #ff9c8d;
+  --water-violet: #9a78e8;
+  --water-peach: #ffc996;
+  --brand: #e86fa5;
+  --brand-2: #8c67d4;
+  --brand-3: #ff967e;
+  --text-1: #4b344f;
+  --text-2: #68536a;
+  --text-3: #8d748d;
+  --text-mute: #a68fa5;
+  --bg-2: #fff9fc;
+  --bg-3: #fff0f6;
+  --surface: rgba(255, 250, 252, 0.86);
+  --surface-strong: rgba(255, 252, 253, 0.96);
+  --surface-border: rgba(218, 135, 176, 0.24);
+  --hairline: rgba(164, 103, 145, 0.13);
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  border-color: color-mix(in srgb, var(--water-cyan) 24%, var(--surface-border));
+  color: var(--text-2);
+  border-color: rgba(232, 132, 176, 0.28);
   background:
-    radial-gradient(circle at 12% 2%, color-mix(in srgb, var(--water-cyan) 12%, transparent), transparent 24rem),
-    radial-gradient(circle at 92% 8%, color-mix(in srgb, var(--water-violet) 10%, transparent), transparent 28rem),
-    linear-gradient(155deg, color-mix(in srgb, var(--bg-2) 84%, transparent), var(--surface));
+    radial-gradient(circle at 9% 2%, rgba(255, 158, 197, 0.28), transparent 25rem),
+    radial-gradient(circle at 94% 7%, rgba(188, 157, 248, 0.24), transparent 28rem),
+    radial-gradient(circle at 80% 64%, rgba(255, 211, 171, 0.24), transparent 24rem),
+    linear-gradient(155deg, rgba(255, 252, 249, 0.98), rgba(255, 241, 247, 0.97) 52%, rgba(246, 240, 255, 0.96));
   box-shadow:
-    0 32px 90px rgba(0, 0, 0, 0.38),
-    0 0 0 1px color-mix(in srgb, var(--water-blue) 10%, transparent),
-    0 0 70px color-mix(in srgb, var(--water-cyan) 8%, transparent);
+    0 32px 90px rgba(106, 65, 100, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.82) inset,
+    0 0 72px rgba(244, 126, 179, 0.12);
 }
 
 .article-theme-water::before,
@@ -7452,23 +7515,36 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 }
 
 .article-theme-water::before {
-  top: -220px;
-  right: -180px;
-  width: 520px;
-  height: 520px;
-  border: 1px solid color-mix(in srgb, var(--water-cyan) 18%, transparent);
+  top: -190px;
+  right: -150px;
+  width: 490px;
+  height: 490px;
+  border: 2px dashed rgba(233, 116, 166, 0.18);
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.94) 0 5px, transparent 6px),
+    radial-gradient(circle at 55% 18%, rgba(255, 202, 224, 0.78) 0 8px, transparent 9px),
+    radial-gradient(circle at 69% 38%, rgba(207, 183, 255, 0.72) 0 6px, transparent 7px),
+    radial-gradient(circle at 42% 54%, rgba(255, 219, 189, 0.7) 0 9px, transparent 10px),
+    radial-gradient(circle, rgba(255, 220, 234, 0.56), rgba(245, 231, 255, 0.18) 64%, transparent 70%);
   box-shadow:
-    inset 0 0 80px color-mix(in srgb, var(--water-blue) 12%, transparent),
-    0 0 80px color-mix(in srgb, var(--water-cyan) 8%, transparent);
+    inset 0 0 90px rgba(255, 158, 198, 0.13),
+    0 0 90px rgba(193, 154, 246, 0.12);
   animation: water-orbit 18s ease-in-out infinite alternate;
 }
 
 .article-theme-water::after {
-  top: 360px;
-  left: -210px;
-  width: 430px;
-  height: 430px;
-  background: radial-gradient(circle, color-mix(in srgb, var(--water-violet) 9%, transparent), transparent 68%);
+  content: "♡  ✦  ♡";
+  top: 390px;
+  left: -30px;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  color: rgba(221, 101, 159, 0.2);
+  background: none;
+  font-family: Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  letter-spacing: 0.24em;
+  filter: drop-shadow(0 8px 18px rgba(189, 130, 225, 0.18));
   animation: water-drift 15s ease-in-out infinite alternate;
 }
 
@@ -7477,15 +7553,15 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   overflow: hidden;
   margin: 0 0 42px;
   padding: clamp(24px, 4vw, 42px);
-  border: 1px solid color-mix(in srgb, var(--water-cyan) 22%, var(--surface-border));
+  border: 1px solid rgba(232, 132, 176, 0.28);
   border-radius: 22px;
   background:
-    linear-gradient(135deg, color-mix(in srgb, var(--water-blue) 11%, transparent), transparent 52%),
-    radial-gradient(circle at 88% 16%, color-mix(in srgb, var(--water-violet) 16%, transparent), transparent 34%),
-    color-mix(in srgb, var(--bg-2) 76%, transparent);
+    radial-gradient(circle at 13% 10%, rgba(255, 183, 211, 0.32), transparent 35%),
+    radial-gradient(circle at 88% 14%, rgba(198, 172, 249, 0.28), transparent 35%),
+    linear-gradient(135deg, rgba(255, 252, 250, 0.94), rgba(255, 238, 246, 0.88) 54%, rgba(245, 239, 255, 0.92));
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 22px 55px rgba(0, 0, 0, 0.26);
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 22px 55px rgba(135, 80, 123, 0.14);
 }
 
 .article-theme-water .article-header::before {
@@ -7494,16 +7570,16 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   align-items: center;
   margin-bottom: 14px;
   padding: 5px 10px;
-  border: 1px solid color-mix(in srgb, var(--water-cyan) 35%, transparent);
+  border: 1px solid rgba(228, 113, 165, 0.36);
   border-radius: 999px;
-  color: color-mix(in srgb, var(--water-cyan) 78%, var(--text-1));
-  background: color-mix(in srgb, var(--water-cyan) 8%, transparent);
+  color: #a54d76;
+  background: rgba(255, 249, 252, 0.72);
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  box-shadow: 0 0 24px color-mix(in srgb, var(--water-cyan) 12%, transparent);
+  box-shadow: 0 8px 24px rgba(215, 99, 152, 0.13);
 }
 
 .article-theme-water .article-header::after {
@@ -7513,11 +7589,12 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   bottom: -94px;
   width: 270px;
   height: 170px;
-  border: 1px solid color-mix(in srgb, var(--water-cyan) 20%, transparent);
+  border: 1px solid rgba(237, 122, 170, 0.23);
   border-radius: 50%;
   box-shadow:
-    0 -24px 0 -23px color-mix(in srgb, var(--water-violet) 25%, transparent),
-    0 -48px 0 -47px color-mix(in srgb, var(--water-blue) 28%, transparent);
+    0 -24px 0 -23px rgba(191, 151, 242, 0.34),
+    0 -48px 0 -47px rgba(255, 158, 194, 0.4),
+    0 -72px 0 -71px rgba(255, 199, 151, 0.36);
   transform: rotate(-8deg);
   opacity: 0.72;
 }
@@ -7526,12 +7603,12 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   position: relative;
   z-index: 1;
   margin-bottom: 18px;
-  background: linear-gradient(105deg, #f9fdff 0%, var(--water-cyan) 30%, #d7d9ff 52%, var(--water-violet) 74%, #f9fdff 100%);
+  background: linear-gradient(105deg, #573650 0%, #d75f91 30%, #925fc7 54%, #ef856e 76%, #573650 100%);
   background-size: 220% auto;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 8px 28px color-mix(in srgb, var(--water-blue) 26%, transparent));
+  filter: drop-shadow(0 8px 24px rgba(203, 100, 156, 0.16));
   animation: water-title-flow 8s linear infinite;
 }
 
@@ -7546,39 +7623,47 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 }
 
 .article-theme-water .toc {
-  border-color: color-mix(in srgb, var(--water-cyan) 22%, var(--surface-border));
+  border-color: rgba(225, 132, 174, 0.24);
   background:
-    linear-gradient(120deg, color-mix(in srgb, var(--water-blue) 8%, transparent), color-mix(in srgb, var(--water-violet) 5%, transparent)),
-    var(--surface);
-  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.18);
+    radial-gradient(circle at 12% 0%, rgba(255, 178, 209, 0.24), transparent 38%),
+    linear-gradient(120deg, rgba(255, 251, 252, 0.94), rgba(246, 239, 255, 0.88));
+  box-shadow: 0 14px 38px rgba(124, 74, 118, 0.1);
 }
 
 .article-theme-water .article-content > p:first-of-type strong {
   color: transparent;
-  background: linear-gradient(100deg, var(--water-cyan), #dce2ff 46%, var(--water-violet));
+  background: linear-gradient(100deg, #d6598e, #8b64cb 52%, #e77d6b);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 3px 12px color-mix(in srgb, var(--water-cyan) 28%, transparent));
+  filter: drop-shadow(0 3px 12px rgba(213, 89, 142, 0.18));
 }
 
 .article-theme-water .article-content h2 {
   border-bottom-color: transparent;
-  background: linear-gradient(90deg, var(--text-1), color-mix(in srgb, var(--water-cyan) 72%, var(--text-1)) 68%, var(--water-violet));
+  background: linear-gradient(90deg, #4d354f, #cc5d8d 64%, #8c64ca);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .article-theme-water .article-content h2::before {
+  content: "♡";
+  display: inline-grid;
+  place-items: center;
   width: 17px;
   height: 17px;
-  border-radius: 68% 32% 70% 30%;
-  background: linear-gradient(145deg, #dffbff, var(--water-cyan) 35%, var(--water-blue) 72%, var(--water-violet));
+  border-radius: 58% 42% 62% 38%;
+  color: #fff;
+  background: linear-gradient(145deg, #ffabc9, var(--water-cyan) 42%, var(--water-violet));
   box-shadow:
-    inset 2px 2px 4px rgba(255, 255, 255, 0.45),
-    0 7px 20px color-mix(in srgb, var(--water-cyan) 42%, transparent);
-  transform: translateY(-1px) rotate(45deg);
+    inset 2px 2px 4px rgba(255, 255, 255, 0.48),
+    0 7px 20px rgba(222, 101, 158, 0.28);
+  font-family: Georgia, serif;
+  font-size: 0.7rem;
+  line-height: 1;
+  -webkit-text-fill-color: #fff;
+  transform: translateY(-1px) rotate(-8deg);
 }
 
 .article-theme-water .article-content h2::after {
@@ -7588,27 +7673,27 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   right: 0;
   bottom: -1px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--water-cyan) 18%, var(--water-blue) 55%, var(--water-violet) 82%, transparent);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--water-cyan) 36%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(239, 122, 174, 0.56) 18%, rgba(255, 166, 142, 0.52) 55%, rgba(164, 126, 224, 0.48) 82%, transparent);
+  box-shadow: 0 0 12px rgba(224, 104, 160, 0.14);
 }
 
 .article-theme-water .article-content h3::before {
   width: 3px;
-  background: linear-gradient(180deg, var(--water-cyan), var(--water-blue), var(--water-violet));
-  box-shadow: 0 0 13px color-mix(in srgb, var(--water-cyan) 46%, transparent);
+  background: linear-gradient(180deg, var(--water-cyan), var(--water-peach), var(--water-violet));
+  box-shadow: 0 0 13px rgba(225, 102, 161, 0.26);
 }
 
 .article-theme-water .article-content blockquote {
   overflow: hidden;
   padding: clamp(22px, 4vw, 34px) clamp(22px, 5vw, 42px) clamp(22px, 4vw, 32px) clamp(58px, 8vw, 78px);
-  border-color: color-mix(in srgb, var(--water-cyan) 34%, transparent);
+  border-color: rgba(229, 125, 170, 0.28);
   background:
-    radial-gradient(circle at 12% 14%, color-mix(in srgb, var(--water-cyan) 15%, transparent), transparent 38%),
-    linear-gradient(135deg, color-mix(in srgb, var(--water-blue) 13%, transparent), color-mix(in srgb, var(--water-violet) 9%, transparent));
+    radial-gradient(circle at 12% 14%, rgba(255, 178, 209, 0.28), transparent 38%),
+    linear-gradient(135deg, rgba(255, 253, 250, 0.9), rgba(249, 237, 255, 0.78));
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 18px 48px rgba(0, 0, 0, 0.22),
-    0 0 32px color-mix(in srgb, var(--water-cyan) 8%, transparent);
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 18px 48px rgba(120, 74, 112, 0.12),
+    0 0 32px rgba(236, 122, 174, 0.08);
   font-family: "Georgia", "Source Han Serif SC", serif;
   font-size: 1.08em;
   line-height: 1.82;
@@ -7618,8 +7703,8 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   z-index: 2;
   left: 18px;
   top: 13px;
-  color: var(--water-cyan);
-  text-shadow: 0 0 22px color-mix(in srgb, var(--water-cyan) 55%, transparent);
+  color: #dc6598;
+  text-shadow: 0 0 22px rgba(221, 101, 152, 0.28);
 }
 
 .article-theme-water .article-content blockquote::after {
@@ -7650,15 +7735,15 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   top: -13px;
   left: 18px;
   padding: 5px 10px;
-  border: 1px solid color-mix(in srgb, var(--water-cyan) 50%, transparent);
+  border: 1px solid rgba(233, 131, 176, 0.46);
   border-radius: 999px;
-  color: #ecfdff;
-  background: color-mix(in srgb, #07131f 90%, transparent);
+  color: #914b6c;
+  background: rgba(255, 250, 252, 0.95);
   font-family: var(--font-mono);
   font-size: 0.64rem;
   font-weight: 700;
   letter-spacing: 0.12em;
-  box-shadow: 0 0 22px color-mix(in srgb, var(--water-cyan) 22%, transparent);
+  box-shadow: 0 8px 22px rgba(204, 91, 146, 0.16);
 }
 
 .article-theme-water .post-video-frame {
@@ -7666,10 +7751,10 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   padding: 3px;
   border: 0;
   border-radius: 18px;
-  background: linear-gradient(125deg, var(--water-cyan), var(--water-blue) 44%, var(--water-violet) 72%, var(--water-peach));
+  background: linear-gradient(125deg, #fff8fb, var(--water-cyan) 26%, var(--water-violet) 58%, var(--water-peach) 82%, #fffaf5);
   box-shadow:
-    0 28px 72px rgba(0, 0, 0, 0.42),
-    0 0 42px color-mix(in srgb, var(--water-blue) 20%, transparent);
+    0 28px 72px rgba(101, 63, 95, 0.2),
+    0 0 42px rgba(225, 103, 161, 0.13);
 }
 
 .article-theme-water .post-video-frame::after {
@@ -7678,7 +7763,7 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   inset: 3px;
   z-index: 2;
   border-radius: 15px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 17%, transparent 83%, rgba(85, 232, 255, 0.06));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 17%, transparent 83%, rgba(255, 154, 199, 0.08));
   pointer-events: none;
 }
 
@@ -7690,11 +7775,27 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 }
 
 .article-theme-water .post-video figcaption {
-  color: color-mix(in srgb, var(--text-3) 86%, var(--water-cyan));
+  color: #8d7189;
 }
 
 .article-theme-water .post-figure {
   position: relative;
+  isolation: isolate;
+}
+
+.article-theme-water .post-figure::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 8% -5% 4%;
+  border-radius: 30%;
+  background:
+    radial-gradient(circle at 20% 24%, rgba(255, 151, 194, 0.34), transparent 42%),
+    radial-gradient(circle at 82% 20%, rgba(199, 166, 255, 0.3), transparent 43%),
+    radial-gradient(circle at 52% 82%, rgba(255, 205, 173, 0.24), transparent 48%);
+  filter: blur(30px);
+  opacity: 0.78;
+  pointer-events: none;
 }
 
 .article-theme-water .post-figure::before {
@@ -7704,31 +7805,33 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   top: -11px;
   right: 18px;
   padding: 5px 10px;
-  border: 1px solid rgba(255, 213, 167, 0.5);
+  border: 1px solid rgba(255, 155, 196, 0.48);
   border-radius: 999px;
-  color: #704229;
-  background: rgba(255, 244, 226, 0.9);
+  color: #9a4d6b;
+  background: linear-gradient(135deg, rgba(255, 250, 253, 0.96), rgba(255, 226, 240, 0.94) 58%, rgba(241, 231, 255, 0.95));
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 800;
   letter-spacing: 0.1em;
-  box-shadow: 0 8px 24px rgba(121, 72, 40, 0.18);
+  box-shadow:
+    0 8px 24px rgba(154, 75, 111, 0.16),
+    0 0 22px rgba(228, 142, 255, 0.14);
 }
 
 .article-theme-water .post-figure img {
-  border-color: rgba(255, 218, 177, 0.48);
+  border-color: rgba(255, 173, 209, 0.5);
   background:
     linear-gradient(var(--bg-2), var(--bg-2)) padding-box,
-    linear-gradient(135deg, var(--water-cyan), var(--water-blue) 34%, var(--water-peach) 72%, #ffe8c8) border-box;
+    linear-gradient(135deg, #fff8fc, #ff9fc6 28%, #c9b0ff 58%, #ffc5a8 82%, #fff9fd) border-box;
   box-shadow:
-    0 28px 72px rgba(0, 0, 0, 0.34),
-    0 0 44px rgba(255, 190, 120, 0.12),
-    0 0 0 1px rgba(255, 230, 199, 0.14);
+    0 28px 72px rgba(0, 0, 0, 0.3),
+    0 0 46px rgba(255, 130, 184, 0.18),
+    0 0 0 1px rgba(255, 224, 242, 0.2);
 }
 
 .article-theme-water .article-footer a {
-  border-color: color-mix(in srgb, var(--water-cyan) 18%, var(--surface-border));
-  background: linear-gradient(135deg, color-mix(in srgb, var(--water-blue) 7%, transparent), color-mix(in srgb, var(--water-violet) 5%, transparent));
+  border-color: rgba(226, 131, 173, 0.22);
+  background: linear-gradient(135deg, rgba(255, 248, 251, 0.92), rgba(246, 239, 255, 0.86));
 }
 
 .article-theme-water .water-reveal {
@@ -7749,25 +7852,26 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 
 [data-theme="light"] .article-theme-water {
   background:
-    radial-gradient(circle at 12% 2%, rgba(84, 210, 238, 0.16), transparent 25rem),
-    radial-gradient(circle at 92% 8%, rgba(157, 111, 232, 0.11), transparent 28rem),
-    linear-gradient(155deg, rgba(247, 252, 255, 0.94), rgba(250, 247, 255, 0.92));
+    radial-gradient(circle at 9% 2%, rgba(255, 158, 197, 0.28), transparent 25rem),
+    radial-gradient(circle at 94% 7%, rgba(188, 157, 248, 0.24), transparent 28rem),
+    radial-gradient(circle at 80% 64%, rgba(255, 211, 171, 0.24), transparent 24rem),
+    linear-gradient(155deg, rgba(255, 252, 249, 0.98), rgba(255, 241, 247, 0.97) 52%, rgba(246, 240, 255, 0.96));
   box-shadow:
-    0 28px 76px rgba(40, 74, 110, 0.15),
-    0 0 0 1px rgba(72, 167, 211, 0.1),
-    0 0 56px rgba(80, 197, 230, 0.08);
+    0 28px 76px rgba(106, 65, 100, 0.16),
+    0 0 0 1px rgba(255, 255, 255, 0.82) inset,
+    0 0 56px rgba(244, 126, 179, 0.1);
 }
 
 [data-theme="light"] .article-theme-water .article-header {
   background:
-    linear-gradient(135deg, rgba(95, 170, 255, 0.12), transparent 52%),
-    radial-gradient(circle at 88% 16%, rgba(167, 102, 239, 0.12), transparent 34%),
-    rgba(255, 255, 255, 0.76);
-  box-shadow: 0 18px 46px rgba(53, 99, 145, 0.13);
+    radial-gradient(circle at 13% 10%, rgba(255, 183, 211, 0.32), transparent 35%),
+    radial-gradient(circle at 88% 14%, rgba(198, 172, 249, 0.28), transparent 35%),
+    linear-gradient(135deg, rgba(255, 252, 250, 0.94), rgba(255, 238, 246, 0.88) 54%, rgba(245, 239, 255, 0.92));
+  box-shadow: 0 18px 46px rgba(135, 80, 123, 0.13);
 }
 
 [data-theme="light"] .article-theme-water .article-header h1 {
-  background-image: linear-gradient(105deg, #16304a 0%, #137fa3 30%, #3b52a3 58%, #8b3db9 78%, #16304a 100%);
+  background-image: linear-gradient(105deg, #573650 0%, #d75f91 30%, #925fc7 54%, #ef856e 76%, #573650 100%);
 }
 
 @keyframes water-title-flow {
