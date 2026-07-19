@@ -22,8 +22,16 @@ url: "https://xueyuanqiao.github.io" # the base hostname & protocol for your sit
 #twitter_username: jekyllrb
 github_username:  XueyuanQiao
 music_artist: xueyuan
-music_title: King Without a Crown
-music_file: /assets/audio/King_Without_a_Crown.mp3
+music_tracks:
+  - title: King Without a Crown
+    file: /assets/audio/King_Without_a_Crown.mp3
+    duration: "2:55"
+  - title: Bunker Logic
+    file: /assets/audio/Bunker_Logic.mp3
+    duration: "2:21"
+  - title: Burning Low
+    file: /assets/audio/Burning_Low.mp3
+    duration: "0:30"
 netease_music_url: https://163cn.tv/bblZtmc9
 qq_music_url: https://c6.y.qq.com/base/fcgi-bin/u?__=GWOcn49RH2fI
 

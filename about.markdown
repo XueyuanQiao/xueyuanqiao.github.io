@@ -250,12 +250,13 @@ permalink: /about.html
             <span class="artist-card__badge"><span></span> ARTIST PROFILE ONLINE</span>
             <h3>xueyuan · AI 音乐人</h3>
             <p>音乐是我在工程工作之外建立的另一条表达通道。创作时，我会先定义作品想传达的主题、情绪和画面，再使用生成式 AI 参与旋律、编曲和声音方案的探索，并通过多轮筛选与调整完成作品。这个身份与质量工程并不冲突：一个追求可验证的系统，另一个练习对感受与表达负责。</p>
-            <p class="artist-card__note">目前以 <strong>xueyuan</strong> 名义在网易云音乐与 QQ 音乐发布作品；本站提供《King Without a Crown》试听，播放器默认暂停，是否播放完全交给访问者决定。</p>
+            <p class="artist-card__note">我已以 <strong>xueyuan</strong> 的音乐人身份入驻网易云音乐与 QQ 音乐。本站播放器现收录 <strong>{{ site.music_tracks.size }} 首作品</strong>：{% for track in site.music_tracks %}《{{ track.title }}》{% unless forloop.last %}、{% endunless %}{% endfor %}；访客可以展开播放列表，选择任意曲目在线收听。</p>
             <div class="artist-card__actions">
                 <button class="btn btn-primary" type="button" data-music-play>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6a1 1 0 0 0 1.55.83l10.2-6.8a1 1 0 0 0 0-1.66L9.55 4.37A1 1 0 0 0 8 5.2z"/></svg>
                     播放站内作品
                 </button>
+                <button class="btn btn-ghost" type="button" data-music-queue-open>查看播放列表</button>
                 <a class="btn btn-ghost" href="{{ site.netease_music_url }}" target="_blank" rel="noopener">在网易云音乐关注</a>
                 <a class="btn btn-ghost" href="{{ site.qq_music_url }}" target="_blank" rel="noopener">在 QQ 音乐关注</a>
             </div>

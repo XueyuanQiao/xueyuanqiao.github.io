@@ -820,7 +820,10 @@
   var doc = document;
   var STORE_VOLUME = "aurora-music-volume";
   var STORE_COLLAPSED = "aurora-music-collapsed";
+  var STORE_DOCK_POSITION = "aurora-music-dock-position";
   var SESSION_TIME = "aurora-music-time";
+  var SESSION_PLAYING = "aurora-music-playing";
+  var SESSION_TRACK = "aurora-music-track";
 
   function ready(fn) {
     if (doc.readyState !== "loading") fn();
@@ -833,14 +836,28 @@
 
     var audio = dock.querySelector("[data-music-audio]");
     var toggle = dock.querySelector("[data-music-toggle]");
+    var previous = dock.querySelector("[data-music-prev]");
+    var next = dock.querySelector("[data-music-next]");
     var collapse = dock.querySelector("[data-music-collapse]");
+    var dragHandle = dock.querySelector("[data-music-drag-handle]");
+    var queueToggle = dock.querySelector("[data-music-queue-toggle]");
     var seek = dock.querySelector("[data-music-seek]");
     var currentEl = dock.querySelector("[data-music-current]");
     var durationEl = dock.querySelector("[data-music-duration]");
+    var statusEl = dock.querySelector("[data-music-status]");
+    var titleEl = dock.querySelector("[data-music-title]");
     var mute = dock.querySelector("[data-music-mute]");
     var volume = dock.querySelector("[data-music-volume]");
     var canvas = dock.querySelector("[data-music-visualizer]");
-    if (!audio || !toggle || !seek) return;
+    var trackButtons = Array.prototype.slice.call(dock.querySelectorAll("[data-music-track]"));
+    var tracks = trackButtons.map(function (button) {
+      return {
+        title: button.getAttribute("data-track-title") || "Untitled",
+        src: button.getAttribute("data-track-src") || "",
+        duration: button.getAttribute("data-track-duration") || "0:00"
+      };
+    });
+    if (!audio || !toggle || !seek || !tracks.length) return;
 
     var seeking = false;
     var frameId = 0;
@@ -854,10 +871,31 @@
     var frequencyData = null;
     var canvasContext = canvas && canvas.getContext ? canvas.getContext("2d") : null;
     var reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var dragPointerId = null;
+    var dragStart = null;
+    var dockResizeTimer = 0;
+    var isPageLeaving = false;
+    var leavingPlaybackIntent = null;
+    var resumeAfterNavigation = false;
+    var resumeAttempted = false;
+    var audioLoadRetries = 0;
+    var audioLoadRetryTimer = 0;
+    var currentTrackIndex = Math.round(readNumber(sessionStorage, SESSION_TRACK, 0, 0, tracks.length - 1));
+    var restoreTimeOnMetadata = true;
+    var pendingTrackAutoplay = false;
+    var isTrackSwitching = false;
 
-    // Explicitly keep every fresh page load paused. We only restore the position.
+    try { resumeAfterNavigation = sessionStorage.getItem(SESSION_PLAYING) === "1"; } catch (e) {}
+
+    // A new browsing session remains paused. If this tab was already playing
+    // before an internal navigation, metadataReady() resumes from that point.
     audio.pause();
     audio.loop = false;
+    if (currentTrackIndex !== 0) {
+      audio.src = tracks[currentTrackIndex].src;
+      try { audio.load(); } catch (e) {}
+    }
+    syncTrackUI();
     audio.volume = readNumber(localStorage, STORE_VOLUME, 0.72, 0, 1);
     if (volume) volume.value = String(audio.volume);
     setVolumePaint(audio.volume);
@@ -867,15 +905,25 @@
     } catch (e) {}
 
     toggle.addEventListener("click", function () {
-      if (audio.paused) playAudio();
+      if (audio.paused) playAudio(false);
       else audio.pause();
     });
 
     doc.querySelectorAll("[data-music-play]").forEach(function (button) {
       button.addEventListener("click", function () {
         setCollapsed(false);
-        playAudio();
+        playAudio(false);
         window.setTimeout(function () { toggle.focus({ preventScroll: true }); }, 0);
+      });
+    });
+
+    doc.querySelectorAll("[data-music-queue-open]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        setCollapsed(false);
+        setQueueOpen(true);
+        window.setTimeout(function () {
+          if (queueToggle) queueToggle.focus({ preventScroll: true });
+        }, 0);
       });
     });
 
@@ -884,6 +932,39 @@
         setCollapsed(!dock.classList.contains("is-collapsed"));
       });
     }
+
+    if (previous) {
+      previous.addEventListener("click", function () {
+        if (audio.currentTime > 3) {
+          audio.currentTime = 0;
+          updateProgress(true);
+          savePosition();
+          return;
+        }
+        switchTrack((currentTrackIndex - 1 + tracks.length) % tracks.length, !audio.paused);
+      });
+    }
+
+    if (next) {
+      next.addEventListener("click", function () {
+        switchTrack((currentTrackIndex + 1) % tracks.length, !audio.paused);
+      });
+    }
+
+    if (queueToggle) {
+      queueToggle.addEventListener("click", function () {
+        setQueueOpen(!dock.classList.contains("is-queue-open"));
+      });
+    }
+
+    trackButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        var index = parseInt(button.getAttribute("data-track-index"), 10);
+        if (!isFinite(index)) return;
+        setCollapsed(false);
+        switchTrack(index, true);
+      });
+    });
 
     seek.addEventListener("pointerdown", function () { seeking = true; });
     seek.addEventListener("input", function () {
@@ -914,45 +995,93 @@
       });
     }
 
-    audio.addEventListener("loadedmetadata", function () {
-      var savedTime = readNumber(sessionStorage, SESSION_TIME, 0, 0, Math.max(0, audio.duration - 0.25));
+    var metadataReady = function () {
+      var savedTime = restoreTimeOnMetadata
+        ? readNumber(sessionStorage, SESSION_TIME, 0, 0, Math.max(0, audio.duration - 0.25))
+        : 0;
+      restoreTimeOnMetadata = false;
       if (savedTime > 0 && isFinite(audio.duration)) audio.currentTime = savedTime;
       updateProgress(true);
       setupMediaSession();
-    });
+      var shouldPlaySelectedTrack = pendingTrackAutoplay;
+      pendingTrackAutoplay = false;
+      isTrackSwitching = false;
+      if (shouldPlaySelectedTrack) {
+        window.requestAnimationFrame(function () { playAudio(false); });
+      } else if (resumeAfterNavigation && !resumeAttempted) {
+        resumeAttempted = true;
+        window.requestAnimationFrame(function () { playAudio(true); });
+      }
+    };
+
+    audio.addEventListener("loadedmetadata", metadataReady);
 
     audio.addEventListener("durationchange", function () { updateProgress(true); });
     audio.addEventListener("progress", updateBuffered);
     audio.addEventListener("timeupdate", function () { if (!seeking) updateProgress(false); });
     audio.addEventListener("play", function () {
+      resumeAfterNavigation = false;
       dock.classList.add("is-playing");
-      dock.classList.remove("is-error");
+      dock.classList.remove("is-error", "is-resume-pending");
+      if (statusEl) statusEl.textContent = defaultStatusText();
       toggle.setAttribute("aria-label", "暂停背景音乐");
       toggle.setAttribute("aria-pressed", "true");
+      setPlaybackIntent(true);
       if (navigator.mediaSession) navigator.mediaSession.playbackState = "playing";
       startRenderLoop();
     });
     audio.addEventListener("pause", function () {
       dock.classList.remove("is-playing");
+      if (statusEl && !dock.classList.contains("is-resume-pending")) statusEl.textContent = defaultStatusText();
       toggle.setAttribute("aria-label", "播放背景音乐");
       toggle.setAttribute("aria-pressed", "false");
+      if (!isPageLeaving && !isTrackSwitching) setPlaybackIntent(false);
       if (navigator.mediaSession) navigator.mediaSession.playbackState = "paused";
       if (frameId) cancelAnimationFrame(frameId);
       frameId = 0;
       drawIdleVisualizer();
-      savePosition();
+      if (!isTrackSwitching) savePosition();
     });
     audio.addEventListener("ended", function () {
+      if (currentTrackIndex < tracks.length - 1) {
+        switchTrack(currentTrackIndex + 1, true);
+        return;
+      }
       audio.currentTime = 0;
       updateProgress(true);
       savePosition();
+      setPlaybackIntent(false);
     });
     audio.addEventListener("error", function () {
+      if (resumeAfterNavigation && audioLoadRetries < 3) {
+        retryAudioLoad();
+        return;
+      }
       dock.classList.add("is-error");
       toggle.setAttribute("aria-label", "音频加载失败，请稍后重试");
+      setPlaybackIntent(false);
     });
 
-    window.addEventListener("pagehide", savePosition);
+    window.addEventListener("pagehide", function () {
+      isPageLeaving = true;
+      if (leavingPlaybackIntent === null) leavingPlaybackIntent = !audio.paused && !audio.ended;
+      persistPlaybackSession(leavingPlaybackIntent);
+    });
+
+    // Mark same-tab internal navigation early so a browser-generated pause
+    // event during teardown cannot overwrite the intention to keep playing.
+    doc.addEventListener("click", function (event) {
+      if (event.defaultPrevented || event.button !== 0) return;
+      var link = event.target.closest("a[href]");
+      if (!link || link.target || link.hasAttribute("download")) return;
+      var next;
+      try { next = new URL(link.href, location.href); } catch (e) { return; }
+      if (next.origin !== location.origin) return;
+      if (next.pathname === location.pathname && next.search === location.search && next.hash) return;
+      isPageLeaving = true;
+      leavingPlaybackIntent = !audio.paused && !audio.ended;
+      persistPlaybackSession(leavingPlaybackIntent);
+    }, true);
 
     if (canvas && canvasContext) {
       var resize = function () {
@@ -971,29 +1100,278 @@
     updateProgress(true);
     updateBuffered();
     syncMute();
+    initDockDragging();
+    if (audio.readyState >= 1) metadataReady();
+    else if (resumeAfterNavigation) {
+      window.setTimeout(function () {
+        if (audio.readyState === 0 && !resumeAttempted) retryAudioLoad();
+      }, 320);
+    }
 
-    function playAudio() {
-      var promise = audio.play();
+    function playAudio(isContinuation) {
+      var promise;
+      try { promise = audio.play(); }
+      catch (error) { handlePlayFailure(isContinuation); return; }
       if (promise && promise.then) {
         promise.then(function () {
           // The visualizer is optional: only attach it after native playback has
           // started so a suspended AudioContext can never block the track.
           ensureAudioGraph();
         }).catch(function () {
-          dock.classList.add("is-error");
-          toggle.setAttribute("aria-label", "播放失败，请再次点击重试");
+          handlePlayFailure(isContinuation);
         });
       } else {
         ensureAudioGraph();
       }
     }
 
+    function handlePlayFailure(isContinuation) {
+      setPlaybackIntent(false);
+      if (isContinuation) {
+        dock.classList.add("is-resume-pending");
+        dock.classList.remove("is-error");
+        if (statusEl) statusEl.textContent = "点击继续播放";
+        toggle.setAttribute("aria-label", "继续播放背景音乐");
+        return;
+      }
+      dock.classList.add("is-error");
+      toggle.setAttribute("aria-label", "播放失败，请再次点击重试");
+    }
+
+    function switchTrack(index, playWhenReady) {
+      var nextIndex = Math.round(clamp(index, 0, tracks.length - 1));
+      if (nextIndex === currentTrackIndex) {
+        if (playWhenReady && audio.paused) playAudio(false);
+        return;
+      }
+
+      isTrackSwitching = true;
+      currentTrackIndex = nextIndex;
+      restoreTimeOnMetadata = false;
+      pendingTrackAutoplay = Boolean(playWhenReady);
+      resumeAfterNavigation = false;
+      resumeAttempted = false;
+      audioLoadRetries = 0;
+      if (audioLoadRetryTimer) {
+        window.clearTimeout(audioLoadRetryTimer);
+        audioLoadRetryTimer = 0;
+      }
+
+      try {
+        sessionStorage.setItem(SESSION_TRACK, String(currentTrackIndex));
+        sessionStorage.setItem(SESSION_TIME, "0");
+      } catch (e) {}
+
+      syncTrackUI();
+      seek.value = "0";
+      dock.style.setProperty("--seek", "0%");
+      dock.style.setProperty("--buffered", "0%");
+      if (currentEl) currentEl.textContent = "0:00";
+      audio.src = tracks[currentTrackIndex].src;
+      try { audio.load(); }
+      catch (e) {
+        isTrackSwitching = false;
+        handlePlayFailure(false);
+      }
+    }
+
+    function syncTrackUI() {
+      var track = tracks[currentTrackIndex];
+      if (!track) return;
+      dock.setAttribute("data-track-title", track.title);
+      if (titleEl) titleEl.textContent = track.title;
+      if (durationEl) durationEl.textContent = track.duration;
+      if (statusEl && !dock.classList.contains("is-resume-pending")) statusEl.textContent = defaultStatusText();
+      trackButtons.forEach(function (button, index) {
+        var active = index === currentTrackIndex;
+        button.classList.toggle("is-active", active);
+        if (active) button.setAttribute("aria-current", "true");
+        else button.removeAttribute("aria-current");
+      });
+    }
+
+    function defaultStatusText() {
+      return pad2(currentTrackIndex + 1) + " / " + pad2(tracks.length) + " · AI MUSIC";
+    }
+
+    function setQueueOpen(open) {
+      dock.classList.toggle("is-queue-open", open);
+      if (queueToggle) {
+        queueToggle.setAttribute("aria-expanded", open ? "true" : "false");
+        queueToggle.setAttribute("aria-label", open ? "收起播放列表" : "展开播放列表");
+      }
+      window.setTimeout(function () {
+        if (!dock.classList.contains("is-positioned")) return;
+        clampDockPosition();
+        saveDockPosition();
+      }, reducedMotion ? 0 : 360);
+    }
+
+    function retryAudioLoad() {
+      if (!resumeAfterNavigation || audioLoadRetries >= 3 || audioLoadRetryTimer) return;
+      audioLoadRetries += 1;
+      dock.classList.add("is-resume-pending");
+      dock.classList.remove("is-error");
+      if (statusEl) statusEl.textContent = "正在恢复播放";
+      toggle.setAttribute("aria-label", "正在恢复背景音乐");
+      audioLoadRetryTimer = window.setTimeout(function () {
+        audioLoadRetryTimer = 0;
+        try {
+          audio.load();
+          window.setTimeout(function () {
+            if (audio.readyState >= 1 || resumeAttempted) return;
+            if (audioLoadRetries < 3) retryAudioLoad();
+            else handlePlayFailure(true);
+          }, 520);
+        }
+        catch (e) { handlePlayFailure(true); }
+      }, audioLoadRetries * 180);
+    }
+
     function setCollapsed(collapsed) {
       dock.classList.toggle("is-collapsed", collapsed);
+      if (collapsed) setQueueOpen(false);
       if (!collapse) return;
       collapse.setAttribute("aria-expanded", collapsed ? "false" : "true");
       collapse.setAttribute("aria-label", collapsed ? "展开播放器" : "收起播放器");
       try { localStorage.setItem(STORE_COLLAPSED, collapsed ? "1" : "0"); } catch (e) {}
+      window.setTimeout(function () {
+        if (!dock.classList.contains("is-positioned")) return;
+        clampDockPosition();
+        saveDockPosition();
+      }, reducedMotion ? 0 : 440);
+    }
+
+    function initDockDragging() {
+      if (!dragHandle || !("PointerEvent" in window)) return;
+
+      dragHandle.addEventListener("pointerdown", function (event) {
+        if (!isDockDragEnabled() || event.button !== 0 || event.isPrimary === false) return;
+        if (event.target.closest("button, a, input, label")) return;
+
+        var rect = dock.getBoundingClientRect();
+        dragPointerId = event.pointerId;
+        dragStart = {
+          pointerX: event.clientX,
+          pointerY: event.clientY,
+          left: rect.left,
+          top: rect.top
+        };
+
+        event.preventDefault();
+        dock.classList.add("is-positioned", "is-dragging");
+        dock.style.left = rect.left.toFixed(1) + "px";
+        dock.style.top = rect.top.toFixed(1) + "px";
+        dock.style.right = "auto";
+        dock.style.bottom = "auto";
+        try { dragHandle.setPointerCapture(event.pointerId); } catch (e) {}
+      });
+
+      var moveDrag = function (event) {
+        if (!dragStart) return;
+        event.preventDefault();
+        positionDock(
+          dragStart.left + event.clientX - dragStart.pointerX,
+          dragStart.top + event.clientY - dragStart.pointerY
+        );
+      };
+
+      var finishDrag = function (event) {
+        if (!dragStart) return;
+        var pointerId = dragPointerId;
+        dragPointerId = null;
+        dragStart = null;
+        try { dragHandle.releasePointerCapture(pointerId); } catch (e) {}
+        dock.classList.remove("is-dragging");
+        clampDockPosition();
+        saveDockPosition();
+      };
+
+      window.addEventListener("pointermove", moveDrag, { passive: false });
+      window.addEventListener("pointerup", finishDrag);
+      window.addEventListener("pointercancel", finishDrag);
+      dragHandle.addEventListener("lostpointercapture", finishDrag);
+      dragHandle.addEventListener("dblclick", function (event) {
+        if (event.target.closest("button, a, input, label")) return;
+        resetDockPosition(true);
+      });
+
+      window.addEventListener("resize", function () {
+        window.clearTimeout(dockResizeTimer);
+        dockResizeTimer = window.setTimeout(function () {
+          if (isDockDragEnabled()) restoreDockPosition();
+          else resetDockPosition(false);
+        }, 120);
+      }, { passive: true });
+
+      window.requestAnimationFrame(restoreDockPosition);
+    }
+
+    function isDockDragEnabled() {
+      return window.innerWidth > 680;
+    }
+
+    function positionDock(left, top) {
+      var margin = 12;
+      var rect = dock.getBoundingClientRect();
+      var maxLeft = Math.max(margin, window.innerWidth - rect.width - margin);
+      var maxTop = Math.max(margin, window.innerHeight - rect.height - margin);
+      dock.style.left = clamp(left, margin, maxLeft).toFixed(1) + "px";
+      dock.style.top = clamp(top, margin, maxTop).toFixed(1) + "px";
+      dock.style.right = "auto";
+      dock.style.bottom = "auto";
+    }
+
+    function clampDockPosition() {
+      if (!dock.classList.contains("is-positioned") || !isDockDragEnabled()) return;
+      var rect = dock.getBoundingClientRect();
+      positionDock(rect.left, rect.top);
+    }
+
+    function saveDockPosition() {
+      if (!dock.classList.contains("is-positioned") || !isDockDragEnabled()) return;
+      var margin = 12;
+      var rect = dock.getBoundingClientRect();
+      var availableX = Math.max(1, window.innerWidth - rect.width - margin * 2);
+      var availableY = Math.max(1, window.innerHeight - rect.height - margin * 2);
+      var state = {
+        x: clamp((rect.left - margin) / availableX, 0, 1),
+        y: clamp((rect.top - margin) / availableY, 0, 1)
+      };
+      try { localStorage.setItem(STORE_DOCK_POSITION, JSON.stringify(state)); } catch (e) {}
+    }
+
+    function restoreDockPosition() {
+      if (!isDockDragEnabled()) {
+        resetDockPosition(false);
+        return;
+      }
+      var state = null;
+      try { state = JSON.parse(localStorage.getItem(STORE_DOCK_POSITION) || "null"); } catch (e) {}
+      if (!state || !isFinite(state.x) || !isFinite(state.y)) return;
+
+      var margin = 12;
+      var rect = dock.getBoundingClientRect();
+      var availableX = Math.max(0, window.innerWidth - rect.width - margin * 2);
+      var availableY = Math.max(0, window.innerHeight - rect.height - margin * 2);
+      dock.classList.add("is-positioned");
+      positionDock(
+        margin + clamp(state.x, 0, 1) * availableX,
+        margin + clamp(state.y, 0, 1) * availableY
+      );
+    }
+
+    function resetDockPosition(removeStoredPosition) {
+      dragPointerId = null;
+      dragStart = null;
+      dock.classList.remove("is-positioned", "is-dragging");
+      dock.style.removeProperty("left");
+      dock.style.removeProperty("top");
+      dock.style.removeProperty("right");
+      dock.style.removeProperty("bottom");
+      if (removeStoredPosition) {
+        try { localStorage.removeItem(STORE_DOCK_POSITION); } catch (e) {}
+      }
     }
 
     function seekToRange() {
@@ -1041,7 +1419,19 @@
 
     function savePosition() {
       if (!isFinite(audio.currentTime)) return;
-      try { sessionStorage.setItem(SESSION_TIME, String(audio.currentTime)); } catch (e) {}
+      try {
+        sessionStorage.setItem(SESSION_TIME, String(audio.currentTime));
+        sessionStorage.setItem(SESSION_TRACK, String(currentTrackIndex));
+      } catch (e) {}
+    }
+
+    function setPlaybackIntent(playing) {
+      try { sessionStorage.setItem(SESSION_PLAYING, playing ? "1" : "0"); } catch (e) {}
+    }
+
+    function persistPlaybackSession(playing) {
+      savePosition();
+      setPlaybackIntent(typeof playing === "boolean" ? playing : (!audio.paused && !audio.ended));
     }
 
     function startRenderLoop() {
@@ -1166,7 +1556,7 @@
           artist: dock.getAttribute("data-track-artist") || "xueyuan",
           album: "xueyuan · AI Music"
         });
-        navigator.mediaSession.setActionHandler("play", playAudio);
+        navigator.mediaSession.setActionHandler("play", function () { playAudio(false); });
         navigator.mediaSession.setActionHandler("pause", function () { audio.pause(); });
         navigator.mediaSession.setActionHandler("seekbackward", function (details) {
           audio.currentTime = Math.max(0, audio.currentTime - (details.seekOffset || 10));
@@ -1176,6 +1566,13 @@
         });
         navigator.mediaSession.setActionHandler("seekto", function (details) {
           if (typeof details.seekTime === "number") audio.currentTime = details.seekTime;
+        });
+        navigator.mediaSession.setActionHandler("previoustrack", function () {
+          if (audio.currentTime > 3) audio.currentTime = 0;
+          else switchTrack((currentTrackIndex - 1 + tracks.length) % tracks.length, !audio.paused);
+        });
+        navigator.mediaSession.setActionHandler("nexttrack", function () {
+          switchTrack((currentTrackIndex + 1) % tracks.length, !audio.paused);
         });
       } catch (e) {}
     }
@@ -1202,6 +1599,10 @@
     var minutes = Math.floor(whole / 60);
     var remainder = whole % 60;
     return minutes + ":" + (remainder < 10 ? "0" : "") + remainder;
+  }
+
+  function pad2(value) {
+    return value < 10 ? "0" + value : String(value);
   }
 
   function clamp(value, min, max) {

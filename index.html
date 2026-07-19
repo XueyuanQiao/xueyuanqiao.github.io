@@ -100,7 +100,7 @@ permalink: /
                 资深全栈测试开发 · <span class="grad-text">AI 全栈工程师 / AI 音乐人</span>
             </h2>
             <p class="profile-card-desc">
-                精通移动端、Web端及服务端的全栈测试开发，历经大搜索与金融支付核心业务的稳定性考验。现深耕无人车赛道，测试领域由纯软件向自动驾驶全栈拓展，深入感知、决策、控制（PNC）核心模块，学习 SIL（软件在环）与 HIL（硬件在环）测试体系。在夯实质量基建的同时，正稳步向 AI 全栈工程师转型：近期从 0 到 1 独立构建了‘菜鸟无人车云端质量平台’，一人闭环完成系统设计、前后端开发、CI/CD 搭建及部署上线，以实际工程产出实现了从‘守质量’到‘造产品’的能力跃迁。工程之外，我也以 xueyuan 的名字进行 AI 音乐创作，把主题、情绪与叙事判断融入生成式音乐流程，作品已在网易云音乐和 QQ 音乐上线。
+                精通移动端、Web端及服务端的全栈测试开发，历经大搜索与金融支付核心业务的稳定性考验。现深耕无人车赛道，测试领域由纯软件向自动驾驶全栈拓展，深入感知、决策、控制（PNC）核心模块，学习 SIL（软件在环）与 HIL（硬件在环）测试体系。在夯实质量基建的同时，正稳步向 AI 全栈工程师转型：近期从 0 到 1 独立构建了‘菜鸟无人车云端质量平台’，一人闭环完成系统设计、前后端开发、CI/CD 搭建及部署上线，以实际工程产出实现了从‘守质量’到‘造产品’的能力跃迁。工程之外，我也以 xueyuan 的名字进行 AI 音乐创作，把主题、情绪与叙事判断融入生成式音乐流程；现已以该名义入驻网易云音乐和 QQ 音乐，本站播放器收录三首作品供访客试听。
             </p>
             <div class="profile-card-tags">
                 <span>资深测试开发</span>
@@ -141,16 +141,20 @@ permalink: /
         <div class="artist-card__content">
             <span class="artist-card__badge"><span></span> NETEASE CLOUD MUSIC + QQ MUSIC</span>
             <h3>xueyuan · AI 音乐人</h3>
-            <p>我把 AI 当作音乐创作中的新型乐器，而不是替代审美判断的按钮：先确定主题、情绪和叙事方向，再借助生成式能力探索旋律、编曲与声音表达。作品以 <strong>xueyuan</strong> 的名字发布，目前已入驻网易云音乐和 QQ 音乐。</p>
+            <p>我把 AI 当作音乐创作中的新型乐器，而不是替代审美判断的按钮：先确定主题、情绪和叙事方向，再借助生成式能力探索旋律、编曲与声音表达。我已以 <strong>xueyuan</strong> 的音乐人身份入驻网易云音乐和 QQ 音乐；本站播放器现收录 {{ site.music_tracks.size }} 首作品。</p>
             <div class="artist-track">
-                <span class="artist-track__label">NOW PLAYING ON SITE</span>
-                <strong>King Without a Crown</strong>
-                <span>02:55 · 可选背景音乐 · 默认暂停</span>
+                <span class="artist-track__label">SITE PLAYLIST · {{ site.music_tracks.size }} TRACKS</span>
+                <strong>{% for track in site.music_tracks %}{{ track.title }}{% unless forloop.last %} · {% endunless %}{% endfor %}</strong>
+                <span>按列表顺序播放 · 支持展开歌单选曲</span>
             </div>
             <div class="artist-card__actions">
                 <button class="btn btn-primary" type="button" data-music-play>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6a1 1 0 0 0 1.55.83l10.2-6.8a1 1 0 0 0 0-1.66L9.55 4.37A1 1 0 0 0 8 5.2z"/></svg>
                     在线试听
+                </button>
+                <button class="btn btn-ghost" type="button" data-music-queue-open>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h12M4 12h12M4 18h8"/><path d="m17 15 4 3-4 3z"/></svg>
+                    查看播放列表
                 </button>
                 <a class="btn btn-ghost" href="{{ site.netease_music_url }}" target="_blank" rel="noopener">网易云音乐主页</a>
                 <a class="btn btn-ghost" href="{{ site.qq_music_url }}" target="_blank" rel="noopener">QQ 音乐主页</a>
