@@ -1345,6 +1345,41 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   text-align: center;
 }
 
+/* Responsive interview embeds inside long-form posts. */
+.article-content .post-video {
+  display: block;
+  max-width: min(100%, 720px);
+  margin: 2.2em auto;
+}
+
+.article-content .post-video-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--surface-border);
+  border-radius: 14px;
+  background: #0b0b0b;
+  box-shadow: var(--shadow-1);
+}
+
+.article-content .post-video-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.article-content .post-video figcaption {
+  max-width: 680px;
+  margin: 12px auto 0;
+  padding: 0 8px;
+  line-height: 1.65;
+}
+
+.article-content .post-video figcaption a {
+  white-space: nowrap;
+}
+
 /* Hero / poster figure: 用于 markdown 里 ![alt](url){: .post-figure } */
 .article-content .post-figure,
 .article-content figure.post-figure {
@@ -1802,6 +1837,32 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 }
 
 .lightbox-close svg { width: 20px; height: 20px; }
+
+/* Warm photo treatment: keep the cat portrait bright and comforting in preview. */
+.lightbox[data-theme="warm"] {
+  background:
+    radial-gradient(circle at 50% 34%, rgba(255, 255, 255, 0.96) 0%, rgba(255, 244, 226, 0.94) 42%, rgba(245, 214, 180, 0.92) 100%);
+  backdrop-filter: blur(10px) saturate(0.92);
+  -webkit-backdrop-filter: blur(10px) saturate(0.92);
+}
+
+.lightbox[data-theme="warm"] img {
+  box-shadow:
+    0 28px 72px rgba(123, 73, 42, 0.26),
+    0 0 0 1px rgba(255, 255, 255, 0.72),
+    0 0 42px rgba(239, 161, 89, 0.16);
+}
+
+.lightbox[data-theme="warm"] figcaption {
+  color: rgba(102, 61, 43, 0.82);
+}
+
+.lightbox[data-theme="warm"] .lightbox-close {
+  color: #6c402f;
+  background: rgba(255, 250, 242, 0.78);
+  border-color: rgba(142, 88, 58, 0.2);
+  box-shadow: 0 8px 24px rgba(116, 66, 38, 0.14);
+}
 
 .article-content img.image-zoom {
   cursor: zoom-in;
@@ -3493,8 +3554,10 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   .code-lang { right: 60px; font-size: 0.68rem; }
 
   /* TOC 默认折叠（由 JS 处理；样式保证折叠态紧凑） */
-  .toc { padding: 14px 16px; margin-bottom: 22px; }
-  .toc-title { font-size: 0.74rem; }
+  .toc { padding: 4px 16px; margin-bottom: 22px; }
+  .toc-title { min-height: 44px; margin: 0; font-size: 0.74rem; }
+  .toc:not([data-collapsed="true"]) { padding-top: 12px; padding-bottom: 14px; }
+  .toc:not([data-collapsed="true"]) .toc-title { margin-bottom: 8px; }
   .toc-list .toc-h3 a { padding-left: 22px; }
   .toc-list .toc-h4 a { padding-left: 36px; }
 
@@ -3642,7 +3705,7 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 
   .article { padding: 20px 14px; }
   .article-header h1 { font-size: 1.4rem; line-height: 1.25; }
-  .article-content { font-size: 0.96rem; }
+  .article-content { font-size: 1rem; line-height: 1.85; }
   .article-content h2 { font-size: 1.2rem; }
   .article-content h3 { font-size: 1.05rem; }
   .article-content > p:first-of-type::first-letter {
@@ -7315,17 +7378,18 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   .artist-track { grid-template-columns: 1fr; gap: 6px; }
   .artist-track > span:last-child { text-align: left; }
   .music-dock__head {
-    grid-template-columns: auto minmax(0, 1fr) auto 28px;
+    grid-template-columns: auto minmax(0, 1fr) auto 40px;
     cursor: default;
     touch-action: auto;
   }
+  .music-collapse { width: 40px; height: 40px; }
   .music-drag-grip { display: none; }
 }
 
 @media (max-width: 480px) {
   .music-dock { border-radius: 19px; }
   .music-dock__glass { padding: 12px; }
-  .music-dock__head { grid-template-columns: auto minmax(0, 1fr) auto 26px; gap: 8px; }
+  .music-dock__head { grid-template-columns: auto minmax(0, 1fr) auto 40px; gap: 8px; }
   .music-transport { grid-template-columns: 19px 46px 19px; gap: 2px; }
   .music-skip { width: 19px; }
   .music-play { width: 46px; height: 46px; }
@@ -7352,4 +7416,433 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   .music-dock { transition-duration: 0.01ms; }
   .pjax-enabled .main { transition-duration: 0.01ms; }
   .pjax-enabled body.is-pjax-loading::after { animation: none; width: 100%; }
+}
+
+/* ==========================================================================
+   Water essay visual theme
+   Scoped through `visual_theme: water` so other posts keep their own tone.
+   ========================================================================== */
+.article-theme-water {
+  --water-cyan: #55e8ff;
+  --water-blue: #5b7cff;
+  --water-violet: #ad63ff;
+  --water-peach: #ffc889;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--water-cyan) 24%, var(--surface-border));
+  background:
+    radial-gradient(circle at 12% 2%, color-mix(in srgb, var(--water-cyan) 12%, transparent), transparent 24rem),
+    radial-gradient(circle at 92% 8%, color-mix(in srgb, var(--water-violet) 10%, transparent), transparent 28rem),
+    linear-gradient(155deg, color-mix(in srgb, var(--bg-2) 84%, transparent), var(--surface));
+  box-shadow:
+    0 32px 90px rgba(0, 0, 0, 0.38),
+    0 0 0 1px color-mix(in srgb, var(--water-blue) 10%, transparent),
+    0 0 70px color-mix(in srgb, var(--water-cyan) 8%, transparent);
+}
+
+.article-theme-water::before,
+.article-theme-water::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+.article-theme-water::before {
+  top: -220px;
+  right: -180px;
+  width: 520px;
+  height: 520px;
+  border: 1px solid color-mix(in srgb, var(--water-cyan) 18%, transparent);
+  box-shadow:
+    inset 0 0 80px color-mix(in srgb, var(--water-blue) 12%, transparent),
+    0 0 80px color-mix(in srgb, var(--water-cyan) 8%, transparent);
+  animation: water-orbit 18s ease-in-out infinite alternate;
+}
+
+.article-theme-water::after {
+  top: 360px;
+  left: -210px;
+  width: 430px;
+  height: 430px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--water-violet) 9%, transparent), transparent 68%);
+  animation: water-drift 15s ease-in-out infinite alternate;
+}
+
+.article-theme-water .article-header {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 42px;
+  padding: clamp(24px, 4vw, 42px);
+  border: 1px solid color-mix(in srgb, var(--water-cyan) 22%, var(--surface-border));
+  border-radius: 22px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--water-blue) 11%, transparent), transparent 52%),
+    radial-gradient(circle at 88% 16%, color-mix(in srgb, var(--water-violet) 16%, transparent), transparent 34%),
+    color-mix(in srgb, var(--bg-2) 76%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 22px 55px rgba(0, 0, 0, 0.26);
+}
+
+.article-theme-water .article-header::before {
+  content: "BE WATER  ·  向内求索";
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 5px 10px;
+  border: 1px solid color-mix(in srgb, var(--water-cyan) 35%, transparent);
+  border-radius: 999px;
+  color: color-mix(in srgb, var(--water-cyan) 78%, var(--text-1));
+  background: color-mix(in srgb, var(--water-cyan) 8%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  box-shadow: 0 0 24px color-mix(in srgb, var(--water-cyan) 12%, transparent);
+}
+
+.article-theme-water .article-header::after {
+  content: "";
+  position: absolute;
+  right: -52px;
+  bottom: -94px;
+  width: 270px;
+  height: 170px;
+  border: 1px solid color-mix(in srgb, var(--water-cyan) 20%, transparent);
+  border-radius: 50%;
+  box-shadow:
+    0 -24px 0 -23px color-mix(in srgb, var(--water-violet) 25%, transparent),
+    0 -48px 0 -47px color-mix(in srgb, var(--water-blue) 28%, transparent);
+  transform: rotate(-8deg);
+  opacity: 0.72;
+}
+
+.article-theme-water .article-header h1 {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 18px;
+  background: linear-gradient(105deg, #f9fdff 0%, var(--water-cyan) 30%, #d7d9ff 52%, var(--water-violet) 74%, #f9fdff 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 8px 28px color-mix(in srgb, var(--water-blue) 26%, transparent));
+  animation: water-title-flow 8s linear infinite;
+}
+
+.article-theme-water .post-meta {
+  position: relative;
+  z-index: 1;
+}
+
+.article-theme-water .post-meta > * {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.article-theme-water .toc {
+  border-color: color-mix(in srgb, var(--water-cyan) 22%, var(--surface-border));
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--water-blue) 8%, transparent), color-mix(in srgb, var(--water-violet) 5%, transparent)),
+    var(--surface);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.18);
+}
+
+.article-theme-water .article-content > p:first-of-type strong {
+  color: transparent;
+  background: linear-gradient(100deg, var(--water-cyan), #dce2ff 46%, var(--water-violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 3px 12px color-mix(in srgb, var(--water-cyan) 28%, transparent));
+}
+
+.article-theme-water .article-content h2 {
+  border-bottom-color: transparent;
+  background: linear-gradient(90deg, var(--text-1), color-mix(in srgb, var(--water-cyan) 72%, var(--text-1)) 68%, var(--water-violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.article-theme-water .article-content h2::before {
+  width: 17px;
+  height: 17px;
+  border-radius: 68% 32% 70% 30%;
+  background: linear-gradient(145deg, #dffbff, var(--water-cyan) 35%, var(--water-blue) 72%, var(--water-violet));
+  box-shadow:
+    inset 2px 2px 4px rgba(255, 255, 255, 0.45),
+    0 7px 20px color-mix(in srgb, var(--water-cyan) 42%, transparent);
+  transform: translateY(-1px) rotate(45deg);
+}
+
+.article-theme-water .article-content h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--water-cyan) 18%, var(--water-blue) 55%, var(--water-violet) 82%, transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--water-cyan) 36%, transparent);
+}
+
+.article-theme-water .article-content h3::before {
+  width: 3px;
+  background: linear-gradient(180deg, var(--water-cyan), var(--water-blue), var(--water-violet));
+  box-shadow: 0 0 13px color-mix(in srgb, var(--water-cyan) 46%, transparent);
+}
+
+.article-theme-water .article-content blockquote {
+  overflow: hidden;
+  padding: clamp(22px, 4vw, 34px) clamp(22px, 5vw, 42px) clamp(22px, 4vw, 32px) clamp(58px, 8vw, 78px);
+  border-color: color-mix(in srgb, var(--water-cyan) 34%, transparent);
+  background:
+    radial-gradient(circle at 12% 14%, color-mix(in srgb, var(--water-cyan) 15%, transparent), transparent 38%),
+    linear-gradient(135deg, color-mix(in srgb, var(--water-blue) 13%, transparent), color-mix(in srgb, var(--water-violet) 9%, transparent));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 18px 48px rgba(0, 0, 0, 0.22),
+    0 0 32px color-mix(in srgb, var(--water-cyan) 8%, transparent);
+  font-family: "Georgia", "Source Han Serif SC", serif;
+  font-size: 1.08em;
+  line-height: 1.82;
+}
+
+.article-theme-water .article-content blockquote::before {
+  z-index: 2;
+  left: 18px;
+  top: 13px;
+  color: var(--water-cyan);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--water-cyan) 55%, transparent);
+}
+
+.article-theme-water .article-content blockquote::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -80% -40%;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.09) 48%, transparent 58%);
+  transform: translateX(-52%) rotate(8deg);
+  animation: water-quote-sheen 7.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.article-theme-water .article-content blockquote > * {
+  position: relative;
+  z-index: 1;
+}
+
+.article-theme-water .post-video {
+  position: relative;
+  margin-top: 3em;
+}
+
+.article-theme-water .post-video::before {
+  content: "ORIGINAL INTERVIEW  ·  1971";
+  position: absolute;
+  z-index: 3;
+  top: -13px;
+  left: 18px;
+  padding: 5px 10px;
+  border: 1px solid color-mix(in srgb, var(--water-cyan) 50%, transparent);
+  border-radius: 999px;
+  color: #ecfdff;
+  background: color-mix(in srgb, #07131f 90%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  box-shadow: 0 0 22px color-mix(in srgb, var(--water-cyan) 22%, transparent);
+}
+
+.article-theme-water .post-video-frame {
+  position: relative;
+  padding: 3px;
+  border: 0;
+  border-radius: 18px;
+  background: linear-gradient(125deg, var(--water-cyan), var(--water-blue) 44%, var(--water-violet) 72%, var(--water-peach));
+  box-shadow:
+    0 28px 72px rgba(0, 0, 0, 0.42),
+    0 0 42px color-mix(in srgb, var(--water-blue) 20%, transparent);
+}
+
+.article-theme-water .post-video-frame::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  z-index: 2;
+  border-radius: 15px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 17%, transparent 83%, rgba(85, 232, 255, 0.06));
+  pointer-events: none;
+}
+
+.article-theme-water .post-video-frame iframe {
+  position: relative;
+  z-index: 1;
+  border-radius: 15px;
+  background: #05070b;
+}
+
+.article-theme-water .post-video figcaption {
+  color: color-mix(in srgb, var(--text-3) 86%, var(--water-cyan));
+}
+
+.article-theme-water .post-figure {
+  position: relative;
+}
+
+.article-theme-water .post-figure::before {
+  content: "FOUR YEARS TOGETHER";
+  position: absolute;
+  z-index: 2;
+  top: -11px;
+  right: 18px;
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 213, 167, 0.5);
+  border-radius: 999px;
+  color: #704229;
+  background: rgba(255, 244, 226, 0.9);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  box-shadow: 0 8px 24px rgba(121, 72, 40, 0.18);
+}
+
+.article-theme-water .post-figure img {
+  border-color: rgba(255, 218, 177, 0.48);
+  background:
+    linear-gradient(var(--bg-2), var(--bg-2)) padding-box,
+    linear-gradient(135deg, var(--water-cyan), var(--water-blue) 34%, var(--water-peach) 72%, #ffe8c8) border-box;
+  box-shadow:
+    0 28px 72px rgba(0, 0, 0, 0.34),
+    0 0 44px rgba(255, 190, 120, 0.12),
+    0 0 0 1px rgba(255, 230, 199, 0.14);
+}
+
+.article-theme-water .article-footer a {
+  border-color: color-mix(in srgb, var(--water-cyan) 18%, var(--surface-border));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--water-blue) 7%, transparent), color-mix(in srgb, var(--water-violet) 5%, transparent));
+}
+
+.article-theme-water .water-reveal {
+  transition:
+    opacity 680ms var(--ease-out),
+    transform 760ms var(--ease-out),
+    filter 680ms var(--ease-out);
+}
+
+.article-theme-water .water-reveal:not(.is-in) {
+  transform: translateY(24px) scale(0.985);
+  filter: blur(5px);
+}
+
+.article-theme-water .water-reveal.is-in {
+  filter: blur(0);
+}
+
+[data-theme="light"] .article-theme-water {
+  background:
+    radial-gradient(circle at 12% 2%, rgba(84, 210, 238, 0.16), transparent 25rem),
+    radial-gradient(circle at 92% 8%, rgba(157, 111, 232, 0.11), transparent 28rem),
+    linear-gradient(155deg, rgba(247, 252, 255, 0.94), rgba(250, 247, 255, 0.92));
+  box-shadow:
+    0 28px 76px rgba(40, 74, 110, 0.15),
+    0 0 0 1px rgba(72, 167, 211, 0.1),
+    0 0 56px rgba(80, 197, 230, 0.08);
+}
+
+[data-theme="light"] .article-theme-water .article-header {
+  background:
+    linear-gradient(135deg, rgba(95, 170, 255, 0.12), transparent 52%),
+    radial-gradient(circle at 88% 16%, rgba(167, 102, 239, 0.12), transparent 34%),
+    rgba(255, 255, 255, 0.76);
+  box-shadow: 0 18px 46px rgba(53, 99, 145, 0.13);
+}
+
+[data-theme="light"] .article-theme-water .article-header h1 {
+  background-image: linear-gradient(105deg, #16304a 0%, #137fa3 30%, #3b52a3 58%, #8b3db9 78%, #16304a 100%);
+}
+
+@keyframes water-title-flow {
+  to { background-position: 220% center; }
+}
+
+@keyframes water-orbit {
+  from { transform: translate3d(0, 0, 0) rotate(0deg); }
+  to { transform: translate3d(-24px, 38px, 0) rotate(12deg); }
+}
+
+@keyframes water-drift {
+  from { transform: translate3d(0, 0, 0) scale(0.96); }
+  to { transform: translate3d(52px, 84px, 0) scale(1.08); }
+}
+
+@keyframes water-quote-sheen {
+  0%, 26% { transform: translateX(-54%) rotate(8deg); opacity: 0; }
+  42% { opacity: 1; }
+  68%, 100% { transform: translateX(54%) rotate(8deg); opacity: 0; }
+}
+
+@media (max-width: 680px) {
+  .article-theme-water {
+    border-radius: 22px;
+  }
+  .article-theme-water .article-header {
+    margin-bottom: 30px;
+    padding: 22px 18px;
+    border-radius: 17px;
+  }
+  .article-theme-water .article-header::before {
+    margin-bottom: 12px;
+    font-size: 0.59rem;
+    letter-spacing: 0.12em;
+  }
+  .article-theme-water .article-header::after {
+    right: -110px;
+    bottom: -112px;
+  }
+  .article-theme-water .article-content blockquote {
+    padding: 20px 18px 20px 48px;
+    font-size: 1em;
+  }
+  .article-theme-water .article-content blockquote::before {
+    left: 12px;
+    top: 12px;
+  }
+  .article-theme-water .post-video::before,
+  .article-theme-water .post-figure::before {
+    left: 12px;
+    right: auto;
+    max-width: calc(100% - 24px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .article-theme-water .post-video-frame {
+    padding: 2px;
+    border-radius: 14px;
+  }
+  .article-theme-water .post-video-frame iframe,
+  .article-theme-water .post-video-frame::after {
+    border-radius: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article-theme-water::before,
+  .article-theme-water::after,
+  .article-theme-water .article-header h1,
+  .article-theme-water .article-content blockquote::after {
+    animation: none !important;
+  }
+  .article-theme-water .water-reveal:not(.is-in) {
+    filter: none;
+  }
 }

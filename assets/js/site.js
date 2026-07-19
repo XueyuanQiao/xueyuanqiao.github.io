@@ -219,7 +219,11 @@
   }
 
   function initReveal() {
-    var revealItems = doc.querySelectorAll(".post-card, .article, .page, .pagination, .hero, .link-category, .cate-cloud, .cate-list");
+    var revealItems = Array.prototype.slice.call(doc.querySelectorAll(".post-card, .article, .page, .pagination, .hero, .link-category, .cate-cloud, .cate-list"));
+    doc.querySelectorAll(".article-theme-water .article-content > h2, .article-theme-water .article-content > h3, .article-theme-water .article-content > blockquote, .article-theme-water .article-content > .post-video, .article-theme-water .article-content > .post-figure").forEach(function (el) {
+      if (revealItems.indexOf(el) === -1) revealItems.push(el);
+      el.classList.add("water-reveal");
+    });
     revealItems.forEach(function (el) { el.classList.add("reveal"); });
     if (!("IntersectionObserver" in window)) {
       revealItems.forEach(function (el) { el.classList.add("is-in"); });
@@ -549,6 +553,7 @@
       lbTrigger = img;
       var inner = dialog.querySelector('img');
       var caption = dialog.querySelector('figcaption');
+      dialog.dataset.theme = img.getAttribute('data-lightbox-theme') || '';
       inner.src = img.currentSrc || img.src;
       inner.alt = img.alt || '';
       caption.textContent = img.alt || '';
@@ -1101,9 +1106,14 @@
     setVolumePaint(audio.volume);
     initMusicCache();
 
-    try {
-      if (localStorage.getItem(STORE_COLLAPSED) === "1") setCollapsed(true);
-    } catch (e) {}
+    var savedCollapsed = null;
+    try { savedCollapsed = localStorage.getItem(STORE_COLLAPSED); } catch (e) {}
+    if (
+      savedCollapsed === "1" ||
+      (savedCollapsed === null && window.matchMedia && window.matchMedia("(max-width: 680px), (max-height: 480px)").matches)
+    ) {
+      setCollapsed(true);
+    }
 
     toggle.addEventListener("click", function () {
       if (audio.paused) playAudio(false);

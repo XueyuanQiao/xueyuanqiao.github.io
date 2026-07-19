@@ -2,7 +2,7 @@
 layout: default
 ---
 
-<article class="article" itemscope itemtype="http://schema.org/BlogPosting">
+<article class="article{% if page.visual_theme %} article-theme-{{ page.visual_theme | slugify }}{% endif %}" itemscope itemtype="http://schema.org/BlogPosting">
     <header class="article-header">
         <h1 itemprop="name headline">{{ page.title }}</h1>
         <div class="post-meta">
