@@ -72,7 +72,7 @@ featured_rank: 1
 猫猫陪着我四年多了。照片里它睁着两只圆眼睛，看起来比我平静。它不知道白天发生了什么，也不关心我有没有把事情想通。看它一会儿，脑子里的声音会小一点。就一点，也够了。
 
 <figure class="post-figure post-figure--cat-video" markdown="0">
-  <video class="post-cat-video" width="720" height="1280" autoplay muted loop playsinline preload="metadata" poster="/images/26071901-cat-angel-video-poster.webp" aria-label="AI 生成的天使猫猫短片">
+  <video class="post-cat-video" width="720" height="1280" autoplay muted loop playsinline preload="auto" poster="/images/26071901-cat-angel-video-poster.webp" aria-label="AI 生成的天使猫猫短片">
     <source src="/videos/26071901-cat-angel-ai.webm" type="video/webm">
     <source src="/videos/26071901-cat-angel-ai.mp4" type="video/mp4">
     您的浏览器暂不支持视频播放，可<a href="/videos/26071901-cat-angel-ai.mp4">下载观看</a>。
