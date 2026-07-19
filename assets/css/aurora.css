@@ -7249,6 +7249,38 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   pointer-events: none;
 }
 
+/* ---------- Persistent player / PJAX navigation ---------- */
+.pjax-enabled .main {
+  transition: opacity 180ms ease, transform 220ms var(--ease-out);
+}
+
+.pjax-enabled .main[tabindex="-1"]:focus { outline: none; }
+
+.pjax-enabled body.is-pjax-loading .main {
+  opacity: 0.42;
+  transform: translateY(4px);
+  pointer-events: none;
+}
+
+.pjax-enabled body.is-pjax-loading::after {
+  content: "";
+  position: fixed;
+  z-index: 240;
+  top: 0;
+  left: 0;
+  width: 42%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--brand-2), var(--brand-3));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--brand-2) 68%, transparent);
+  animation: pjax-progress 900ms ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pjax-progress {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(340%); }
+}
+
 @media (max-width: 920px) {
   .artist-card {
     grid-template-columns: minmax(190px, 0.62fr) minmax(0, 1.38fr);
@@ -7316,4 +7348,6 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   .music-eq span,
   .music-live-dot { animation: none !important; }
   .music-dock { transition-duration: 0.01ms; }
+  .pjax-enabled .main { transition-duration: 0.01ms; }
+  .pjax-enabled body.is-pjax-loading::after { animation: none; width: 100%; }
 }

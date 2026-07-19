@@ -14,6 +14,7 @@
   var doc = document;
   var root = doc.documentElement;
   var STORE_KEY = "aurora-theme";
+  var pageCleanups = [];
 
   // ========== Theme ==========
   function applyTheme(theme) {
@@ -59,27 +60,6 @@
 
   ready(function () {
     var body = doc.body;
-
-    // Active nav link（文章详情归入“文章”，分类筛选页归入“分类”）
-    var path = location.pathname.replace(/\/$/, "") || "/";
-    var sectionPath = path;
-    if (doc.querySelector(".article")) {
-      sectionPath = path.indexOf("/about/") === 0 ? "/about.html" : "/archive.html";
-    } else if (path.indexOf("/category") === 0) {
-      sectionPath = "/cate.html";
-    }
-    doc.querySelectorAll(".nav a").forEach(function (a) {
-      var href;
-      try { href = new URL(a.href, location.href).pathname; }
-      catch (e) { href = a.getAttribute("href") || ""; }
-      href = href.replace(/\/$/, "") || "/";
-      var current = href === sectionPath;
-      if (!current && href !== "/" && path.indexOf(href) === 0) current = true;
-      if (current) {
-        a.classList.add("is-active");
-        a.setAttribute("aria-current", "page");
-      }
-    });
 
     // Mobile menu toggle
     var menuBtn = doc.querySelector(".menu-toggle");
@@ -154,24 +134,6 @@
     // 初始挂载后再同步一次按钮状态（applyTheme 在 DOM 解析前就调用过）
     syncThemeToggle(root.getAttribute("data-theme") === "light" ? "light" : "dark");
 
-    // Reveal on scroll
-    var revealItems = doc.querySelectorAll(".post-card, .article, .page, .pagination, .hero, .link-category, .cate-cloud, .cate-list");
-    revealItems.forEach(function (el) { el.classList.add("reveal"); });
-
-    if ("IntersectionObserver" in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-in");
-            io.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0, rootMargin: "0px 0px -40px 0px" });
-      revealItems.forEach(function (el) { io.observe(el); });
-    } else {
-      revealItems.forEach(function (el) { el.classList.add("is-in"); });
-    }
-
     // Reading progress + back to top: share one rAF-throttled scroll handler.
     var progress = doc.querySelector(".read-progress");
     var hasNativeScrollTimeline = !!(window.CSS && CSS.supports && CSS.supports("animation-timeline", "scroll()"));
@@ -206,24 +168,243 @@
       });
     }
 
-    // Code block enhancements
-    enhanceCodeBlocks();
-
-    // Article-only enhancements
-    enhanceArticle();
-
-    // Archive pagination (文章库分页：10/20/50 每页)
-    initArchivePagination();
-
     // Command palette search: index is fetched only when the user opens it.
     initSearch(closeMenu);
 
-    // Landing-only enhancements run via a separate IIFE listener.
+    // Page-specific behaviors are safe to rerun after a PJAX content swap.
+    runPageEnhancements(false);
+    initPjax(main, closeMenu, updateScrollUI);
   });
+
+  function runPageEnhancements(notifyPageModules) {
+    while (pageCleanups.length) {
+      try { pageCleanups.pop()(); } catch (e) {}
+    }
+
+    syncActiveNav();
+    var revealCleanup = initReveal();
+    if (revealCleanup) pageCleanups.push(revealCleanup);
+    enhanceCodeBlocks();
+    var articleCleanup = enhanceArticle();
+    if (articleCleanup) pageCleanups.push(articleCleanup);
+    initArchivePagination();
+
+    if (notifyPageModules !== false) {
+      doc.dispatchEvent(new CustomEvent("aurora:page-ready", {
+        detail: { url: location.href }
+      }));
+    }
+  }
+
+  function syncActiveNav() {
+    var path = location.pathname.replace(/\/$/, "") || "/";
+    var sectionPath = path;
+    if (doc.querySelector(".article")) {
+      sectionPath = path.indexOf("/about/") === 0 ? "/about.html" : "/archive.html";
+    } else if (path.indexOf("/category") === 0) {
+      sectionPath = "/cate.html";
+    }
+
+    doc.querySelectorAll(".nav a").forEach(function (a) {
+      var href;
+      try { href = new URL(a.href, location.href).pathname; }
+      catch (e) { href = a.getAttribute("href") || ""; }
+      href = href.replace(/\/$/, "") || "/";
+      var current = href === sectionPath;
+      if (!current && href !== "/" && path.indexOf(href) === 0) current = true;
+      a.classList.toggle("is-active", current);
+      if (current) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+  }
+
+  function initReveal() {
+    var revealItems = doc.querySelectorAll(".post-card, .article, .page, .pagination, .hero, .link-category, .cate-cloud, .cate-list");
+    revealItems.forEach(function (el) { el.classList.add("reveal"); });
+    if (!("IntersectionObserver" in window)) {
+      revealItems.forEach(function (el) { el.classList.add("is-in"); });
+      return null;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-in");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0, rootMargin: "0px 0px -40px 0px" });
+    revealItems.forEach(function (el) { observer.observe(el); });
+    return function () { observer.disconnect(); };
+  }
+
+  function initPjax(main, closeMenu, updateScrollUI) {
+    if (!main || !("fetch" in window) || !("pushState" in history) || !("DOMParser" in window)) return;
+
+    var activeController = null;
+    var navigationId = 0;
+    var parser = new DOMParser();
+    root.classList.add("pjax-enabled");
+
+    function stateWithScroll(base) {
+      var state = Object.assign({}, base || history.state || {});
+      state.auroraPjax = true;
+      state.scrollX = window.scrollX || 0;
+      state.scrollY = window.scrollY || 0;
+      return state;
+    }
+
+    history.replaceState(stateWithScroll(history.state), "", location.href);
+
+    function isPjaxLink(link, target) {
+      if (!link || !target || target.origin !== location.origin) return false;
+      if (link.target || link.hasAttribute("download") || link.hasAttribute("data-no-pjax")) return false;
+      if ((link.getAttribute("rel") || "").split(/\s+/).indexOf("external") !== -1) return false;
+      if (/^(mailto:|tel:|javascript:)/i.test(link.getAttribute("href") || "")) return false;
+      if (target.pathname.indexOf("/assets/") === 0) return false;
+      var file = target.pathname.split("/").pop() || "";
+      if (file.indexOf(".") !== -1 && !/\.html?$/i.test(file)) return false;
+      if (target.pathname === location.pathname && target.search === location.search) return false;
+      return true;
+    }
+
+    doc.addEventListener("click", function (event) {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      var link = event.target.closest && event.target.closest("a[href]");
+      if (!link) return;
+      var target;
+      try { target = new URL(link.href, location.href); } catch (e) { return; }
+      if (!isPjaxLink(link, target)) return;
+      event.preventDefault();
+      navigate(target, { mode: "push", trigger: link });
+    }, true);
+
+    window.addEventListener("popstate", function (event) {
+      navigate(new URL(location.href), {
+        mode: "pop",
+        scrollX: event.state && isFinite(event.state.scrollX) ? event.state.scrollX : 0,
+        scrollY: event.state && isFinite(event.state.scrollY) ? event.state.scrollY : 0
+      });
+    });
+
+    function navigate(target, options) {
+      options = options || {};
+      var id = ++navigationId;
+      if (activeController) activeController.abort();
+      activeController = new AbortController();
+
+      if (options.mode === "push") {
+        history.replaceState(stateWithScroll(history.state), "", location.href);
+      }
+
+      closePersistentOverlays();
+      if (typeof closeMenu === "function") closeMenu(false);
+      doc.body.classList.add("is-pjax-loading");
+      main.setAttribute("aria-busy", "true");
+      doc.dispatchEvent(new CustomEvent("aurora:before-navigation", {
+        detail: { from: location.href, to: target.href }
+      }));
+
+      fetch(target.href, {
+        signal: activeController.signal,
+        credentials: "same-origin",
+        headers: { "Accept": "text/html", "X-Aurora-PJAX": "1" }
+      }).then(function (response) {
+        var type = response.headers.get("content-type") || "";
+        if (!response.ok || type.indexOf("text/html") === -1) throw new Error("Invalid PJAX response");
+        return response.text();
+      }).then(function (html) {
+        if (id !== navigationId) return;
+        var incoming = parser.parseFromString(html, "text/html");
+        var incomingMain = incoming.querySelector("main#main");
+        if (!incomingMain) throw new Error("Unsupported PJAX document");
+
+        if (options.mode === "push") {
+          history.pushState({ auroraPjax: true, scrollX: 0, scrollY: 0 }, "", target.href);
+        }
+
+        syncHead(incoming);
+        doc.body.classList.toggle("is-landing", incoming.body.classList.contains("is-landing"));
+        main.className = incomingMain.className;
+        main.innerHTML = incomingMain.innerHTML;
+        executeMainScripts(main);
+        main.removeAttribute("aria-busy");
+
+        runPageEnhancements();
+        restoreScroll(target, options);
+        if (typeof updateScrollUI === "function") updateScrollUI();
+
+        main.setAttribute("tabindex", "-1");
+        try { main.focus({ preventScroll: true }); } catch (e) { main.focus(); }
+        window.requestAnimationFrame(function () {
+          doc.body.classList.remove("is-pjax-loading");
+        });
+      }).catch(function (error) {
+        if (error && error.name === "AbortError") return;
+        location.assign(target.href);
+      });
+    }
+
+    function closePersistentOverlays() {
+      var dialog = doc.querySelector("[data-search-dialog]");
+      if (dialog && dialog.open) {
+        try { dialog.close(); } catch (e) { dialog.removeAttribute("open"); }
+      }
+      root.classList.remove("has-modal-open");
+      doc.querySelectorAll(".lightbox").forEach(function (lightbox) { lightbox.remove(); });
+    }
+
+    function executeMainScripts(scope) {
+      scope.querySelectorAll("script").forEach(function (oldScript) {
+        var script = doc.createElement("script");
+        Array.prototype.slice.call(oldScript.attributes).forEach(function (attribute) {
+          script.setAttribute(attribute.name, attribute.value);
+        });
+        script.text = oldScript.textContent || "";
+        oldScript.parentNode.replaceChild(script, oldScript);
+      });
+    }
+
+    function restoreScroll(target, options) {
+      if (target.hash) {
+        var id;
+        try { id = decodeURIComponent(target.hash.slice(1)); } catch (e) { id = target.hash.slice(1); }
+        var anchor = id && doc.getElementById(id);
+        if (anchor) {
+          anchor.scrollIntoView();
+          return;
+        }
+      }
+      if (options.mode === "pop") window.scrollTo(options.scrollX || 0, options.scrollY || 0);
+      else window.scrollTo(0, 0);
+    }
+
+    function syncHead(incoming) {
+      doc.title = incoming.title || doc.title;
+      var selectors = [
+        'meta[name="description"]',
+        'meta[name="keywords"]',
+        'meta[name^="twitter:"]',
+        'meta[property^="og:"]',
+        'meta[property^="article:"]',
+        'link[rel="canonical"]',
+        'link[rel="prev"]',
+        'link[rel="next"]',
+        'script[type="application/ld+json"]'
+      ];
+      selectors.forEach(function (selector) {
+        doc.head.querySelectorAll(selector).forEach(function (node) { node.remove(); });
+        incoming.head.querySelectorAll(selector).forEach(function (node) {
+          doc.head.appendChild(doc.importNode(node, true));
+        });
+      });
+    }
+  }
 
   function enhanceArticle() {
     var content = doc.querySelector('.article-content');
-    if (!content) return;
+    if (!content) return null;
+    var cleanupFns = [];
 
     // 1) Wrap tables for horizontal scrolling
     content.querySelectorAll('table').forEach(function (table) {
@@ -288,8 +469,13 @@
           if (tocEl.dataset.userToggled === '1') return;
           setTocCollapsed(e.matches);
         };
-        if (mq.addEventListener) mq.addEventListener('change', onMq);
-        else if (mq.addListener) mq.addListener(onMq);
+        if (mq.addEventListener) {
+          mq.addEventListener('change', onMq);
+          cleanupFns.push(function () { mq.removeEventListener('change', onMq); });
+        } else if (mq.addListener) {
+          mq.addListener(onMq);
+          cleanupFns.push(function () { mq.removeListener(onMq); });
+        }
       }
 
       // Spy active heading
@@ -316,6 +502,7 @@
           });
         }, { rootMargin: '-30% 0px -65% 0px', threshold: 0 });
         headings.forEach(function (h) { spy.observe(h); });
+        cleanupFns.push(function () { spy.disconnect(); });
       }
 
       // Collapse toggle
@@ -407,12 +594,20 @@
         }
       });
     });
-    doc.addEventListener('keydown', function (e) {
+    var onLightboxKeydown = function (e) {
       if (e.key === 'Escape' && lb && lb.open) {
         e.preventDefault();
         closeLightbox();
       }
-    });
+    };
+    doc.addEventListener('keydown', onLightboxKeydown);
+    cleanupFns.push(function () { doc.removeEventListener('keydown', onLightboxKeydown); });
+
+    return function () {
+      clearTimeout(lbCloseTimer);
+      while (cleanupFns.length) cleanupFns.pop()();
+      if (lb) lb.remove();
+    };
   }
 
   // ========== Archive pagination (文章库分页) ==========
@@ -909,22 +1104,23 @@
       else audio.pause();
     });
 
-    doc.querySelectorAll("[data-music-play]").forEach(function (button) {
-      button.addEventListener("click", function () {
+    doc.addEventListener("click", function (event) {
+      var playButton = event.target.closest && event.target.closest("[data-music-play]");
+      if (playButton) {
         setCollapsed(false);
         playAudio(false);
         window.setTimeout(function () { toggle.focus({ preventScroll: true }); }, 0);
-      });
-    });
+        return;
+      }
 
-    doc.querySelectorAll("[data-music-queue-open]").forEach(function (button) {
-      button.addEventListener("click", function () {
+      var queueButton = event.target.closest && event.target.closest("[data-music-queue-open]");
+      if (queueButton) {
         setCollapsed(false);
         setQueueOpen(true);
         window.setTimeout(function () {
           if (queueToggle) queueToggle.focus({ preventScroll: true });
         }, 0);
-      });
+      }
     });
 
     if (collapse) {
@@ -1630,6 +1826,7 @@
   var doc = document;
   var prefersReducedMotion =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var landingCleanups = [];
   // 触屏 / 粗指针设备：不启用 3D tilt 与神经网络背景，避免性能浪费与残留态
   var isTouchDevice =
     (window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches) ||
@@ -1637,14 +1834,18 @@
   var isNarrowScreen = window.matchMedia && window.matchMedia("(max-width: 920px)").matches;
 
   function bootstrap() {
+    while (landingCleanups.length) {
+      try { landingCleanups.pop()(); } catch (e) {}
+    }
+
     var isLanding = doc.body.classList.contains("is-landing");
-    initTyped();
-    initCounters();
+    addCleanup(initTyped());
+    addCleanup(initCounters());
     initSkillClickFeedback();
     if (!isTouchDevice) initTilt();
     if (!isTouchDevice) initSkillSpotlight();
     try {
-      if (isLanding && !isTouchDevice && !isNarrowScreen) initNeural();
+      if (isLanding && !isTouchDevice && !isNarrowScreen) addCleanup(initNeural());
     } catch (err) {
       // 神经网络背景失败不应阻断其他交互
       if (window.console) console.warn("[site] initNeural failed:", err);
@@ -1654,12 +1855,18 @@
     }
   }
 
+  function addCleanup(cleanup) {
+    if (typeof cleanup === "function") landingCleanups.push(cleanup);
+  }
+
   if (doc.readyState !== "loading") bootstrap();
   else doc.addEventListener("DOMContentLoaded", bootstrap);
+  doc.addEventListener("aurora:page-ready", bootstrap);
 
   // ---------- Typed text ----------
   function initTyped() {
     var nodes = doc.querySelectorAll("[data-typed]");
+    var states = [];
     nodes.forEach(function (el) {
       var raw = el.getAttribute("data-typed-strings") || "[]";
       var lines;
@@ -1669,38 +1876,52 @@
       if (prefersReducedMotion) { el.textContent = lines[0]; return; }
 
       var li = 0, ci = 0, deleting = false;
+      var state = { timer: 0, cancelled: false };
+      states.push(state);
+      function schedule(delay) {
+        state.timer = setTimeout(tick, delay);
+      }
       function tick() {
+        if (state.cancelled || !el.isConnected) return;
         var cur = lines[li];
         if (!deleting) {
           ci++;
           el.textContent = cur.slice(0, ci);
           if (ci === cur.length) {
             deleting = true;
-            return setTimeout(tick, 1600);
+            schedule(1600);
+            return;
           }
-          setTimeout(tick, 60 + Math.random() * 40);
+          schedule(60 + Math.random() * 40);
         } else {
           ci--;
           el.textContent = cur.slice(0, ci);
           if (ci === 0) {
             deleting = false;
             li = (li + 1) % lines.length;
-            return setTimeout(tick, 200);
+            schedule(200);
+            return;
           }
-          setTimeout(tick, 26);
+          schedule(26);
         }
       }
       tick();
     });
+    return function () {
+      states.forEach(function (state) {
+        state.cancelled = true;
+        if (state.timer) clearTimeout(state.timer);
+      });
+    };
   }
 
   // ---------- Counters ----------
   function initCounters() {
     var els = doc.querySelectorAll("[data-counter]");
-    if (!els.length) return;
+    if (!els.length) return null;
     if (!("IntersectionObserver" in window) || prefersReducedMotion) {
       els.forEach(function (el) { el.textContent = el.getAttribute("data-counter"); });
-      return;
+      return null;
     }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
@@ -1710,6 +1931,7 @@
       });
     }, { threshold: 0.4 });
     els.forEach(function (el) { io.observe(el); });
+    return function () { io.disconnect(); };
   }
 
   function animateCounter(el) {
@@ -1791,8 +2013,8 @@
   // ---------- Neural network background ----------
   function initNeural() {
     var canvas = doc.querySelector(".bg-neural");
-    if (!canvas || !canvas.getContext) return;
-    if (prefersReducedMotion) return;
+    if (!canvas || !canvas.getContext) return null;
+    if (prefersReducedMotion) return null;
 
     var ctx = canvas.getContext("2d");
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -1934,20 +2156,31 @@
       mouse.active = true;
     }
     function onLeave() { mouse.active = false; }
+    var onResize = debounce(resize, 150);
+    var onVisibility = function () {
+      if (doc.hidden) stop();
+      else start();
+    };
 
-    window.addEventListener("resize", debounce(resize, 150), { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
     window.addEventListener("pointermove", onMove, { passive: true });
     doc.documentElement.addEventListener("pointerleave", onLeave, { passive: true });
     window.addEventListener("blur", onLeave);
 
     // Visibility pause
-    doc.addEventListener("visibilitychange", function () {
-      if (doc.hidden) stop();
-      else start();
-    });
+    doc.addEventListener("visibilitychange", onVisibility);
 
     resize();
     start();
+    return function () {
+      stop();
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("pointermove", onMove);
+      doc.documentElement.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("blur", onLeave);
+      doc.removeEventListener("visibilitychange", onVisibility);
+      ctx.clearRect(0, 0, w, h);
+    };
   }
 
   function debounce(fn, ms) {
@@ -2083,22 +2316,33 @@
   var isTouchDevice =
     (window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches) ||
     ("ontouchstart" in window && navigator.maxTouchPoints > 0);
+  var aboutCleanups = [];
 
   function ready(fn) {
     if (doc.readyState !== "loading") fn();
     else doc.addEventListener("DOMContentLoaded", fn);
   }
 
-  ready(function () {
+  function bootstrapAbout() {
+    while (aboutCleanups.length) {
+      try { aboutCleanups.pop()(); } catch (e) {}
+    }
     if (!doc.querySelector("[data-about-hero]")) return;
 
-    initHoloRain();
-    initUptime();
-    initRadar();
-    initTimeline();
+    addCleanup(initHoloRain());
+    addCleanup(initUptime());
+    addCleanup(initRadar());
+    addCleanup(initTimeline());
     initManifestoSpotlight();
     initSnapshot();
-  });
+  }
+
+  function addCleanup(cleanup) {
+    if (typeof cleanup === "function") aboutCleanups.push(cleanup);
+  }
+
+  ready(bootstrapAbout);
+  doc.addEventListener("aurora:page-ready", bootstrapAbout);
 
   // ---------- Core profile snapshot · 级联滑入 + 字符解码 ----------
   function initSnapshot() {
@@ -2217,9 +2461,9 @@
 
   // ---------- Holographic rain (matrix-style) ----------
   function initHoloRain() {
-    if (prefersReducedMotion || isTouchDevice) return;
+    if (prefersReducedMotion || isTouchDevice) return null;
     var canvas = doc.querySelector(".holo-rain");
-    if (!canvas || !canvas.getContext) return;
+    if (!canvas || !canvas.getContext) return null;
 
     var ctx = canvas.getContext("2d");
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -2287,22 +2531,30 @@
     }
 
     var ro = ("ResizeObserver" in window) ? new ResizeObserver(resize) : null;
+    var onVisibility = function () {
+      if (doc.hidden) cancelAnimationFrame(rafId);
+      else step();
+    };
     if (ro) ro.observe(canvas);
     else window.addEventListener("resize", resize);
 
     resize();
     step();
 
-    doc.addEventListener("visibilitychange", function () {
-      if (doc.hidden) cancelAnimationFrame(rafId);
-      else step();
-    });
+    doc.addEventListener("visibilitychange", onVisibility);
+    return function () {
+      cancelAnimationFrame(rafId);
+      if (ro) ro.disconnect();
+      else window.removeEventListener("resize", resize);
+      doc.removeEventListener("visibilitychange", onVisibility);
+      ctx.clearRect(0, 0, w, h);
+    };
   }
 
   // ---------- Career time since 2016 ----------
   function initUptime() {
     var el = doc.querySelector("[data-about-uptime]");
-    if (!el) return;
+    if (!el) return null;
     var start = new Date("2016-01-01T00:00:00+08:00");
     function tick() {
       var now = new Date();
@@ -2315,15 +2567,16 @@
     }
     function pad(n) { return n < 10 ? "0" + n : "" + n; }
     tick();
-    setInterval(tick, 1000);
+    var timer = setInterval(tick, 1000);
+    return function () { clearInterval(timer); };
   }
 
   // ---------- Skill radar ----------
   function initRadar() {
     var radar = doc.querySelector("[data-about-radar]");
-    if (!radar) return;
+    if (!radar) return null;
     var svg = radar.querySelector("svg");
-    if (!svg) return;
+    if (!svg) return null;
 
     var legend = doc.querySelectorAll(".radar-legend li");
     var labels = [];
@@ -2332,7 +2585,7 @@
       labels.push(li.getAttribute("data-label") || "");
       values.push(parseFloat(li.getAttribute("data-value")) || 0);
     });
-    if (!values.length) return;
+    if (!values.length) return null;
 
     var R = 150;
     var n = values.length;
@@ -2416,8 +2669,9 @@
       requestAnimationFrame(frame);
     }
 
+    var io = null;
     if ("IntersectionObserver" in window) {
-      var io = new IntersectionObserver(function (entries) {
+      io = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
           if (e.isIntersecting) {
             play();
@@ -2452,15 +2706,16 @@
         else l.classList.remove("is-active");
       });
     }
+    return function () { if (io) io.disconnect(); };
   }
 
   // ---------- Timeline ----------
   function initTimeline() {
     var items = doc.querySelectorAll("[data-about-timeline] .tl-item");
-    if (!items.length) return;
+    if (!items.length) return null;
     if (!("IntersectionObserver" in window) || prefersReducedMotion) {
       items.forEach(function (it) { it.classList.add("is-in"); });
-      return;
+      return null;
     }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
@@ -2471,6 +2726,7 @@
       });
     }, { threshold: 0.1, rootMargin: "0px 0px -10% 0px" });
     items.forEach(function (it) { io.observe(it); });
+    return function () { io.disconnect(); };
   }
 
   // ---------- Manifesto card spotlight + light tilt ----------
