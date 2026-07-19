@@ -9,3 +9,6 @@
 喵喵陪我四年多了。它不懂向内求索，日程一直很简单：吃饭，睡觉，等我摸它。这些很小的事，最近倒是我需要重新学的。
 
 新写了一篇：《向内求索：Be water, my friend.》
+
+完整文章：
+https://xueyuanqiao.github.io/life/2026/07/19/inward-search.html?from=timeline&v=20260720
