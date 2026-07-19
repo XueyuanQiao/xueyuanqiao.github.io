@@ -469,7 +469,7 @@ permalink: /about.html
         <h2>常用技术 · Tech Stack</h2>
     </header>
     <div class="about-stack">
-        {%- assign stack_items = "Python|Java|Ruby on Rails|Pytest|Selenium|FastAPI|React|TypeScript|Vite|Spring|MySQL|Redis / Tair|RocketMQ|Kafka|Docker|Kubernetes|Prometheus|Grafana|Jenkins|云效|Linux" | split: "|" -%}
+        {%- assign stack_items = "Python|Java|Ruby on Rails|Pytest|Selenium|FastAPI|React|TypeScript|Vite|Spring|MySQL|Redis / Tair|OceanBase|RocketMQ|Kafka|SOFA / 分布式事务|Docker|Kubernetes|Prometheus|Grafana|Jenkins|云效|Linux" | split: "|" -%}
         {% for tag in stack_items %}
         <span class="stack-chip" style="--i: {{ forloop.index0 }}">
             <span class="chip-glyph">{{ tag | slice: 0, 1 }}</span>

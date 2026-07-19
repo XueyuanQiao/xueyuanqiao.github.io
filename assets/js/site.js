@@ -1138,6 +1138,7 @@
   var STORE_VOLUME = "aurora-music-volume";
   var STORE_COLLAPSED = "aurora-music-collapsed";
   var STORE_DOCK_POSITION = "aurora-music-dock-position";
+  var EDGE_SNAP_DISTANCE = 96;
   var SESSION_TIME = "aurora-music-time";
   var SESSION_PLAYING = "aurora-music-playing";
   var SESSION_TRACK = "aurora-music-track";
@@ -1229,15 +1230,8 @@
     initMusicCache();
     initEmbeddedVideoPause();
     doc.addEventListener("aurora:page-ready", initEmbeddedVideoPause);
-
-    var savedCollapsed = null;
-    try { savedCollapsed = localStorage.getItem(STORE_COLLAPSED); } catch (e) {}
-    if (
-      savedCollapsed === "1" ||
-      (savedCollapsed === null && window.matchMedia && window.matchMedia("(max-width: 680px), (max-height: 480px)").matches)
-    ) {
-      setCollapsed(true);
-    }
+    doc.addEventListener("aurora:page-ready", syncDockForCurrentPage);
+    syncDockExpansionForCurrentPage();
 
     toggle.addEventListener("click", function () {
       if (audio.paused) playAudio(false);
@@ -1754,13 +1748,15 @@
       }, audioLoadRetries * 180);
     }
 
-    function setCollapsed(collapsed) {
+    function setCollapsed(collapsed, persistPreference) {
       dock.classList.toggle("is-collapsed", collapsed);
       if (collapsed) setQueueOpen(false);
       if (!collapse) return;
       collapse.setAttribute("aria-expanded", collapsed ? "false" : "true");
       collapse.setAttribute("aria-label", collapsed ? "展开播放器" : "收起播放器");
-      try { localStorage.setItem(STORE_COLLAPSED, collapsed ? "1" : "0"); } catch (e) {}
+      if (persistPreference !== false) {
+        try { localStorage.setItem(STORE_COLLAPSED, collapsed ? "1" : "0"); } catch (e) {}
+      }
       window.setTimeout(function () {
         if (!dock.classList.contains("is-positioned")) return;
         if (dock.classList.contains("is-edge-docked")) clampEdgeDockPosition();
@@ -1810,7 +1806,7 @@
         dragStart = null;
         try { dragHandle.releasePointerCapture(pointerId); } catch (e) {}
         dock.classList.remove("is-dragging");
-        dockToNearestEdge();
+        settleDockAfterDrag();
       };
 
       window.addEventListener("pointermove", moveDrag, { passive: false });
@@ -1825,15 +1821,59 @@
       window.addEventListener("resize", function () {
         window.clearTimeout(dockResizeTimer);
         dockResizeTimer = window.setTimeout(function () {
+          if (isHomePage()) {
+            if (dock.classList.contains("is-edge-docked")) {
+              clampEdgeDockPosition();
+              saveDockPosition();
+            } else if (dock.classList.contains("is-positioned") && isDockDragEnabled()) {
+              clampDockPosition();
+              saveDockPosition();
+            } else {
+              resetDockPosition(false);
+            }
+            return;
+          }
+
           if (dock.classList.contains("is-edge-docked")) {
             clampEdgeDockPosition();
             saveDockPosition();
-          } else if (isDockDragEnabled()) restoreDockPosition();
-          else resetDockPosition(false);
+          } else if (isDockDragEnabled()) {
+            restoreDockPosition();
+          } else {
+            resetDockPosition(false);
+          }
         }, 120);
       }, { passive: true });
 
-      window.requestAnimationFrame(restoreDockPosition);
+      window.requestAnimationFrame(syncDockForCurrentPage);
+    }
+
+    function isHomePage() {
+      return doc.body.classList.contains("is-landing") || location.pathname === "/" || location.pathname === "/index.html";
+    }
+
+    function syncDockExpansionForCurrentPage() {
+      if (isHomePage()) {
+        setQueueOpen(false);
+        setCollapsed(false, false);
+        return;
+      }
+
+      var savedCollapsed = null;
+      try { savedCollapsed = localStorage.getItem(STORE_COLLAPSED); } catch (e) {}
+      var collapseByDefault = savedCollapsed === null && window.matchMedia &&
+        window.matchMedia("(max-width: 680px), (max-height: 480px)").matches;
+      setCollapsed(savedCollapsed === "1" || collapseByDefault, false);
+    }
+
+    function syncDockForCurrentPage() {
+      syncDockExpansionForCurrentPage();
+      if (isHomePage()) {
+        // 每次进入首页先回到右下角默认位置，之后仍允许用户自由拖放。
+        resetDockPosition(false);
+      } else {
+        restoreDockPosition();
+      }
     }
 
     function isDockDragEnabled() {
@@ -1927,6 +1967,24 @@
       var rect = dock.getBoundingClientRect();
       var side = rect.left + rect.width / 2 <= window.innerWidth / 2 ? "left" : "right";
       dockToEdge(side, rect.top, true);
+    }
+
+    function settleDockAfterDrag() {
+      var rect = dock.getBoundingClientRect();
+      var leftGap = Math.max(0, rect.left);
+      var rightGap = Math.max(0, window.innerWidth - rect.right);
+      var nearestGap = Math.min(leftGap, rightGap);
+
+      if (nearestGap <= EDGE_SNAP_DISTANCE) {
+        dockToEdge(leftGap <= rightGap ? "left" : "right", rect.top, true);
+        return;
+      }
+
+      dock.classList.remove("is-edge-docked", "is-edge-left", "is-edge-right");
+      syncEdgeToggle(false);
+      setCollapsed(false);
+      clampDockPosition();
+      saveDockPosition();
     }
 
     function dockToEdge(side, top, persist) {

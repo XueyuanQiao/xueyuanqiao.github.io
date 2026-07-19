@@ -176,11 +176,13 @@ permalink: /about/2026/02/22/intro.html
   <span class="pf-skill" style="--i:7"><span class="g">T</span>TypeScript</span>
   <span class="pf-skill" style="--i:8"><span class="g">M</span>MySQL</span>
   <span class="pf-skill" style="--i:9"><span class="g">R</span>Redis / Tair</span>
-  <span class="pf-skill" style="--i:10"><span class="g">R</span>RocketMQ</span>
-  <span class="pf-skill" style="--i:11"><span class="g">D</span>Docker</span>
-  <span class="pf-skill" style="--i:12"><span class="g">P</span>Prometheus</span>
-  <span class="pf-skill" style="--i:13"><span class="g">G</span>Grafana</span>
-  <span class="pf-skill" style="--i:14"><span class="g">L</span>Linux</span>
+  <span class="pf-skill" style="--i:10"><span class="g">O</span>OceanBase</span>
+  <span class="pf-skill" style="--i:11"><span class="g">R</span>RocketMQ / Kafka</span>
+  <span class="pf-skill" style="--i:12"><span class="g">S</span>SOFA / 分布式事务</span>
+  <span class="pf-skill" style="--i:13"><span class="g">D</span>Docker</span>
+  <span class="pf-skill" style="--i:14"><span class="g">P</span>Prometheus</span>
+  <span class="pf-skill" style="--i:15"><span class="g">G</span>Grafana</span>
+  <span class="pf-skill" style="--i:16"><span class="g">L</span>Linux</span>
 </div>
 
 <div class="profile-cards" markdown="0">
@@ -206,6 +208,14 @@ permalink: /about/2026/02/22/intro.html
       <li>JVM、Linux 和分布式链路诊断</li>
       <li>Redis / Tair、RocketMQ / Kafka 常见故障</li>
       <li>Prometheus / Grafana 指标与日志定位</li>
+    </ul>
+  </div>
+  <div class="profile-card" data-tilt style="--accent: 124,255,180">
+    <div class="pf-h">中间件与架构</div>
+    <ul class="pf-list">
+      <li>Tair、OceanBase、SOFA 体系与消息中间件</li>
+      <li>分布式事务、缓存一致性与消息异常处理</li>
+      <li>限流、熔断、降级、主备切换与多地容灾</li>
     </ul>
   </div>
 </div>
