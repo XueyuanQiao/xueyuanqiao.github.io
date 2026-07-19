@@ -85,11 +85,11 @@ permalink: /about.html
     </div>
 </section>
 
-<!-- Core profile preview -->
+<!-- Core profile preview · 核心概述精简展示 + 打字逐行展开 -->
 <section class="landing-section about-snapshot" data-about-snapshot>
     <header class="section-head">
-        <span class="section-eyebrow">// profile.summary</span>
-        <h2>我在做什么 · At a Glance</h2>
+        <span class="section-eyebrow">// profile.prompt</span>
+        <h2>一个提示词看懂我 · One Prompt</h2>
     </header>
 
     <div class="snapshot-card" data-snapshot-card>
@@ -98,77 +98,90 @@ permalink: /about.html
             <span class="t-dot t-dot-r"></span>
             <span class="t-dot t-dot-y"></span>
             <span class="t-dot t-dot-g"></span>
-            <span class="snapshot-bar-title">~/about/qiaoxueyuan.md</span>
+            <span class="snapshot-bar-title">~/.prompts/qiaoxueyuan.system.md</span>
             <span class="snapshot-bar-status" data-snapshot-status aria-live="polite"></span>
         </div>
 
         <ol class="snapshot-lines" data-snapshot-lines>
             <li class="snap-line snap-head">
                 <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="1. 当前工作"></span>
+                <span class="snap-val" data-text="1. 角色设定 · Role &amp; Persona"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">岗位</span>
-                <span class="snap-val" data-text="九识无人车质量工程，负责 L4 无人配送车端到端质量。"></span>
+                <span class="snap-field">你是谁</span>
+                <span class="snap-val" data-text="乔雪源 / Xueyuan，一名把质量工程、测试开发与 AI 应用连接起来的工程师。"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">风格</span>
+                <span class="snap-val" data-text="工程审美优先，简单胜于复杂；用数据说话，不堆术语。"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">背景</span>
+                <span class="snap-val" data-text="近十年质量工程，横跨搜索、金融、AI 应用与 L4 无人车。"></span>
+            </li>
+
+            <li class="snap-line snap-head">
+                <span class="snap-hash">#</span>
+                <span class="snap-val" data-text="2. 上下文 · Context"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">当前</span>
+                <span class="snap-val" data-text="在九识无人车负责 L4 无人配送车的端到端质量。"></span>
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">对象</span>
                 <span class="snap-val" data-text="车端、云端、数据链路，以及仿真和路测中的关键场景。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">阶段</span>
-                <span class="snap-val" data-text="软件质量经验较多；自动驾驶仿真与路测仍在系统学习。"></span>
+                <span class="snap-field">能力</span>
+                <span class="snap-val" data-text="Python / FastAPI / Pytest，React / TypeScript，以及 AI 效果评测与质量平台。"></span>
             </li>
 
             <li class="snap-line snap-head">
                 <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="2. 做过的业务"></span>
+                <span class="snap-val" data-text="3. 任务目标 · Objective"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">搜索</span>
-                <span class="snap-val" data-text="百度大搜索：检索链路测试、自动化 diff、日历和天气垂类研发。"></span>
+                <span class="snap-field">核心</span>
+                <span class="snap-val" data-text="把质量方法、自动化与 AI 能力接进真实业务链路，交付可验证的结果。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">金融</span>
-                <span class="snap-val" data-text="支付宝基金养老：压测、容灾演练、资金链路与日常质量治理。"></span>
+                <span class="snap-field">近期</span>
+                <span class="snap-val" data-text="独立完成质量中台的需求梳理、前后端开发、数据存储与 CI/CD 部署。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">AI 应用</span>
-                <span class="snap-val" data-text="AI Phone：VOIP / ASR / 翻译 / TTS 链路与模型效果评测。"></span>
+                <span class="snap-field">AI</span>
+                <span class="snap-val" data-text="用 WER、基准集与 LLM-as-a-Judge 评估模型，把提示词配置纳入工程治理。"></span>
             </li>
 
             <li class="snap-line snap-head">
                 <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="3. 近期交付"></span>
+                <span class="snap-val" data-text="4. 限制与规则 · Constraints"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">质量中台</span>
-                <span class="snap-val" data-text="独立完成需求梳理、前后端开发、数据存储与 CI/CD 部署。"></span>
-            </li>
-            <li class="snap-line snap-item">
-                <span class="snap-field">技术栈</span>
-                <span class="snap-val" data-text="FastAPI / React / TypeScript / MySQL / Tair / Docker / SAE。"></span>
-            </li>
-            <li class="snap-line snap-item">
-                <span class="snap-field">AI 分析</span>
-                <span class="snap-val" data-text="根据测试数据归纳失败模式并给出排查建议，按业务配置提示词。"></span>
-            </li>
-
-            <li class="snap-line snap-head">
-                <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="4. 工作习惯"></span>
-            </li>
-            <li class="snap-line snap-item">
-                <span class="snap-field">验证</span>
-                <span class="snap-val" data-text="先定义指标与回归集，再用数据判断效果。"></span>
-            </li>
-            <li class="snap-line snap-item">
-                <span class="snap-field">自动化</span>
-                <span class="snap-val" data-text="高频回归尽量接入流水线，保留可追溯的结果。"></span>
+                <span class="snap-field">必须</span>
+                <span class="snap-val" data-text="先定义指标与回归集，再用数据判断效果；关键结果必须可追溯。"></span>
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">边界</span>
                 <span class="snap-val" data-text="生产实践、个人项目和学习验证分开说明。"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">绝不</span>
+                <span class="snap-val" data-text="不靠运气保稳定，不把工具使用包装成生产经验。"></span>
+            </li>
+
+            <li class="snap-line snap-head">
+                <span class="snap-hash">#</span>
+                <span class="snap-val" data-text="5. 输出格式 · Output"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">交付</span>
+                <span class="snap-val" data-text="可量化的质量指标、可复现的自动化链路、可持续演进的工程资产。"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">形态</span>
+                <span class="snap-val" data-text="质量平台 + CI/CD 管线 + AI 评测 + 持续的技术写作。"></span>
             </li>
         </ol>
 
@@ -202,7 +215,7 @@ permalink: /about.html
             </span>
             <span class="snapshot-cta-text">
                 <span class="snapshot-cta-main">阅读完整个人概述</span>
-                <span class="snapshot-cta-sub">职业经历 · 项目实践 · 技术范围 · 学习边界</span>
+                <span class="snapshot-cta-sub">完整履历 · 项目实践 · 技术栈全景 · 学习边界</span>
             </span>
             <span class="snapshot-cta-arrow" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>

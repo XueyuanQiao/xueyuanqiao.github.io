@@ -1304,7 +1304,7 @@
       statusEl.classList.remove("is-thinking", "is-generating", "is-done");
       if (state === "thinking" || state === "generating") {
         statusEl.classList.add(state === "thinking" ? "is-thinking" : "is-generating");
-        var label = state === "thinking" ? "loading" : "showing";
+        var label = state === "thinking" ? "thinking" : "generating";
         var step = 0;
         var render = function () {
           var dots = ".".repeat((step % 3) + 1);
@@ -1315,7 +1315,7 @@
         statusTimer = setInterval(render, 380);
       } else if (state === "done") {
         statusEl.classList.add("is-done");
-        statusEl.textContent = "✓ ready";
+        statusEl.textContent = "✓ done";
       } else {
         statusEl.textContent = "";
       }
@@ -1347,7 +1347,7 @@
 
     function runSequence() {
       section.classList.add("is-typing");
-      // 分两段展示，避免内容同时进入造成跳动
+      // 先「思考」，再「生成」，贴近推理型大模型的两段式过程
       setStatus("thinking");
       setTimeout(startGenerating, 900);
     }
