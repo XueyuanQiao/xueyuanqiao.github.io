@@ -1821,7 +1821,7 @@
       window.addEventListener("resize", function () {
         window.clearTimeout(dockResizeTimer);
         dockResizeTimer = window.setTimeout(function () {
-          if (isHomePage()) {
+          if (usesDefaultExpandedDock()) {
             if (dock.classList.contains("is-edge-docked")) {
               clampEdgeDockPosition();
               saveDockPosition();
@@ -1852,8 +1852,16 @@
       return doc.body.classList.contains("is-landing") || location.pathname === "/" || location.pathname === "/index.html";
     }
 
+    function isInwardSearchPage() {
+      return location.pathname === "/life/2026/07/19/inward-search.html";
+    }
+
+    function usesDefaultExpandedDock() {
+      return isHomePage() || isInwardSearchPage();
+    }
+
     function syncDockExpansionForCurrentPage() {
-      if (isHomePage()) {
+      if (usesDefaultExpandedDock()) {
         setQueueOpen(false);
         setCollapsed(false, false);
         return;
@@ -1868,8 +1876,8 @@
 
     function syncDockForCurrentPage() {
       syncDockExpansionForCurrentPage();
-      if (isHomePage()) {
-        // 每次进入首页先回到右下角默认位置，之后仍允许用户自由拖放。
+      if (usesDefaultExpandedDock()) {
+        // 首页和《向内求索》直达时先回到右下角默认展开位置，之后仍允许用户自由拖放。
         resetDockPosition(false);
       } else {
         restoreDockPosition();
