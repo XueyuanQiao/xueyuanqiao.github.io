@@ -94,7 +94,7 @@ permalink: /about/2026/02/22/intro.html
 
 ## 近期项目 · 无人车质量中台
 
-这套内部质量平台由我独立完成需求梳理、界面、前后端、数据存储和部署，主要用于汇总质量数据、管理测试执行并查看结果。开发过程中会使用 AI 编程工具辅助设计和编码，但技术选型、联调、验证与上线由我负责。
+这套内部质量平台由我独立完成需求梳理、界面、前后端、数据存储和部署，主要用于汇总质量数据、管理测试执行并查看结果。
 
 <div class="post-gallery" markdown="0">
   <figure>
@@ -125,15 +125,11 @@ permalink: /about/2026/02/22/intro.html
   </div>
   <div class="profile-card" data-tilt style="--accent: 251,191,36">
     <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span> 结果分析</div>
-    <p>根据测试执行数据归纳失败模式、标记可疑项并给出排查建议。当前按不同业务配置提示词，定位是辅助分析，不替代测试结论和人工复核。</p>
+    <p>根据测试执行数据归纳失败模式、标记可疑项并给出排查建议；分析结果与原始执行数据一同展示，由测试人员确认后进入结论。</p>
   </div>
 </div>
 
-## AI 相关实践与边界
-
-<div class="profile-panel" markdown="0" style="--accent: 124,255,180">
-  <p>AI 相关内容按实际使用场景拆开说明：生产项目、开发辅助和个人学习不混在一起。</p>
-</div>
+## AI 相关实践
 
 <div class="profile-layers" markdown="0">
   <div class="pf-layer">
@@ -142,15 +138,15 @@ permalink: /about/2026/02/22/intro.html
   </div>
   <div class="pf-layer">
     <span class="pf-idx">02</span>
-    <div class="pf-body"><b>测试结果分析</b><p>在质量中台中根据执行数据归纳失败模式、标记可疑项并给出排查建议，结论仍由人工复核。</p></div>
+    <div class="pf-body"><b>测试结果分析</b><p>在质量中台中根据执行数据归纳失败模式、标记可疑项并给出排查建议，同时回链原始数据供测试人员复核。</p></div>
   </div>
   <div class="pf-layer">
     <span class="pf-idx">03</span>
-    <div class="pf-body"><b>编码与调试辅助</b><p>使用编程 Agent 比较方案、生成代码、重构和排查问题，同时保留代码审查、自动化测试和上线验证。</p></div>
+    <div class="pf-body"><b>编码与调试辅助</b><p>使用编程 Agent 比较方案、生成代码、重构和排查问题，产出进入常规的代码审查、自动化测试和发布流程。</p></div>
   </div>
   <div class="pf-layer">
     <span class="pf-idx">04</span>
-    <div class="pf-body"><b>内部平台交付</b><p>独立完成无人车质量中台的需求梳理、前后端、数据存储和部署，AI 工具是开发辅助，不作为身份标签。</p></div>
+    <div class="pf-body"><b>内部平台交付</b><p>独立完成无人车质量中台的需求梳理、前后端、数据存储、联调和部署。</p></div>
   </div>
   <div class="pf-layer">
     <span class="pf-idx">05</span>
@@ -159,8 +155,8 @@ permalink: /about/2026/02/22/intro.html
 </div>
 
 <div class="profile-panel" markdown="0" style="--accent: 251,191,36">
-  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span> 经验边界</div>
-  <p>LangChain / LangGraph 和部分 Agent 评估框架目前以个人练习和方案验证为主，不作为大规模生产经验。自动驾驶仿真、路测和算法质量同样处于持续学习阶段。</p>
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span> 近期学习</div>
+  <p>近期在个人项目中使用 LangChain / LangGraph 和 Agent 评估框架，也在工作中持续补齐自动驾驶仿真、路测和算法质量相关知识。</p>
 </div>
 
 ## 常用技术

@@ -167,12 +167,12 @@ permalink: /about.html
                 <span class="snap-val" data-text="先定义指标与回归集，再用数据判断效果；关键结果必须可追溯。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">边界</span>
-                <span class="snap-val" data-text="生产实践、个人项目和学习验证分开说明。"></span>
+                <span class="snap-field">方法</span>
+                <span class="snap-val" data-text="从真实问题出发，用指标、自动化和复盘沉淀工程经验。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">绝不</span>
-                <span class="snap-val" data-text="不靠运气保稳定，不把工具使用包装成生产经验。"></span>
+                <span class="snap-field">原则</span>
+                <span class="snap-val" data-text="稳定性依靠基线、监控、演练和持续回归。"></span>
             </li>
 
             <li class="snap-line snap-head">
@@ -219,7 +219,7 @@ permalink: /about.html
             </span>
             <span class="snapshot-cta-text">
                 <span class="snapshot-cta-main">阅读完整个人概述</span>
-                <span class="snapshot-cta-sub">完整履历 · 项目实践 · 技术栈全景 · 学习边界</span>
+                <span class="snapshot-cta-sub">完整履历 · 项目实践 · 技术栈 · 近期方向</span>
             </span>
             <span class="snapshot-cta-arrow" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
@@ -289,8 +289,8 @@ permalink: /about.html
         </article>
         <article class="manifesto-card" style="--accent: 124,255,180">
             <div class="manifesto-num">04</div>
-            <h3>明确经验边界</h3>
-            <p>做过的项目、个人练习和正在学习的方向分开写；不把工具使用等同于生产经验。</p>
+            <h3>让经验留下来</h3>
+            <p>每个项目都沉淀可复用的测试资产、指标和复盘记录，让下一次交付更稳、更快。</p>
         </article>
     </div>
 </section>
@@ -378,7 +378,6 @@ permalink: /about.html
             </li>
         </ul>
     </div>
-    <p class="about-foot">六边形用于展示工作内容分布，标签表示经验状态，不再使用主观百分制自评。</p>
 </section>
 
 <!-- Career timeline -->
