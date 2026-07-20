@@ -249,6 +249,175 @@ hr {
   100% { background-position: 48px 48px, 48px 48px; }
 }
 
+/* ---------- Ambient Click Feedback ---------- */
+.click-bloom {
+  --click-tone: var(--brand);
+  --click-tone-alt: var(--brand-2);
+  position: fixed;
+  left: var(--click-x);
+  top: var(--click-y);
+  width: 1px;
+  height: 1px;
+  z-index: 120;
+  pointer-events: none;
+  color: var(--click-tone);
+  transform: rotate(var(--click-rotation, 0deg));
+  animation: click-bloom-life 820ms var(--ease-out) both;
+  contain: layout style;
+}
+
+.click-bloom--tone-2 {
+  --click-tone: var(--brand-2);
+  --click-tone-alt: var(--brand-3);
+}
+
+.click-bloom--tone-3 {
+  --click-tone: var(--brand-3);
+  --click-tone-alt: var(--brand);
+}
+
+.click-bloom::before,
+.click-bloom::after,
+.click-bloom__ring,
+.click-bloom__particle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.click-bloom::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--click-tone) 78%, white);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--click-tone) 48%, transparent);
+  animation: click-bloom-core 500ms var(--ease-out) both;
+}
+
+.click-bloom::after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border: 1px solid color-mix(in srgb, var(--click-tone-alt) 44%, transparent);
+  border-radius: 50%;
+  animation: click-bloom-ring-soft 760ms 55ms var(--ease-out) both;
+}
+
+.click-bloom__ring {
+  width: 16px;
+  height: 16px;
+  border: 1px solid color-mix(in srgb, var(--click-tone) 62%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--click-tone) 12%, transparent);
+  animation: click-bloom-ring 720ms var(--ease-out) both;
+}
+
+.click-bloom__particle {
+  width: var(--particle-size);
+  height: var(--particle-size);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--click-tone-alt) 76%, white);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--click-tone) 38%, transparent);
+  opacity: 0;
+}
+
+.click-bloom--ripple .click-bloom__particle {
+  animation: click-bloom-dust 680ms var(--particle-delay) var(--ease-out) both;
+}
+
+.click-bloom--burst .click-bloom__ring {
+  width: 10px;
+  height: 10px;
+  border-style: dashed;
+  animation-duration: 620ms;
+}
+
+.click-bloom--burst .click-bloom__particle {
+  animation: click-bloom-burst 650ms var(--particle-delay) var(--ease-out) both;
+}
+
+.click-bloom--orbit .click-bloom__ring {
+  width: 20px;
+  height: 20px;
+  border-color: color-mix(in srgb, var(--click-tone) 54%, transparent);
+  border-right-color: transparent;
+  border-bottom-color: color-mix(in srgb, var(--click-tone-alt) 28%, transparent);
+  animation: click-bloom-orbit-ring 780ms var(--ease-out) both;
+}
+
+.click-bloom--orbit .click-bloom__particle {
+  animation: click-bloom-orbit-particle 740ms var(--particle-delay) var(--ease-out) both;
+}
+
+.click-bloom--orbit .click-bloom__particle:nth-of-type(n + 5) {
+  display: none;
+}
+
+@keyframes click-bloom-life {
+  0%, 82% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes click-bloom-core {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+  24% { opacity: 0.82; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.45); }
+}
+
+@keyframes click-bloom-ring {
+  0% { opacity: 0.62; transform: translate(-50%, -50%) scale(0.28); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(3.45); }
+}
+
+@keyframes click-bloom-ring-soft {
+  0% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.42); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(4.8); }
+}
+
+@keyframes click-bloom-dust {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--particle-angle)) translateX(7px) scale(0.4);
+  }
+  20% { opacity: 0.56; }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--particle-angle)) translateX(var(--particle-distance)) scale(0.12);
+  }
+}
+
+@keyframes click-bloom-burst {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--particle-angle)) translateX(4px) scale(0.5);
+  }
+  18% { opacity: 0.72; }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--particle-angle)) translateX(calc(var(--particle-distance) + 8px)) scale(0.1);
+  }
+}
+
+@keyframes click-bloom-orbit-ring {
+  0% { opacity: 0.58; transform: translate(-50%, -50%) scale(0.38) rotate(0); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(2.65) rotate(115deg); }
+}
+
+@keyframes click-bloom-orbit-particle {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--particle-angle)) translateX(9px) scale(0.48);
+  }
+  22% { opacity: 0.62; }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(calc(var(--particle-angle) + 82deg)) translateX(var(--particle-distance)) scale(0.16);
+  }
+}
+
 /* ---------- Reading Progress ---------- */
 .read-progress {
   position: fixed;

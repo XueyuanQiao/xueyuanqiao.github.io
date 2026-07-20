@@ -1128,6 +1128,111 @@
 })();
 
 /* ==========================================================================
+   Ambient click feedback
+   Mouse-only, theme-aware effects for non-interactive page areas.
+   ========================================================================== */
+(function () {
+  "use strict";
+
+  var doc = document;
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+  var interactiveSelector = [
+    "a",
+    "button",
+    "input",
+    "select",
+    "textarea",
+    "label",
+    "summary",
+    "audio",
+    "video",
+    "iframe",
+    "object",
+    "embed",
+    "dialog",
+    "[contenteditable]:not([contenteditable='false'])",
+    "[draggable='true']",
+    "[onclick]",
+    "[tabindex]:not([tabindex='-1'])",
+    "[role='button']",
+    "[role='link']",
+    "[role='menuitem']",
+    "[role='option']",
+    "[role='tab']",
+    "[role='checkbox']",
+    "[role='radio']",
+    "[role='switch']",
+    "[role='slider']",
+    "[data-no-click-effect]",
+    "[data-music-player]",
+    "[data-cat-interactive]",
+    ".skill-card",
+    ".lightbox",
+    ".scrim"
+  ].join(",");
+  var variants = ["ripple", "burst", "orbit"];
+
+  function hasInteractiveCursor(target) {
+    var el = target;
+    while (el && el !== doc.body) {
+      var cursor = window.getComputedStyle(el).cursor;
+      if (/^(pointer|grab|grabbing|move|[nesw-]+resize|col-resize|row-resize)$/.test(cursor)) {
+        return true;
+      }
+      el = el.parentElement;
+    }
+    return false;
+  }
+
+  function isInteractiveTarget(target) {
+    if (!target || target.nodeType !== 1) return true;
+    return !!target.closest(interactiveSelector) || hasInteractiveCursor(target);
+  }
+
+  function createParticle(index, variant) {
+    var particle = doc.createElement("i");
+    var step = 360 / 6;
+    var jitter = variant === "orbit" ? 0 : (Math.random() * 14 - 7);
+    particle.className = "click-bloom__particle";
+    particle.style.setProperty("--particle-angle", (index * step + jitter) + "deg");
+    particle.style.setProperty("--particle-distance", (18 + Math.random() * 13) + "px");
+    particle.style.setProperty("--particle-delay", Math.round(Math.random() * 34) + "ms");
+    particle.style.setProperty("--particle-size", (1.5 + Math.random() * 1.5) + "px");
+    return particle;
+  }
+
+  function showClickEffect(x, y) {
+    var variant = variants[Math.floor(Math.random() * variants.length)];
+    var tone = 1 + Math.floor(Math.random() * 3);
+    var effect = doc.createElement("span");
+    var ring = doc.createElement("i");
+
+    effect.className = "click-bloom click-bloom--" + variant + " click-bloom--tone-" + tone;
+    effect.setAttribute("aria-hidden", "true");
+    effect.style.setProperty("--click-x", x + "px");
+    effect.style.setProperty("--click-y", y + "px");
+    effect.style.setProperty("--click-rotation", Math.round(Math.random() * 90 - 45) + "deg");
+
+    ring.className = "click-bloom__ring";
+    effect.appendChild(ring);
+    for (var i = 0; i < 6; i++) effect.appendChild(createParticle(i, variant));
+
+    doc.body.appendChild(effect);
+    effect.addEventListener("animationend", function (event) {
+      if (event.target === effect) effect.remove();
+    });
+    window.setTimeout(function () { effect.remove(); }, 1100);
+  }
+
+  doc.addEventListener("pointerdown", function (event) {
+    if (event.button !== 0 || event.pointerType !== "mouse") return;
+    if (reduceMotion && reduceMotion.matches) return;
+    if (isInteractiveTarget(event.target)) return;
+    showClickEffect(event.clientX, event.clientY);
+  }, { passive: true });
+})();
+
+/* ==========================================================================
    Global background music player
    Native Audio + Pointer-friendly ranges + Media Session + Web Audio visualizer
    ========================================================================== */
