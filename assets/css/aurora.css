@@ -7514,6 +7514,10 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
 
 .fab { bottom: 170px; }
 .music-dock.is-queue-open ~ .fab { bottom: 328px; }
+.music-dock.is-edge-docked.is-edge-right ~ .fab {
+  right: 82px;
+  right: max(82px, calc(env(safe-area-inset-right) + 78px));
+}
 
 .is-menu-open .music-dock {
   opacity: 0.16;
