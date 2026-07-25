@@ -20,7 +20,11 @@ permalink: /
 </head>
 <body>
     <div class="space-backdrop" aria-hidden="true">
-        <div class="space-backdrop__image"></div>
+        <canvas
+            id="space-panorama"
+            data-panorama-src="{{ '/images/space-panorama-360.webp' | relative_url }}"
+            data-panorama-mobile-src="{{ '/images/space-panorama-360-mobile.webp' | relative_url }}"
+        ></canvas>
         <div class="space-backdrop__veil"></div>
     </div>
 
@@ -32,27 +36,29 @@ permalink: /
     <div class="particle-ambient" aria-hidden="true"></div>
     <div class="particle-vignette" aria-hidden="true"></div>
 
+    <div class="space-drag-hint" aria-hidden="true">
+        <span></span>
+        拖曳探索 360° 宇宙
+    </div>
+
     <main class="particle-entry" aria-label="博客入口">
         <a class="particle-enter" href="{{ '/blog/' | relative_url }}">
             <span class="particle-enter__copy">
-                <small>继续探索</small>
+                <small>我的技术博客</small>
                 <strong>进入博客</strong>
             </span>
             <b aria-hidden="true">↗</b>
         </a>
 
-        <div class="particle-controls" aria-label="粒子效果开关">
-            <button type="button" data-particle-trigger>星云爆发</button>
-            <button type="button" data-particle-flow aria-pressed="true">星轨流动：开</button>
-            <button type="button" data-particle-glow aria-pressed="true">宇宙辉光：开</button>
-            <button class="particle-reset" type="button" data-particle-reset aria-label="重置宇宙视角" title="重置宇宙视角">重置宇宙</button>
+        <div class="particle-controls" aria-label="视角控制">
+            <button class="particle-reset" type="button" data-particle-reset aria-label="重置宇宙视角" title="重置宇宙视角">重置视角</button>
         </div>
 
     </main>
 
-    <p class="space-credit">背景影像：NASA / ESA / CSA / STScI</p>
+    <p class="space-credit">360° 全天星空影像：ESO / S. Brunier</p>
 
-    <p class="particle-loading" role="status">正在生成互动宇宙…</p>
+    <p class="particle-loading" role="status">正在载入 360° 深空全景…</p>
 
     <div class="particle-fallback" role="status">
         <p>互动宇宙暂时无法显示</p>
