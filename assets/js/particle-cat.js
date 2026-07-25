@@ -38,6 +38,7 @@
   var animationFrame = 0;
   var launchAnimationFrame = 0;
   var launchStartedAt = 0;
+  var launchArrivalTheme = "dark";
   var warpStars = [];
   var lastFrame = performance.now();
   var dragging = false;
@@ -349,7 +350,7 @@
   }
 
   function buildWarpStars() {
-    var count = coarsePointerQuery.matches || width < 700 ? 92 : 168;
+    var count = coarsePointerQuery.matches || width < 700 ? 72 : 124;
     var maximumRadius = Math.hypot(width, height) * 0.72;
     warpStars = [];
     for (var i = 0; i < count; i += 1) {
@@ -357,9 +358,9 @@
         angle: random(0, Math.PI * 2),
         distance: random(8, maximumRadius * 0.46),
         depth: random(0.34, 1),
-        alpha: random(0.2, 0.82),
-        width: random(0.45, 1.5),
-        color: Math.random() > 0.78 ? "145,203,255" : Math.random() > 0.88 ? "177,157,255" : "231,246,255"
+        alpha: random(0.12, 0.48),
+        width: random(0.35, 1.05),
+        color: Math.random() > 0.82 ? "124,145,183" : Math.random() > 0.9 ? "134,119,173" : "186,202,215"
       });
     }
   }
@@ -374,12 +375,12 @@
     var maximumRadius = Math.hypot(width, height) * 0.72;
 
     launchContext.clearRect(0, 0, width, height);
-    launchContext.fillStyle = "rgba(1,3,11," + Math.min(0.94, progress * 1.35) + ")";
+    launchContext.fillStyle = "rgba(1,3,10," + Math.min(0.96, progress * 1.28) + ")";
     launchContext.fillRect(0, 0, width, height);
 
     var nebula = launchContext.createRadialGradient(centerX, centerY, 0, centerX, centerY, maximumRadius * 0.72);
-    nebula.addColorStop(0, "rgba(84,174,255," + 0.12 * warpProgress + ")");
-    nebula.addColorStop(0.22, "rgba(56,78,188," + 0.09 * warpProgress + ")");
+    nebula.addColorStop(0, "rgba(49,61,103," + 0.08 * warpProgress + ")");
+    nebula.addColorStop(0.24, "rgba(43,49,91," + 0.055 * warpProgress + ")");
     nebula.addColorStop(1, "rgba(2,4,14,0)");
     launchContext.fillStyle = nebula;
     launchContext.fillRect(0, 0, width, height);
@@ -388,14 +389,14 @@
     launchContext.globalCompositeOperation = "screen";
     for (var i = 0; i < warpStars.length; i += 1) {
       var star = warpStars[i];
-      var acceleration = (1.4 + warpProgress * 27) * star.depth * (1 + progress * 2.8);
+      var acceleration = (1.1 + warpProgress * 17) * star.depth * (1 + progress * 2.2);
       star.distance += acceleration;
       if (star.distance > maximumRadius) {
         star.distance = random(4, 34);
         star.angle = random(0, Math.PI * 2);
       }
 
-      var streakLength = (5 + warpProgress * 86) * star.depth;
+      var streakLength = (4 + warpProgress * 54) * star.depth;
       var tailDistance = Math.max(1, star.distance - streakLength);
       var cos = Math.cos(star.angle);
       var sin = Math.sin(star.angle);
@@ -403,10 +404,10 @@
       var headY = centerY + sin * star.distance;
       var tailX = centerX + cos * tailDistance;
       var tailY = centerY + sin * tailDistance;
-      var alpha = star.alpha * (0.25 + warpProgress * 0.75) * Math.min(1, star.distance / 90);
+      var alpha = star.alpha * (0.2 + warpProgress * 0.68) * Math.min(1, star.distance / 110);
 
       launchContext.strokeStyle = "rgba(" + star.color + "," + alpha + ")";
-      launchContext.lineWidth = star.width + warpProgress * star.depth * 1.25;
+      launchContext.lineWidth = star.width + warpProgress * star.depth * 0.7;
       launchContext.beginPath();
       launchContext.moveTo(tailX, tailY);
       launchContext.lineTo(headX, headY);
@@ -414,9 +415,10 @@
     }
     launchContext.restore();
 
-    if (progress > 0.82) {
-      var darken = clamp((progress - 0.82) / 0.18, 0, 1);
-      launchContext.fillStyle = "rgba(1,3,10," + darken * 0.96 + ")";
+    if (progress > 0.84) {
+      var darken = clamp((progress - 0.84) / 0.16, 0, 1);
+      var arrivalColor = launchArrivalTheme === "light" ? "235,239,247" : "3,5,12";
+      launchContext.fillStyle = "rgba(" + arrivalColor + "," + darken * 0.96 + ")";
       launchContext.fillRect(0, 0, width, height);
     }
 
@@ -430,6 +432,12 @@
     launchTransition.style.setProperty("--launch-x", badgeBounds.left + badgeBounds.width * 0.5 + "px");
     launchTransition.style.setProperty("--launch-y", badgeBounds.top + badgeBounds.height * 0.5 + "px");
     launchTransition.setAttribute("aria-hidden", "false");
+    try {
+      launchArrivalTheme = window.localStorage.getItem("aurora-theme") === "light" ? "light" : "dark";
+    } catch (error) {
+      launchArrivalTheme = "dark";
+    }
+    launchTransition.classList.toggle("is-light-arrival", launchArrivalTheme === "light");
     launchTransition.classList.add("is-active");
     document.body.classList.add("is-site-launching");
     buildWarpStars();
