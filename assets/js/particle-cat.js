@@ -38,8 +38,10 @@
   var animationFrame = 0;
   var launchAnimationFrame = 0;
   var launchStartedAt = 0;
+  var launchLastFrame = 0;
   var launchArrivalTheme = "dark";
   var warpStars = [];
+  var warpBands = [];
   var lastFrame = performance.now();
   var dragging = false;
   var dragPointerId = null;
@@ -50,6 +52,7 @@
   var yaw = 0.68;
   var pitch = -0.035;
   var fov = 96;
+  var viewReset = null;
   var flowEnabled = !reducedMotionQuery.matches;
   var glowEnabled = true;
   var flowAmount = flowEnabled ? 1 : 0;
@@ -68,6 +71,18 @@
   function wrapAngle(value) {
     var twoPi = Math.PI * 2;
     return ((value + Math.PI) % twoPi + twoPi) % twoPi - Math.PI;
+  }
+
+  function easeInOutCubic(value) {
+    return value < 0.5
+      ? 4 * value * value * value
+      : 1 - Math.pow(-2 * value + 2, 3) / 2;
+  }
+
+  function cancelViewReset() {
+    if (!viewReset) return;
+    viewReset = null;
+    if (resetButton) resetButton.classList.remove("is-resetting");
   }
 
   function compileShader(type, source) {
@@ -350,17 +365,35 @@
   }
 
   function buildWarpStars() {
-    var count = coarsePointerQuery.matches || width < 700 ? 72 : 124;
-    var maximumRadius = Math.hypot(width, height) * 0.72;
+    var count = coarsePointerQuery.matches || width < 700 ? 132 : 220;
     warpStars = [];
     for (var i = 0; i < count; i += 1) {
+      var angle = random(0, Math.PI * 2);
+      var radius = random(0.12, 1.18);
       warpStars.push({
-        angle: random(0, Math.PI * 2),
-        distance: random(8, maximumRadius * 0.46),
-        depth: random(0.34, 1),
-        alpha: random(0.12, 0.48),
-        width: random(0.35, 1.05),
+        x: Math.cos(angle) * radius,
+        y: Math.sin(angle) * radius,
+        z: random(0.12, 1.18),
+        speed: random(0.72, 1.36),
+        twist: random(-0.18, 0.18),
+        alpha: random(0.13, 0.48),
+        width: random(0.35, 1),
         color: Math.random() > 0.82 ? "124,145,183" : Math.random() > 0.9 ? "134,119,173" : "186,202,215"
+      });
+    }
+
+    var bandCount = coarsePointerQuery.matches || width < 700 ? 9 : 14;
+    warpBands = [];
+    for (var j = 0; j < bandCount; j += 1) {
+      warpBands.push({
+        z: random(0.18, 1.16),
+        radius: random(0.16, 0.34),
+        speed: random(0.62, 1.18),
+        phase: random(0, Math.PI * 2),
+        length: random(0.62, 1.72),
+        tilt: random(-0.32, 0.32),
+        alpha: random(0.035, 0.095),
+        color: Math.random() > 0.68 ? "91,108,153" : "75,91,126"
       });
     }
   }
@@ -370,9 +403,12 @@
     var duration = 1580;
     var progress = clamp((now - launchStartedAt) / duration, 0, 1);
     var warpProgress = clamp((progress - 0.05) / 0.76, 0, 1);
+    var frameScale = clamp((now - launchLastFrame) / 16.67, 0.5, 2.1);
     var centerX = width * 0.5;
     var centerY = height * 0.43;
     var maximumRadius = Math.hypot(width, height) * 0.72;
+    var focalLength = Math.min(width, height) * (0.46 + warpProgress * 0.08);
+    launchLastFrame = now;
 
     launchContext.clearRect(0, 0, width, height);
     launchContext.fillStyle = "rgba(1,3,10," + Math.min(0.96, progress * 1.28) + ")";
@@ -389,28 +425,64 @@
     launchContext.globalCompositeOperation = "screen";
     for (var i = 0; i < warpStars.length; i += 1) {
       var star = warpStars[i];
-      var acceleration = (1.1 + warpProgress * 17) * star.depth * (1 + progress * 2.2);
-      star.distance += acceleration;
-      if (star.distance > maximumRadius) {
-        star.distance = random(4, 34);
-        star.angle = random(0, Math.PI * 2);
+      star.z -= (0.0038 + warpProgress * 0.031) * star.speed * frameScale;
+      if (star.z < 0.065) {
+        var resetAngle = random(0, Math.PI * 2);
+        var resetRadius = random(0.12, 1.18);
+        star.x = Math.cos(resetAngle) * resetRadius;
+        star.y = Math.sin(resetAngle) * resetRadius;
+        star.z = random(1.02, 1.2);
       }
 
-      var streakLength = (4 + warpProgress * 54) * star.depth;
-      var tailDistance = Math.max(1, star.distance - streakLength);
-      var cos = Math.cos(star.angle);
-      var sin = Math.sin(star.angle);
-      var headX = centerX + cos * star.distance;
-      var headY = centerY + sin * star.distance;
-      var tailX = centerX + cos * tailDistance;
-      var tailY = centerY + sin * tailDistance;
-      var alpha = star.alpha * (0.2 + warpProgress * 0.68) * Math.min(1, star.distance / 110);
+      var tailZ = Math.min(1.34, star.z + (0.016 + warpProgress * 0.12) * star.speed);
+      var headRotation = progress * 0.46 * (1 - star.z) + star.twist;
+      var tailRotation = progress * 0.46 * (1 - tailZ) + star.twist;
+      var headCos = Math.cos(headRotation);
+      var headSin = Math.sin(headRotation);
+      var tailCos = Math.cos(tailRotation);
+      var tailSin = Math.sin(tailRotation);
+      var headX3d = star.x * headCos - star.y * headSin;
+      var headY3d = star.x * headSin + star.y * headCos;
+      var tailX3d = star.x * tailCos - star.y * tailSin;
+      var tailY3d = star.x * tailSin + star.y * tailCos;
+      var headX = centerX + headX3d * focalLength / star.z;
+      var headY = centerY + headY3d * focalLength / star.z;
+      var tailX = centerX + tailX3d * focalLength / tailZ;
+      var tailY = centerY + tailY3d * focalLength / tailZ;
+      var distanceFromCenter = Math.hypot(headX - centerX, headY - centerY);
+      var alpha = star.alpha * (0.18 + warpProgress * 0.74) * clamp(distanceFromCenter / 130, 0.12, 1);
 
       launchContext.strokeStyle = "rgba(" + star.color + "," + alpha + ")";
-      launchContext.lineWidth = star.width + warpProgress * star.depth * 0.7;
+      launchContext.lineWidth = star.width + warpProgress * clamp(0.45 / star.z, 0, 1.25);
       launchContext.beginPath();
       launchContext.moveTo(tailX, tailY);
       launchContext.lineTo(headX, headY);
+      launchContext.stroke();
+    }
+
+    for (var j = 0; j < warpBands.length; j += 1) {
+      var band = warpBands[j];
+      band.z -= (0.0024 + warpProgress * 0.018) * band.speed * frameScale;
+      if (band.z < 0.085) {
+        band.z = random(1.02, 1.2);
+        band.phase = random(0, Math.PI * 2);
+      }
+
+      var bandRadius = focalLength * band.radius / band.z;
+      if (bandRadius > maximumRadius * 1.35) continue;
+      var bandAlpha = band.alpha * (0.25 + warpProgress * 0.75) * clamp(1 - band.z * 0.38, 0.22, 1);
+      launchContext.strokeStyle = "rgba(" + band.color + "," + bandAlpha + ")";
+      launchContext.lineWidth = 0.55 + warpProgress * clamp(0.7 / band.z, 0, 1.4);
+      launchContext.beginPath();
+      launchContext.ellipse(
+        centerX,
+        centerY,
+        bandRadius * 1.28,
+        bandRadius * 0.7,
+        band.tilt + progress * 0.34,
+        band.phase,
+        band.phase + band.length
+      );
       launchContext.stroke();
     }
     launchContext.restore();
@@ -442,6 +514,7 @@
     document.body.classList.add("is-site-launching");
     buildWarpStars();
     launchStartedAt = performance.now();
+    launchLastFrame = launchStartedAt;
     cancelAnimationFrame(launchAnimationFrame);
     if (launchContext) launchAnimationFrame = requestAnimationFrame(drawLaunchTransition);
     return 1580;
@@ -588,7 +661,23 @@
     flowAmount += ((flowEnabled ? 1 : 0) - flowAmount) * 0.045;
     glowAmount += ((glowEnabled ? 1 : 0) - glowAmount) * 0.055;
 
-    if (!dragging) {
+    if (viewReset) {
+      var resetProgress = clamp((now - viewReset.startedAt) / viewReset.duration, 0, 1);
+      var resetEase = easeInOutCubic(resetProgress);
+      yaw = wrapAngle(viewReset.startYaw + viewReset.deltaYaw * resetEase);
+      pitch = viewReset.startPitch + (viewReset.targetPitch - viewReset.startPitch) * resetEase;
+      fov = viewReset.startFov + (viewReset.targetFov - viewReset.startFov) * resetEase;
+      inertiaYaw = 0;
+      inertiaPitch = 0;
+
+      if (resetProgress >= 1) {
+        yaw = viewReset.targetYaw;
+        pitch = viewReset.targetPitch;
+        fov = viewReset.targetFov;
+        viewReset = null;
+        if (resetButton) resetButton.classList.remove("is-resetting");
+      }
+    } else if (!dragging) {
       yaw += inertiaYaw * dt;
       pitch += inertiaPitch * dt;
       inertiaYaw *= Math.pow(0.91, dt * 0.06);
@@ -610,6 +699,7 @@
   }
 
   function onPointerDown(event) {
+    cancelViewReset();
     dragging = true;
     dragPointerId = event.pointerId;
     previousPointerX = event.clientX;
@@ -649,31 +739,61 @@
   }
 
   function resetUniverse() {
-    yaw = 0.68;
-    pitch = -0.035;
-    fov = 96;
+    var targetYaw = 0.68;
+    var targetPitch = -0.035;
+    var targetFov = 96;
     inertiaYaw = 0;
     inertiaPitch = 0;
+
+    if (reducedMotionQuery.matches) {
+      yaw = targetYaw;
+      pitch = targetPitch;
+      fov = targetFov;
+      viewReset = null;
+    } else {
+      var deltaYaw = wrapAngle(targetYaw - yaw);
+      var travel = Math.abs(deltaYaw) + Math.abs(targetPitch - pitch) + Math.abs(targetFov - fov) / 70;
+      var duration = clamp(720 + travel * 230, 760, 1120);
+      viewReset = {
+        startedAt: performance.now(),
+        duration: duration,
+        startYaw: yaw,
+        startPitch: pitch,
+        startFov: fov,
+        deltaYaw: deltaYaw,
+        targetYaw: targetYaw,
+        targetPitch: targetPitch,
+        targetFov: targetFov
+      };
+
+      if (resetButton) {
+        resetButton.classList.remove("is-resetting");
+        void resetButton.offsetWidth;
+        resetButton.style.setProperty("--reset-duration", duration + "ms");
+        resetButton.classList.add("is-resetting");
+      }
+    }
+
     for (var i = 0; i < stars.length; i += 1) {
-      stars[i].ox = 0;
-      stars[i].oy = 0;
-      stars[i].vx = 0;
-      stars[i].vy = 0;
+      stars[i].vx += -stars[i].ox * 0.025;
+      stars[i].vy += -stars[i].oy * 0.025;
     }
   }
 
   function onWheel(event) {
     event.preventDefault();
+    cancelViewReset();
     fov = clamp(fov + event.deltaY * 0.025, 52, 100);
     markExplored();
   }
 
   function onKeyDown(event) {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight" && event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
+    cancelViewReset();
     if (event.key === "ArrowLeft") yaw -= 0.08;
     else if (event.key === "ArrowRight") yaw += 0.08;
     else if (event.key === "ArrowUp") pitch = clamp(pitch - 0.06, -1.18, 1.18);
-    else if (event.key === "ArrowDown") pitch = clamp(pitch + 0.06, -1.18, 1.18);
-    else return;
+    else pitch = clamp(pitch + 0.06, -1.18, 1.18);
     markExplored();
   }
 
@@ -689,15 +809,7 @@
   window.addEventListener("resize", resize, { passive: true });
 
   if (resetButton) {
-    resetButton.addEventListener("click", function () {
-      resetUniverse();
-      resetButton.classList.remove("is-resetting");
-      void resetButton.offsetWidth;
-      resetButton.classList.add("is-resetting");
-      window.setTimeout(function () {
-        resetButton.classList.remove("is-resetting");
-      }, 640);
-    });
+    resetButton.addEventListener("click", resetUniverse);
   }
 
   if (entryLink) {
