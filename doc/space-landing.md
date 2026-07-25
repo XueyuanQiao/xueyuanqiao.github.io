@@ -38,6 +38,7 @@
 4. `.space-drag-hint` / `.space-credit`：拖曳提示和影像署名。
 5. `.particle-entry`：博客入口与“重置视角”。
 6. `.particle-loading` / `.particle-fallback`：载入状态和 WebGL/图片失败降级。
+7. `.launch-transition`：点击博客入口后显示的全屏火箭升空、星轨加速与能量门转场，层级固定为 `z-index: 30`。
 
 不要把交互按钮放到粒子画布下方。`.particle-entry` 本身使用 `pointer-events: none`，只有入口链接和按钮恢复为 `pointer-events: auto`，这样大部分页面区域仍可拖动。
 
@@ -94,7 +95,11 @@
 - 主文案：`探索 Xueyuan 的技术宇宙`
 - 辅助文案：`深空坐标 · 技术博客`
 - 链接目标：`/blog/`
-- 点击普通左键后添加 `.is-launching`，火箭在 680ms 内离轨，随后跳转。
+- 点击普通左键后添加 `.is-launching`，同时激活 `.launch-transition.is-active`。
+- JavaScript 读取入口火箭的实际屏幕坐标，通过 CSS 变量 `--launch-x` / `--launch-y` 让转场火箭从按钮位置起飞。
+- 转场总时长为 1580ms：火箭升空、驶向屏幕中央能量门、星轨进入加速状态、能量门闪光后压暗画面，再跳转 `/blog/`。
+- `launch-transition__canvas` 使用 Canvas 2D 实时绘制放射状星轨；能量门、网格、火箭和文案由 CSS 动画完成，不引入额外运行时依赖。
+- `<head>` 使用低优先级 `prefetch` 预取 `/blog/` 文档，减少转场结束后的页面等待感。
 - `Ctrl`、`Command`、`Shift`、`Alt` 修饰点击保持浏览器原生行为。
 - 用户启用 `prefers-reduced-motion` 时不等待动画，直接跳转。
 
@@ -151,7 +156,7 @@ bundle exec jekyll serve --host 127.0.0.1 --port 4000 --no-watch
 - 最终出现 `.panorama-high-ready`，桌面与移动端画质符合预期。
 - 水平可连续拖动 360°，垂直视角不会翻转。
 - 惯性、滚轮缩放、方向键和“重置视角”有效。
-- 点击博客入口可看到火箭离轨动画，并进入 `/blog/`。
+- 点击博客入口后，火箭应从入口图标位置升空，出现星轨加速、能量门与“航向 Xueyuan 的技术宇宙”文案，约 1.58 秒后进入 `/blog/`。
 - `/blog/` 的 Aurora 布局、导航、主题切换、文章列表没有变化。
 - 390 × 844 移动视口无横向溢出，入口不遮挡安全区。
 - 控制台无 JavaScript、WebGL 或资源 404 错误。
@@ -159,6 +164,7 @@ bundle exec jekyll serve --host 127.0.0.1 --port 4000 --no-watch
 ## 10. 性能和维护原则
 
 - 不引入 Three.js 等运行时库；当前实现是原生 WebGL + Canvas 2D。
+- 跃迁 Canvas 复用首页 DPR 上限，桌面最高 1.5、粗指针设备最高 1.25，避免转场短时间内过度占用 GPU。
 - 不要把最终高清资源设为首个阻塞资源。
 - 不要在渐进加载期间重建 WebGL program 或重置视角状态。
 - 新增视觉效果前先确认不会遮挡博客入口、拖曳区域或明显增加 GPU 占用。
@@ -176,3 +182,4 @@ bundle exec jekyll serve --host 127.0.0.1 --port 4000 --no-watch
 - 博客入口升级为深空导航舱样式，增加火箭离轨跳转动画。
 - 入口文案调整为“探索 Xueyuan 的技术宇宙”。
 - 重置入口改为轨道回航图标，并保留无障碍名称与反馈动画。
+- 火箭入口增加全屏深空跃迁转场：从按钮坐标升空，经星轨加速和能量门闪光后再进入博客，并预取 `/blog/` 降低切页突兀感。

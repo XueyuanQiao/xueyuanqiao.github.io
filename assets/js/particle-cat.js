@@ -22,6 +22,9 @@
   var root = document.documentElement;
   var resetButton = document.querySelector("[data-particle-reset]");
   var entryLink = document.querySelector(".particle-enter");
+  var launchTransition = document.querySelector("[data-launch-transition]");
+  var launchCanvas = launchTransition && launchTransition.querySelector(".launch-transition__canvas");
+  var launchContext = launchCanvas && launchCanvas.getContext("2d", { alpha: true, desynchronized: true });
   var reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   var coarsePointerQuery = window.matchMedia("(pointer: coarse)");
 
@@ -33,6 +36,9 @@
   var stars = [];
   var streams = [];
   var animationFrame = 0;
+  var launchAnimationFrame = 0;
+  var launchStartedAt = 0;
+  var warpStars = [];
   var lastFrame = performance.now();
   var dragging = false;
   var dragPointerId = null;
@@ -332,6 +338,105 @@
     particleCanvas.style.width = width + "px";
     particleCanvas.style.height = height + "px";
     particleContext.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    if (launchCanvas && launchContext) {
+      launchCanvas.width = Math.max(1, Math.round(width * dpr));
+      launchCanvas.height = Math.max(1, Math.round(height * dpr));
+      launchCanvas.style.width = width + "px";
+      launchCanvas.style.height = height + "px";
+      launchContext.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+  }
+
+  function buildWarpStars() {
+    var count = coarsePointerQuery.matches || width < 700 ? 92 : 168;
+    var maximumRadius = Math.hypot(width, height) * 0.72;
+    warpStars = [];
+    for (var i = 0; i < count; i += 1) {
+      warpStars.push({
+        angle: random(0, Math.PI * 2),
+        distance: random(8, maximumRadius * 0.46),
+        depth: random(0.34, 1),
+        alpha: random(0.2, 0.82),
+        width: random(0.45, 1.5),
+        color: Math.random() > 0.78 ? "145,203,255" : Math.random() > 0.88 ? "177,157,255" : "231,246,255"
+      });
+    }
+  }
+
+  function drawLaunchTransition(now) {
+    if (!launchContext || !launchCanvas) return;
+    var duration = 1580;
+    var progress = clamp((now - launchStartedAt) / duration, 0, 1);
+    var warpProgress = clamp((progress - 0.05) / 0.76, 0, 1);
+    var centerX = width * 0.5;
+    var centerY = height * 0.43;
+    var maximumRadius = Math.hypot(width, height) * 0.72;
+
+    launchContext.clearRect(0, 0, width, height);
+    launchContext.fillStyle = "rgba(1,3,11," + Math.min(0.94, progress * 1.35) + ")";
+    launchContext.fillRect(0, 0, width, height);
+
+    var nebula = launchContext.createRadialGradient(centerX, centerY, 0, centerX, centerY, maximumRadius * 0.72);
+    nebula.addColorStop(0, "rgba(84,174,255," + 0.12 * warpProgress + ")");
+    nebula.addColorStop(0.22, "rgba(56,78,188," + 0.09 * warpProgress + ")");
+    nebula.addColorStop(1, "rgba(2,4,14,0)");
+    launchContext.fillStyle = nebula;
+    launchContext.fillRect(0, 0, width, height);
+
+    launchContext.save();
+    launchContext.globalCompositeOperation = "screen";
+    for (var i = 0; i < warpStars.length; i += 1) {
+      var star = warpStars[i];
+      var acceleration = (1.4 + warpProgress * 27) * star.depth * (1 + progress * 2.8);
+      star.distance += acceleration;
+      if (star.distance > maximumRadius) {
+        star.distance = random(4, 34);
+        star.angle = random(0, Math.PI * 2);
+      }
+
+      var streakLength = (5 + warpProgress * 86) * star.depth;
+      var tailDistance = Math.max(1, star.distance - streakLength);
+      var cos = Math.cos(star.angle);
+      var sin = Math.sin(star.angle);
+      var headX = centerX + cos * star.distance;
+      var headY = centerY + sin * star.distance;
+      var tailX = centerX + cos * tailDistance;
+      var tailY = centerY + sin * tailDistance;
+      var alpha = star.alpha * (0.25 + warpProgress * 0.75) * Math.min(1, star.distance / 90);
+
+      launchContext.strokeStyle = "rgba(" + star.color + "," + alpha + ")";
+      launchContext.lineWidth = star.width + warpProgress * star.depth * 1.25;
+      launchContext.beginPath();
+      launchContext.moveTo(tailX, tailY);
+      launchContext.lineTo(headX, headY);
+      launchContext.stroke();
+    }
+    launchContext.restore();
+
+    if (progress > 0.82) {
+      var darken = clamp((progress - 0.82) / 0.18, 0, 1);
+      launchContext.fillStyle = "rgba(1,3,10," + darken * 0.96 + ")";
+      launchContext.fillRect(0, 0, width, height);
+    }
+
+    if (progress < 1) launchAnimationFrame = requestAnimationFrame(drawLaunchTransition);
+  }
+
+  function startLaunchTransition() {
+    if (!launchTransition || !entryLink) return 680;
+    var badge = entryLink.querySelector("b");
+    var badgeBounds = badge ? badge.getBoundingClientRect() : entryLink.getBoundingClientRect();
+    launchTransition.style.setProperty("--launch-x", badgeBounds.left + badgeBounds.width * 0.5 + "px");
+    launchTransition.style.setProperty("--launch-y", badgeBounds.top + badgeBounds.height * 0.5 + "px");
+    launchTransition.setAttribute("aria-hidden", "false");
+    launchTransition.classList.add("is-active");
+    document.body.classList.add("is-site-launching");
+    buildWarpStars();
+    launchStartedAt = performance.now();
+    cancelAnimationFrame(launchAnimationFrame);
+    if (launchContext) launchAnimationFrame = requestAnimationFrame(drawLaunchTransition);
+    return 1580;
   }
 
   function projectStar(star) {
@@ -594,9 +699,10 @@
       event.preventDefault();
       if (entryLink.classList.contains("is-launching")) return;
       entryLink.classList.add("is-launching");
+      var transitionDuration = startLaunchTransition();
       window.setTimeout(function () {
         window.location.assign(entryLink.href);
-      }, 680);
+      }, transitionDuration);
     });
   }
 
