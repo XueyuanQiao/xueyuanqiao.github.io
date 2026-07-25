@@ -7,10 +7,10 @@ permalink: /
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-    <meta name="theme-color" content="#030711">
+    <meta name="theme-color" content="#02050b">
     <meta name="color-scheme" content="dark">
-    <title>猫猫粒子场 · {{ site.title }}</title>
-    <meta name="description" content="可拖曳旋转的 3D 猫猫粒子场，在完整模型与星云粒子之间循环变形。">
+    <title>猫猫粒子首页 · {{ site.title }}</title>
+    <meta name="description" content="由真实猫猫照片生成的互动粒子首页。">
     <link rel="canonical" href="{{ '/' | absolute_url }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ '/images/favicon.png' | relative_url }}">
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -19,58 +19,48 @@ permalink: /
     <link rel="stylesheet" href="{{ '/assets/css/particle-cat.css' | relative_url }}">
 </head>
 <body>
-    <canvas id="cat-particle-stage" aria-hidden="true"></canvas>
-    <div class="particle-noise" aria-hidden="true"></div>
+    <div class="particle-photo-stage" aria-hidden="true">
+        <img class="particle-photo" data-particle-photo="0" src="{{ '/images/cat-particle-pose-1.webp' | relative_url }}" alt="">
+        <img class="particle-photo" data-particle-photo="1" src="{{ '/images/cat-particle-pose-2.webp' | relative_url }}" alt="">
+        <img class="particle-photo" data-particle-photo="2" src="{{ '/images/cat-particle-pose-3.webp' | relative_url }}" alt="">
+    </div>
+
+    <canvas
+        id="cat-particle-stage"
+        data-model-src-1="{{ '/images/cat-particle-pose-1.webp' | relative_url }}"
+        data-model-src-2="{{ '/images/cat-particle-pose-2.webp' | relative_url }}"
+        data-model-src-3="{{ '/images/cat-particle-pose-3.webp' | relative_url }}"
+        aria-label="由真实猫猫照片生成的可互动彩色粒子模型"
+    ></canvas>
+
+    <div class="particle-ambient" aria-hidden="true"></div>
     <div class="particle-vignette" aria-hidden="true"></div>
 
-    <header class="particle-nav">
-        <a class="particle-back" href="{{ '/blog/' | relative_url }}" aria-label="进入博客">
-            <span aria-hidden="true">↗</span>
+    <main class="particle-entry" aria-label="博客入口">
+        <a class="particle-enter" href="{{ '/blog/' | relative_url }}">
             <span>进入博客</span>
+            <b aria-hidden="true">→</b>
         </a>
-        <div class="particle-brand" aria-label="Xueyuan Particle Lab">
-            <span class="particle-brand__mark">XY</span>
-            <span><strong>PARTICLE LAB</strong><small>CAT / NEBULA / 01</small></span>
+
+        <div class="particle-controls" aria-label="粒子效果开关">
+            <button type="button" data-particle-pose>切换姿态</button>
+            <button type="button" data-particle-trigger>粒子散开</button>
+            <button type="button" data-particle-auto aria-pressed="true">自动循环：开</button>
+            <button class="particle-reset" type="button" data-particle-reset aria-label="重置猫猫视角" title="重置猫猫视角">重置视角</button>
         </div>
-    </header>
 
-    <main class="particle-shell">
-        <section class="particle-copy" aria-labelledby="particle-title">
-            <div class="particle-status"><span></span><b data-particle-phase>MODEL LOCKED</b></div>
-            <p class="particle-eyebrow">// GENERATIVE SPECIMEN · 001</p>
-            <h1 id="particle-title">CAT<span>/</span><br>NEBULA</h1>
-            <p class="particle-lead">一只由数千个光点构成的猫。靠近它，粒子会像被水流推开；离开后，它会带着呼吸感缓慢归位。</p>
-
-            <dl class="particle-metrics">
-                <div><dt>PARTICLES</dt><dd data-particle-count>--</dd></div>
-                <div><dt>RENDERER</dt><dd>CANVAS 3D</dd></div>
-                <div><dt>CONTROL</dt><dd>FLUID FIELD</dd></div>
-            </dl>
-
-            <div class="particle-controls" aria-label="粒子场控制">
-                <a class="particle-button particle-button--primary" href="{{ '/blog/' | relative_url }}">
-                    <span>进入博客</span><b aria-hidden="true">↗</b>
-                </a>
-                <button class="particle-button" type="button" data-particle-trigger>触发变形</button>
-                <button class="particle-button" type="button" data-particle-auto aria-pressed="true">自动循环：开</button>
-                <button class="particle-button particle-button--icon" type="button" data-particle-reset aria-label="重置猫猫视角" title="重置视角">◎</button>
-            </div>
-
-            <p class="particle-hint"><span aria-hidden="true">◎</span> 移动鼠标推散粒子 · 单击释放波纹 · 拖曳旋转</p>
-        </section>
+        <p class="particle-hint">三张真实照片连续重组 · 移动鼠标推开粒子 · 拖曳旋转</p>
     </main>
 
-    <div class="particle-coordinate particle-coordinate--left" aria-hidden="true">Y 31.2304<br>X 121.4737</div>
-    <div class="particle-coordinate particle-coordinate--right" aria-hidden="true">XUEYUAN.GITHUB.IO<br>REALTIME PARTICLE FIELD</div>
+    <p class="particle-loading" role="status">正在读取三张猫猫照片…</p>
 
     <div class="particle-fallback" role="status">
-        <span>CAT / NEBULA</span>
-        <strong>当前浏览器无法启动粒子画布</strong>
-        <a href="{{ '/blog/' | relative_url }}">进入博客</a>
+        <p>粒子效果暂时无法显示</p>
+        <a href="{{ '/blog/' | relative_url }}">进入博客 →</a>
     </div>
 
     <noscript>
-        <div class="particle-noscript">需要启用 JavaScript 才能观看猫猫粒子场。<a href="{{ '/blog/' | relative_url }}">直接进入博客</a></div>
+        <div class="particle-noscript">需要启用 JavaScript 才能观看猫猫粒子。<a href="{{ '/blog/' | relative_url }}">进入博客</a></div>
     </noscript>
 
     <script src="{{ '/assets/js/particle-cat.js' | relative_url }}" defer></script>
