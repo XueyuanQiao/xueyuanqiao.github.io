@@ -9,8 +9,8 @@ permalink: /
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <meta name="theme-color" content="#02050b">
     <meta name="color-scheme" content="dark">
-    <title>猫猫粒子首页 · {{ site.title }}</title>
-    <meta name="description" content="由真实猫猫照片生成的互动粒子首页。">
+    <title>{{ site.title }}</title>
+    <meta name="description" content="由猫猫头像生成的实时互动粒子点云首页。">
     <link rel="canonical" href="{{ '/' | absolute_url }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ '/images/favicon.png' | relative_url }}">
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -19,18 +19,10 @@ permalink: /
     <link rel="stylesheet" href="{{ '/assets/css/particle-cat.css' | relative_url }}">
 </head>
 <body>
-    <div class="particle-photo-stage" aria-hidden="true">
-        <img class="particle-photo" data-particle-photo="0" src="{{ '/images/cat-particle-pose-1.webp' | relative_url }}" alt="">
-        <img class="particle-photo" data-particle-photo="1" src="{{ '/images/cat-particle-pose-2.webp' | relative_url }}" alt="">
-        <img class="particle-photo" data-particle-photo="2" src="{{ '/images/cat-particle-pose-3.webp' | relative_url }}" alt="">
-    </div>
-
     <canvas
         id="cat-particle-stage"
-        data-model-src-1="{{ '/images/cat-particle-pose-1.webp' | relative_url }}"
-        data-model-src-2="{{ '/images/cat-particle-pose-2.webp' | relative_url }}"
-        data-model-src-3="{{ '/images/cat-particle-pose-3.webp' | relative_url }}"
-        aria-label="由真实猫猫照片生成的可互动彩色粒子模型"
+        data-model-src="{{ '/images/cat-particle-avatar.webp' | relative_url }}"
+        aria-label="由猫猫头像生成的可互动彩色粒子点云"
     ></canvas>
 
     <div class="particle-ambient" aria-hidden="true"></div>
@@ -43,16 +35,16 @@ permalink: /
         </a>
 
         <div class="particle-controls" aria-label="粒子效果开关">
-            <button type="button" data-particle-pose>切换姿态</button>
-            <button type="button" data-particle-trigger>粒子散开</button>
-            <button type="button" data-particle-auto aria-pressed="true">自动循环：开</button>
-            <button class="particle-reset" type="button" data-particle-reset aria-label="重置猫猫视角" title="重置猫猫视角">重置视角</button>
+            <button type="button" data-particle-trigger>扩散粒子</button>
+            <button type="button" data-particle-flow aria-pressed="true">呼吸流动：开</button>
+            <button type="button" data-particle-glow aria-pressed="true">粒子辉光：开</button>
+            <button class="particle-reset" type="button" data-particle-reset aria-label="重置猫猫点云" title="重置猫猫点云">重置点云</button>
         </div>
 
-        <p class="particle-hint">三张真实照片连续重组 · 移动鼠标推开粒子 · 拖曳旋转</p>
+        <p class="particle-hint">移动鼠标推开粒子 · 离开后弹性归位 · 拖曳旋转 · 单击释放波纹</p>
     </main>
 
-    <p class="particle-loading" role="status">正在读取三张猫猫照片…</p>
+    <p class="particle-loading" role="status">正在生成猫猫粒子点云…</p>
 
     <div class="particle-fallback" role="status">
         <p>粒子效果暂时无法显示</p>

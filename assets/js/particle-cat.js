@@ -10,21 +10,14 @@
     return;
   }
 
-  var poseButton = document.querySelector("[data-particle-pose]");
   var triggerButton = document.querySelector("[data-particle-trigger]");
-  var autoButton = document.querySelector("[data-particle-auto]");
+  var flowButton = document.querySelector("[data-particle-flow]");
+  var glowButton = document.querySelector("[data-particle-glow]");
   var resetButton = document.querySelector("[data-particle-reset]");
-  var photoElements = Array.prototype.slice.call(document.querySelectorAll("[data-particle-photo]"));
   var reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   var coarsePointerQuery = window.matchMedia("(pointer: coarse)");
   var prefersReducedMotion = reducedMotionQuery.matches;
-  var autoPlay = !prefersReducedMotion;
-  var poseNames = ["正面", "侧望", "卧姿"];
-  var modelSources = [
-    canvas.getAttribute("data-model-src-1"),
-    canvas.getAttribute("data-model-src-2"),
-    canvas.getAttribute("data-model-src-3")
-  ].filter(Boolean);
+  var modelSource = canvas.getAttribute("data-model-src");
 
   var width = 0;
   var height = 0;
@@ -33,8 +26,6 @@
   var centerY = 0;
   var sceneScale = 1;
   var particles = [];
-  var poseImages = [];
-  var poseMetas = [];
   var stars = [];
   var shockwaves = [];
   var animationFrame = 0;
@@ -42,28 +33,23 @@
   var elapsed = 0;
   var morph = 0;
   var morphTransition = null;
-  var currentPose = 0;
-  var poseFrom = 0;
-  var poseTo = 0;
-  var poseMix = 1;
-  var poseTransition = null;
-  var nextAutoAt = lastFrame + 5200;
-  var yaw = -0.08;
-  var pitch = 0.01;
+  var flowEnabled = !prefersReducedMotion;
+  var glowEnabled = true;
+  var yaw = -0.035;
+  var pitch = 0.012;
   var targetYaw = yaw;
   var targetPitch = pitch;
-  var zoom = 1.05;
-  var targetZoom = 1.05;
+  var zoom = 1;
+  var targetZoom = 1;
   var dragging = false;
   var activePointerId = null;
-  var pointerX = 0;
-  var pointerY = 0;
+  var pointerX = -1000;
+  var pointerY = -1000;
   var pointerStrength = 0;
   var pointerTargetStrength = 0;
   var pointerLastMove = 0;
   var pointerDownAt = 0;
   var pointerTravel = 0;
-  var transitionEnergy = 0;
   var frameSamples = 0;
   var slowFrames = 0;
   var renderStride = 1;
@@ -88,19 +74,15 @@
   function qualityFactor() {
     var cores = navigator.hardwareConcurrency || 4;
     var memory = navigator.deviceMemory || 4;
-    if (window.innerWidth < 520 || cores <= 2 || memory <= 2) return 0.48;
-    if (coarsePointerQuery.matches || window.innerWidth < 900 || cores <= 4 || memory <= 4) return 0.68;
+    if (window.innerWidth < 520 || cores <= 2 || memory <= 2) return 0.43;
+    if (coarsePointerQuery.matches || window.innerWidth < 900 || cores <= 4 || memory <= 4) return 0.62;
     return 1;
   }
 
   var quality = qualityFactor();
 
   function targetParticleCount() {
-    return Math.round(18000 * quality);
-  }
-
-  function colorChannel(value) {
-    return clamp(Math.round(value / 10) * 10, 0, 255);
+    return Math.round(30000 * quality);
   }
 
   function loadImage(source) {
@@ -113,8 +95,22 @@
     });
   }
 
-  function extractPose(image, wanted) {
-    var maximum = 760;
+  function boostedColor(r, g, b, luma) {
+    var lift = luma < 78 ? (78 - luma) * 0.8 : 4;
+    var warmth = Math.max(0, r - b) * 0.055;
+    var red = clamp(Math.round(r + lift * 0.58 + warmth), 0, 255);
+    var green = clamp(Math.round(g + lift * 0.72 + 3), 0, 255);
+    var blue = clamp(Math.round(b + lift + 7), 0, 255);
+    return {
+      r: red,
+      g: green,
+      b: blue,
+      css: "rgb(" + red + "," + green + "," + blue + ")"
+    };
+  }
+
+  function buildParticles(image) {
+    var maximum = 900;
     var ratio = Math.min(1, maximum / Math.max(image.naturalWidth, image.naturalHeight));
     var sampleWidth = Math.max(1, Math.round(image.naturalWidth * ratio));
     var sampleHeight = Math.max(1, Math.round(image.naturalHeight * ratio));
@@ -125,118 +121,67 @@
     sampleContext.clearRect(0, 0, sampleWidth, sampleHeight);
     sampleContext.drawImage(image, 0, 0, sampleWidth, sampleHeight);
 
-    var data = sampleContext.getImageData(0, 0, sampleWidth, sampleHeight).data;
+    var pixels = sampleContext.getImageData(0, 0, sampleWidth, sampleHeight).data;
     var candidates = [];
-    var minX = sampleWidth;
-    var minY = sampleHeight;
-    var maxX = 0;
-    var maxY = 0;
     var scanStep = quality < 0.55 ? 2 : 1;
 
     for (var y = 0; y < sampleHeight; y += scanStep) {
       for (var x = 0; x < sampleWidth; x += scanStep) {
         var index = (y * sampleWidth + x) * 4;
-        var alpha = data[index + 3];
-        if (alpha <= 28) continue;
+        var alpha = pixels[index + 3];
+        if (alpha < 38) continue;
 
-        var r = data[index];
-        var g = data[index + 1];
-        var b = data[index + 2];
+        var r = pixels[index];
+        var g = pixels[index + 1];
+        var b = pixels[index + 2];
         var luma = r * 0.2126 + g * 0.7152 + b * 0.0722;
+        var acceptance = (alpha / 255) * (0.54 + (255 - luma) / 255 * 0.46);
+        if (Math.random() > acceptance) continue;
         candidates.push({ x: x, y: y, r: r, g: g, b: b, a: alpha, luma: luma });
-        minX = Math.min(minX, x);
-        minY = Math.min(minY, y);
-        maxX = Math.max(maxX, x);
-        maxY = Math.max(maxY, y);
       }
     }
 
-    if (!candidates.length) throw new Error("猫猫照片中没有可用主体");
+    if (!candidates.length) throw new Error("头像中没有可用的粒子像素");
 
-    var count = Math.min(wanted, candidates.length);
-    var selected = [];
+    var count = Math.min(targetParticleCount(), candidates.length);
+    particles = [];
+
     for (var i = 0; i < count; i += 1) {
       var pick = i + Math.floor(Math.random() * (candidates.length - i));
       var temporary = candidates[i];
       candidates[i] = candidates[pick];
       candidates[pick] = temporary;
-      selected.push(candidates[i]);
-    }
+      var pixel = candidates[i];
+      var modelX = pixel.x / sampleWidth * 2 - 1;
+      var modelY = 1 - pixel.y / sampleHeight * 2;
+      var side = clamp(Math.abs(modelX), 0, 1);
+      var depth = (1 - Math.pow(side, 1.5)) * 0.12 + (128 - pixel.luma) / 255 * 0.08 + randomRange(-0.045, 0.045);
+      var theta = Math.random() * Math.PI * 2;
+      var radius = randomRange(1.2, 2.75);
+      var color = boostedColor(pixel.r, pixel.g, pixel.b, pixel.luma);
+      var detailBoost = pixel.luma < 118 ? 1.28 : 1;
 
-    selected.sort(function (first, second) {
-      var firstY = (first.y - minY) / Math.max(1, maxY - minY);
-      var secondY = (second.y - minY) / Math.max(1, maxY - minY);
-      var bandDifference = Math.floor(firstY * 90) - Math.floor(secondY * 90);
-      return bandDifference || first.x - second.x;
-    });
-
-    var subjectWidth = Math.max(1, maxX - minX);
-    var subjectHeight = Math.max(1, maxY - minY);
-    var modelScale = Math.min(4.9 / subjectWidth, 5.18 / subjectHeight);
-    var subjectCenterX = (minX + maxX) * 0.5;
-    var subjectCenterY = (minY + maxY) * 0.5;
-
-    var points = selected.map(function (pixel) {
-      var modelX = (pixel.x - subjectCenterX) * modelScale;
-      var modelY = (subjectCenterY - pixel.y) * modelScale;
-      var normalizedSide = clamp(Math.abs(modelX) / 2.45, 0, 1);
-      var z = (1 - Math.pow(normalizedSide, 1.55)) * 0.48 + randomRange(-0.07, 0.07);
-      var visibilityLift = pixel.luma < 72 ? (72 - pixel.luma) * 0.78 : 7;
-      var red = colorChannel(pixel.r + (255 - pixel.r) * 0.16 + visibilityLift * 0.72);
-      var green = colorChannel(pixel.g + (255 - pixel.g) * 0.16 + visibilityLift * 0.86);
-      var blue = colorChannel(pixel.b + (255 - pixel.b) * 0.16 + visibilityLift);
-
-      return {
+      particles.push({
         x: modelX,
         y: modelY,
-        z: z,
-        r: red,
-        g: green,
-        b: blue,
-        a: pixel.a / 255,
-        luma: pixel.luma,
-        css: "rgb(" + red + "," + green + "," + blue + ")"
-      };
-    });
-
-    return {
-      points: points,
-      meta: {
-        sampleWidth: sampleWidth,
-        sampleHeight: sampleHeight,
-        subjectCenterX: subjectCenterX,
-        subjectCenterY: subjectCenterY,
-        modelScale: modelScale
-      }
-    };
-  }
-
-  function buildParticles(images) {
-    var wanted = targetParticleCount();
-    var extracted = images.map(function (image) { return extractPose(image, wanted); });
-    var poseSets = extracted.map(function (pose) { return pose.points; });
-    poseImages = images;
-    poseMetas = extracted.map(function (pose) { return pose.meta; });
-    var count = Math.min.apply(Math, poseSets.map(function (pose) { return pose.length; }));
-    particles = [];
-
-    for (var i = 0; i < count; i += 1) {
-      var theta = Math.random() * Math.PI * 2;
-      var radial = randomRange(2.4, 5.9);
-      particles.push({
-        poses: poseSets.map(function (pose) { return pose[i]; }),
-        sx: Math.cos(theta) * radial + randomRange(-0.7, 0.7),
-        sy: Math.sin(theta) * radial * 0.78 + randomRange(-0.55, 0.55),
-        sz: Math.sin(theta * 1.7) * randomRange(1.3, 4.0),
-        bridgeX: Math.cos(theta * 1.8) * randomRange(0.18, 0.85),
-        bridgeY: Math.sin(theta * 1.35) * randomRange(0.14, 0.7),
-        bridgeZ: Math.cos(theta * 0.75) * randomRange(0.2, 1.1),
-        size: randomRange(1.42, 2.65),
-        alpha: randomRange(0.94, 1),
+        z: depth,
+        scatterX: Math.cos(theta) * radius + randomRange(-0.35, 0.35),
+        scatterY: Math.sin(theta) * radius + randomRange(-0.35, 0.35),
+        scatterZ: Math.sin(theta * 1.7) * randomRange(0.8, 2.1),
+        r: color.r,
+        g: color.g,
+        b: color.b,
+        css: color.css,
+        alpha: Math.max(pixel.a / 255, pixel.luma < 118 ? 0.86 : 0.48),
+        size: randomRange(1.05, 2.15) * detailBoost,
         phase: Math.random() * Math.PI * 2,
-        speed: randomRange(0.45, 1.25),
-        delay: Math.random() * 0.17,
-        glow: Math.random() > 0.978,
+        speed: randomRange(0.45, 1.2),
+        delay: Math.random() * 0.2,
+        glow: Math.random() > (pixel.luma < 118 ? 0.94 : 0.975),
+        offsetX: 0,
+        offsetY: 0,
+        velocityX: 0,
+        velocityY: 0,
         previousX: null,
         previousY: null
       });
@@ -244,17 +189,17 @@
   }
 
   function buildStars() {
-    var starCount = Math.round(150 * Math.max(0.6, quality));
+    var count = Math.round(180 * Math.max(0.58, quality));
     stars = [];
-    for (var i = 0; i < starCount; i += 1) {
+    for (var i = 0; i < count; i += 1) {
       stars.push({
         x: Math.random(),
         y: Math.random(),
-        size: randomRange(0.35, 1.25),
-        alpha: randomRange(0.08, 0.52),
+        size: randomRange(0.35, 1.35),
+        alpha: randomRange(0.06, 0.42),
         phase: Math.random() * Math.PI * 2,
         speed: randomRange(0.12, 0.55),
-        tint: Math.random() > 0.84 ? "125,234,255" : "205,228,240"
+        tint: Math.random() > 0.84 ? "125,234,255" : "211,228,238"
       });
     }
   }
@@ -262,7 +207,7 @@
   function resize() {
     width = window.innerWidth;
     height = window.innerHeight;
-    dpr = Math.min(window.devicePixelRatio || 1, quality < 0.6 ? 1.35 : 1.8);
+    dpr = Math.min(window.devicePixelRatio || 1, quality < 0.55 ? 1.3 : 1.75);
     canvas.width = Math.max(1, Math.round(width * dpr));
     canvas.height = Math.max(1, Math.round(height * dpr));
     canvas.style.width = width + "px";
@@ -271,12 +216,12 @@
 
     if (width <= 900) {
       centerX = width * 0.5;
-      centerY = height * 0.4;
-      sceneScale = Math.min(height * 0.145, width * 0.255);
+      centerY = height * 0.42;
+      sceneScale = Math.min(width * 0.58, height * 0.36);
     } else {
       centerX = width * 0.5;
-      centerY = height * 0.48;
-      sceneScale = Math.min(height * 0.18, width * 0.115);
+      centerY = height * 0.47;
+      sceneScale = Math.min(width * 0.39, height * 0.475);
     }
   }
 
@@ -289,12 +234,11 @@
     var rotatedZ = x * sinYaw + z * cosYaw;
     var rotatedY = y * cosPitch - rotatedZ * sinPitch;
     var finalZ = y * sinPitch + rotatedZ * cosPitch;
-    var perspective = clamp(1 + finalZ * 0.045, 0.78, 1.22);
+    var perspective = clamp(1 + finalZ * 0.1, 0.76, 1.26);
     var scale = sceneScale * zoom * perspective;
     return {
       x: centerX + rotatedX * scale,
       y: centerY - rotatedY * scale,
-      z: finalZ,
       perspective: perspective
     };
   }
@@ -311,124 +255,83 @@
       ctx.fillRect(star.x * width, star.y * height, star.size, star.size);
     }
 
-    if (pointerStrength > 0.02) {
-      var aura = ctx.createRadialGradient(pointerX, pointerY, 0, pointerX, pointerY, 150);
-      aura.addColorStop(0, "rgba(125,234,255," + (0.055 * pointerStrength) + ")");
-      aura.addColorStop(0.45, "rgba(107,125,255," + (0.025 * pointerStrength) + ")");
-      aura.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = aura;
-      ctx.beginPath();
-      ctx.arc(pointerX, pointerY, 150, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
+    var auraRadius = Math.min(width, height) * 0.48;
+    var aura = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, auraRadius);
+    aura.addColorStop(0, "rgba(93,182,222,0.095)");
+    aura.addColorStop(0.42, "rgba(101,92,194,0.038)");
+    aura.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = aura;
+    ctx.fillRect(centerX - auraRadius, centerY - auraRadius, auraRadius * 2, auraRadius * 2);
     ctx.restore();
   }
 
-  function waveDisplacement(screenX, screenY) {
-    var dx = 0;
-    var dy = 0;
-
+  function waveForce(particle, screenX, screenY) {
     for (var i = 0; i < shockwaves.length; i += 1) {
       var wave = shockwaves[i];
-      var distance = Math.hypot(screenX - wave.x, screenY - wave.y);
+      var dx = screenX - wave.x;
+      var dy = screenY - wave.y;
+      var distance = Math.hypot(dx, dy);
       var band = Math.abs(distance - wave.radius);
-      if (band < 72) {
-        var force = (1 - band / 72) * wave.alpha * 21;
-        var angle = Math.atan2(screenY - wave.y, screenX - wave.x);
-        dx += Math.cos(angle) * force;
-        dy += Math.sin(angle) * force;
+      if (band < 54 && distance > 0.1) {
+        var force = (1 - band / 54) * wave.alpha * 1.45;
+        particle.velocityX += dx / distance * force;
+        particle.velocityY += dy / distance * force;
+      }
+    }
+  }
+
+  function updateParticleOffset(particle, screenX, screenY) {
+    if (pointerStrength > 0.015) {
+      var dx = screenX + particle.offsetX - pointerX;
+      var dy = screenY + particle.offsetY - pointerY;
+      var distanceSquared = dx * dx + dy * dy;
+      var radius = coarsePointerQuery.matches ? 118 : 154;
+
+      if (distanceSquared < radius * radius && distanceSquared > 0.2) {
+        var distance = Math.sqrt(distanceSquared);
+        var force = Math.pow(1 - distance / radius, 2) * pointerStrength * 1.35;
+        particle.velocityX += dx / distance * force;
+        particle.velocityY += dy / distance * force;
       }
     }
 
-    return { x: dx, y: dy };
-  }
-
-  function placePhoto(index, alpha) {
-    if (!photoElements[index] || !poseImages[index] || !poseMetas[index]) return;
-    var element = photoElements[index];
-    var meta = poseMetas[index];
-    var factor = meta.modelScale * sceneScale * zoom;
-    var drawWidth = meta.sampleWidth * factor;
-    var drawHeight = meta.sampleHeight * factor;
-    var drawX = centerX - meta.subjectCenterX * factor;
-    var drawY = centerY - meta.subjectCenterY * factor;
-
-    element.style.left = drawX + "px";
-    element.style.top = drawY + "px";
-    element.style.width = drawWidth + "px";
-    element.style.height = drawHeight + "px";
-    element.style.opacity = String(clamp(alpha, 0, 1));
-    element.style.transformOrigin = meta.subjectCenterX * factor + "px " + meta.subjectCenterY * factor + "px";
-    element.style.transform = "rotate(" + (pitch * 0.08) + "rad) scaleX(" + (1 - Math.abs(yaw) * 0.1) + ")";
-  }
-
-  function updatePhotoLayer() {
-    var bridge = poseTransition && !prefersReducedMotion ? Math.sin(poseMix * Math.PI) : 0;
-    var photoAlpha = (0.96 - morph * 0.52) * (1 - bridge * 0.18);
-    for (var i = 0; i < photoElements.length; i += 1) {
-      photoElements[i].style.opacity = "0";
-    }
-    if (poseTransition) {
-      placePhoto(poseFrom, photoAlpha * (1 - poseMix));
-      placePhoto(poseTo, photoAlpha * poseMix);
-    } else {
-      placePhoto(currentPose, photoAlpha);
-    }
+    waveForce(particle, screenX + particle.offsetX, screenY + particle.offsetY);
+    particle.velocityX += -particle.offsetX * 0.021;
+    particle.velocityY += -particle.offsetY * 0.021;
+    particle.velocityX *= 0.875;
+    particle.velocityY *= 0.875;
+    particle.offsetX += particle.velocityX;
+    particle.offsetY += particle.velocityY;
   }
 
   function renderParticles(time) {
-    var breathing = prefersReducedMotion ? 1 : 1 + Math.sin(time * 0.75) * 0.007;
-    var bridge = poseTransition && !prefersReducedMotion ? Math.sin(poseMix * Math.PI) : 0;
-    var movement = transitionEnergy + pointerStrength * 0.45 + bridge * 0.55;
-    var stride = renderStride;
+    var globalFloat = flowEnabled && !prefersReducedMotion ? Math.sin(time * 0.62) * 7 : 0;
+    var breathing = flowEnabled && !prefersReducedMotion ? 1 + Math.sin(time * 1.18) * 0.011 : 1;
+    var movement = morphTransition || morph > 0.02 || pointerStrength > 0.05 || shockwaves.length;
 
     ctx.save();
     ctx.globalCompositeOperation = "screen";
 
-    for (var i = 0; i < particles.length; i += stride) {
+    for (var i = 0; i < particles.length; i += renderStride) {
       var particle = particles[i];
-      var from = particle.poses[poseFrom];
-      var to = particle.poses[poseTo];
-      var localPoseMix = easeInOut(clamp((poseMix - particle.delay * 0.42) / (1 - particle.delay * 0.42), 0, 1));
-      var modelX = lerp(from.x, to.x, localPoseMix) + particle.bridgeX * bridge;
-      var modelY = lerp(from.y, to.y, localPoseMix) + particle.bridgeY * bridge;
-      var modelZ = lerp(from.z, to.z, localPoseMix) + particle.bridgeZ * bridge;
       var localMorph = easeInOut(clamp((morph - particle.delay) / (1 - particle.delay), 0, 1));
-      var drift = prefersReducedMotion ? 0 : Math.sin(time * particle.speed + particle.phase) * (0.011 + localMorph * 0.055);
-      var x = lerp(modelX * breathing, particle.sx, localMorph) + drift;
-      var y = lerp(modelY * breathing, particle.sy, localMorph) + drift * 0.65;
-      var z = lerp(modelZ, particle.sz, localMorph) + drift * 0.9;
-      var projected = project(x, y, z);
+      var drift = flowEnabled && !prefersReducedMotion
+        ? Math.sin(time * particle.speed + particle.phase) * (0.004 + localMorph * 0.025)
+        : 0;
+      var modelX = lerp(particle.x * breathing, particle.scatterX, localMorph) + drift;
+      var modelY = lerp(particle.y * breathing, particle.scatterY, localMorph) + drift * 0.75;
+      var modelZ = lerp(particle.z, particle.scatterZ, localMorph) + drift * 0.7;
+      var projected = project(modelX, modelY, modelZ);
       var screenX = projected.x;
-      var screenY = projected.y;
+      var screenY = projected.y + globalFloat;
 
-      if (pointerStrength > 0.015) {
-        var deltaX = screenX - pointerX;
-        var deltaY = screenY - pointerY;
-        var distanceSquared = deltaX * deltaX + deltaY * deltaY;
-        var radius = 145;
+      updateParticleOffset(particle, screenX, screenY);
+      screenX += particle.offsetX;
+      screenY += particle.offsetY;
 
-        if (distanceSquared < radius * radius && distanceSquared > 0.1) {
-          var distance = Math.sqrt(distanceSquared);
-          var force = Math.pow(1 - distance / radius, 2) * pointerStrength;
-          screenX += deltaX / distance * force * 62;
-          screenY += deltaY / distance * force * 62;
-        }
-      }
-
-      var wave = waveDisplacement(screenX, screenY);
-      screenX += wave.x;
-      screenY += wave.y;
-
-      var red = Math.round(lerp(from.r, to.r, localPoseMix));
-      var green = Math.round(lerp(from.g, to.g, localPoseMix));
-      var blue = Math.round(lerp(from.b, to.b, localPoseMix));
-      var color = poseTransition ? "rgb(" + red + "," + green + "," + blue + ")" : to.css;
-      var alpha = lerp(from.a, to.a, localPoseMix) * particle.alpha;
-
-      if (movement > 0.2 && i % 23 === 0 && particle.previousX !== null) {
-        ctx.strokeStyle = "rgba(" + red + "," + green + "," + blue + ",0.13)";
+      if (movement && i % 31 === 0 && particle.previousX !== null) {
+        ctx.globalAlpha = 0.1;
+        ctx.strokeStyle = particle.css;
         ctx.lineWidth = 0.55;
         ctx.beginPath();
         ctx.moveTo(particle.previousX, particle.previousY);
@@ -439,23 +342,18 @@
       particle.previousX = screenX;
       particle.previousY = screenY;
 
-      if (particle.glow && i % 2 === 0) {
-        ctx.fillStyle = "rgba(" + red + "," + green + "," + blue + ",0.12)";
-        ctx.beginPath();
-        ctx.arc(screenX, screenY, particle.size * 3.6 * projected.perspective, 0, Math.PI * 2);
-        ctx.fill();
+      var alpha = particle.alpha * (0.72 + projected.perspective * 0.19);
+      var size = Math.max(0.9, particle.size * projected.perspective * (1 + localMorph * 0.12));
+
+      if (glowEnabled && (particle.glow || i % 8 === 0)) {
+        ctx.globalAlpha = alpha * (particle.glow ? 0.17 : 0.075);
+        ctx.fillStyle = particle.css;
+        var halo = size * (particle.glow ? 4.8 : 2.6);
+        ctx.fillRect(screenX - halo * 0.5, screenY - halo * 0.5, halo, halo);
       }
 
-      if (i % 5 === 0) {
-        var haloSize = particle.size * projected.perspective * 2.35;
-        ctx.fillStyle = "rgba(" + red + "," + green + "," + blue + ",0.11)";
-        ctx.fillRect(screenX - haloSize * 0.5, screenY - haloSize * 0.5, haloSize, haloSize);
-      }
-
-      ctx.fillStyle = color;
-      var particleVisibility = 0.42 + Math.max(localMorph, bridge) * 0.58;
-      ctx.globalAlpha = alpha * particleVisibility * (0.88 + projected.perspective * 0.1);
-      var size = Math.max(1.3, particle.size * projected.perspective);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = particle.css;
       ctx.fillRect(screenX - size * 0.5, screenY - size * 0.5, size, size);
     }
 
@@ -465,8 +363,8 @@
 
   function updateShockwaves(delta) {
     for (var i = shockwaves.length - 1; i >= 0; i -= 1) {
-      shockwaves[i].radius += delta * 0.23;
-      shockwaves[i].alpha -= delta * 0.00058;
+      shockwaves[i].radius += delta * 0.25;
+      shockwaves[i].alpha -= delta * 0.00072;
       if (shockwaves[i].alpha <= 0) shockwaves.splice(i, 1);
     }
   }
@@ -491,67 +389,23 @@
       from: morph,
       to: target,
       start: performance.now(),
-      duration: duration || 1550
+      duration: duration || 1700
     };
-    transitionEnergy = 1;
-    if (triggerButton) triggerButton.textContent = target > 0.5 ? "重新聚合" : "粒子散开";
-  }
-
-  function startPoseTransition(nextPose, duration) {
-    if (poseTransition || nextPose === currentPose) return;
-    poseFrom = currentPose;
-    poseTo = nextPose;
-    poseMix = 0;
-    poseTransition = {
-      start: performance.now(),
-      duration: duration || 1850
-    };
-    transitionEnergy = 1;
-    if (morph > 0.08) startMorph(0, 1050);
+    if (triggerButton) triggerButton.textContent = target > 0.5 ? "重新聚合" : "扩散粒子";
   }
 
   function updateTransitions(now) {
-    if (morphTransition) {
-      var morphProgress = clamp((now - morphTransition.start) / morphTransition.duration, 0, 1);
-      morph = lerp(morphTransition.from, morphTransition.to, easeInOut(morphProgress));
-      if (morphProgress >= 1) morphTransition = null;
-    }
-
-    if (poseTransition) {
-      var poseProgress = clamp((now - poseTransition.start) / poseTransition.duration, 0, 1);
-      poseMix = easeInOut(poseProgress);
-      if (poseProgress >= 1) {
-        currentPose = poseTo;
-        poseFrom = currentPose;
-        poseTo = currentPose;
-        poseMix = 1;
-        poseTransition = null;
-        if (poseButton) poseButton.textContent = "姿态：" + poseNames[currentPose];
-      }
-    }
-  }
-
-  function switchToNextPose() {
-    startPoseTransition((currentPose + 1) % poseNames.length, 1900);
-  }
-
-  function updateAuto(now) {
-    if (!autoPlay || prefersReducedMotion || dragging) return;
-    if (!poseTransition && !morphTransition && now >= nextAutoAt) {
-      if (morph > 0.08) {
-        startMorph(0, 1100);
-      } else {
-        switchToNextPose();
-      }
-      nextAutoAt = now + 6500;
-    }
+    if (!morphTransition) return;
+    var progress = clamp((now - morphTransition.start) / morphTransition.duration, 0, 1);
+    morph = lerp(morphTransition.from, morphTransition.to, easeInOut(progress));
+    if (progress >= 1) morphTransition = null;
   }
 
   function updatePerformance(delta) {
     frameSamples += 1;
     if (delta > 31) slowFrames += 1;
     if (frameSamples < 180) return;
-    if (slowFrames > 74 && renderStride < 2) renderStride = 2;
+    if (slowFrames > 72 && renderStride < 2) renderStride = 2;
     frameSamples = 0;
     slowFrames = 0;
   }
@@ -562,19 +416,15 @@
     elapsed += delta * 0.001;
 
     updateTransitions(now);
-    updateAuto(now);
     updateShockwaves(delta);
     updatePerformance(delta);
 
     yaw = lerp(yaw, targetYaw, 0.075);
     pitch = lerp(pitch, targetPitch, 0.075);
     zoom = lerp(zoom, targetZoom, 0.08);
-    pointerStrength = lerp(pointerStrength, pointerTargetStrength, 0.12);
-    transitionEnergy = lerp(transitionEnergy, poseTransition || morphTransition ? 0.78 : 0, 0.045);
+    pointerStrength = lerp(pointerStrength, pointerTargetStrength, 0.115);
+    if (!dragging && now - pointerLastMove > 90) pointerTargetStrength = 0;
 
-    if (!dragging && now - pointerLastMove > 110) pointerTargetStrength = 0;
-
-    updatePhotoLayer();
     drawBackground(elapsed);
     renderParticles(elapsed);
     drawShockwaves();
@@ -611,8 +461,8 @@
 
     if (dragging && event.pointerId === activePointerId) {
       pointerTravel += Math.abs(deltaX) + Math.abs(deltaY);
-      targetYaw = clamp(targetYaw + deltaX * 0.0022, -0.2, 0.2);
-      targetPitch = clamp(targetPitch - deltaY * 0.0016, -0.08, 0.08);
+      targetYaw = clamp(targetYaw + deltaX * 0.0025, -0.32, 0.32);
+      targetPitch = clamp(targetPitch - deltaY * 0.0018, -0.13, 0.13);
     }
   });
 
@@ -622,8 +472,9 @@
     dragging = false;
     activePointerId = null;
     canvas.classList.remove("is-dragging");
-    if (pointerTravel < 12 && held < 460) {
-      shockwaves.push({ x: pointerX, y: pointerY, radius: 6, alpha: 1 });
+    if (pointerTravel < 12 && held < 480) {
+      shockwaves.push({ x: pointerX, y: pointerY, radius: 7, alpha: 1 });
+      if (shockwaves.length > 4) shockwaves.shift();
     }
   }
 
@@ -635,60 +486,68 @@
 
   canvas.addEventListener("wheel", function (event) {
     event.preventDefault();
-    targetZoom = clamp(targetZoom - event.deltaY * 0.0006, 0.92, 1.2);
+    targetZoom = clamp(targetZoom - event.deltaY * 0.0006, 0.88, 1.18);
   }, { passive: false });
-
-  if (poseButton) {
-    poseButton.textContent = "姿态：" + poseNames[currentPose];
-    poseButton.addEventListener("click", function () {
-      nextAutoAt = performance.now() + 6500;
-      switchToNextPose();
-    });
-  }
 
   if (triggerButton) {
     triggerButton.addEventListener("click", function () {
-      nextAutoAt = performance.now() + 6500;
-      startMorph(morph > 0.5 ? 0 : 1, 1550);
+      startMorph(morph > 0.5 ? 0 : 1, 1750);
     });
   }
 
-  if (autoButton) {
-    autoButton.setAttribute("aria-pressed", String(autoPlay));
-    autoButton.textContent = "自动循环：" + (autoPlay ? "开" : "关");
-    autoButton.addEventListener("click", function () {
-      autoPlay = !autoPlay;
-      nextAutoAt = performance.now() + 3600;
-      autoButton.setAttribute("aria-pressed", String(autoPlay));
-      autoButton.textContent = "自动循环：" + (autoPlay ? "开" : "关");
-      if (!autoPlay && morph > 0.05) startMorph(0, 1200);
+  function updateFlowButton() {
+    if (!flowButton) return;
+    flowButton.setAttribute("aria-pressed", String(flowEnabled));
+    flowButton.textContent = "呼吸流动：" + (flowEnabled ? "开" : "关");
+  }
+
+  function updateGlowButton() {
+    if (!glowButton) return;
+    glowButton.setAttribute("aria-pressed", String(glowEnabled));
+    glowButton.textContent = "粒子辉光：" + (glowEnabled ? "开" : "关");
+  }
+
+  if (flowButton) {
+    updateFlowButton();
+    flowButton.addEventListener("click", function () {
+      flowEnabled = !flowEnabled;
+      updateFlowButton();
     });
   }
 
-  if (resetButton) {
-    resetButton.addEventListener("click", function () {
-      targetYaw = -0.08;
-      targetPitch = 0.01;
-      targetZoom = 1.05;
-      if (morph > 0.03) startMorph(0, 1150);
+  if (glowButton) {
+    updateGlowButton();
+    glowButton.addEventListener("click", function () {
+      glowEnabled = !glowEnabled;
+      updateGlowButton();
     });
   }
+
+  function resetCloud() {
+    targetYaw = -0.035;
+    targetPitch = 0.012;
+    targetZoom = 1;
+    if (morph > 0.01) startMorph(0, 1250);
+    shockwaves = [];
+    for (var i = 0; i < particles.length; i += 1) {
+      particles[i].offsetX = 0;
+      particles[i].offsetY = 0;
+      particles[i].velocityX = 0;
+      particles[i].velocityY = 0;
+    }
+  }
+
+  if (resetButton) resetButton.addEventListener("click", resetCloud);
 
   function handleMotionPreference(event) {
     prefersReducedMotion = event.matches;
     if (prefersReducedMotion) {
-      autoPlay = false;
+      flowEnabled = false;
       morph = 0;
       morphTransition = null;
-      poseTransition = null;
-      poseFrom = currentPose;
-      poseTo = currentPose;
-      poseMix = 1;
+      resetCloud();
     }
-    if (autoButton) {
-      autoButton.setAttribute("aria-pressed", String(autoPlay));
-      autoButton.textContent = "自动循环：" + (autoPlay ? "开" : "关");
-    }
+    updateFlowButton();
   }
 
   if (reducedMotionQuery.addEventListener) {
@@ -709,15 +568,15 @@
   });
 
   function start() {
-    if (modelSources.length !== 3) {
+    if (!modelSource) {
       document.documentElement.classList.add("no-particle-model");
       return;
     }
 
     resize();
     buildStars();
-    Promise.all(modelSources.map(loadImage)).then(function (images) {
-      buildParticles(images);
+    loadImage(modelSource).then(function (image) {
+      buildParticles(image);
       document.documentElement.classList.add("particle-ready");
       lastFrame = performance.now();
       animationFrame = window.requestAnimationFrame(animate);
