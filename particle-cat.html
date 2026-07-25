@@ -22,6 +22,8 @@ permalink: /
     <div class="space-backdrop" aria-hidden="true">
         <canvas
             id="space-panorama"
+            data-panorama-preview-src="{{ '/images/space-panorama-360-preview.webp' | relative_url }}"
+            data-panorama-medium-src="{{ '/images/space-panorama-360-medium.webp' | relative_url }}"
             data-panorama-src="{{ '/images/space-panorama-360.webp' | relative_url }}"
             data-panorama-mobile-src="{{ '/images/space-panorama-360-mobile.webp' | relative_url }}"
         ></canvas>
@@ -42,16 +44,28 @@ permalink: /
     </div>
 
     <main class="particle-entry" aria-label="博客入口">
-        <a class="particle-enter" href="{{ '/blog/' | relative_url }}">
+        <a class="particle-enter" href="{{ '/blog/' | relative_url }}" aria-label="探索 Xueyuan 的技术宇宙，进入博客">
             <span class="particle-enter__copy">
-                <small>我的技术博客</small>
-                <strong>进入博客</strong>
+                <small>深空坐标 · 技术博客</small>
+                <strong>探索 Xueyuan 的技术宇宙</strong>
             </span>
-            <b aria-hidden="true">↗</b>
+            <b aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                    <path d="M13.7 4.3c2.9-2.9 6.5-2.3 6.5-2.3s.6 3.6-2.3 6.5l-5.7 5.7-5.1-5.1 6.6-4.8Z"></path>
+                    <path d="m8.8 11.1-3.7 3.7-2.5.6.7-2.4 3.8-3.8M11.1 13.4l-1.7 5.2 1.1 2.8 1.3-2.6 3.3-3.3"></path>
+                    <circle cx="15.8" cy="6.2" r="1.45"></circle>
+                </svg>
+            </b>
         </a>
 
         <div class="particle-controls" aria-label="视角控制">
-            <button class="particle-reset" type="button" data-particle-reset aria-label="重置宇宙视角" title="重置宇宙视角">重置视角</button>
+            <button class="particle-reset" type="button" data-particle-reset aria-label="重置宇宙视角" title="重置宇宙视角">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M19.1 7.7A8 8 0 1 0 20 15.2"></path>
+                    <path d="M19.1 3.5v4.2h-4.2"></path>
+                    <circle cx="12" cy="12" r="1.55"></circle>
+                </svg>
+            </button>
         </div>
 
     </main>

@@ -21,6 +21,7 @@
 
   var root = document.documentElement;
   var resetButton = document.querySelector("[data-particle-reset]");
+  var entryLink = document.querySelector(".particle-enter");
   var reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   var coarsePointerQuery = window.matchMedia("(pointer: coarse)");
 
@@ -154,6 +155,7 @@
   var program;
   var locations;
   var panoramaTexture;
+  var panoramaQuality = 0;
 
   try {
     program = createProgram(vertexShaderSource, fragmentShaderSource);
@@ -193,10 +195,11 @@
       : panoramaCanvas.getAttribute("data-panorama-src");
   }
 
-  function loadImage(source) {
+  function loadImage(source, priority) {
     return new Promise(function (resolve, reject) {
       var image = new Image();
       image.decoding = "async";
+      if ("fetchPriority" in image) image.fetchPriority = priority || "auto";
       image.onload = function () { resolve(image); };
       image.onerror = function () { reject(new Error("360° 全景影像载入失败")); };
       image.src = source;
@@ -204,17 +207,74 @@
   }
 
   function uploadPanorama(image) {
+    var previousTexture = panoramaTexture;
     textureWidth = image.naturalWidth;
     textureHeight = image.naturalHeight;
-    panoramaTexture = gl.createTexture();
+    var nextTexture = gl.createTexture();
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, panoramaTexture);
+    gl.bindTexture(gl.TEXTURE_2D, nextTexture);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+    panoramaTexture = nextTexture;
+    if (previousTexture) gl.deleteTexture(previousTexture);
+  }
+
+  function showPanorama(image, quality, readyClass) {
+    if (quality <= panoramaQuality) return;
+    uploadPanorama(image);
+    panoramaQuality = quality;
+    root.classList.add(readyClass);
+  }
+
+  function loadInitialPanorama() {
+    var previewSource = panoramaCanvas.getAttribute("data-panorama-preview-src");
+    var mediumSource = panoramaCanvas.getAttribute("data-panorama-medium-src");
+    return loadImage(previewSource, "high")
+      .then(function (image) {
+        return { image: image, quality: 1, readyClass: "panorama-preview-ready" };
+      })
+      .catch(function () {
+        return loadImage(mediumSource, "high").then(function (image) {
+          return { image: image, quality: 2, readyClass: "panorama-medium-ready" };
+        });
+      });
+  }
+
+  function loadDetailedPanorama() {
+    var mediumSource = panoramaCanvas.getAttribute("data-panorama-medium-src");
+    var finalSource = choosePanoramaSource();
+    var mediumPromise = panoramaQuality >= 2
+      ? Promise.resolve()
+      : loadImage(mediumSource, "high")
+        .then(function (image) {
+          showPanorama(image, 2, "panorama-medium-ready");
+        })
+        .catch(function () {
+          return null;
+        });
+
+    mediumPromise
+      .then(function () {
+        return loadImage(finalSource, "low");
+      })
+      .then(function (image) {
+        showPanorama(image, 3, "panorama-high-ready");
+      })
+      .catch(function (error) {
+        console.warn(error.message);
+      });
+  }
+
+  function scheduleDetailedPanorama() {
+    if (typeof window.requestIdleCallback === "function") {
+      window.requestIdleCallback(loadDetailedPanorama, { timeout: 450 });
+    } else {
+      window.setTimeout(loadDetailedPanorama, 80);
+    }
   }
 
   function buildStars() {
@@ -515,7 +575,30 @@
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("resize", resize, { passive: true });
 
-  if (resetButton) resetButton.addEventListener("click", resetUniverse);
+  if (resetButton) {
+    resetButton.addEventListener("click", function () {
+      resetUniverse();
+      resetButton.classList.remove("is-resetting");
+      void resetButton.offsetWidth;
+      resetButton.classList.add("is-resetting");
+      window.setTimeout(function () {
+        resetButton.classList.remove("is-resetting");
+      }, 640);
+    });
+  }
+
+  if (entryLink) {
+    entryLink.addEventListener("click", function (event) {
+      var isModified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
+      if (isModified || event.button !== 0 || reducedMotionQuery.matches) return;
+      event.preventDefault();
+      if (entryLink.classList.contains("is-launching")) return;
+      entryLink.classList.add("is-launching");
+      window.setTimeout(function () {
+        window.location.assign(entryLink.href);
+      }, 680);
+    });
+  }
 
   if (typeof reducedMotionQuery.addEventListener === "function") {
     reducedMotionQuery.addEventListener("change", function (event) {
@@ -528,12 +611,13 @@
   resize();
   buildStars();
 
-  loadImage(choosePanoramaSource())
-    .then(function (image) {
-      uploadPanorama(image);
+  loadInitialPanorama()
+    .then(function (result) {
+      showPanorama(result.image, result.quality, result.readyClass);
       root.classList.add("particle-ready");
       lastFrame = performance.now();
       animationFrame = requestAnimationFrame(render);
+      scheduleDetailedPanorama();
     })
     .catch(function (error) {
       console.error(error);

@@ -34,7 +34,7 @@ button { color: inherit; }
   inset: 0;
   z-index: 0;
   overflow: hidden;
-  background: #010207 url("/images/space-panorama-360-mobile.webp") center / cover no-repeat;
+  background: #010207 url("/images/space-panorama-360-preview.webp") center / cover no-repeat;
 }
 
 #space-panorama {
@@ -149,46 +149,63 @@ button { color: inherit; }
   position: absolute;
   left: 50%;
   bottom: clamp(32px, 5.2vh, 64px);
-  width: 258px;
-  min-height: 69px;
-  padding: 9px 10px 9px 23px;
+  width: 348px;
+  min-height: 76px;
+  padding: 11px 13px 11px 25px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   overflow: hidden;
-  border: 1px solid rgba(228, 243, 255, 0.27);
-  border-radius: 999px;
+  border: 1px solid rgba(178, 221, 243, 0.28);
+  border-radius: 20px;
   color: #f7fbff;
   background:
-    linear-gradient(115deg, rgba(255, 255, 255, 0.08), transparent 45%),
-    rgba(2, 7, 16, 0.76);
+    radial-gradient(circle at 86% 48%, rgba(60, 131, 173, 0.13), transparent 29%),
+    linear-gradient(112deg, rgba(255, 255, 255, 0.055), transparent 38%),
+    rgba(1, 6, 15, 0.82);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 18px 54px rgba(0, 0, 0, 0.32);
-  backdrop-filter: blur(24px) saturate(125%);
-  -webkit-backdrop-filter: blur(24px) saturate(125%);
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(92, 186, 232, 0.045),
+    0 20px 58px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(28px) saturate(118%);
+  -webkit-backdrop-filter: blur(28px) saturate(118%);
+  clip-path: polygon(13px 0, calc(100% - 13px) 0, 100% 13px, 100% calc(100% - 13px), calc(100% - 13px) 100%, 13px 100%, 0 calc(100% - 13px), 0 13px);
   text-decoration: none;
   pointer-events: auto;
   transform: translateX(-50%);
   animation: entry-beacon 4.8s ease-in-out infinite;
-  transition: transform 220ms ease, border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+  transition: transform 260ms ease, border-color 260ms ease, background 260ms ease, box-shadow 260ms ease, opacity 260ms ease;
 }
 
 .particle-enter::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(105deg, transparent 25%, rgba(169, 230, 255, 0.16) 50%, transparent 75%);
+  background: linear-gradient(105deg, transparent 29%, rgba(151, 222, 255, 0.13) 50%, transparent 71%);
   transform: translateX(-115%);
   transition: transform 650ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
+.particle-enter::after {
+  content: "";
+  position: absolute;
+  left: 24px;
+  bottom: 0;
+  width: 84px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(111, 214, 255, 0.9), transparent);
+  box-shadow: 0 0 10px rgba(101, 205, 255, 0.32);
+  transform-origin: center;
+  transition: width 360ms ease, opacity 360ms ease;
+}
+
 .particle-enter:hover,
 .particle-enter:focus-visible {
-  border-color: rgba(172, 229, 255, 0.52);
+  border-color: rgba(156, 225, 255, 0.56);
   background:
-    linear-gradient(115deg, rgba(150, 221, 255, 0.12), transparent 50%),
-    rgba(3, 10, 22, 0.74);
+    radial-gradient(circle at 86% 48%, rgba(62, 165, 219, 0.2), transparent 32%),
+    linear-gradient(112deg, rgba(135, 216, 255, 0.09), transparent 46%),
+    rgba(2, 10, 22, 0.86);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.15),
     0 22px 64px rgba(0, 0, 0, 0.4),
@@ -200,47 +217,134 @@ button { color: inherit; }
 .particle-enter:hover::before,
 .particle-enter:focus-visible::before { transform: translateX(115%); }
 
+.particle-enter:hover::after,
+.particle-enter:focus-visible::after { width: 142px; }
+
 .particle-enter__copy {
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 3px;
+  gap: 5px;
+  transition: transform 480ms cubic-bezier(0.2, 0.75, 0.2, 1), opacity 320ms ease;
 }
 
 .particle-enter__copy small {
-  color: rgba(185, 207, 222, 0.58);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(165, 200, 219, 0.66);
   font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
   font-size: 9px;
   letter-spacing: 0.14em;
+}
+
+.particle-enter__copy small::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #98e7ff;
+  box-shadow: 0 0 9px rgba(109, 219, 255, 0.82);
 }
 
 .particle-enter__copy strong {
   font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
   font-size: 17px;
   font-weight: 620;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.055em;
+  white-space: nowrap;
 }
 
 .particle-enter b {
   position: relative;
   z-index: 1;
-  width: 42px;
-  height: 42px;
+  width: 48px;
+  height: 48px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(169, 222, 246, 0.24);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.065);
-  font-size: 17px;
-  font-weight: 400;
-  transition: transform 220ms ease, background 220ms ease, border-color 220ms ease;
+  background: radial-gradient(circle, rgba(82, 156, 195, 0.13), rgba(5, 15, 27, 0.54) 68%);
+  color: #dff7ff;
+  transition: transform 620ms cubic-bezier(0.16, 0.74, 0.2, 1), background 240ms ease, border-color 240ms ease, opacity 260ms ease;
+}
+
+.particle-enter b::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: conic-gradient(from 20deg, transparent 0 24%, rgba(122, 218, 255, 0.72) 32%, transparent 41% 72%, rgba(153, 134, 255, 0.52) 82%, transparent 90%);
+  -webkit-mask: radial-gradient(circle, transparent 65%, #000 67%);
+  mask: radial-gradient(circle, transparent 65%, #000 67%);
+  animation: orbit-ring 8s linear infinite;
+}
+
+.particle-enter b::after {
+  content: "";
+  position: absolute;
+  right: 54%;
+  top: 57%;
+  width: 70px;
+  height: 2px;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, rgba(100, 200, 255, 0.2), rgba(190, 239, 255, 0.92));
+  box-shadow: 0 0 10px rgba(99, 202, 255, 0.48);
+  transform: rotate(-38deg) scaleX(0.25);
+  transform-origin: right center;
+  transition: opacity 180ms ease, transform 560ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.particle-enter b svg {
+  position: relative;
+  z-index: 1;
+  width: 22px;
+  height: 22px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .particle-enter:hover b,
 .particle-enter:focus-visible b {
   border-color: rgba(165, 225, 255, 0.42);
-  background: rgba(135, 210, 255, 0.12);
-  transform: translate(2px, -2px);
+  background: radial-gradient(circle, rgba(89, 194, 239, 0.18), rgba(5, 18, 32, 0.58) 70%);
+  transform: translate(3px, -3px) rotate(-3deg);
+}
+
+.particle-enter.is-launching {
+  pointer-events: none;
+  animation: none;
+  border-color: rgba(139, 221, 255, 0.64);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 46px rgba(96, 198, 255, 0.16),
+    0 20px 58px rgba(0, 0, 0, 0.4);
+}
+
+.particle-enter.is-launching::after {
+  width: calc(100% - 48px);
+  opacity: 0.9;
+}
+
+.particle-enter.is-launching .particle-enter__copy {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.particle-enter.is-launching b {
+  border-color: transparent;
+  background: transparent;
+  animation: rocket-launch 680ms cubic-bezier(0.3, 0.02, 0.3, 1) forwards;
+}
+
+.particle-enter.is-launching b::after {
+  opacity: 1;
+  transform: rotate(-38deg) scaleX(1);
 }
 
 .particle-controls {
@@ -285,8 +389,12 @@ button { color: inherit; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 0 15px;
+  width: 44px;
+  min-width: 44px !important;
+  height: 44px;
+  min-height: 44px !important;
+  padding: 0;
+  border-radius: 50% !important;
   color: rgba(225, 239, 248, 0.78) !important;
   border-color: rgba(224, 241, 252, 0.2) !important;
   background:
@@ -297,11 +405,21 @@ button { color: inherit; }
     0 12px 34px rgba(0, 0, 0, 0.2) !important;
 }
 
-.particle-reset::before {
-  content: "↺";
+.particle-reset svg {
+  width: 19px;
+  height: 19px;
+  overflow: visible;
   color: rgba(165, 224, 252, 0.88);
-  font-size: 14px;
-  line-height: 1;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 5px rgba(111, 207, 255, 0.28));
+}
+
+.particle-reset.is-resetting svg {
+  animation: reset-orbit 620ms cubic-bezier(0.2, 0.72, 0.2, 1);
 }
 
 .particle-reset:hover,
@@ -383,6 +501,23 @@ button { color: inherit; }
   50% { filter: drop-shadow(0 0 12px rgba(130, 214, 255, 0.18)); }
 }
 
+@keyframes orbit-ring {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rocket-launch {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0) scale(1); }
+  18% { opacity: 1; transform: translate(-3px, 3px) rotate(-5deg) scale(1.03); }
+  72% { opacity: 1; }
+  100% { opacity: 0; transform: translate(72px, -62px) rotate(-8deg) scale(0.7); }
+}
+
+@keyframes reset-orbit {
+  0% { transform: rotate(0deg) scale(1); }
+  55% { transform: rotate(-300deg) scale(1.08); }
+  100% { transform: rotate(-360deg) scale(1); }
+}
+
 @media (max-width: 900px) {
   .particle-controls {
     top: max(14px, env(safe-area-inset-top));
@@ -410,13 +545,15 @@ button { color: inherit; }
   .space-drag-hint { top: max(25px, calc(env(safe-area-inset-top) + 12px)); }
 
   .particle-enter {
-    width: 228px;
-    min-height: 62px;
-    padding-left: 18px;
+    width: min(320px, calc(100vw - 34px));
+    min-height: 70px;
+    padding: 10px 11px 10px 19px;
   }
 
-  .particle-enter__copy strong { font-size: 15px; }
-  .particle-enter b { width: 37px; height: 37px; }
+  .particle-enter__copy { gap: 4px; }
+  .particle-enter__copy small { font-size: 8px; }
+  .particle-enter__copy strong { font-size: 14px; letter-spacing: 0.025em; }
+  .particle-enter b { width: 42px; height: 42px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

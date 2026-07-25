@@ -12,6 +12,7 @@
 
 - [功能特性](#功能特性)
 - [目录结构](#目录结构)
+- [360° 宇宙首页](#360-宇宙首页)
 - [本地预览](#本地预览)
 - [写一篇新文章](#写一篇新文章)
 - [热门文章（首页置顶）](#热门文章首页置顶)
@@ -26,7 +27,8 @@
 
 ## 功能特性
 
-- **Aurora 自研主题**：极光渐变背景、玻璃拟态卡片、神经网络动效（Landing 页）
+- **独立宇宙首页**：WebGL 360° 全景、惯性拖曳、星尘粒子和渐进式无损加载
+- **Aurora 自研主题**：博客页使用极光渐变、玻璃拟态卡片与微交互
 - **响应式布局**：单栏 / 双栏自动切换，桌面 ≥ 921px、平板 / 手机 ≤ 920px、极窄 ≤ 520px 三档断点
 - **主题切换**：暗色为默认，跟随 `prefers-color-scheme`，支持点击切换并记忆到 `localStorage`
 - **阅读体验**：阅读进度条、文章 TOC（移动端默认折叠）、回到顶部、图片 lightbox、代码一键复制 + 语言标签
@@ -50,8 +52,10 @@
 ├── _posts/                  Markdown 文章源
 ├── assets/
 │   ├── css/aurora.css       主题样式（含移动端适配）
+│   ├── css/particle-cat.css 独立宇宙首页样式（历史文件名）
 │   ├── css/code.css         代码块样式
 │   ├── js/site.js           主题交互逻辑（零依赖）
+│   ├── js/particle-cat.js   WebGL 全景与粒子交互（历史文件名）
 │   └── pdf/                 文章内嵌 / 可下载的 PDF 原件
 ├── category/
 │   ├── index.html           动态分类页（按 ?tag= 过滤）
@@ -63,18 +67,28 @@
 │   ├── new-post.md          发文流程
 │   ├── frontmatter.md       Frontmatter 字段说明
 │   ├── markdown-cheatsheet.md  Markdown 速查
+│   ├── space-landing.md     360° 宇宙首页维护文档
 │   └── troubleshooting.md   常见问题排查
 ├── 404.html                 自定义 404 页
 ├── about.markdown           关于
 ├── cate.html                按主题归档
 ├── doc.markdown             链接收藏
 ├── home.html                文章存档
-├── index.html               首页（landing）
+├── particle-cat.html        根路径 360° 宇宙首页（历史文件名）
+├── index.html               `/blog/` Aurora 博客首页
 ├── spring-doc.html          Spring 框架参考文档（静态存档页）
 ├── generate-category-json.sh  分类索引生成脚本
 ├── CNAME                    自定义域名配置
 └── Gemfile                  Ruby 依赖
 ```
+
+## 360° 宇宙首页
+
+站点根路径 `/` 是独立的 WebGL 宇宙入口，原有博客位于 `/blog/`。两部分使用独立的页面、样式和脚本，修改宇宙首页不应触碰 Aurora 博客的布局与资源。
+
+首页通过 Preview → Medium → Final 逐级替换全景纹理：第一张 5.6 KB 预览完成后立即开放 360° 拖曳，最终仍加载桌面 6000 × 3000 或移动端 4096 × 2048 的高清资源，不重置用户视角，也不降低最终画质。
+
+完整的文件职责、资源规格、交互状态、入口文案、性能边界和验证清单见 [`doc/space-landing.md`](./doc/space-landing.md)。
 
 ## 本地预览
 
@@ -248,24 +262,18 @@ url: https://xueyuanqiao.github.io
 github_username: XueyuanQiao
 ```
 
-### Landing 文案
+### 宇宙首页文案
 
-首页 `index.html` 的 typed 动画来自 `data-typed-strings` 属性，可直接编辑：
-
-```html
-<span data-typed
-      data-typed-strings='["十年质量治理实践","AI Agent · LLM-as-a-Judge"]'>
-</span>
-```
+根路径入口文案在 `particle-cat.html` 的 `.particle-enter__copy` 中维护。修改前同时检查桌面和 320px–390px 窄屏，并同步更新 [`doc/space-landing.md`](./doc/space-landing.md)。
 
 ## 部署
 
-推送到 `main` 分支后，GitHub Pages 自动构建并发布，无需手动操作。
+推送到 `master` 分支后，GitHub Pages 自动构建并发布，无需手动操作。
 
 ```bash
 git add .
 git commit -m "feat: ..."
-git push origin main
+git push origin master
 ```
 
 自定义域名通过仓库根目录的 `CNAME` 文件配置。
@@ -292,7 +300,8 @@ bundle exec jekyll serve  # 本地走查
 - **Rouge** — Jekyll 构建期代码高亮，页面无需下载高亮运行时
 - **浏览器原生 PDF** — 用户点击后按需创建阅读器，避免文章首开下载大文件
 - **CSS3** — 自定义属性、`color-mix`、`backdrop-filter`、`mask-image`
-- **原生 ES** — 零依赖，无打包，IntersectionObserver / matchMedia 等现代 API
+- **WebGL + Canvas 2D** — 360° 全景投影、星轨辉光与粒子叠加，无第三方 3D 运行时
+- **原生 ES** — 零依赖，无打包，IntersectionObserver / matchMedia / Pointer Events 等现代 API
 
 ## 维护清单
 
@@ -301,6 +310,8 @@ bundle exec jekyll serve  # 本地走查
 - [ ] Frontmatter 不使用引号，`categories` 用空格分隔
 - [ ] 发文时间避开北京凌晨 0:00–8:00（或确认时区偏移效果）
 - [ ] 重大改动前用 DevTools 切到 iPhone / Pixel 验证移动端
+- [ ] 修改宇宙首页后验证 Preview → Medium → Final 纹理升级、拖曳连续性和 `/blog/` 跳转
+- [ ] 宇宙首页 HTML、CSS、JS、资源或文案变化后同步更新 `doc/space-landing.md`
 - [ ] 升级依赖：`bundle update` 后本地 `bundle exec jekyll serve` 走查一遍
 
 更细的工程问题排查见 [`doc/troubleshooting.md`](./doc/troubleshooting.md)。
