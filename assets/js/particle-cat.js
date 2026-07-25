@@ -10,580 +10,445 @@
     return;
   }
 
+  var root = document.documentElement;
   var triggerButton = document.querySelector("[data-particle-trigger]");
   var flowButton = document.querySelector("[data-particle-flow]");
   var glowButton = document.querySelector("[data-particle-glow]");
   var resetButton = document.querySelector("[data-particle-reset]");
   var reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   var coarsePointerQuery = window.matchMedia("(pointer: coarse)");
-  var prefersReducedMotion = reducedMotionQuery.matches;
-  var modelSource = canvas.getAttribute("data-model-src");
 
   var width = 0;
   var height = 0;
   var dpr = 1;
-  var centerX = 0;
-  var centerY = 0;
-  var sceneScale = 1;
   var particles = [];
-  var stars = [];
-  var shockwaves = [];
-  var animationFrame = 0;
+  var meteors = [];
+  var waves = [];
+  var frameId = 0;
   var lastFrame = performance.now();
-  var elapsed = 0;
-  var morph = 0;
-  var morphTransition = null;
-  var flowEnabled = !prefersReducedMotion;
+  var lastMeteor = performance.now();
+  var pointer = { x: -9999, y: -9999, active: false, strength: 0 };
+  var view = { x: 0, y: 0, targetX: 0, targetY: 0 };
+  var flowEnabled = !reducedMotionQuery.matches;
   var glowEnabled = true;
-  var yaw = -0.035;
-  var pitch = 0.012;
-  var targetYaw = yaw;
-  var targetPitch = pitch;
-  var zoom = 1;
-  var targetZoom = 1;
-  var dragging = false;
-  var activePointerId = null;
-  var pointerX = -1000;
-  var pointerY = -1000;
-  var pointerStrength = 0;
-  var pointerTargetStrength = 0;
-  var pointerLastMove = 0;
-  var pointerDownAt = 0;
-  var pointerTravel = 0;
-  var frameSamples = 0;
-  var slowFrames = 0;
-  var renderStride = 1;
+  var paused = false;
+  var quality = getQuality();
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
 
-  function lerp(a, b, amount) {
-    return a + (b - a) * amount;
-  }
-
-  function easeInOut(value) {
-    var t = clamp(value, 0, 1);
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  }
-
-  function randomRange(min, max) {
+  function random(min, max) {
     return min + Math.random() * (max - min);
   }
 
-  function qualityFactor() {
+  function getQuality() {
     var cores = navigator.hardwareConcurrency || 4;
     var memory = navigator.deviceMemory || 4;
-    if (window.innerWidth < 520 || cores <= 2 || memory <= 2) return 0.43;
-    if (coarsePointerQuery.matches || window.innerWidth < 900 || cores <= 4 || memory <= 4) return 0.62;
+    if (window.innerWidth < 520 || cores <= 2 || memory <= 2) return 0.48;
+    if (coarsePointerQuery.matches || window.innerWidth < 900 || cores <= 4 || memory <= 4) return 0.7;
     return 1;
   }
 
-  var quality = qualityFactor();
-
-  function targetParticleCount() {
-    return Math.round(30000 * quality);
+  function starCount() {
+    var areaFactor = clamp((window.innerWidth * window.innerHeight) / 1200000, 0.65, 1.35);
+    return Math.round(760 * quality * areaFactor);
   }
 
-  function loadImage(source) {
-    return new Promise(function (resolve, reject) {
-      var image = new Image();
-      image.decoding = "async";
-      image.onload = function () { resolve(image); };
-      image.onerror = reject;
-      image.src = source;
-    });
-  }
+  function makeParticle(index, total) {
+    var depth = Math.pow(Math.random(), 0.72);
+    var bright = Math.random();
+    var warm = Math.random() > 0.82;
+    var blue = !warm && Math.random() > 0.72;
+    var size = bright > 0.965 ? random(1.45, 2.5) : random(0.32, 1.22);
 
-  function boostedColor(r, g, b, luma) {
-    var lift = luma < 78 ? (78 - luma) * 0.8 : 4;
-    var warmth = Math.max(0, r - b) * 0.055;
-    var red = clamp(Math.round(r + lift * 0.58 + warmth), 0, 255);
-    var green = clamp(Math.round(g + lift * 0.72 + 3), 0, 255);
-    var blue = clamp(Math.round(b + lift + 7), 0, 255);
     return {
-      r: red,
-      g: green,
-      b: blue,
-      css: "rgb(" + red + "," + green + "," + blue + ")"
+      x: index < total * 0.1 ? (index / (total * 0.1)) : Math.random(),
+      y: Math.random(),
+      depth: depth,
+      size: size,
+      alpha: random(0.18, bright > 0.94 ? 0.94 : 0.67),
+      phase: Math.random() * Math.PI * 2,
+      twinkle: random(0.45, 1.4),
+      drift: random(0.14, 0.55) * (Math.random() > 0.5 ? 1 : -1),
+      color: warm ? "255,205,155" : blue ? "152,211,255" : "226,238,255",
+      ox: 0,
+      oy: 0,
+      vx: 0,
+      vy: 0,
+      streak: bright > 0.985
     };
   }
 
-  function buildParticles(image) {
-    var maximum = 900;
-    var ratio = Math.min(1, maximum / Math.max(image.naturalWidth, image.naturalHeight));
-    var sampleWidth = Math.max(1, Math.round(image.naturalWidth * ratio));
-    var sampleHeight = Math.max(1, Math.round(image.naturalHeight * ratio));
-    var sampleCanvas = document.createElement("canvas");
-    var sampleContext = sampleCanvas.getContext("2d", { willReadFrequently: true });
-    sampleCanvas.width = sampleWidth;
-    sampleCanvas.height = sampleHeight;
-    sampleContext.clearRect(0, 0, sampleWidth, sampleHeight);
-    sampleContext.drawImage(image, 0, 0, sampleWidth, sampleHeight);
-
-    var pixels = sampleContext.getImageData(0, 0, sampleWidth, sampleHeight).data;
-    var candidates = [];
-    var scanStep = quality < 0.55 ? 2 : 1;
-
-    for (var y = 0; y < sampleHeight; y += scanStep) {
-      for (var x = 0; x < sampleWidth; x += scanStep) {
-        var index = (y * sampleWidth + x) * 4;
-        var alpha = pixels[index + 3];
-        if (alpha < 38) continue;
-
-        var r = pixels[index];
-        var g = pixels[index + 1];
-        var b = pixels[index + 2];
-        var luma = r * 0.2126 + g * 0.7152 + b * 0.0722;
-        var acceptance = (alpha / 255) * (0.54 + (255 - luma) / 255 * 0.46);
-        if (Math.random() > acceptance) continue;
-        candidates.push({ x: x, y: y, r: r, g: g, b: b, a: alpha, luma: luma });
-      }
-    }
-
-    if (!candidates.length) throw new Error("头像中没有可用的粒子像素");
-
-    var count = Math.min(targetParticleCount(), candidates.length);
+  function buildUniverse() {
+    var count = starCount();
     particles = [];
-
-    for (var i = 0; i < count; i += 1) {
-      var pick = i + Math.floor(Math.random() * (candidates.length - i));
-      var temporary = candidates[i];
-      candidates[i] = candidates[pick];
-      candidates[pick] = temporary;
-      var pixel = candidates[i];
-      var modelX = pixel.x / sampleWidth * 2 - 1;
-      var modelY = 1 - pixel.y / sampleHeight * 2;
-      var side = clamp(Math.abs(modelX), 0, 1);
-      var depth = (1 - Math.pow(side, 1.5)) * 0.12 + (128 - pixel.luma) / 255 * 0.08 + randomRange(-0.045, 0.045);
-      var theta = Math.random() * Math.PI * 2;
-      var radius = randomRange(1.2, 2.75);
-      var color = boostedColor(pixel.r, pixel.g, pixel.b, pixel.luma);
-      var detailBoost = pixel.luma < 118 ? 1.28 : 1;
-
-      particles.push({
-        x: modelX,
-        y: modelY,
-        z: depth,
-        scatterX: Math.cos(theta) * radius + randomRange(-0.35, 0.35),
-        scatterY: Math.sin(theta) * radius + randomRange(-0.35, 0.35),
-        scatterZ: Math.sin(theta * 1.7) * randomRange(0.8, 2.1),
-        r: color.r,
-        g: color.g,
-        b: color.b,
-        css: color.css,
-        alpha: Math.max(pixel.a / 255, pixel.luma < 118 ? 0.86 : 0.48),
-        size: randomRange(1.05, 2.15) * detailBoost,
-        phase: Math.random() * Math.PI * 2,
-        speed: randomRange(0.45, 1.2),
-        delay: Math.random() * 0.2,
-        glow: Math.random() > (pixel.luma < 118 ? 0.94 : 0.975),
-        offsetX: 0,
-        offsetY: 0,
-        velocityX: 0,
-        velocityY: 0,
-        previousX: null,
-        previousY: null
-      });
-    }
-  }
-
-  function buildStars() {
-    var count = Math.round(180 * Math.max(0.58, quality));
-    stars = [];
-    for (var i = 0; i < count; i += 1) {
-      stars.push({
-        x: Math.random(),
-        y: Math.random(),
-        size: randomRange(0.35, 1.35),
-        alpha: randomRange(0.06, 0.42),
-        phase: Math.random() * Math.PI * 2,
-        speed: randomRange(0.12, 0.55),
-        tint: Math.random() > 0.84 ? "125,234,255" : "211,228,238"
-      });
-    }
+    for (var i = 0; i < count; i += 1) particles.push(makeParticle(i, count));
   }
 
   function resize() {
+    var oldWidth = width || window.innerWidth;
+    var oldHeight = height || window.innerHeight;
     width = window.innerWidth;
     height = window.innerHeight;
-    dpr = Math.min(window.devicePixelRatio || 1, quality < 0.55 ? 1.3 : 1.75);
+    dpr = Math.min(window.devicePixelRatio || 1, quality < 0.6 ? 1.25 : 1.75);
     canvas.width = Math.max(1, Math.round(width * dpr));
     canvas.height = Math.max(1, Math.round(height * dpr));
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    if (width <= 900) {
-      centerX = width * 0.5;
-      centerY = height * 0.42;
-      sceneScale = Math.min(width * 0.58, height * 0.36);
-    } else {
-      centerX = width * 0.5;
-      centerY = height * 0.47;
-      sceneScale = Math.min(width * 0.39, height * 0.475);
+    if (oldWidth !== width || oldHeight !== height) {
+      pointer.x = -9999;
+      pointer.y = -9999;
     }
   }
 
-  function project(x, y, z) {
-    var cosYaw = Math.cos(yaw);
-    var sinYaw = Math.sin(yaw);
-    var cosPitch = Math.cos(pitch);
-    var sinPitch = Math.sin(pitch);
-    var rotatedX = x * cosYaw - z * sinYaw;
-    var rotatedZ = x * sinYaw + z * cosYaw;
-    var rotatedY = y * cosPitch - rotatedZ * sinPitch;
-    var finalZ = y * sinPitch + rotatedZ * cosPitch;
-    var perspective = clamp(1 + finalZ * 0.1, 0.76, 1.26);
-    var scale = sceneScale * zoom * perspective;
-    return {
-      x: centerX + rotatedX * scale,
-      y: centerY - rotatedY * scale,
-      perspective: perspective
-    };
+  function updateView() {
+    view.x += (view.targetX - view.x) * 0.045;
+    view.y += (view.targetY - view.y) * 0.045;
+    root.style.setProperty("--space-x", view.x.toFixed(4));
+    root.style.setProperty("--space-y", view.y.toFixed(4));
   }
 
-  function drawBackground(time) {
+  function updateParticle(particle, dt, time) {
+    var depthScale = 0.22 + particle.depth * 0.78;
+    var x = particle.x * width + view.x * 23 * depthScale;
+    var y = particle.y * height + view.y * 15 * depthScale;
+
+    if (flowEnabled && !reducedMotionQuery.matches) {
+      particle.x += particle.drift * 0.0000058 * dt * depthScale;
+      particle.y += Math.sin(time * 0.00022 + particle.phase) * 0.0000018 * dt * depthScale;
+      if (particle.x > 1.04) particle.x = -0.04;
+      if (particle.x < -0.04) particle.x = 1.04;
+      if (particle.y > 1.04) particle.y = -0.04;
+      if (particle.y < -0.04) particle.y = 1.04;
+    }
+
+    if (pointer.strength > 0.01) {
+      var dx = x + particle.ox - pointer.x;
+      var dy = y + particle.oy - pointer.y;
+      var radius = (coarsePointerQuery.matches ? 108 : 148) * (0.72 + depthScale * 0.38);
+      var distanceSquared = dx * dx + dy * dy;
+      if (distanceSquared < radius * radius && distanceSquared > 0.1) {
+        var distance = Math.sqrt(distanceSquared);
+        var force = Math.pow(1 - distance / radius, 2) * 1.35 * pointer.strength * depthScale;
+        particle.vx += dx / distance * force;
+        particle.vy += dy / distance * force;
+      }
+    }
+
+    for (var i = 0; i < waves.length; i += 1) {
+      var wave = waves[i];
+      var wx = x + particle.ox - wave.x;
+      var wy = y + particle.oy - wave.y;
+      var waveDistance = Math.hypot(wx, wy);
+      var band = Math.abs(waveDistance - wave.radius);
+      if (band < wave.width && waveDistance > 0.1) {
+        var waveForce = (1 - band / wave.width) * wave.power * wave.opacity * depthScale;
+        particle.vx += wx / waveDistance * waveForce;
+        particle.vy += wy / waveDistance * waveForce;
+      }
+    }
+
+    particle.vx += -particle.ox * 0.014;
+    particle.vy += -particle.oy * 0.014;
+    particle.vx *= 0.906;
+    particle.vy *= 0.906;
+    particle.ox += particle.vx * dt * 0.06;
+    particle.oy += particle.vy * dt * 0.06;
+
+    return { x: x + particle.ox, y: y + particle.oy, depth: depthScale };
+  }
+
+  function drawParticle(particle, point, time) {
+    var twinkle = reducedMotionQuery.matches
+      ? 0.82
+      : 0.7 + Math.sin(time * 0.001 * particle.twinkle + particle.phase) * 0.3;
+    var alpha = particle.alpha * twinkle * (0.58 + point.depth * 0.52);
+    var size = particle.size * (0.58 + point.depth * 0.72);
+
+    if (glowEnabled && particle.size > 1.3) {
+      var halo = ctx.createRadialGradient(point.x, point.y, 0, point.x, point.y, size * 5.5);
+      halo.addColorStop(0, "rgba(" + particle.color + "," + Math.min(0.3, alpha * 0.34) + ")");
+      halo.addColorStop(0.22, "rgba(" + particle.color + "," + Math.min(0.11, alpha * 0.12) + ")");
+      halo.addColorStop(1, "rgba(" + particle.color + ",0)");
+      ctx.fillStyle = halo;
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, size * 5.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.fillStyle = "rgba(" + particle.color + "," + alpha + ")";
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, size, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (particle.streak && glowEnabled) {
+      ctx.strokeStyle = "rgba(" + particle.color + "," + alpha * 0.18 + ")";
+      ctx.lineWidth = 0.55;
+      ctx.beginPath();
+      ctx.moveTo(point.x - size * 4.6, point.y);
+      ctx.lineTo(point.x + size * 4.6, point.y);
+      ctx.moveTo(point.x, point.y - size * 4.6);
+      ctx.lineTo(point.x, point.y + size * 4.6);
+      ctx.stroke();
+    }
+  }
+
+  function spawnMeteor(force) {
+    if (meteors.length > 4) return;
+    var fromLeft = Math.random() > 0.38;
+    meteors.push({
+      x: fromLeft ? random(width * 0.12, width * 0.72) : random(width * 0.52, width * 0.9),
+      y: random(-30, height * 0.28),
+      vx: fromLeft ? random(8.5, 13.5) : random(-11.5, -7.5),
+      vy: random(3.2, 5.8),
+      length: force ? random(130, 220) : random(75, 150),
+      life: 1,
+      decay: force ? random(0.012, 0.018) : random(0.017, 0.025),
+      warm: Math.random() > 0.72
+    });
+  }
+
+  function drawMeteors(dt) {
+    for (var i = meteors.length - 1; i >= 0; i -= 1) {
+      var meteor = meteors[i];
+      meteor.x += meteor.vx * dt * 0.06;
+      meteor.y += meteor.vy * dt * 0.06;
+      meteor.life -= meteor.decay * dt * 0.06;
+      if (meteor.life <= 0 || meteor.y > height + 100) {
+        meteors.splice(i, 1);
+        continue;
+      }
+
+      var speed = Math.hypot(meteor.vx, meteor.vy);
+      var tailX = meteor.x - meteor.vx / speed * meteor.length;
+      var tailY = meteor.y - meteor.vy / speed * meteor.length;
+      var gradient = ctx.createLinearGradient(tailX, tailY, meteor.x, meteor.y);
+      var color = meteor.warm ? "255,199,151" : "188,228,255";
+      gradient.addColorStop(0, "rgba(" + color + ",0)");
+      gradient.addColorStop(0.78, "rgba(" + color + "," + meteor.life * 0.2 + ")");
+      gradient.addColorStop(1, "rgba(255,255,255," + meteor.life * 0.82 + ")");
+      ctx.strokeStyle = gradient;
+      ctx.lineWidth = 1.15;
+      ctx.beginPath();
+      ctx.moveTo(tailX, tailY);
+      ctx.lineTo(meteor.x, meteor.y);
+      ctx.stroke();
+      ctx.fillStyle = "rgba(255,255,255," + meteor.life + ")";
+      ctx.beginPath();
+      ctx.arc(meteor.x, meteor.y, 1.25, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function addWave(x, y, power, delay) {
+    window.setTimeout(function () {
+      waves.push({ x: x, y: y, radius: 0, opacity: 0.72, speed: random(4.8, 6.4), width: 52, power: power || 0.9 });
+    }, delay || 0);
+  }
+
+  function updateAndDrawWaves(dt) {
+    for (var i = waves.length - 1; i >= 0; i -= 1) {
+      var wave = waves[i];
+      wave.radius += wave.speed * dt * 0.06;
+      wave.opacity *= Math.pow(0.983, dt * 0.06);
+      if (wave.opacity < 0.015 || wave.radius > Math.hypot(width, height)) {
+        waves.splice(i, 1);
+        continue;
+      }
+
+      var ring = ctx.createRadialGradient(
+        wave.x,
+        wave.y,
+        Math.max(0, wave.radius - wave.width),
+        wave.x,
+        wave.y,
+        wave.radius + wave.width
+      );
+      ring.addColorStop(0, "rgba(113,197,255,0)");
+      ring.addColorStop(0.46, "rgba(129,211,255," + wave.opacity * 0.05 + ")");
+      ring.addColorStop(0.5, "rgba(220,240,255," + wave.opacity * 0.22 + ")");
+      ring.addColorStop(0.54, "rgba(156,143,255," + wave.opacity * 0.08 + ")");
+      ring.addColorStop(1, "rgba(113,197,255,0)");
+      ctx.fillStyle = ring;
+      ctx.beginPath();
+      ctx.arc(wave.x, wave.y, wave.radius + wave.width, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function drawNebulaDust(time) {
+    if (!glowEnabled) return;
+    var x = width * (0.58 + view.x * 0.015);
+    var y = height * (0.44 + view.y * 0.012);
+    var radius = Math.min(width, height) * 0.58;
+    var aura = ctx.createRadialGradient(x, y, 0, x, y, radius);
+    var breath = reducedMotionQuery.matches ? 0.055 : 0.047 + Math.sin(time * 0.00035) * 0.012;
+    aura.addColorStop(0, "rgba(96,166,224," + breath + ")");
+    aura.addColorStop(0.38, "rgba(91,83,176," + breath * 0.42 + ")");
+    aura.addColorStop(1, "rgba(5,10,30,0)");
+    ctx.fillStyle = aura;
+    ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+  }
+
+  function render(now) {
+    if (paused) return;
+    var dt = clamp(now - lastFrame, 8, 34);
+    lastFrame = now;
+    updateView();
+    pointer.strength += ((pointer.active ? 1 : 0) - pointer.strength) * 0.08;
     ctx.clearRect(0, 0, width, height);
     ctx.save();
     ctx.globalCompositeOperation = "screen";
+    drawNebulaDust(now);
 
-    for (var i = 0; i < stars.length; i += 1) {
-      var star = stars[i];
-      var twinkle = 0.56 + Math.sin(time * star.speed + star.phase) * 0.44;
-      ctx.fillStyle = "rgba(" + star.tint + "," + (star.alpha * twinkle) + ")";
-      ctx.fillRect(star.x * width, star.y * height, star.size, star.size);
+    for (var i = 0; i < particles.length; i += 1) {
+      var point = updateParticle(particles[i], dt, now);
+      drawParticle(particles[i], point, now);
     }
 
-    var auraRadius = Math.min(width, height) * 0.48;
-    var aura = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, auraRadius);
-    aura.addColorStop(0, "rgba(93,182,222,0.095)");
-    aura.addColorStop(0.42, "rgba(101,92,194,0.038)");
-    aura.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = aura;
-    ctx.fillRect(centerX - auraRadius, centerY - auraRadius, auraRadius * 2, auraRadius * 2);
+    if (flowEnabled && !reducedMotionQuery.matches && now - lastMeteor > random(4200, 7800)) {
+      spawnMeteor(false);
+      lastMeteor = now;
+    }
+    drawMeteors(dt);
+    updateAndDrawWaves(dt);
     ctx.restore();
+    frameId = requestAnimationFrame(render);
   }
 
-  function waveForce(particle, screenX, screenY) {
-    for (var i = 0; i < shockwaves.length; i += 1) {
-      var wave = shockwaves[i];
-      var dx = screenX - wave.x;
-      var dy = screenY - wave.y;
-      var distance = Math.hypot(dx, dy);
-      var band = Math.abs(distance - wave.radius);
-      if (band < 54 && distance > 0.1) {
-        var force = (1 - band / 54) * wave.alpha * 1.45;
-        particle.velocityX += dx / distance * force;
-        particle.velocityY += dy / distance * force;
-      }
-    }
+  function setPointer(event) {
+    pointer.x = event.clientX;
+    pointer.y = event.clientY;
+    pointer.active = true;
+    view.targetX = clamp((event.clientX / width - 0.5) * 2, -1, 1);
+    view.targetY = clamp((event.clientY / height - 0.5) * 2, -1, 1);
   }
 
-  function updateParticleOffset(particle, screenX, screenY) {
-    if (pointerStrength > 0.015) {
-      var dx = screenX + particle.offsetX - pointerX;
-      var dy = screenY + particle.offsetY - pointerY;
-      var distanceSquared = dx * dx + dy * dy;
-      var radius = coarsePointerQuery.matches ? 118 : 154;
-
-      if (distanceSquared < radius * radius && distanceSquared > 0.2) {
-        var distance = Math.sqrt(distanceSquared);
-        var force = Math.pow(1 - distance / radius, 2) * pointerStrength * 1.35;
-        particle.velocityX += dx / distance * force;
-        particle.velocityY += dy / distance * force;
-      }
-    }
-
-    waveForce(particle, screenX + particle.offsetX, screenY + particle.offsetY);
-    particle.velocityX += -particle.offsetX * 0.021;
-    particle.velocityY += -particle.offsetY * 0.021;
-    particle.velocityX *= 0.875;
-    particle.velocityY *= 0.875;
-    particle.offsetX += particle.velocityX;
-    particle.offsetY += particle.velocityY;
+  function clearPointer() {
+    pointer.active = false;
+    view.targetX = 0;
+    view.targetY = 0;
   }
 
-  function renderParticles(time) {
-    var globalFloat = flowEnabled && !prefersReducedMotion ? Math.sin(time * 0.62) * 7 : 0;
-    var breathing = flowEnabled && !prefersReducedMotion ? 1 + Math.sin(time * 1.18) * 0.011 : 1;
-    var movement = morphTransition || morph > 0.02 || pointerStrength > 0.05 || shockwaves.length;
-
-    ctx.save();
-    ctx.globalCompositeOperation = "screen";
-
-    for (var i = 0; i < particles.length; i += renderStride) {
+  function nebulaBurst() {
+    var centerX = width * random(0.42, 0.58);
+    var centerY = height * random(0.36, 0.54);
+    for (var i = 0; i < particles.length; i += 1) {
       var particle = particles[i];
-      var localMorph = easeInOut(clamp((morph - particle.delay) / (1 - particle.delay), 0, 1));
-      var drift = flowEnabled && !prefersReducedMotion
-        ? Math.sin(time * particle.speed + particle.phase) * (0.004 + localMorph * 0.025)
-        : 0;
-      var modelX = lerp(particle.x * breathing, particle.scatterX, localMorph) + drift;
-      var modelY = lerp(particle.y * breathing, particle.scatterY, localMorph) + drift * 0.75;
-      var modelZ = lerp(particle.z, particle.scatterZ, localMorph) + drift * 0.7;
-      var projected = project(modelX, modelY, modelZ);
-      var screenX = projected.x;
-      var screenY = projected.y + globalFloat;
-
-      updateParticleOffset(particle, screenX, screenY);
-      screenX += particle.offsetX;
-      screenY += particle.offsetY;
-
-      if (movement && i % 31 === 0 && particle.previousX !== null) {
-        ctx.globalAlpha = 0.1;
-        ctx.strokeStyle = particle.css;
-        ctx.lineWidth = 0.55;
-        ctx.beginPath();
-        ctx.moveTo(particle.previousX, particle.previousY);
-        ctx.lineTo(screenX, screenY);
-        ctx.stroke();
-      }
-
-      particle.previousX = screenX;
-      particle.previousY = screenY;
-
-      var alpha = particle.alpha * (0.72 + projected.perspective * 0.19);
-      var size = Math.max(0.9, particle.size * projected.perspective * (1 + localMorph * 0.12));
-
-      if (glowEnabled && (particle.glow || i % 8 === 0)) {
-        ctx.globalAlpha = alpha * (particle.glow ? 0.17 : 0.075);
-        ctx.fillStyle = particle.css;
-        var halo = size * (particle.glow ? 4.8 : 2.6);
-        ctx.fillRect(screenX - halo * 0.5, screenY - halo * 0.5, halo, halo);
-      }
-
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = particle.css;
-      ctx.fillRect(screenX - size * 0.5, screenY - size * 0.5, size, size);
+      var px = particle.x * width;
+      var py = particle.y * height;
+      var dx = px - centerX;
+      var dy = py - centerY;
+      var distance = Math.max(42, Math.hypot(dx, dy));
+      var force = clamp(460 / distance, 0.25, 3.8) * random(0.65, 1.15);
+      particle.vx += dx / distance * force;
+      particle.vy += dy / distance * force;
     }
+    addWave(centerX, centerY, 1.55, 0);
+    addWave(centerX, centerY, 1.05, 180);
+    addWave(centerX, centerY, 0.72, 370);
+    spawnMeteor(true);
+    window.setTimeout(function () { spawnMeteor(true); }, 230);
 
-    ctx.globalAlpha = 1;
-    ctx.restore();
-  }
-
-  function updateShockwaves(delta) {
-    for (var i = shockwaves.length - 1; i >= 0; i -= 1) {
-      shockwaves[i].radius += delta * 0.25;
-      shockwaves[i].alpha -= delta * 0.00072;
-      if (shockwaves[i].alpha <= 0) shockwaves.splice(i, 1);
+    if (triggerButton) {
+      triggerButton.textContent = "星云扩散中…";
+      triggerButton.disabled = true;
+      window.setTimeout(function () {
+        triggerButton.textContent = "星云爆发";
+        triggerButton.disabled = false;
+      }, 1150);
     }
   }
 
-  function drawShockwaves() {
-    if (!shockwaves.length) return;
-    ctx.save();
-    ctx.globalCompositeOperation = "screen";
-    for (var i = 0; i < shockwaves.length; i += 1) {
-      var wave = shockwaves[i];
-      ctx.strokeStyle = "rgba(125,234,255," + (wave.alpha * 0.28) + ")";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
-      ctx.stroke();
+  function resetUniverse() {
+    pointer.active = false;
+    view.targetX = 0;
+    view.targetY = 0;
+    meteors = [];
+    waves = [];
+    for (var i = 0; i < particles.length; i += 1) {
+      particles[i].ox = 0;
+      particles[i].oy = 0;
+      particles[i].vx = 0;
+      particles[i].vy = 0;
     }
-    ctx.restore();
-  }
-
-  function startMorph(target, duration) {
-    morphTransition = {
-      from: morph,
-      to: target,
-      start: performance.now(),
-      duration: duration || 1700
-    };
-    if (triggerButton) triggerButton.textContent = target > 0.5 ? "重新聚合" : "扩散粒子";
-  }
-
-  function updateTransitions(now) {
-    if (!morphTransition) return;
-    var progress = clamp((now - morphTransition.start) / morphTransition.duration, 0, 1);
-    morph = lerp(morphTransition.from, morphTransition.to, easeInOut(progress));
-    if (progress >= 1) morphTransition = null;
-  }
-
-  function updatePerformance(delta) {
-    frameSamples += 1;
-    if (delta > 31) slowFrames += 1;
-    if (frameSamples < 180) return;
-    if (slowFrames > 72 && renderStride < 2) renderStride = 2;
-    frameSamples = 0;
-    slowFrames = 0;
-  }
-
-  function animate(now) {
-    var delta = Math.min(50, now - lastFrame);
-    lastFrame = now;
-    elapsed += delta * 0.001;
-
-    updateTransitions(now);
-    updateShockwaves(delta);
-    updatePerformance(delta);
-
-    yaw = lerp(yaw, targetYaw, 0.075);
-    pitch = lerp(pitch, targetPitch, 0.075);
-    zoom = lerp(zoom, targetZoom, 0.08);
-    pointerStrength = lerp(pointerStrength, pointerTargetStrength, 0.115);
-    if (!dragging && now - pointerLastMove > 90) pointerTargetStrength = 0;
-
-    drawBackground(elapsed);
-    renderParticles(elapsed);
-    drawShockwaves();
-    animationFrame = window.requestAnimationFrame(animate);
-  }
-
-  function pointerPosition(event) {
-    var rect = canvas.getBoundingClientRect();
-    return { x: event.clientX - rect.left, y: event.clientY - rect.top };
-  }
-
-  canvas.addEventListener("pointerdown", function (event) {
-    var point = pointerPosition(event);
-    activePointerId = event.pointerId;
-    dragging = true;
-    pointerX = point.x;
-    pointerY = point.y;
-    pointerDownAt = performance.now();
-    pointerTravel = 0;
-    pointerTargetStrength = 1;
-    pointerLastMove = performance.now();
-    canvas.classList.add("is-dragging");
-    canvas.setPointerCapture(event.pointerId);
-  });
-
-  canvas.addEventListener("pointermove", function (event) {
-    var point = pointerPosition(event);
-    var deltaX = point.x - pointerX;
-    var deltaY = point.y - pointerY;
-    pointerX = point.x;
-    pointerY = point.y;
-    pointerTargetStrength = 1;
-    pointerLastMove = performance.now();
-
-    if (dragging && event.pointerId === activePointerId) {
-      pointerTravel += Math.abs(deltaX) + Math.abs(deltaY);
-      targetYaw = clamp(targetYaw + deltaX * 0.0025, -0.32, 0.32);
-      targetPitch = clamp(targetPitch - deltaY * 0.0018, -0.13, 0.13);
-    }
-  });
-
-  function releasePointer(event) {
-    if (!dragging || event.pointerId !== activePointerId) return;
-    var held = performance.now() - pointerDownAt;
-    dragging = false;
-    activePointerId = null;
-    canvas.classList.remove("is-dragging");
-    if (pointerTravel < 12 && held < 480) {
-      shockwaves.push({ x: pointerX, y: pointerY, radius: 7, alpha: 1 });
-      if (shockwaves.length > 4) shockwaves.shift();
-    }
-  }
-
-  canvas.addEventListener("pointerup", releasePointer);
-  canvas.addEventListener("pointercancel", releasePointer);
-  canvas.addEventListener("pointerleave", function () {
-    if (!dragging) pointerTargetStrength = 0;
-  });
-
-  canvas.addEventListener("wheel", function (event) {
-    event.preventDefault();
-    targetZoom = clamp(targetZoom - event.deltaY * 0.0006, 0.88, 1.18);
-  }, { passive: false });
-
-  if (triggerButton) {
-    triggerButton.addEventListener("click", function () {
-      startMorph(morph > 0.5 ? 0 : 1, 1750);
-    });
+    addWave(width * 0.5, height * 0.48, 0.72, 0);
   }
 
   function updateFlowButton() {
     if (!flowButton) return;
     flowButton.setAttribute("aria-pressed", String(flowEnabled));
-    flowButton.textContent = "呼吸流动：" + (flowEnabled ? "开" : "关");
+    flowButton.textContent = "星轨流动：" + (flowEnabled ? "开" : "关");
   }
 
   function updateGlowButton() {
     if (!glowButton) return;
     glowButton.setAttribute("aria-pressed", String(glowEnabled));
-    glowButton.textContent = "粒子辉光：" + (glowEnabled ? "开" : "关");
+    glowButton.textContent = "宇宙辉光：" + (glowEnabled ? "开" : "关");
+    document.body.classList.toggle("glow-off", !glowEnabled);
   }
 
+  function onVisibilityChange() {
+    if (document.hidden) {
+      paused = true;
+      cancelAnimationFrame(frameId);
+    } else if (paused) {
+      paused = false;
+      lastFrame = performance.now();
+      frameId = requestAnimationFrame(render);
+    }
+  }
+
+  canvas.addEventListener("pointermove", setPointer, { passive: true });
+  canvas.addEventListener("pointerenter", setPointer, { passive: true });
+  canvas.addEventListener("pointerleave", clearPointer, { passive: true });
+  canvas.addEventListener("pointerdown", function (event) {
+    setPointer(event);
+    addWave(event.clientX, event.clientY, 1.05, 0);
+  }, { passive: true });
+
+  window.addEventListener("mousemove", function (event) {
+    view.targetX = clamp((event.clientX / width - 0.5) * 2, -1, 1);
+    view.targetY = clamp((event.clientY / height - 0.5) * 2, -1, 1);
+  }, { passive: true });
+  window.addEventListener("resize", resize, { passive: true });
+  document.addEventListener("visibilitychange", onVisibilityChange);
+
+  if (triggerButton) triggerButton.addEventListener("click", nebulaBurst);
+  if (resetButton) resetButton.addEventListener("click", resetUniverse);
   if (flowButton) {
-    updateFlowButton();
     flowButton.addEventListener("click", function () {
       flowEnabled = !flowEnabled;
       updateFlowButton();
     });
   }
-
   if (glowButton) {
-    updateGlowButton();
     glowButton.addEventListener("click", function () {
       glowEnabled = !glowEnabled;
       updateGlowButton();
     });
   }
 
-  function resetCloud() {
-    targetYaw = -0.035;
-    targetPitch = 0.012;
-    targetZoom = 1;
-    if (morph > 0.01) startMorph(0, 1250);
-    shockwaves = [];
-    for (var i = 0; i < particles.length; i += 1) {
-      particles[i].offsetX = 0;
-      particles[i].offsetY = 0;
-      particles[i].velocityX = 0;
-      particles[i].velocityY = 0;
-    }
-  }
-
-  if (resetButton) resetButton.addEventListener("click", resetCloud);
-
-  function handleMotionPreference(event) {
-    prefersReducedMotion = event.matches;
-    if (prefersReducedMotion) {
+  function onReducedMotionChange(event) {
+    if (event.matches) {
       flowEnabled = false;
-      morph = 0;
-      morphTransition = null;
-      resetCloud();
+      meteors = [];
+      updateFlowButton();
     }
-    updateFlowButton();
   }
 
-  if (reducedMotionQuery.addEventListener) {
-    reducedMotionQuery.addEventListener("change", handleMotionPreference);
-  } else if (reducedMotionQuery.addListener) {
-    reducedMotionQuery.addListener(handleMotionPreference);
+  if (typeof reducedMotionQuery.addEventListener === "function") {
+    reducedMotionQuery.addEventListener("change", onReducedMotionChange);
   }
 
-  window.addEventListener("resize", resize, { passive: true });
-  document.addEventListener("visibilitychange", function () {
-    if (document.hidden) {
-      if (animationFrame) window.cancelAnimationFrame(animationFrame);
-      animationFrame = 0;
-    } else if (!animationFrame && particles.length) {
-      lastFrame = performance.now();
-      animationFrame = window.requestAnimationFrame(animate);
-    }
-  });
-
-  function start() {
-    if (!modelSource) {
-      document.documentElement.classList.add("no-particle-model");
-      return;
-    }
-
-    resize();
-    buildStars();
-    loadImage(modelSource).then(function (image) {
-      buildParticles(image);
-      document.documentElement.classList.add("particle-ready");
-      lastFrame = performance.now();
-      animationFrame = window.requestAnimationFrame(animate);
-    }).catch(function () {
-      document.documentElement.classList.add("no-particle-model");
-    });
-  }
-
-  start();
+  resize();
+  buildUniverse();
+  updateFlowButton();
+  updateGlowButton();
+  root.classList.add("particle-ready");
+  addWave(width * 0.54, height * 0.46, 0.52, 420);
+  frameId = requestAnimationFrame(render);
 })();
