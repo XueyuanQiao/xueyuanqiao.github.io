@@ -1,7 +1,7 @@
 ---
 layout: landing
 title: 关于
-excerpt: 质量工程、AI 全栈实践、无人车质量与 AI 音乐创作
+excerpt: 质量工程、测试平台、AI 评测与 L4 无人车端到端质量
 permalink: /about.html
 ---
 
@@ -45,7 +45,7 @@ permalink: /about.html
 
         <p class="about-typed">
             <span data-typed
-                  data-typed-strings='["质量工程与测试开发","L4 无人配送车质量","Python / FastAPI / Pytest","React / TypeScript","AI 评测：WER / LLM-as-a-Judge","AI 音乐人 · xueyuan","CI/CD 与质量平台"]'>
+                  data-typed-strings='["质量策略与测试开发","L4 无人配送车质量","稳定性与质量治理","质量平台：FastAPI / React","AI 评测：基准集 / WER / LLM-as-a-Judge","CI/CD 与可观测性"]'>
             </span><span class="caret">_</span>
         </p>
 
@@ -65,10 +65,6 @@ permalink: /about.html
             <span class="status-pill">
                 <span class="status-key">方向</span>
                 <span class="status-val">测试平台 / AI 评测</span>
-            </span>
-            <span class="status-pill">
-                <span class="status-key">创作</span>
-                <span class="status-val">AI 音乐人 · xueyuan</span>
             </span>
             <span class="status-pill">
                 <span class="status-key">从业计时</span>
@@ -109,83 +105,70 @@ permalink: /about.html
         <ol class="snapshot-lines" data-snapshot-lines>
             <li class="snap-line snap-head">
                 <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="1. 角色设定 · Role &amp; Persona"></span>
+                <span class="snap-val" data-text="1. 职业定位 · Profile"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">你是谁</span>
-                <span class="snap-val" data-text="乔雪源 / Xueyuan，一名连接质量工程、AI 应用与音乐创作的工程师和 AI 音乐人。"></span>
+                <span class="snap-field">定位</span>
+                <span class="snap-val" data-text="乔雪源 / Xueyuan，近十年质量工程与测试开发经验，关注复杂系统的质量治理与工程交付。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">风格</span>
-                <span class="snap-val" data-text="工程审美优先，简单胜于复杂；用数据说话，不堆术语。"></span>
-            </li>
-            <li class="snap-line snap-item">
-                <span class="snap-field">背景</span>
-                <span class="snap-val" data-text="近十年质量工程，横跨搜索、金融、AI 应用与 L4 无人车。"></span>
-            </li>
-
-            <li class="snap-line snap-head">
-                <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="2. 上下文 · Context"></span>
+                <span class="snap-field">经历</span>
+                <span class="snap-val" data-text="做过 SaaS 客服、百度搜索、支付宝基金与个人养老金、AI Phone，现进入 L4 无人配送车领域。"></span>
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">当前</span>
-                <span class="snap-val" data-text="在九识无人车负责 L4 无人配送车的端到端质量。"></span>
-            </li>
-            <li class="snap-line snap-item">
-                <span class="snap-field">对象</span>
-                <span class="snap-val" data-text="车端、云端、数据链路，以及仿真和路测中的关键场景。"></span>
-            </li>
-            <li class="snap-line snap-item">
-                <span class="snap-field">能力</span>
-                <span class="snap-val" data-text="Python / FastAPI / Pytest，React / TypeScript，以及 AI 效果评测与质量平台。"></span>
+                <span class="snap-val" data-text="在九识负责无人配送车端到端质量，覆盖车端、云端、数据链路、OTA，并持续补齐仿真与路测能力。"></span>
             </li>
 
             <li class="snap-line snap-head">
                 <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="3. 任务目标 · Objective"></span>
+                <span class="snap-val" data-text="2. 能解决的问题 · Scope"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">核心</span>
-                <span class="snap-val" data-text="把质量方法、自动化与 AI 能力接进真实业务链路，交付可验证的结果。"></span>
+                <span class="snap-field">质量</span>
+                <span class="snap-val" data-text="从业务目标和故障后果出发，制定测试策略、发布门槛、质量指标和应急方案。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">近期</span>
-                <span class="snap-val" data-text="独立完成质量中台的需求梳理、前后端开发、数据存储与 CI/CD 部署。"></span>
+                <span class="snap-field">稳定性</span>
+                <span class="snap-val" data-text="通过容量基线、全链路压测、容灾演练、监控和复盘，把风险暴露在上线之前。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">AI</span>
-                <span class="snap-val" data-text="用 WER、基准集与 LLM-as-a-Judge 评估模型，把提示词配置纳入工程治理。"></span>
+                <span class="snap-field">工程</span>
+                <span class="snap-val" data-text="把高频流程做成自动化和平台能力，能独立完成需求梳理、前后端、数据存储、CI/CD 与部署。"></span>
             </li>
 
             <li class="snap-line snap-head">
                 <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="4. 限制与规则 · Constraints"></span>
+                <span class="snap-val" data-text="3. AI 时代的质量方法 · AI Quality"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">必须</span>
-                <span class="snap-val" data-text="先定义指标与回归集，再用数据判断效果；关键结果必须可追溯。"></span>
+                <span class="snap-field">分层</span>
+                <span class="snap-val" data-text="规则明确的流程交给自动化；模型输出用固定评测集、多维指标和人工抽检单独治理。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">方法</span>
-                <span class="snap-val" data-text="从真实问题出发，用指标、自动化和复盘沉淀工程经验。"></span>
+                <span class="snap-field">评测</span>
+                <span class="snap-val" data-text="实践过 WER、翻译基准集和 LLM-as-a-Judge；关注的不只是平均分，还包括失败分布、成本和回归变化。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">原则</span>
-                <span class="snap-val" data-text="稳定性依靠基线、监控、演练和持续回归。"></span>
+                <span class="snap-field">协作</span>
+                <span class="snap-val" data-text="用 AI 加速调研、原型、编码和分析，但关键结论必须回到原始数据，代码仍要经过评审与测试。"></span>
             </li>
 
             <li class="snap-line snap-head">
                 <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="5. 输出格式 · Output"></span>
+                <span class="snap-val" data-text="4. 判断与交付 · Delivery"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">判断</span>
+                <span class="snap-val" data-text="不以测试用例数量或工具数量证明质量，优先看关键风险是否收敛、结果是否可解释。"></span>
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">交付</span>
-                <span class="snap-val" data-text="可量化的质量指标、可复现的自动化链路、可持续演进的工程资产。"></span>
+                <span class="snap-val" data-text="交付的不只是一轮测试结果，还包括可复现的链路、可追溯的数据和可持续维护的工程资产。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">形态</span>
-                <span class="snap-val" data-text="质量平台 + CI/CD 管线 + AI 评测 + 技术写作 + AI 音乐作品。"></span>
+                <span class="snap-field">原则</span>
+                <span class="snap-val" data-text="先解决真实问题，再选择技术；保留证据和边界，对最终上线结果负责。"></span>
             </li>
         </ol>
 
@@ -228,42 +211,6 @@ permalink: /about.html
     </div>
 </section>
 
-<!-- AI music identity -->
-<section class="landing-section about-music-section" id="music">
-    <header class="section-head">
-        <span class="section-eyebrow">// creative.identity</span>
-        <h2>工程之外，我也做音乐 · AI Musician</h2>
-    </header>
-
-    <div class="artist-card artist-card--about">
-        <div class="artist-card__visual" aria-hidden="true">
-            <div class="artist-orbit artist-orbit--outer"></div>
-            <div class="artist-orbit artist-orbit--inner"></div>
-            <div class="artist-disc">
-                <span>XY</span>
-                <small>AI MUSIC</small>
-            </div>
-            <div class="artist-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-        </div>
-
-        <div class="artist-card__content">
-            <span class="artist-card__badge"><span></span> ARTIST PROFILE ONLINE</span>
-            <h3>xueyuan · AI 音乐人</h3>
-            <p>音乐是我在工程工作之外建立的另一条表达通道。创作时，我会先定义作品想传达的主题、情绪和画面，再使用生成式 AI 参与旋律、编曲和声音方案的探索，并通过多轮筛选与调整完成作品。这个身份与质量工程并不冲突：一个追求可验证的系统，另一个练习对感受与表达负责。</p>
-            <p class="artist-card__note">我的歌手名是 <strong>xueyuan</strong>，目前已入驻网易云音乐与 QQ 音乐。本站播放器现收录 <strong>{{ site.music_tracks.size }} 首作品</strong>：{% for track in site.music_tracks %}《{{ track.title }}》{% unless forloop.last %}、{% endunless %}{% endfor %}；访客可以展开播放列表，选择任意曲目在线收听。</p>
-            <div class="artist-card__actions">
-                <button class="btn btn-primary" type="button" data-music-play>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6a1 1 0 0 0 1.55.83l10.2-6.8a1 1 0 0 0 0-1.66L9.55 4.37A1 1 0 0 0 8 5.2z"/></svg>
-                    播放站内作品
-                </button>
-                <button class="btn btn-ghost" type="button" data-music-queue-open>查看播放列表</button>
-                <a class="btn btn-ghost" href="{{ site.netease_music_url }}" target="_blank" rel="noopener">在网易云音乐关注</a>
-                <a class="btn btn-ghost" href="{{ site.qq_music_url }}" target="_blank" rel="noopener">在 QQ 音乐关注</a>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- Working principles -->
 <section class="landing-section about-manifesto">
     <header class="section-head">
@@ -274,23 +221,23 @@ permalink: /about.html
     <div class="manifesto-grid">
         <article class="manifesto-card" style="--accent: 124,140,255">
             <div class="manifesto-num">01</div>
-            <h3>先把关键链路跑通</h3>
-            <p>先识别最容易出问题、最影响用户的路径，再补自动化、数据和监控，不追求一次做全。</p>
+            <h3>先判断风险，再决定怎么测</h3>
+            <p>先看业务目标、关键链路和故障代价，再决定测试范围与投入。用例数量不是目标，风险收敛才是。</p>
         </article>
         <article class="manifesto-card" style="--accent: 89,227,255">
             <div class="manifesto-num">02</div>
-            <h3>用指标代替感觉</h3>
-            <p>性能看容量基线，语音识别看 WER，模型输出看基准集；先约定口径，再讨论好坏。</p>
+            <h3>不同问题，用不同的尺子</h3>
+            <p>规则明确的流程交给自动化；模型输出用固定评测集、多维指标和人工抽检。确定性与概率性问题分开治理。</p>
         </article>
         <article class="manifesto-card" style="--accent: 184,136,255">
             <div class="manifesto-num">03</div>
-            <h3>重复工作接入流水线</h3>
-            <p>把稳定的回归、检查和部署步骤自动化，减少手工操作，也让问题更容易复现和追踪。</p>
+            <h3>让 AI 提速，责任仍由人承担</h3>
+            <p>用 AI 查资料、做原型、写代码和分析结果；关键结论要能回到原始数据，代码仍要经过评审、测试和发布流程。</p>
         </article>
         <article class="manifesto-card" style="--accent: 124,255,180">
             <div class="manifesto-num">04</div>
-            <h3>让经验留下来</h3>
-            <p>每个项目都沉淀可复用的测试资产、指标和复盘记录，让下一次交付更稳、更快。</p>
+            <h3>把一次性交付变成长期资产</h3>
+            <p>把高频动作接入流水线，把案例、指标、失败样本和复盘留在系统里。工具会换，判断问题的依据不能丢。</p>
         </article>
     </div>
 </section>
@@ -475,6 +422,42 @@ permalink: /about.html
             {{ tag }}
         </span>
         {% endfor %}
+    </div>
+</section>
+
+<!-- Music hobby -->
+<section class="landing-section about-music-section" id="music">
+    <header class="section-head">
+        <span class="section-eyebrow">// off.work</span>
+        <h2>工作之外的爱好 · Music</h2>
+    </header>
+
+    <div class="artist-card artist-card--about">
+        <div class="artist-card__visual" aria-hidden="true">
+            <div class="artist-orbit artist-orbit--outer"></div>
+            <div class="artist-orbit artist-orbit--inner"></div>
+            <div class="artist-disc">
+                <span>XY</span>
+                <small>AI MUSIC</small>
+            </div>
+            <div class="artist-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="artist-card__content">
+            <span class="artist-card__badge"><span></span> PERSONAL HOBBY · MUSIC</span>
+            <h3>音乐，工作之外的一点兴趣</h3>
+            <p>业余时间我会尝试做音乐。生成式工具参与旋律、编曲和声音方案的探索，主题、取舍和最终成品由我自己决定。它不是我的职业主线，只是一个长期保留的爱好。</p>
+            <p class="artist-card__note">发布作品时使用名字 <strong>xueyuan</strong>，目前可在网易云音乐和 QQ 音乐找到。本站播放器收录 <strong>{{ site.music_tracks.size }} 首作品</strong>：{% for track in site.music_tracks %}《{{ track.title }}》{% unless forloop.last %}、{% endunless %}{% endfor %}。</p>
+            <div class="artist-card__actions">
+                <button class="btn btn-primary" type="button" data-music-play>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6a1 1 0 0 0 1.55.83l10.2-6.8a1 1 0 0 0 0-1.66L9.55 4.37A1 1 0 0 0 8 5.2z"/></svg>
+                    播放站内作品
+                </button>
+                <button class="btn btn-ghost" type="button" data-music-queue-open>查看播放列表</button>
+                <a class="btn btn-ghost" href="{{ site.netease_music_url }}" target="_blank" rel="noopener">网易云音乐</a>
+                <a class="btn btn-ghost" href="{{ site.qq_music_url }}" target="_blank" rel="noopener">QQ 音乐</a>
+            </div>
+        </div>
     </div>
 </section>
 
