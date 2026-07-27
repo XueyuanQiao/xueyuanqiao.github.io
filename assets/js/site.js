@@ -2947,6 +2947,7 @@
     if (!lines.length) return;
     var statusEl = section.querySelector("[data-snapshot-status]");
     var statusTimer = null;
+    var fallbackTimer = null;
 
     function setStatus(state) {
       if (!statusEl) return;
@@ -2971,29 +2972,42 @@
       }
     }
 
-    // 减少动效偏好 / 无 IO 支持：直接呈现全部内容
-    if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    function revealStatic() {
       lines.forEach(function (li) {
         var val = li.querySelector(".snap-val");
         if (val) val.textContent = val.getAttribute("data-text") || "";
         li.classList.add("is-revealed");
       });
+      section.classList.remove("is-pending", "is-typing");
       section.classList.add("is-done");
       setStatus("done");
+    }
+
+    // 减少动效偏好 / 无 IO 支持：直接呈现全部内容
+    if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+      revealStatic();
       return;
     }
 
+    section.classList.add("is-pending");
     var started = false;
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting && !started) {
           started = true;
+          if (fallbackTimer) clearTimeout(fallbackTimer);
           io.unobserve(e.target);
           runSequence();
         }
       });
-    }, { threshold: 0.3 });
+    }, { threshold: 0.08 });
     io.observe(section);
+    fallbackTimer = setTimeout(function () {
+      if (started) return;
+      started = true;
+      io.unobserve(section);
+      revealStatic();
+    }, 8000);
 
     function runSequence() {
       section.classList.add("is-typing");
@@ -3016,7 +3030,7 @@
         lastEnd = startAt + 520;
       });
       setTimeout(function () {
-        section.classList.remove("is-typing");
+        section.classList.remove("is-pending", "is-typing");
         section.classList.add("is-done");
         setStatus("done");
       }, lastEnd + 200);

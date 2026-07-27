@@ -4557,12 +4557,19 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   align-items: baseline;
   gap: 12px;
   padding: 7px 0;
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.about-snapshot.is-pending .snap-line {
   opacity: 0;
   transform: translateX(-16px);
   filter: blur(3px);
 }
 
-.snap-line.is-revealed {
+.snap-line.is-revealed,
+.about-snapshot.is-pending .snap-line.is-revealed {
   opacity: 1;
   transform: none;
   filter: none;
@@ -4666,6 +4673,10 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   word-break: break-word;
 }
 
+.snap-val:empty::before {
+  content: attr(data-text);
+}
+
 /* 正在解码的那一行：高亮 + 辉光 + 末尾光标 */
 .snap-val.is-decoding {
   color: var(--brand-2);
@@ -4698,10 +4709,16 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   background-size: 200% 100%;
   box-shadow: 0 16px 36px -16px color-mix(in srgb, var(--brand) 75%, transparent);
   overflow: hidden;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+}
+
+.about-snapshot.is-pending .snapshot-cta {
   opacity: 0;
   transform: translateY(14px) scale(0.98);
   pointer-events: none;
-  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
 }
 
 .about-snapshot.is-typing .snapshot-cta,
@@ -4793,9 +4810,14 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
   border-radius: 14px;
   overflow: hidden;
   background: color-mix(in srgb, var(--brand) 14%, var(--border));
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.about-snapshot.is-pending .snapshot-stats {
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .about-snapshot.is-typing .snapshot-stats,

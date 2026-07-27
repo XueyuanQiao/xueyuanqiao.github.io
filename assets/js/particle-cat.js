@@ -177,7 +177,6 @@
   var program;
   var locations;
   var panoramaTexture;
-  var panoramaQuality = 0;
 
   try {
     program = createProgram(vertexShaderSource, fragmentShaderSource);
@@ -211,10 +210,9 @@
 
   function choosePanoramaSource() {
     var maximumTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 4096;
-    var useMobile = window.innerWidth < 900 || coarsePointerQuery.matches || maximumTextureSize < 6000;
-    return useMobile
-      ? panoramaCanvas.getAttribute("data-panorama-mobile-src")
-      : panoramaCanvas.getAttribute("data-panorama-src");
+    var originalSource = panoramaCanvas.getAttribute("data-panorama-src");
+    var compatibilitySource = panoramaCanvas.getAttribute("data-panorama-mobile-src");
+    return maximumTextureSize >= 6000 ? originalSource : (compatibilitySource || originalSource);
   }
 
   function loadImage(source, priority) {
@@ -245,58 +243,13 @@
     if (previousTexture) gl.deleteTexture(previousTexture);
   }
 
-  function showPanorama(image, quality, readyClass) {
-    if (quality <= panoramaQuality) return;
+  function showPanorama(image) {
     uploadPanorama(image);
-    panoramaQuality = quality;
-    root.classList.add(readyClass);
+    root.classList.add("panorama-high-ready");
   }
 
-  function loadInitialPanorama() {
-    var previewSource = panoramaCanvas.getAttribute("data-panorama-preview-src");
-    var mediumSource = panoramaCanvas.getAttribute("data-panorama-medium-src");
-    return loadImage(previewSource, "high")
-      .then(function (image) {
-        return { image: image, quality: 1, readyClass: "panorama-preview-ready" };
-      })
-      .catch(function () {
-        return loadImage(mediumSource, "high").then(function (image) {
-          return { image: image, quality: 2, readyClass: "panorama-medium-ready" };
-        });
-      });
-  }
-
-  function loadDetailedPanorama() {
-    var mediumSource = panoramaCanvas.getAttribute("data-panorama-medium-src");
-    var finalSource = choosePanoramaSource();
-    var mediumPromise = panoramaQuality >= 2
-      ? Promise.resolve()
-      : loadImage(mediumSource, "high")
-        .then(function (image) {
-          showPanorama(image, 2, "panorama-medium-ready");
-        })
-        .catch(function () {
-          return null;
-        });
-
-    mediumPromise
-      .then(function () {
-        return loadImage(finalSource, "low");
-      })
-      .then(function (image) {
-        showPanorama(image, 3, "panorama-high-ready");
-      })
-      .catch(function (error) {
-        console.warn(error.message);
-      });
-  }
-
-  function scheduleDetailedPanorama() {
-    if (typeof window.requestIdleCallback === "function") {
-      window.requestIdleCallback(loadDetailedPanorama, { timeout: 450 });
-    } else {
-      window.setTimeout(loadDetailedPanorama, 80);
-    }
+  function loadOriginalPanorama() {
+    return loadImage(choosePanoramaSource(), "high");
   }
 
   function buildStars() {
@@ -837,13 +790,12 @@
   resize();
   buildStars();
 
-  loadInitialPanorama()
-    .then(function (result) {
-      showPanorama(result.image, result.quality, result.readyClass);
+  loadOriginalPanorama()
+    .then(function (image) {
+      showPanorama(image);
       root.classList.add("particle-ready");
       lastFrame = performance.now();
       animationFrame = requestAnimationFrame(render);
-      scheduleDetailedPanorama();
     })
     .catch(function (error) {
       console.error(error);

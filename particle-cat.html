@@ -15,6 +15,7 @@ permalink: /
     <link rel="icon" type="image/png" sizes="32x32" href="{{ '/images/favicon.png' | relative_url }}">
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="image" type="image/webp" fetchpriority="high" href="{{ '/images/space-panorama-360.webp' | relative_url }}">
     <link rel="prefetch" href="{{ '/blog/' | relative_url }}" as="document">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="{{ '/assets/css/particle-cat.css' | relative_url }}">
@@ -23,8 +24,6 @@ permalink: /
     <div class="space-backdrop" aria-hidden="true">
         <canvas
             id="space-panorama"
-            data-panorama-preview-src="{{ '/images/space-panorama-360-preview.webp' | relative_url }}"
-            data-panorama-medium-src="{{ '/images/space-panorama-360-medium.webp' | relative_url }}"
             data-panorama-src="{{ '/images/space-panorama-360.webp' | relative_url }}"
             data-panorama-mobile-src="{{ '/images/space-panorama-360-mobile.webp' | relative_url }}"
         ></canvas>
@@ -91,7 +90,14 @@ permalink: /
 
     <p class="space-credit">360° 全天星空影像：ESO / S. Brunier</p>
 
-    <p class="particle-loading" role="status">正在载入 360° 深空全景…</p>
+    <div class="particle-loading" role="status" aria-live="polite">
+        <span class="particle-loading__signal" aria-hidden="true"></span>
+        <span class="particle-loading__copy">
+            <strong>正在接收原始星图</strong>
+            <small>6000 × 3000 · 360° HIGH RESOLUTION</small>
+        </span>
+        <span class="particle-loading__track" aria-hidden="true"><i></i></span>
+    </div>
 
     <div class="particle-fallback" role="status">
         <p>互动宇宙暂时无法显示</p>

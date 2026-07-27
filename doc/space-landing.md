@@ -22,11 +22,11 @@
 | --- | --- |
 | `particle-cat.html` | 页面结构、全景资源地址、博客入口、重置入口和降级内容 |
 | `assets/css/particle-cat.css` | 宇宙首页全部视觉、响应式、火箭与回航动画 |
-| `assets/js/particle-cat.js` | WebGL 全景、Canvas 粒子、360° 交互、渐进加载和入口行为 |
-| `images/space-panorama-360-preview.webp` | 首屏极小预览，确保页面尽快可拖动 |
-| `images/space-panorama-360-medium.webp` | 中清过渡纹理 |
-| `images/space-panorama-360.webp` | 桌面最终高清纹理 |
-| `images/space-panorama-360-mobile.webp` | 移动端及纹理能力受限设备的最终高清纹理 |
+| `assets/js/particle-cat.js` | WebGL 全景、Canvas 粒子、360° 交互、原图加载和入口行为 |
+| `images/space-panorama-360-preview.webp` | 加载阶段的模糊背景，仅作视觉过渡，不上传为 WebGL 纹理 |
+| `images/space-panorama-360-medium.webp` | 历史中清资源，当前加载链路不再使用 |
+| `images/space-panorama-360.webp` | 默认且唯一的最终 WebGL 高清纹理 |
+| `images/space-panorama-360-mobile.webp` | 仅在 GPU 最大纹理尺寸不足 6000 时使用的兼容降级纹理 |
 
 全景原始影像来自 [ESO 360° 全天星空全景](https://www.eso.org/public/images/eso0932a/)，页面左下角保留署名。
 
@@ -44,26 +44,25 @@
 
 不要把交互按钮放到粒子画布下方。`.particle-entry` 本身使用 `pointer-events: none`，只有入口链接和按钮恢复为 `pointer-events: auto`，这样大部分页面区域仍可拖动。
 
-## 4. 渐进加载与无损最终效果
+## 4. 原图优先加载与过渡状态
 
-当前采用四级资源策略：
+当前采用“过渡背景 + 原始高清纹理”策略：
 
 | 阶段 | 分辨率 | 约大小 | 用途 |
 | --- | ---: | ---: | --- |
-| Preview | 768 × 384 | 5.6 KB | CSS 首屏背景和第一张 WebGL 纹理 |
-| Medium | 1600 × 800 | 132 KB | 快速提升清晰度 |
-| Desktop Final | 6000 × 3000 | 6.8 MB | 桌面最终画质 |
-| Mobile Final | 4096 × 2048 | 2.1 MB | 移动端最终画质 |
+| Preview | 768 × 384 | 5.6 KB | 带模糊、遮罩和加载提示的 CSS 过渡背景 |
+| Original Final | 6000 × 3000 | 6.8 MB | 默认最终画质，也是正常设备唯一上传到 WebGL 的纹理 |
+| Compatibility Final | 4096 × 2048 | 2.1 MB | 仅供 `MAX_TEXTURE_SIZE < 6000` 的设备兼容使用 |
 
 加载顺序：
 
-1. 浏览器解析 CSS 时立即显示 Preview 背景。
-2. JavaScript 以高优先级载入 Preview；上传为 WebGL 纹理后立即添加 `.particle-ready`，此时拖曳、惯性、缩放和粒子效果全部可用。
-3. `requestIdleCallback`（不支持时延迟 80ms）开始载入 Medium。
-4. Medium 上传后继续加载最终纹理。桌面优先 6000 × 3000；窄屏、粗指针或 `MAX_TEXTURE_SIZE < 6000` 的设备使用 4096 × 2048。
-5. `showPanorama()` 只允许更高质量纹理替换当前纹理，并删除旧的 WebGL Texture，避免显存累积。
+1. 浏览器解析 CSS 时立即显示 Preview 背景，并通过模糊遮罩、扫描光和状态卡明确表达“正在加载”。
+2. `<head>` 以高优先级预载 6000 × 3000 原始图，JavaScript 同样使用高优先级图片请求。
+3. 原始图完成解码并上传为 WebGL 纹理后添加 `.panorama-high-ready`，高清画布淡入，加载状态淡出。
+4. 随后添加 `.particle-ready` 并启动拖曳、惯性、缩放和粒子渲染。
+5. 只有 GPU 最大纹理尺寸不足 6000 时才选择 4096 × 2048 兼容纹理，避免上传失败导致页面不可用。
 
-纹理替换不会重建渲染器，也不会修改 `yaw`、`pitch` 或 `fov`，所以用户可以在高清资源下载期间持续拖动，升级画质时视角不会跳回初始位置。
+加载阶段不启动 WebGL 交互，避免用低清纹理提前渲染；原始图上传完成后直接以默认 `yaw`、`pitch` 和 `fov` 启动最终高清视角。
 
 最终高清资源没有降质。除非明确接受新的画质基线，不要为了减小体积再次压缩 `space-panorama-360.webp` 或 `space-panorama-360-mobile.webp`。
 
@@ -71,9 +70,7 @@
 
 | 类名 | 含义 |
 | --- | --- |
-| `.panorama-preview-ready` | Preview 已上传 |
-| `.panorama-medium-ready` | Medium 已上传 |
-| `.panorama-high-ready` | 最终高清纹理已上传 |
+| `.panorama-high-ready` | 原始高清纹理（或硬件兼容纹理）已上传，开始淡入最终画面 |
 | `.particle-ready` | 渲染循环和交互已经启动 |
 | `.has-explored` | 用户已拖动、缩放或使用方向键，隐藏拖曳提示 |
 | `.is-dragging` | 正在拖动，切换抓取光标 |
@@ -166,9 +163,9 @@ bundle exec jekyll serve --host 127.0.0.1 --port 4000 --no-watch
 
 浏览器验收清单：
 
-- `/` 首屏先出现 Preview，不需要等待最终图片即可拖动。
-- 下载 Medium 和 Final 时持续拖动，视角不跳变。
-- 最终出现 `.panorama-high-ready`，桌面与移动端画质符合预期。
+- `/` 首屏出现带模糊和扫描光的 Preview 过渡背景，以及“正在接收原始星图”状态卡。
+- 正常设备只请求并上传 6000 × 3000 原始图，不再先后显示 Preview / Medium WebGL 纹理。
+- 最终出现 `.panorama-high-ready`，状态卡平滑消失，高清画布淡入且没有中清停留状态。
 - 水平可连续拖动 360°，垂直视角不会翻转。
 - 惯性、滚轮缩放、方向键和“重置视角”有效。
 - 点击博客入口后，火箭应从入口图标位置升空，出现具有明显前后景深的三维星线、旋转空间弧带、暗色引力透镜与“航向 Xueyuan 的技术宇宙”文案，约 1.58 秒后进入 `/blog/`；过程中不应出现刺眼白光或占满屏幕的机械圆环。
@@ -183,13 +180,20 @@ bundle exec jekyll serve --host 127.0.0.1 --port 4000 --no-watch
 
 - 不引入 Three.js 等运行时库；当前实现是原生 WebGL + Canvas 2D。
 - 跃迁 Canvas 复用首页 DPR 上限，桌面最高 1.5、粗指针设备最高 1.25，避免转场短时间内过度占用 GPU。
-- 不要把最终高清资源设为首个阻塞资源。
+- 原始高清资源使用 `preload` 和高优先级请求，但不能作为阻塞 HTML 解析的同步资源。
 - 不要在渐进加载期间重建 WebGL program 或重置视角状态。
 - 新增视觉效果前先确认不会遮挡博客入口、拖曳区域或明显增加 GPU 占用。
 - 页面只保留博客入口和图标式重置入口，其他效果默认开启。
 - 修改任何宇宙首页 HTML、CSS、JS、资源或文案时，同步更新本文的文件清单、资源表、行为说明和验证清单。
 
 ## 11. 变更记录
+
+### 2026-07-27
+
+- 移除 Preview → Medium → Final 的 WebGL 分级替换，正常设备始终只上传 6000 × 3000 原始高清纹理。
+- Preview 改为带模糊遮罩、扫描光和原图加载状态卡的纯 CSS 过渡背景。
+- 原始图完成后再淡入高清画布并启动交互，避免用户把中清过渡误认为最终画质。
+- 仅在 GPU 最大纹理尺寸不足 6000 时保留 4096 × 2048 兼容降级。
 
 ### 2026-07-26
 
