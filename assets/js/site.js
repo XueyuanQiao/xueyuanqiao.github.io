@@ -3320,12 +3320,23 @@
 
   // ---------- Timeline ----------
   function initTimeline() {
-    var items = doc.querySelectorAll("[data-about-timeline] .tl-item");
+    var timeline = doc.querySelector("[data-about-timeline]");
+    if (!timeline) return null;
+    var items = timeline.querySelectorAll(".tl-item");
     if (!items.length) return null;
     if (!("IntersectionObserver" in window) || prefersReducedMotion) {
       items.forEach(function (it) { it.classList.add("is-in"); });
       return null;
     }
+
+    items.forEach(function (it) {
+      var rect = it.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
+        it.classList.add("is-in");
+      }
+    });
+    timeline.classList.add("is-enhanced");
+
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) {
@@ -3334,8 +3345,13 @@
         }
       });
     }, { threshold: 0.1, rootMargin: "0px 0px -10% 0px" });
-    items.forEach(function (it) { io.observe(it); });
-    return function () { io.disconnect(); };
+    items.forEach(function (it) {
+      if (!it.classList.contains("is-in")) io.observe(it);
+    });
+    return function () {
+      io.disconnect();
+      timeline.classList.remove("is-enhanced");
+    };
   }
 
   // ---------- Manifesto card spotlight + light tilt ----------

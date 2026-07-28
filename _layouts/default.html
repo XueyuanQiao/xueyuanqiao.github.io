@@ -248,6 +248,93 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
     </button>
 
-    <script src="{{ '/assets/js/site.js' | relative_url }}" defer></script>
+    <script data-site-runtime-loader>
+      (function (doc, win) {
+        "use strict";
+
+        var root = doc.documentElement;
+        var source = {{ '/assets/js/site.js' | relative_url | jsonify }};
+        var activeScript = null;
+        var retryTimer = 0;
+        var retryCount = 0;
+        var loaded = false;
+        var maximumDelay = 30000;
+
+        function setState(state) {
+          root.setAttribute("data-site-runtime", state);
+        }
+
+        function retrySource() {
+          if (!retryCount) return source;
+          try {
+            var url = new URL(source, win.location.href);
+            url.searchParams.set("aurora-retry", String(retryCount));
+            return url.href;
+          } catch (error) {
+            return source + (source.indexOf("?") === -1 ? "?" : "&") + "aurora-retry=" + retryCount;
+          }
+        }
+
+        function scheduleRetry() {
+          if (loaded || activeScript || retryTimer || win.navigator.onLine === false) return;
+          var delay = Math.min(1000 * Math.pow(2, Math.max(0, retryCount - 1)), maximumDelay);
+          retryTimer = win.setTimeout(function () {
+            retryTimer = 0;
+            loadRuntime();
+          }, delay);
+        }
+
+        function loadRuntime() {
+          if (loaded || activeScript) return;
+          if (win.navigator.onLine === false) {
+            setState("degraded");
+            return;
+          }
+
+          if (retryTimer) {
+            win.clearTimeout(retryTimer);
+            retryTimer = 0;
+          }
+
+          var script = doc.createElement("script");
+          activeScript = script;
+          script.src = retrySource();
+          script.async = true;
+          script.setAttribute("data-site-runtime-script", "");
+          setState(retryCount ? "recovering" : "loading");
+
+          script.onload = function () {
+            loaded = true;
+            activeScript = null;
+            setState("ready");
+          };
+
+          script.onerror = function () {
+            activeScript = null;
+            retryCount += 1;
+            setState("degraded");
+            script.remove();
+            scheduleRetry();
+          };
+
+          doc.head.appendChild(script);
+        }
+
+        win.addEventListener("online", function () {
+          if (loaded || activeScript) return;
+          if (retryTimer) {
+            win.clearTimeout(retryTimer);
+            retryTimer = 0;
+          }
+          loadRuntime();
+        });
+
+        win.addEventListener("offline", function () {
+          if (!loaded) setState("degraded");
+        });
+
+        loadRuntime();
+      })(document, window);
+    </script>
 </body>
 </html>

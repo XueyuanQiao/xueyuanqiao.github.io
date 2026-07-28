@@ -265,17 +265,43 @@ permalink: /about.html
                     </linearGradient>
                 </defs>
                 <circle cx="0" cy="0" r="155" fill="url(#radarGlow)" class="radar-bgglow"/>
-                <g class="radar-rings"></g>
-                <g class="radar-axes"></g>
-                <polygon class="radar-shape" points=""/>
-                <g class="radar-points"></g>
-                <g class="radar-labels"></g>
+                <g class="radar-rings">
+                    <circle cx="0" cy="0" r="37.5"/>
+                    <circle cx="0" cy="0" r="75"/>
+                    <circle cx="0" cy="0" r="112.5"/>
+                    <circle cx="0" cy="0" r="150"/>
+                </g>
+                <g class="radar-axes">
+                    <line x1="0" y1="0" x2="0" y2="-150"/>
+                    <line x1="0" y1="0" x2="129.90" y2="-75"/>
+                    <line x1="0" y1="0" x2="129.90" y2="75"/>
+                    <line x1="0" y1="0" x2="0" y2="150"/>
+                    <line x1="0" y1="0" x2="-129.90" y2="75"/>
+                    <line x1="0" y1="0" x2="-129.90" y2="-75"/>
+                </g>
+                <polygon class="radar-shape" points="0,-135 114.32,-66 71.45,41.25 0,102 -98.73,57 -106.52,-61.5"/>
+                <g class="radar-points">
+                    <circle r="5" cx="0" cy="-135" data-axis="0"/>
+                    <circle r="5" cx="114.32" cy="-66" data-axis="1"/>
+                    <circle r="5" cx="71.45" cy="41.25" data-axis="2"/>
+                    <circle r="5" cx="0" cy="102" data-axis="3"/>
+                    <circle r="5" cx="-98.73" cy="57" data-axis="4"/>
+                    <circle r="5" cx="-106.52" cy="-61.5" data-axis="5"/>
+                </g>
+                <g class="radar-labels">
+                    <text x="0" y="-168" data-axis="0">Test Auto</text>
+                    <text x="148.96" y="-82" data-axis="1">Stability</text>
+                    <text x="148.96" y="90" data-axis="2">Vehicle QA</text>
+                    <text x="0" y="176" data-axis="3">AI Eval</text>
+                    <text x="-148.96" y="90" data-axis="4">Platform</text>
+                    <text x="-148.96" y="-82" data-axis="5">Delivery</text>
+                </g>
                 <line class="radar-sweep" x1="0" y1="0" x2="0" y2="-150"/>
             </svg>
         </div>
 
         <ul class="radar-legend">
-            <li data-axis="0" data-label="Test Auto" data-value="90" style="--accent: 124,140,255">
+            <li tabindex="0" data-axis="0" data-label="Test Auto" data-value="90" style="--accent: 124,140,255">
                 <span class="dot"></span>
                 <div>
                     <div class="r-name">自动化测试</div>
@@ -283,7 +309,7 @@ permalink: /about.html
                 </div>
                 <span class="r-score">长期</span>
             </li>
-            <li data-axis="1" data-label="Stability" data-value="88" style="--accent: 89,227,255">
+            <li tabindex="0" data-axis="1" data-label="Stability" data-value="88" style="--accent: 89,227,255">
                 <span class="dot"></span>
                 <div>
                     <div class="r-name">稳定性</div>
@@ -291,7 +317,7 @@ permalink: /about.html
                 </div>
                 <span class="r-score">长期</span>
             </li>
-            <li data-axis="2" data-label="Vehicle QA" data-value="55" style="--accent: 184,136,255">
+            <li tabindex="0" data-axis="2" data-label="Vehicle QA" data-value="55" style="--accent: 184,136,255">
                 <span class="dot"></span>
                 <div>
                     <div class="r-name">无人车质量</div>
@@ -299,7 +325,7 @@ permalink: /about.html
                 </div>
                 <span class="r-score">起步</span>
             </li>
-            <li data-axis="3" data-label="AI Eval" data-value="68" style="--accent: 124,255,180">
+            <li tabindex="0" data-axis="3" data-label="AI Eval" data-value="68" style="--accent: 124,255,180">
                 <span class="dot"></span>
                 <div>
                     <div class="r-name">AI 评测</div>
@@ -307,7 +333,7 @@ permalink: /about.html
                 </div>
                 <span class="r-score">实践</span>
             </li>
-            <li data-axis="4" data-label="Platform" data-value="76" style="--accent: 251,191,36">
+            <li tabindex="0" data-axis="4" data-label="Platform" data-value="76" style="--accent: 251,191,36">
                 <span class="dot"></span>
                 <div>
                     <div class="r-name">质量平台开发</div>
@@ -315,7 +341,7 @@ permalink: /about.html
                 </div>
                 <span class="r-score">项目</span>
             </li>
-            <li data-axis="5" data-label="Delivery" data-value="82" style="--accent: 248,113,113">
+            <li tabindex="0" data-axis="5" data-label="Delivery" data-value="82" style="--accent: 248,113,113">
                 <span class="dot"></span>
                 <div>
                     <div class="r-name">工程交付</div>
