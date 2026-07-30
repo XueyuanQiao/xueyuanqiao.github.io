@@ -177,6 +177,8 @@
   var program;
   var locations;
   var panoramaTexture;
+  var panoramaQuality = 0;
+  var renderingStarted = false;
 
   try {
     program = createProgram(vertexShaderSource, fragmentShaderSource);
@@ -243,13 +245,27 @@
     if (previousTexture) gl.deleteTexture(previousTexture);
   }
 
-  function showPanorama(image) {
+  function showPanorama(image, quality, readyClass) {
+    if (quality <= panoramaQuality) return;
     uploadPanorama(image);
-    root.classList.add("panorama-high-ready");
+    panoramaQuality = quality;
+    root.classList.add(readyClass);
+  }
+
+  function loadPreviewPanorama() {
+    return loadImage(panoramaCanvas.getAttribute("data-panorama-preview-src"), "auto");
   }
 
   function loadOriginalPanorama() {
     return loadImage(choosePanoramaSource(), "high");
+  }
+
+  function startRendering() {
+    if (renderingStarted || !panoramaTexture) return;
+    renderingStarted = true;
+    root.classList.add("particle-ready");
+    lastFrame = performance.now();
+    animationFrame = requestAnimationFrame(render);
   }
 
   function buildStars() {
@@ -790,15 +806,35 @@
   resize();
   buildStars();
 
-  loadOriginalPanorama()
+  var originalPanoramaPromise = loadOriginalPanorama()
     .then(function (image) {
-      showPanorama(image);
-      root.classList.add("particle-ready");
-      lastFrame = performance.now();
-      animationFrame = requestAnimationFrame(render);
+      showPanorama(image, 2, "panorama-high-ready");
+      startRendering();
+      return true;
     })
     .catch(function (error) {
-      console.error(error);
+      console.warn(error.message);
+      return false;
+    });
+
+  var previewPanoramaPromise = loadPreviewPanorama()
+    .then(function (image) {
+      showPanorama(image, 1, "panorama-preview-ready");
+      startRendering();
+      return true;
+    })
+    .catch(function (error) {
+      console.warn(error.message);
+      return false;
+    });
+
+  Promise.all([previewPanoramaPromise, originalPanoramaPromise])
+    .then(function (results) {
+      if (results[1] || !results[0]) return;
+      root.classList.add("panorama-upgrade-failed");
+    })
+    .then(function () {
+      if (panoramaTexture) return;
       root.classList.add("no-particle-canvas");
       cancelAnimationFrame(animationFrame);
     });

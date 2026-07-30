@@ -59,6 +59,8 @@ button { color: inherit; }
   animation: none;
 }
 
+.panorama-upgrade-failed .space-backdrop::before { animation: none; }
+
 #space-panorama {
   position: absolute;
   z-index: 1;
@@ -70,6 +72,7 @@ button { color: inherit; }
   transition: opacity 1200ms ease;
 }
 
+.panorama-preview-ready #space-panorama,
 .panorama-high-ready #space-panorama { opacity: 1; }
 
 .space-backdrop__veil {
@@ -706,6 +709,7 @@ button { color: inherit; }
   color: rgba(226, 240, 248, 0.88);
   text-align: center;
   isolation: isolate;
+  pointer-events: none;
   transform: translate(-50%, -50%);
   transition: opacity 600ms ease, transform 600ms ease, visibility 600ms ease;
 }
@@ -745,6 +749,7 @@ button { color: inherit; }
 }
 
 .panorama-high-ready .particle-loading,
+.panorama-upgrade-failed .particle-loading,
 .no-particle-canvas .particle-loading {
   opacity: 0;
   visibility: hidden;
