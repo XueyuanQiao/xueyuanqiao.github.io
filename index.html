@@ -118,6 +118,78 @@ permalink: /blog/
     </a>
 </section>
 
+<!-- Popular posts (pinned / 热门文章) -->
+{%- assign featured_posts = site.posts | where: "featured", true | sort: "featured_rank" -%}
+{% if featured_posts.size > 0 %}
+<section class="landing-section" id="popular">
+    <header class="section-head">
+        <span class="section-eyebrow">// popular</span>
+        <h2>热门文章 · Popular</h2>
+    </header>
+
+    <div class="feature-grid" data-tilt-root>
+        {% for post in featured_posts %}
+        <a class="feature-card feature-card-hot" data-tilt href="{{ post.url | relative_url }}">
+            <div class="feature-card-bg"></div>
+            <span class="feature-card-badge">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3 4 4.5 4 8a4 4 0 0 1-8 0c0-1 .3-1.8.7-2.5C9 8.5 11 7 12 2z"/><path d="M9 14c0 3 1.5 4 3 4s3-1 3-4"/></svg>
+                热门
+            </span>
+            <div class="feature-card-inner">
+                <div class="feature-meta">
+                    <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y-%m-%d" }}</time>
+                    {% if post.categories.size > 0 %}<span class="sep">·</span><span>{{ post.categories | first }}</span>{% endif %}
+                </div>
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.excerpt | strip_html | strip_newlines | truncate: 90 }}</p>
+                <div class="feature-foot">
+                    <span class="read-more">
+                        Read
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                    </span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Recent posts (近期文章，自动排除已置顶的热门文章) -->
+<section class="landing-section" id="latest">
+    <header class="section-head">
+        <span class="section-eyebrow">// recent posts</span>
+        <h2>近期文章 · Featured</h2>
+        <a class="section-more" href="{{ '/archive.html' | relative_url }}">
+            查看全部
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </a>
+    </header>
+
+    <div class="feature-grid" data-tilt-root>
+        {%- assign recent_posts = site.posts | where_exp: "p", "p.featured != true" -%}
+        {% for post in recent_posts limit:6 %}
+        <a class="feature-card" data-tilt href="{{ post.url | relative_url }}">
+            <div class="feature-card-bg"></div>
+            <div class="feature-card-inner">
+                <div class="feature-meta">
+                    <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y-%m-%d" }}</time>
+                    {% if post.categories.size > 0 %}<span class="sep">·</span><span>{{ post.categories | first }}</span>{% endif %}
+                </div>
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.excerpt | strip_html | strip_newlines | truncate: 90 }}</p>
+                <div class="feature-foot">
+                    <span class="read-more">
+                        Read
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                    </span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
 <!-- Skill matrix -->
 <section class="landing-section">
     <header class="section-head">
@@ -191,78 +263,6 @@ permalink: /blog/
                 <span>Curiosity</span><span>First Principles</span><span>Critical Thinking</span><span>Reflection</span>
             </div>
         </article>
-    </div>
-</section>
-
-<!-- Popular posts (pinned / 热门文章) -->
-{%- assign featured_posts = site.posts | where: "featured", true | sort: "featured_rank" -%}
-{% if featured_posts.size > 0 %}
-<section class="landing-section" id="popular">
-    <header class="section-head">
-        <span class="section-eyebrow">// popular</span>
-        <h2>热门文章 · Popular</h2>
-    </header>
-
-    <div class="feature-grid" data-tilt-root>
-        {% for post in featured_posts %}
-        <a class="feature-card feature-card-hot" data-tilt href="{{ post.url | relative_url }}">
-            <div class="feature-card-bg"></div>
-            <span class="feature-card-badge">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3 4 4.5 4 8a4 4 0 0 1-8 0c0-1 .3-1.8.7-2.5C9 8.5 11 7 12 2z"/><path d="M9 14c0 3 1.5 4 3 4s3-1 3-4"/></svg>
-                热门
-            </span>
-            <div class="feature-card-inner">
-                <div class="feature-meta">
-                    <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y-%m-%d" }}</time>
-                    {% if post.categories.size > 0 %}<span class="sep">·</span><span>{{ post.categories | first }}</span>{% endif %}
-                </div>
-                <h3>{{ post.title }}</h3>
-                <p>{{ post.excerpt | strip_html | strip_newlines | truncate: 90 }}</p>
-                <div class="feature-foot">
-                    <span class="read-more">
-                        Read
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                    </span>
-                </div>
-            </div>
-        </a>
-        {% endfor %}
-    </div>
-</section>
-{% endif %}
-
-<!-- Recent posts (近期文章，自动排除已置顶的热门文章) -->
-<section class="landing-section" id="latest">
-    <header class="section-head">
-        <span class="section-eyebrow">// recent posts</span>
-        <h2>近期文章 · Featured</h2>
-        <a class="section-more" href="{{ '/archive.html' | relative_url }}">
-            查看全部
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-        </a>
-    </header>
-
-    <div class="feature-grid" data-tilt-root>
-        {%- assign recent_posts = site.posts | where_exp: "p", "p.featured != true" -%}
-        {% for post in recent_posts limit:6 %}
-        <a class="feature-card" data-tilt href="{{ post.url | relative_url }}">
-            <div class="feature-card-bg"></div>
-            <div class="feature-card-inner">
-                <div class="feature-meta">
-                    <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y-%m-%d" }}</time>
-                    {% if post.categories.size > 0 %}<span class="sep">·</span><span>{{ post.categories | first }}</span>{% endif %}
-                </div>
-                <h3>{{ post.title }}</h3>
-                <p>{{ post.excerpt | strip_html | strip_newlines | truncate: 90 }}</p>
-                <div class="feature-foot">
-                    <span class="read-more">
-                        Read
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                    </span>
-                </div>
-            </div>
-        </a>
-        {% endfor %}
     </div>
 </section>
 
