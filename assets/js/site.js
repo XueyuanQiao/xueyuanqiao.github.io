@@ -226,6 +226,10 @@
       if (revealItems.indexOf(el) === -1) revealItems.push(el);
       el.classList.add("water-reveal");
     });
+    doc.querySelectorAll(".article-theme-reflection .article-content > h2, .article-theme-reflection .reflection-evidence > *, .article-theme-reflection .reflection-timeline, .article-theme-reflection .reflection-stance, .article-theme-reflection .reflection-figure--absence, .article-theme-reflection .reflection-figure--water, .article-theme-reflection .reflection-ending").forEach(function (el) {
+      if (revealItems.indexOf(el) === -1) revealItems.push(el);
+      el.classList.add("reflection-reveal");
+    });
     revealItems.forEach(function (el) { el.classList.add("reveal"); });
     if (!("IntersectionObserver" in window)) {
       revealItems.forEach(function (el) { el.classList.add("is-in"); });
