@@ -18,3 +18,6 @@ images/*.bak
 
 # Source PDFs kept locally for reference; published copies live under assets/
 doc/*.pdf
+
+# Local scratch space (drafts, prompts, working notes) — never published
+tmp/
