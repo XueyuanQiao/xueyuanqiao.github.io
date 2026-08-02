@@ -13,7 +13,7 @@ image_alt: 戴着光环的喵喵，Be water 主题封面
 reading_meta: 全文约 2500 字 · 约 8 分钟阅读
 visual_theme: water
 featured: true
-featured_rank: 1
+featured_rank: 2
 ---
 
 <p class="water-opening">最近刷抖音时，先刷到的是周星驰的一段采访。画面里，他说了一句：<strong>Be water, my friend.</strong></p>

@@ -118,49 +118,6 @@ permalink: /blog/
     </a>
 </section>
 
-<!-- AI music identity -->
-<section class="landing-section music-profile-section" id="music">
-    <header class="section-head">
-        <span class="section-eyebrow">// creative.channel</span>
-        <h2>AI 音乐创作 · Music</h2>
-    </header>
-
-    <div class="artist-card">
-        <div class="artist-card__visual" aria-hidden="true">
-            <div class="artist-orbit artist-orbit--outer"></div>
-            <div class="artist-orbit artist-orbit--inner"></div>
-            <div class="artist-disc">
-                <span>XY</span>
-                <small>AI MUSIC</small>
-            </div>
-            <div class="artist-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-        </div>
-
-        <div class="artist-card__content">
-            <span class="artist-card__badge"><span></span> NETEASE CLOUD MUSIC + QQ MUSIC</span>
-            <h3>xueyuan · AI 音乐人</h3>
-            <p>我把 AI 当作音乐创作中的新型乐器，而不是替代审美判断的按钮：先确定主题、情绪和叙事方向，再借助生成式能力探索旋律、编曲与声音表达。我的歌手名是 <strong>xueyuan</strong>，目前已入驻网易云音乐和 QQ 音乐；本站播放器现收录 {{ site.music_tracks.size }} 首作品。</p>
-            <div class="artist-track">
-                <span class="artist-track__label">SITE PLAYLIST · {{ site.music_tracks.size }} TRACKS</span>
-                <strong>{% for track in site.music_tracks %}{{ track.title }}{% unless forloop.last %} · {% endunless %}{% endfor %}</strong>
-                <span>按列表顺序播放 · 支持展开歌单选曲</span>
-            </div>
-            <div class="artist-card__actions">
-                <button class="btn btn-primary" type="button" data-music-play>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6a1 1 0 0 0 1.55.83l10.2-6.8a1 1 0 0 0 0-1.66L9.55 4.37A1 1 0 0 0 8 5.2z"/></svg>
-                    在线试听
-                </button>
-                <button class="btn btn-ghost" type="button" data-music-queue-open>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h12M4 12h12M4 18h8"/><path d="m17 15 4 3-4 3z"/></svg>
-                    查看播放列表
-                </button>
-                <a class="btn btn-ghost" href="{{ site.netease_music_url }}" target="_blank" rel="noopener">网易云音乐主页</a>
-                <a class="btn btn-ghost" href="{{ site.qq_music_url }}" target="_blank" rel="noopener">QQ 音乐主页</a>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- Skill matrix -->
 <section class="landing-section">
     <header class="section-head">
@@ -306,6 +263,49 @@ permalink: /blog/
             </div>
         </a>
         {% endfor %}
+    </div>
+</section>
+
+<!-- AI music identity -->
+<section class="landing-section music-profile-section" id="music">
+    <header class="section-head">
+        <span class="section-eyebrow">// creative.channel</span>
+        <h2>AI 音乐创作 · Music</h2>
+    </header>
+
+    <div class="artist-card">
+        <div class="artist-card__visual" aria-hidden="true">
+            <div class="artist-orbit artist-orbit--outer"></div>
+            <div class="artist-orbit artist-orbit--inner"></div>
+            <div class="artist-disc">
+                <span>XY</span>
+                <small>AI MUSIC</small>
+            </div>
+            <div class="artist-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="artist-card__content">
+            <span class="artist-card__badge"><span></span> NETEASE CLOUD MUSIC + QQ MUSIC</span>
+            <h3>xueyuan · AI 音乐人</h3>
+            <p>我把 AI 当作音乐创作中的新型乐器，而不是替代审美判断的按钮：先确定主题、情绪和叙事方向，再借助生成式能力探索旋律、编曲与声音表达。我的歌手名是 <strong>xueyuan</strong>，目前已入驻网易云音乐和 QQ 音乐；本站播放器现收录 {{ site.music_tracks.size }} 首作品。</p>
+            <div class="artist-track">
+                <span class="artist-track__label">SITE PLAYLIST · {{ site.music_tracks.size }} TRACKS</span>
+                <strong>{% for track in site.music_tracks %}{{ track.title }}{% unless forloop.last %} · {% endunless %}{% endfor %}</strong>
+                <span>按列表顺序播放 · 支持展开歌单选曲</span>
+            </div>
+            <div class="artist-card__actions">
+                <button class="btn btn-primary" type="button" data-music-play>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6a1 1 0 0 0 1.55.83l10.2-6.8a1 1 0 0 0 0-1.66L9.55 4.37A1 1 0 0 0 8 5.2z"/></svg>
+                    在线试听
+                </button>
+                <button class="btn btn-ghost" type="button" data-music-queue-open>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h12M4 12h12M4 18h8"/><path d="m17 15 4 3-4 3z"/></svg>
+                    查看播放列表
+                </button>
+                <a class="btn btn-ghost" href="{{ site.netease_music_url }}" target="_blank" rel="noopener">网易云音乐主页</a>
+                <a class="btn btn-ghost" href="{{ site.qq_music_url }}" target="_blank" rel="noopener">QQ 音乐主页</a>
+            </div>
+        </div>
     </div>
 </section>
 

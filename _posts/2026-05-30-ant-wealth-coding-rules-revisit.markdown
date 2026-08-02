@@ -5,8 +5,6 @@ date: 2026-05-30 10:00:00 +0800
 excerpt: 几年后再看财富技术部的编码军规，我记住的不是口号，而是并发、幂等、金额、核对、变更和应急这些朴素的工程要求。
 categories: 质量工程
 permalink: /quality/2026/05/30/ant-wealth-coding-rules-revisit.html
-featured: true
-featured_rank: 2
 ---
 
 最近翻到一张旧照片，是蚂蚁财富工区里挂过的“财富编码军规”海报。离开几年后再看，很多具体系统已经变化，但海报里的并发、幂等、资金核对、生产变更和应急原则并没有显得过时。
