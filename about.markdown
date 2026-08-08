@@ -105,74 +105,79 @@ permalink: /about.html
         <ol class="snapshot-lines" data-snapshot-lines>
             <li class="snap-line snap-head">
                 <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="1. 职业定位 · Profile"></span>
+                <span class="snap-val" data-text="1. 身份与目标 · Identity"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">定位</span>
-                <span class="snap-val" data-text="乔雪源 / Xueyuan，AI 全栈开发工程师，近十年质量工程与测试开发经验，已交付业务系统和质量平台。"></span>
-            </li>
-            <li class="snap-line snap-item">
-                <span class="snap-field">经历</span>
-                <span class="snap-val" data-text="做过 SaaS 客服、百度搜索、支付宝基金与个人养老金、AI Phone，现进入 L4 无人配送车领域。"></span>
+                <span class="snap-field">身份</span>
+                <span class="snap-val" data-text="乔雪源 / Xueyuan，AI 全栈开发工程师，近十年从事质量工程与测试开发，并承担业务研发与平台交付。"></span>
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">当前</span>
-                <span class="snap-val" data-text="在九识负责无人配送车端到端质量，覆盖车端、云端、数据链路、OTA、仿真与路测，同时承担业务开发和质量平台建设。"></span>
+                <span class="snap-val" data-text="在九识负责 L4 无人配送车端到端质量，同时推进业务系统开发与质量平台建设。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">开发</span>
-                <span class="snap-val" data-text="多个业务和平台项目已落地，成果已经进入真实业务使用。"></span>
+                <span class="snap-field">目标</span>
+                <span class="snap-val" data-text="把业务判断、工程实现、质量验证与上线治理连成闭环，让复杂系统的交付结果可验证、可追溯、可持续。"></span>
             </li>
 
             <li class="snap-line snap-head">
                 <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="2. 能解决的问题 · Scope"></span>
+                <span class="snap-val" data-text="2. 业务背景 · Context"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">经历</span>
+                <span class="snap-val" data-text="历经 SaaS 客服、百度搜索、支付宝基金与个人养老金、AI Phone、L4 无人配送车，长期处理高可用、长链路与复杂协同场景。"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">责任域</span>
+                <span class="snap-val" data-text="当前覆盖车端、云端、车云通信、数据链路、OTA、仿真与路测，并为关键版本建立可执行的验证与发布依据。"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">交付域</span>
+                <span class="snap-val" data-text="能够独立完成需求分析、产品与交互设计、前后端开发、数据建模、CI/CD、部署及上线后的持续治理。"></span>
+            </li>
+
+            <li class="snap-line snap-head">
+                <span class="snap-hash">#</span>
+                <span class="snap-val" data-text="3. 核心能力 · Capabilities"></span>
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">质量</span>
-                <span class="snap-val" data-text="从业务目标和故障后果出发，制定测试策略、发布门槛、质量指标和应急方案。"></span>
+                <span class="snap-val" data-text="从业务目标、关键路径和故障代价出发，制定测试策略、发布门槛、质量指标与应急方案。"></span>
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">稳定性</span>
-                <span class="snap-val" data-text="通过容量基线、全链路压测、容灾演练、监控和复盘，把风险暴露在上线之前。"></span>
+                <span class="snap-val" data-text="通过容量基线、全链路压测、容灾演练、监控与复盘，识别系统性风险并推动风险前置收敛。"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">AI 评测</span>
+                <span class="snap-val" data-text="用固定评测集、WER、翻译基准和 LLM-as-a-Judge 治理概率性输出，持续跟踪失败分布、成本与回归变化。"></span>
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">工程</span>
-                <span class="snap-val" data-text="能独立完成需求梳理、交互设计、前后端、数据存储、CI/CD 与部署，项目以真实业务使用作为完成标准。"></span>
+                <span class="snap-val" data-text="把高频验证、执行数据和分析结果沉淀进平台，将一次性交付转化为可复用、可维护的工程资产。"></span>
             </li>
 
             <li class="snap-line snap-head">
                 <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="3. AI 时代的质量方法 · AI Quality"></span>
-            </li>
-            <li class="snap-line snap-item">
-                <span class="snap-field">分层</span>
-                <span class="snap-val" data-text="规则明确的流程交给自动化；模型输出用固定评测集、多维指标和人工抽检单独治理。"></span>
-            </li>
-            <li class="snap-line snap-item">
-                <span class="snap-field">评测</span>
-                <span class="snap-val" data-text="已将 WER、翻译基准集和 LLM-as-a-Judge 用于同声传译批量评测与回归，并持续跟踪失败分布、成本和结果变化。"></span>
-            </li>
-            <li class="snap-line snap-item">
-                <span class="snap-field">协作</span>
-                <span class="snap-val" data-text="用 AI 加速调研、原型、编码和分析，但关键结论必须回到原始数据，代码仍要经过评审与测试。"></span>
-            </li>
-
-            <li class="snap-line snap-head">
-                <span class="snap-hash">#</span>
-                <span class="snap-val" data-text="4. 判断与交付 · Delivery"></span>
+                <span class="snap-val" data-text="4. 工作原则 · Operating Principles"></span>
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">判断</span>
-                <span class="snap-val" data-text="不以测试用例数量或工具数量证明质量，优先看关键风险是否收敛、结果是否可解释。"></span>
+                <span class="snap-val" data-text="先定义问题、风险与证据，再选择技术；不以用例数、工具数或代码量替代质量结论。"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">交付</span>
-                <span class="snap-val" data-text="交付的不只是一轮测试结果，还包括可复现的链路、可追溯的数据和可持续维护的工程资产。"></span>
+                <span class="snap-field">协作</span>
+                <span class="snap-val" data-text="用 AI 加速调研、原型、开发与分析；关键判断回到原始数据，代码进入正常的评审、测试和发布流程。"></span>
+            </li>
+
+            <li class="snap-line snap-head">
+                <span class="snap-hash">#</span>
+                <span class="snap-val" data-text="5. 完成标准 · Success Criteria"></span>
             </li>
             <li class="snap-line snap-item">
-                <span class="snap-field">原则</span>
-                <span class="snap-val" data-text="先解决真实问题，再选择技术；保留证据和边界，对最终上线结果负责。"></span>
+                <span class="snap-field">验收</span>
+                <span class="snap-val" data-text="结果可验证、链路可复现、风险有边界、系统可维护，并能在真实业务中稳定运行。"></span>
             </li>
         </ol>
 
