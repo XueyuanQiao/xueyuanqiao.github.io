@@ -1,7 +1,7 @@
 ---
 layout: landing
 title: 关于
-excerpt: 质量工程、测试平台、AI 评测与 L4 无人车端到端质量
+excerpt: AI 全栈开发、业务与平台交付、质量工程及 L4 无人车端到端质量
 permalink: /about.html
 ---
 
@@ -33,7 +33,7 @@ permalink: /about.html
     <div class="about-hero-content">
         <div class="about-eyebrow">
             <span class="dot"></span>
-            <span class="about-eyebrow-text">// 个人说明 · 2026.07 更新</span>
+            <span class="about-eyebrow-text">// 个人说明 · 2026.08 更新</span>
         </div>
 
         <h1 class="about-title">
@@ -45,7 +45,7 @@ permalink: /about.html
 
         <p class="about-typed">
             <span data-typed
-                  data-typed-strings='["质量策略与测试开发","L4 无人配送车质量","稳定性与质量治理","质量平台：FastAPI / React","AI 评测：基准集 / WER / LLM-as-a-Judge","CI/CD 与可观测性"]'>
+                  data-typed-strings='["AI 全栈业务开发","质量平台独立交付","L4 无人配送车端到端质量","需求到上线完整闭环","AI 评测与结果分析","业务开发与平台开发均已落地"]'>
             </span><span class="caret">_</span>
         </p>
 
@@ -64,7 +64,7 @@ permalink: /about.html
             </span>
             <span class="status-pill">
                 <span class="status-key">方向</span>
-                <span class="status-val">测试平台 / AI 评测</span>
+                <span class="status-val">AI 全栈开发 / 无人车质量</span>
             </span>
             <span class="status-pill">
                 <span class="status-key">从业计时</span>
@@ -109,7 +109,7 @@ permalink: /about.html
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">定位</span>
-                <span class="snap-val" data-text="乔雪源 / Xueyuan，近十年质量工程与测试开发经验，关注复杂系统的质量治理与工程交付。"></span>
+                <span class="snap-val" data-text="乔雪源 / Xueyuan，AI 全栈开发工程师，近十年质量工程与测试开发经验，已交付业务系统和质量平台。"></span>
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">经历</span>
@@ -117,7 +117,11 @@ permalink: /about.html
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">当前</span>
-                <span class="snap-val" data-text="在九识负责无人配送车端到端质量，覆盖车端、云端、数据链路、OTA，并持续补齐仿真与路测能力。"></span>
+                <span class="snap-val" data-text="在九识负责无人配送车端到端质量，覆盖车端、云端、数据链路、OTA、仿真与路测，同时承担业务开发和质量平台建设。"></span>
+            </li>
+            <li class="snap-line snap-item">
+                <span class="snap-field">开发</span>
+                <span class="snap-val" data-text="多个业务和平台项目已落地，成果已经进入真实业务使用。"></span>
             </li>
 
             <li class="snap-line snap-head">
@@ -134,7 +138,7 @@ permalink: /about.html
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">工程</span>
-                <span class="snap-val" data-text="把高频流程做成自动化和平台能力，能独立完成需求梳理、前后端、数据存储、CI/CD 与部署。"></span>
+                <span class="snap-val" data-text="能独立完成需求梳理、交互设计、前后端、数据存储、CI/CD 与部署，项目以真实业务使用作为完成标准。"></span>
             </li>
 
             <li class="snap-line snap-head">
@@ -147,7 +151,7 @@ permalink: /about.html
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">评测</span>
-                <span class="snap-val" data-text="实践过 WER、翻译基准集和 LLM-as-a-Judge；关注的不只是平均分，还包括失败分布、成本和回归变化。"></span>
+                <span class="snap-val" data-text="已将 WER、翻译基准集和 LLM-as-a-Judge 用于同声传译批量评测与回归，并持续跟踪失败分布、成本和结果变化。"></span>
             </li>
             <li class="snap-line snap-item">
                 <span class="snap-field">协作</span>
@@ -190,8 +194,8 @@ permalink: /about.html
                 <span class="snap-stat-label">主要业务领域</span>
             </div>
             <div class="snap-stat">
-                <span class="snap-stat-value">2016</span>
-                <span class="snap-stat-label">开始从事测试</span>
+                <span class="snap-stat-value">20 万+</span>
+                <span class="snap-stat-label">单月代码量</span>
             </div>
         </div>
 
@@ -202,7 +206,7 @@ permalink: /about.html
             </span>
             <span class="snapshot-cta-text">
                 <span class="snapshot-cta-main">阅读完整个人概述</span>
-                <span class="snapshot-cta-sub">完整履历 · 项目实践 · 技术栈 · 近期方向</span>
+                <span class="snapshot-cta-sub">完整履历 · 业务项目 · 平台交付 · 技术栈</span>
             </span>
             <span class="snapshot-cta-arrow" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
@@ -321,9 +325,9 @@ permalink: /about.html
                 <span class="dot"></span>
                 <div>
                     <div class="r-name">无人车质量</div>
-                    <div class="r-desc">车云链路 · OTA · 仿真 / 路测学习中</div>
+                    <div class="r-desc">车云链路 · OTA · 仿真 / 路测</div>
                 </div>
-                <span class="r-score">起步</span>
+                <span class="r-score">负责</span>
             </li>
             <li tabindex="0" data-axis="3" data-label="AI Eval" data-value="68" style="--accent: 124,255,180">
                 <span class="dot"></span>
@@ -331,7 +335,7 @@ permalink: /about.html
                     <div class="r-name">AI 评测</div>
                     <div class="r-desc">WER · Benchmark · LLM-as-a-Judge</div>
                 </div>
-                <span class="r-score">实践</span>
+                <span class="r-score">落地</span>
             </li>
             <li tabindex="0" data-axis="4" data-label="Platform" data-value="76" style="--accent: 251,191,36">
                 <span class="dot"></span>
@@ -339,7 +343,7 @@ permalink: /about.html
                     <div class="r-name">质量平台开发</div>
                     <div class="r-desc">FastAPI · React · TypeScript · MySQL</div>
                 </div>
-                <span class="r-score">项目</span>
+                <span class="r-score">交付</span>
             </li>
             <li tabindex="0" data-axis="5" data-label="Delivery" data-value="82" style="--accent: 248,113,113">
                 <span class="dot"></span>
@@ -369,7 +373,7 @@ permalink: /about.html
                     <span class="tl-tag">菜鸟无人车 → 九识 · L4</span>
                 </div>
                 <h3>L4 无人配送车质量</h3>
-                <p>负责车端、云端和数据链路的质量工作，并开始参与仿真、路测、车云协同和 OTA 等场景。自动驾驶是新领域，当前仍在补齐感知 / 规划 / 控制相关知识。同期独立开发无人车质量中台，完成前后端、数据库和部署流水线；平台支持测试执行、质量度量，以及基于测试结果的 AI 辅助分析。</p>
+                <p>负责车端、云端和数据链路的端到端质量，覆盖仿真、路测、车云协同和 OTA。同期独立开发无人车质量中台，完成需求、前后端、数据库、CI/CD 和部署；平台支持测试执行、质量度量，以及基于测试结果的 AI 辅助分析。</p>
                 <div class="tl-chips">
                     <span>车云链路</span><span>仿真 / 路测</span><span>OTA</span><span>FastAPI</span><span>React</span><span>云效 / SAE</span>
                 </div>
@@ -472,7 +476,7 @@ permalink: /about.html
         <div class="artist-card__content">
             <span class="artist-card__badge"><span></span> PERSONAL HOBBY · MUSIC</span>
             <h3>音乐，工作之外的一点兴趣</h3>
-            <p>业余时间我会尝试做音乐。生成式工具参与旋律、编曲和声音方案的探索，主题、取舍和最终成品由我自己决定。它不是我的职业主线，只是一个长期保留的爱好。</p>
+            <p>业余时间我会创作音乐。生成式工具参与旋律、编曲和声音方案的生成与打磨，主题、取舍和最终成品由我自己决定。它不是我的职业主线，只是一个长期保留的爱好。</p>
             <p class="artist-card__note">发布作品时使用名字 <strong>xueyuan</strong>，目前可在网易云音乐和 QQ 音乐找到。本站播放器收录 <strong>{{ site.music_tracks.size }} 首作品</strong>：{% for track in site.music_tracks %}《{{ track.title }}》{% unless forloop.last %}、{% endunless %}{% endfor %}。</p>
             <div class="artist-card__actions">
                 <button class="btn btn-primary" type="button" data-music-play>
@@ -536,9 +540,4 @@ permalink: /about.html
             </div>
         </a>
     </div>
-
-    <p class="about-foot">
-        本站基于 <a href="https://jekyllrb.com/" target="_blank" rel="noopener">Jekyll</a> 构建，部署在 GitHub Pages。
-        页面样式与交互由我维护，主要使用原生 CSS 和 JavaScript。
-    </p>
 </section>

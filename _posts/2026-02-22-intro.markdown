@@ -2,23 +2,24 @@
 layout: post
 title: 个人概述
 date: 2026-02-22 03:22:04 +0800
-excerpt: 质量工程、AI 全栈实践与 AI 音乐创作，现负责 L4 无人配送车端到端质量
+excerpt: AI 全栈业务开发与平台交付，现负责 L4 无人配送车端到端质量
 categories: 生活随笔
 permalink: /about/2026/02/22/intro.html
+toc_collapsed: true
 ---
 
 <div class="profile-hero" markdown="0">
-  <span class="pf-badge"><span class="pf-led"></span> 个人概述 · 2026.07 更新</span>
-  <div class="pf-name">乔雪源 · <span class="pf-grad">Quality Engineer &amp; AI Musician</span></div>
+  <span class="pf-badge"><span class="pf-led"></span> 个人概述 · 2026.08 更新</span>
+  <div class="pf-name">乔雪源 · <span class="pf-grad">Quality Engineer &amp; AI Full-Stack Developer</span></div>
   <div class="pf-roles">
+    <span class="pf-role">AI 全栈业务交付</span>
     <span class="pf-role">L4 无人配送车质量</span>
-    <span class="pf-role">测试平台开发</span>
+    <span class="pf-role">质量平台开发</span>
     <span class="pf-role">压测与稳定性</span>
     <span class="pf-role">AI 评测</span>
-    <span class="pf-role">AI 音乐人 · xueyuan</span>
     <span class="pf-role">Python / Java / TypeScript</span>
   </div>
-  <p class="pf-desc">我从事质量工程和测试开发约十年，做过 SaaS 客服系统、百度搜索、支付宝基金与个人养老金、AI Phone，目前在九识负责 L4 无人配送车的端到端质量。日常工作包括测试策略、自动化、压测与稳定性、质量平台开发，以及 AI 模型和应用的效果评测。工程之外，我也进行 AI 音乐创作，歌手名为 xueyuan，目前已入驻网易云音乐和 QQ 音乐。软件质量是我积累较多的领域；自动驾驶与音乐创作都仍在持续学习和实践。</p>
+  <p class="pf-desc">我从事质量工程和测试开发约十年，经历过 SaaS 客服系统、百度搜索、支付宝基金与个人养老金、AI Phone，目前在九识负责 L4 无人配送车端到端质量。现在的工作覆盖需求梳理、产品设计、前后端开发、数据和部署，已经落地多个业务开发和平台开发项目，单月代码量超过 20 万行。无人车质量中台是其中一个由我独立完成从需求到上线闭环的项目。</p>
   <div class="profile-stats">
     <div class="pf-stat"><span class="pf-num"><span data-counter="10">0</span></span><span class="pf-lbl">质量工程年限</span></div>
     <div class="pf-stat"><span class="pf-num"><span data-counter="4">0</span></span><span class="pf-lbl">主要业务领域</span></div>
@@ -27,19 +28,17 @@ permalink: /about/2026/02/22/intro.html
   </div>
 </div>
 
-## AI 音乐创作
-
-<div class="profile-panel" markdown="0" style="--accent: 184,136,255">
-  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V6l10-2v12"/><path d="M9 9l10-2"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg></span> xueyuan · AI 音乐人</div>
-  <p>我把生成式 AI 作为音乐创作工具链的一部分：由人确定主题、情绪、叙事与最终取舍，再用 AI 扩展旋律、编曲和声音表达的可能性。我的歌手名是 <strong>xueyuan</strong>，目前已入驻 <a href="{{ site.netease_music_url }}" target="_blank" rel="noopener">网易云音乐</a>与 <a href="{{ site.qq_music_url }}" target="_blank" rel="noopener">QQ 音乐</a>。本站播放器现收录 <strong>{{ site.music_tracks.size }} 首作品</strong>：{% for track in site.music_tracks %}《{{ track.title }}》{% unless forloop.last %}、{% endunless %}{% endfor %}；访客可以展开播放列表并选择曲目收听。</p>
-  <p><button class="btn btn-primary" type="button" data-music-play>播放站内音乐</button> <button class="btn btn-ghost" type="button" data-music-queue-open>查看播放列表</button></p>
-</div>
-
-## 工作概览
+## 当前工作与开发成果
 
 <div class="profile-panel" markdown="0" style="--accent: 124,140,255">
   <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span> 当前工作 · 九识无人车</div>
-  <p>负责 L4 无人配送车端到端质量，关注车端、云端、数据链路、车云协同和 OTA。正在把已有的软件测试、平台建设和稳定性经验应用到无人车场景，同时补齐仿真、路测以及感知 / 规划 / 控制链路知识。</p>
+  <p>负责 L4 无人配送车端到端质量。质量判断覆盖车端软件、云端服务、车云通信和数据链路，并延伸到 OTA、仿真与路测。除了验证单点功能，还要沿着任务下发、车辆执行、状态回传和异常处理检查整条链路，判断一次变更会不会在真实运行中引入连锁问题。</p>
+  <p>我的重点是把分散的测试活动变成可重复的工程流程：根据业务风险确定测试范围，把高频检查沉淀为自动化，将执行和质量数据收进平台，再通过趋势与失败分布找到优先问题。这样既能让问题更早暴露，也能让版本是否具备发布条件有据可查。</p>
+</div>
+
+<div class="profile-panel" markdown="0" style="--accent: 124,255,180">
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/><path d="M14 4h-4M14 20h-4"/></svg></span> 当前定位 · AI 全栈开发</div>
+  <p>我现在以 AI 全栈方式开展业务开发与平台开发，把质量工程中积累的风险判断、自动化和稳定性经验带入需求分析、交互设计、前端、后端、数据与部署。AI 会参与方案比较、编码、调试和结果分析，但所有产出仍要经过正常的审查、测试和发布流程，并以真实业务中的使用效果作为完成标准。</p>
 </div>
 
 <div class="profile-panel" markdown="0" style="--accent: 89,227,255">
@@ -54,7 +53,7 @@ permalink: /about/2026/02/22/intro.html
     <div class="pf-card" data-tilt>
       <div class="pf-meta"><span class="pf-year">2026 — Now</span><span class="pf-tag">菜鸟无人车 → 九识</span></div>
       <h4>L4 无人配送车质量</h4>
-      <p>负责车端、云端和数据链路质量，参与车云协同、OTA、仿真和路测相关工作。独立开发无人车质量中台，完成需求梳理、登录鉴权、前后端、数据库和部署流水线；平台覆盖测试执行、质量度量和测试结果分析。</p>
+      <p>负责端到端质量方案与关键版本验证，覆盖车云协同、OTA、仿真和路测。围绕测试执行、质量度量与结果分析，独立开发无人车质量中台，从需求、界面、登录鉴权、前后端和数据库，一直完成到 CI/CD 与部署。</p>
       <div class="pf-chips"><span>车云链路</span><span>仿真 / 路测</span><span>OTA</span><span>FastAPI</span><span>React</span><span>云效 / SAE</span></div>
     </div>
   </li>
@@ -92,9 +91,9 @@ permalink: /about/2026/02/22/intro.html
   </li>
 </ol>
 
-## 近期项目 · 无人车质量中台
+## 业务交付 · 无人车质量中台
 
-这套内部质量平台由我独立完成需求梳理、界面、前后端、数据存储和部署，主要用于汇总质量数据、管理测试执行并查看结果。
+这是我以 AI 全栈方式落地的业务项目之一。围绕测试执行、质量度量和结果分析，我独立完成需求梳理、信息架构、界面交互、登录鉴权、前后端、数据存储、联调、CI/CD 和部署。平台将执行记录、质量数据和分析结果集中到同一处，减少在不同工具之间来回整理信息的成本。
 
 <div class="post-gallery" markdown="0">
   <figure>
@@ -125,38 +124,36 @@ permalink: /about/2026/02/22/intro.html
   </div>
   <div class="profile-card" data-tilt style="--accent: 251,191,36">
     <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span> 结果分析</div>
-    <p>根据测试执行数据归纳失败模式、标记可疑项并给出排查建议；分析结果与原始执行数据一同展示，由测试人员确认后进入结论。</p>
+    <p>根据测试执行数据归纳失败模式、标记可疑项并给出排查建议。每条分析都保留原始数据入口，由测试人员复核后形成结论；AI 用来缩小排查范围，不替代最终判断。</p>
   </div>
 </div>
 
-## AI 相关实践
+## AI 在业务里的实际用法
+
+AI 已经进入评测、开发、调试和结果分析这些具体工作；是否真正有用，最终看能不能提高交付效率、减少重复劳动，并让结果经得起复核。
 
 <div class="profile-layers" markdown="0">
   <div class="pf-layer">
     <span class="pf-idx">01</span>
-    <div class="pf-body"><b>模型效果评测</b><p>在 AI Phone 同声传译场景中使用 <strong>WER、翻译基准集和 LLM-as-a-Judge</strong> 做批量验证和回归。</p></div>
+    <div class="pf-body"><b>同声传译效果评测</b><p>在 AI Phone 业务中，用 <strong>WER、翻译基准集和 LLM-as-a-Judge</strong> 对 ASR、翻译与 TTS 链路做批量验证和回归。指标用来发现变化，具体样本仍会回到人工复核。</p></div>
   </div>
   <div class="pf-layer">
     <span class="pf-idx">02</span>
-    <div class="pf-body"><b>测试结果分析</b><p>在质量中台中根据执行数据归纳失败模式、标记可疑项并给出排查建议，同时回链原始数据供测试人员复核。</p></div>
+    <div class="pf-body"><b>AI 全栈业务交付</b><p>在实际项目中使用编程 Agent 辅助拆解需求、比较方案、开发前后端、调试和排查问题。生成内容进入正常的代码审查、自动化测试和发布流程，由我对最终结果负责。</p></div>
   </div>
   <div class="pf-layer">
     <span class="pf-idx">03</span>
-    <div class="pf-body"><b>编码与调试辅助</b><p>使用编程 Agent 比较方案、生成代码、重构和排查问题，产出进入常规的代码审查、自动化测试和发布流程。</p></div>
+    <div class="pf-body"><b>质量结果分析</b><p>在无人车质量中台中，让 AI 根据执行数据归纳失败模式、标记可疑项并给出排查方向，同时回链原始记录，方便测试人员快速确认或推翻它的判断。</p></div>
   </div>
   <div class="pf-layer">
     <span class="pf-idx">04</span>
-    <div class="pf-body"><b>内部平台交付</b><p>独立完成无人车质量中台的需求梳理、前后端、数据存储、联调和部署。</p></div>
-  </div>
-  <div class="pf-layer">
-    <span class="pf-idx">05</span>
-    <div class="pf-body"><b>个人学习验证</b><p>用 LangChain 做过多模型路由网页提取 demo，使用 LangGraph 搭建学习性质的测试平台，也在了解 Ragas、DeepEval、Langfuse 和 LangSmith。</p></div>
+    <div class="pf-body"><b>多个业务项目落地</b><p>目前已经在多个实际业务项目中使用这套工作方式。无人车质量中台是链路较完整的一项，从需求、开发到部署由我独立完成，项目以真实业务中的使用效果作为完成标准。</p></div>
   </div>
 </div>
 
 <div class="profile-panel" markdown="0" style="--accent: 251,191,36">
-  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span> 近期学习</div>
-  <p>近期在个人项目中使用 LangChain / LangGraph 和 Agent 评估框架，也在工作中持续补齐自动驾驶仿真、路测和算法质量相关知识。</p>
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span> 当前重点</div>
+  <p>我现在更关心三件事：AI 给出的判断能不能回到原始数据，生成的代码能不能进入正常的审查、测试和发布流程，做出来的工具能不能被团队持续使用。需要的新知识跟着业务问题补，不再单独罗列框架清单。</p>
 </div>
 
 ## 常用技术
@@ -216,8 +213,16 @@ permalink: /about/2026/02/22/intro.html
   </div>
 </div>
 
+## AI 音乐创作
+
+<div class="profile-panel" markdown="0" style="--accent: 184,136,255">
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V6l10-2v12"/><path d="M9 9l10-2"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg></span> xueyuan · AI 音乐人</div>
+  <p>工程之外，我也使用生成式 AI 进行音乐创作。主题、情绪、叙事和最终取舍由我完成，AI 用来扩展旋律、编曲与声音表达的可能性。歌手名为 <strong>xueyuan</strong>，目前已入驻 <a href="{{ site.netease_music_url }}" target="_blank" rel="noopener">网易云音乐</a>与 <a href="{{ site.qq_music_url }}" target="_blank" rel="noopener">QQ 音乐</a>。本站播放器现收录 <strong>{{ site.music_tracks.size }} 首作品</strong>：{% for track in site.music_tracks %}《{{ track.title }}》{% unless forloop.last %}、{% endunless %}{% endfor %}。</p>
+  <p><button class="btn btn-primary" type="button" data-music-play>播放站内音乐</button> <button class="btn btn-ghost" type="button" data-music-queue-open>查看播放列表</button></p>
+</div>
+
 ## 一句话说明
 
 <div class="profile-quote" markdown="0">
-  <p>我是一名以测试开发和稳定性为主的质量工程师，目前把这些经验应用到 L4 无人配送车；也会自己开发质量工具，把高频流程接入 CI/CD，并用可复现的数据评估结果。工程之外，我也是 AI 音乐人 xueyuan，用另一种媒介练习叙事、审美与表达。</p>
+  <p>我从事 AI 全栈业务开发与平台交付；当前负责 L4 无人配送车端到端质量，也独立开发质量平台，把测试执行、数据和结果分析连成闭环。工程之外，我以 xueyuan 的名字创作 AI 音乐。</p>
 </div>

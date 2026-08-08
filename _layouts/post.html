@@ -30,8 +30,8 @@ layout: default
         </div>
     </header>
 
-    <nav class="toc" data-toc aria-label="目录" hidden>
-        <button class="toc-title" type="button" data-toc-toggle aria-expanded="true" aria-controls="article-toc-list">
+    <nav class="toc" data-toc{% if page.toc_collapsed %} data-toc-default-collapsed="true" data-collapsed="true"{% endif %} aria-label="目录" hidden>
+        <button class="toc-title" type="button" data-toc-toggle aria-expanded="{% if page.toc_collapsed %}false{% else %}true{% endif %}" aria-controls="article-toc-list">
             <span>目录</span>
             <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
         </button>

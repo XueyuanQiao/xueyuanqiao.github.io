@@ -501,9 +501,10 @@
         if (toggle) toggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
       }
 
-      // 移动端默认折叠目录，节省纵向空间
+      // 页面可通过 front matter 指定默认折叠；移动端仍默认折叠以节省纵向空间
+      var defaultCollapsed = tocEl.getAttribute('data-toc-default-collapsed') === 'true';
       var isNarrow = window.matchMedia && window.matchMedia('(max-width: 920px)').matches;
-      setTocCollapsed(Boolean(isNarrow));
+      setTocCollapsed(defaultCollapsed || Boolean(isNarrow));
 
       // 旋屏 / 缩放穿过断点时同步折叠状态，避免横屏 → 竖屏 TOC 还撑开
       // 仅在用户没手动 toggle 过时跟随断点（dataset.userToggled 由点击设置）
@@ -511,7 +512,7 @@
         var mq = window.matchMedia('(max-width: 920px)');
         var onMq = function (e) {
           if (tocEl.dataset.userToggled === '1') return;
-          setTocCollapsed(e.matches);
+          setTocCollapsed(defaultCollapsed || e.matches);
         };
         if (mq.addEventListener) {
           mq.addEventListener('change', onMq);
