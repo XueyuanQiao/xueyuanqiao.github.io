@@ -1246,8 +1246,7 @@
 
   var doc = document;
   var STORE_VOLUME = "aurora-music-volume";
-  var STORE_COLLAPSED = "aurora-music-collapsed-v2";
-  var STORE_DOCK_POSITION = "aurora-music-dock-position-v2";
+  var STORE_DOCK_POSITION = "aurora-music-dock-position-v5";
   var EDGE_SNAP_DISTANCE = 96;
   var SESSION_TIME = "aurora-music-time";
   var SESSION_PLAYING = "aurora-music-playing";
@@ -2270,16 +2269,13 @@
       }, audioLoadRetries * 180);
     }
 
-    function setCollapsed(collapsed, persistPreference) {
+    function setCollapsed(collapsed) {
       dock.classList.toggle("is-collapsed", collapsed);
       if (collapsed) setQueueOpen(false);
       if (!collapse) return;
       collapse.setAttribute("aria-expanded", collapsed ? "false" : "true");
       collapse.setAttribute("aria-label", collapsed ? "展开播放器" : "收起播放器");
       collapse.setAttribute("title", collapsed ? "展开播放器" : "最小化播放器");
-      if (persistPreference !== false) {
-        try { localStorage.setItem(STORE_COLLAPSED, collapsed ? "1" : "0"); } catch (e) {}
-      }
       window.setTimeout(function () {
         if (!dock.classList.contains("is-positioned")) return;
         if (dock.classList.contains("is-edge-docked")) clampEdgeDockPosition();
@@ -2363,9 +2359,7 @@
     }
 
     function syncDockExpansionForCurrentPage() {
-      var savedCollapsed = null;
-      try { savedCollapsed = localStorage.getItem(STORE_COLLAPSED); } catch (e) {}
-      setCollapsed(savedCollapsed !== "0", false);
+      setCollapsed(true);
     }
 
     function syncDockForCurrentPage() {
@@ -2384,7 +2378,10 @@
       var mainRect = main && main.getBoundingClientRect();
       var dockRect = dock.getBoundingClientRect();
       var rightGutter = mainRect ? window.innerWidth - mainRect.right : 0;
-      if (rightGutter < dockRect.width + 24) {
+      var restingDockWidth = dock.classList.contains("is-collapsed")
+        ? Math.min(220, Math.max(0, window.innerWidth - 28))
+        : dockRect.width;
+      if (rightGutter < restingDockWidth + 10) {
         isAutoDocked = true;
         dockToEdge("right", Math.max(12, window.innerHeight - 92), false);
       } else {
