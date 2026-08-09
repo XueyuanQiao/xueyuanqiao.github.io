@@ -6,8 +6,6 @@ excerpt: 入职四个月，架构调了几轮。我承认自己有一个月状�
 categories: 职业成长
 permalink: /career/2026/08/02/words-not-in-code.html
 reading_meta: 全文约 2700 字 · 约 9 分钟阅读
-featured: true
-featured_rank: 1
 visual_theme: reflection
 ---
 
