@@ -5,6 +5,41 @@
   var particleCanvas = document.getElementById("cat-particle-stage");
   if (!panoramaCanvas || !particleCanvas) return;
 
+  var musicWarmup = document.querySelector("[data-music-warmup]");
+  var musicWarmupStarted = false;
+
+  function rememberMusicWarmup() {
+    if (!musicWarmup || !musicWarmup.buffered || !musicWarmup.buffered.length) return;
+    var bufferedEnd = 0;
+    try { bufferedEnd = musicWarmup.buffered.end(musicWarmup.buffered.length - 1); }
+    catch (error) { return; }
+    try {
+      sessionStorage.setItem("aurora-music-warmup-buffered", bufferedEnd.toFixed(2));
+      sessionStorage.setItem("aurora-music-warmup-track", musicWarmup.currentSrc || musicWarmup.src || "");
+    } catch (error) {}
+  }
+
+  function startMusicWarmup() {
+    if (!musicWarmup || musicWarmupStarted) return;
+    var source = musicWarmup.getAttribute("data-music-src");
+    if (!source) return;
+    musicWarmupStarted = true;
+    musicWarmup.preload = "auto";
+    musicWarmup.src = source;
+    musicWarmup.addEventListener("progress", rememberMusicWarmup);
+    musicWarmup.addEventListener("canplaythrough", rememberMusicWarmup, { once: true });
+    try {
+      sessionStorage.setItem("aurora-music-warmup-started", "1");
+      musicWarmup.load();
+    } catch (error) {}
+  }
+
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(startMusicWarmup, { timeout: 1200 });
+  } else {
+    window.setTimeout(startMusicWarmup, 720);
+  }
+
   var gl = panoramaCanvas.getContext("webgl", {
     alpha: false,
     antialias: false,
@@ -783,6 +818,7 @@
 
   if (entryLink) {
     entryLink.addEventListener("click", function (event) {
+      startMusicWarmup();
       var isModified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
       if (isModified || event.button !== 0 || reducedMotionQuery.matches) return;
       event.preventDefault();

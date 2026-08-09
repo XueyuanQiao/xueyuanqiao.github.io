@@ -67,6 +67,7 @@
 │   ├── new-post.md          发文流程
 │   ├── frontmatter.md       Frontmatter 字段说明
 │   ├── markdown-cheatsheet.md  Markdown 速查
+│   ├── music-player.md      音乐预热、自动播放与安全缓冲策略
 │   ├── space-landing.md     360° 宇宙首页维护文档
 │   └── troubleshooting.md   常见问题排查
 ├── 404.html                 自定义 404 页

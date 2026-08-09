@@ -7,6 +7,7 @@
 | [new-post.md](./new-post.md) | 新增一篇文章的完整流程 |
 | [frontmatter.md](./frontmatter.md) | YAML Frontmatter 字段速查 |
 | [markdown-cheatsheet.md](./markdown-cheatsheet.md) | Aurora 主题支持的 Markdown 写法与最佳实践 |
+| [music-player.md](./music-player.md) | 站内音乐预热、自动播放、安全缓冲与缓存策略 |
 | [troubleshooting.md](./troubleshooting.md) | 常见问题与排查 |
 | [space-landing.md](./space-landing.md) | 360° 宇宙首页架构、资源、交互、性能与验证 |
 
