@@ -17,9 +17,23 @@
   var pageCleanups = [];
 
   // ========== Theme ==========
+  function syncThemeEnvironment(theme) {
+    root.setAttribute("data-theme", theme);
+    root.style.colorScheme = theme;
+
+    var themeColor = doc.querySelector('meta[name="theme-color"]');
+    if (themeColor) {
+      themeColor.content = themeColor.getAttribute("data-theme-color-" + theme) ||
+        (theme === "light" ? "#eceff7" : "#0b1020");
+    }
+
+    var colorScheme = doc.querySelector('meta[name="color-scheme"]');
+    if (colorScheme) colorScheme.content = theme;
+  }
+
   function applyTheme(theme) {
     var t = theme === "light" ? "light" : "dark";
-    root.setAttribute("data-theme", t);
+    syncThemeEnvironment(t);
     syncThemeToggle(t);
   }
 

@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-    <meta name="theme-color" content="#0b1020">
-    <meta name="color-scheme" content="dark light">
+    <meta name="theme-color" content="#0b1020" data-theme-color-dark="#0b1020" data-theme-color-light="#eceff7">
+    <meta name="color-scheme" content="dark">
 
     <title>{% if page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
     <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 160 }}">
@@ -16,13 +16,23 @@
     <!-- Apply theme before paint to avoid flash -->
     <!-- 默认暗色：仅在用户显式选择 light 时切换为亮色 -->
     <script>
-      (function () {
+      (function (doc) {
+        var root = doc.documentElement;
         var t = 'dark';
         try {
           if (localStorage.getItem('aurora-theme') === 'light') t = 'light';
         } catch (e) {}
-        document.documentElement.setAttribute('data-theme', t);
-      })();
+        root.setAttribute('data-theme', t);
+        root.style.colorScheme = t;
+
+        var themeColor = doc.querySelector('meta[name="theme-color"]');
+        if (themeColor) {
+          themeColor.content = themeColor.getAttribute('data-theme-color-' + t) || (t === 'light' ? '#eceff7' : '#0b1020');
+        }
+
+        var colorScheme = doc.querySelector('meta[name="color-scheme"]');
+        if (colorScheme) colorScheme.content = t;
+      })(document);
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
