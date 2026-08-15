@@ -214,9 +214,9 @@
   }
 
   function panoramaTransferPhase() {
-    if (panoramaTransferSlow) return "信号较远 · 高清宇宙星象图仍在接收";
-    if (panoramaPreviewReady) return "预览已可拖曳 · 高清宇宙星象图正在加载";
-    return "高清宇宙星象图正在加载";
+    if (panoramaTransferSlow) return "深空信号较远 · 高清星图仍在接收";
+    if (panoramaPreviewReady) return "预览可拖曳 · 高清星图接收中";
+    return "高清星图接收中";
   }
 
   function updatePanoramaTransfer(loaded, total, force) {
@@ -283,7 +283,7 @@
     if (panoramaLoadingState !== "connecting") return;
     setPanoramaLoadingCopy(
       "connecting",
-      "预览已可拖曳 · 正在建立高清星图链路",
+      "预览可拖曳 · 正在建立高清链路",
       "连接中",
       panoramaTargetSpecification() + " 高清全天星图",
       "预览星图已经可以拖曳，高清宇宙星象图正在建立接收链路。"
@@ -302,7 +302,7 @@
     }
     setPanoramaLoadingCopy(
       "connecting",
-      "信号较远 · 高清宇宙星象图仍在建立链路",
+      "深空信号较远 · 高清链路建立中",
       "连接中",
       panoramaTargetSpecification() + " · 抵达后自动显影",
       "三体信号较远，高清宇宙星象图仍在建立接收链路。"
@@ -316,7 +316,7 @@
     setPanoramaLoadingProgress(1, "星图接收完成，正在解析高清细节");
     setPanoramaLoadingCopy(
       "decoding",
-      "星图已接收 · 正在解析 " + panoramaTarget.width + " × " + panoramaTarget.height + " 星域",
+      "星图已接收 · 解析 " + panoramaTarget.width + " × " + panoramaTarget.height + " 星域",
       "100%",
       formatMegabytes(blobSize || panoramaTarget.expectedBytes) + " 深空母版 · 正在解码",
       "三体信号已经接收完成，正在解析高清宇宙星象图。"

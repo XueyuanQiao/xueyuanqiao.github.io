@@ -710,8 +710,8 @@ html:not(.panorama-high-ready):not(.panorama-upgrade-failed) .particle-enter:not
   top: 50%;
   display: grid;
   justify-items: center;
-  gap: 13px;
-  width: min(460px, calc(100vw - 40px));
+  gap: 17px;
+  width: min(580px, calc(100vw - 36px));
   color: rgba(226, 240, 248, 0.88);
   text-align: center;
   isolation: isolate;
@@ -726,7 +726,7 @@ html:not(.panorama-high-ready):not(.panorama-upgrade-failed) .particle-enter:not
   z-index: -2;
   left: 50%;
   top: 50%;
-  width: min(620px, 128vw);
+  width: min(740px, 136vw);
   aspect-ratio: 1.5;
   pointer-events: none;
   background:
@@ -745,8 +745,8 @@ html:not(.panorama-high-ready):not(.panorama-upgrade-failed) .particle-enter:not
   z-index: -1;
   left: 50%;
   top: 31px;
-  width: min(360px, 82vw);
-  height: 276px;
+  width: min(460px, 88vw);
+  height: 314px;
   border-top: 1px solid rgba(145, 207, 235, 0.08);
   border-bottom: 1px solid rgba(145, 207, 235, 0.06);
   background: linear-gradient(180deg, transparent, rgba(117, 197, 232, 0.025) 48%, transparent);
@@ -767,7 +767,7 @@ html:not(.panorama-high-ready):not(.panorama-upgrade-failed) .particle-enter:not
   align-items: center;
   gap: 8px;
   color: rgba(151, 184, 204, 0.56);
-  font-size: 8px;
+  font-size: 9.5px;
   letter-spacing: 0.2em;
   white-space: nowrap;
 }
@@ -783,10 +783,11 @@ html:not(.panorama-high-ready):not(.panorama-upgrade-failed) .particle-enter:not
 
 .particle-loading__signal {
   position: relative;
-  width: 184px;
-  height: 126px;
+  width: 200px;
+  height: 136px;
   background: radial-gradient(ellipse 72px 25px at center, transparent 96%, rgba(148, 205, 231, 0.18) 98%, transparent 100%);
   filter: drop-shadow(0 0 22px rgba(79, 143, 180, 0.08));
+  transform: scale(1.08);
 }
 
 .particle-loading__signal::before,
@@ -871,32 +872,34 @@ html:not(.panorama-high-ready):not(.panorama-upgrade-failed) .particle-enter:not
 
 .particle-loading__copy {
   display: grid;
-  gap: 7px;
+  gap: 9px;
   min-width: 0;
 }
 
 .particle-loading__copy strong {
   font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
-  font-size: 18px;
-  font-weight: 520;
-  letter-spacing: 0.12em;
+  color: rgba(234, 244, 250, 0.94);
+  font-size: 28px;
+  font-weight: 580;
+  letter-spacing: 0.095em;
   text-shadow: 0 0 18px rgba(91, 173, 209, 0.18);
 }
 
 .particle-loading__copy small {
   overflow: hidden;
-  color: rgba(166, 197, 216, 0.68);
-  font-size: 9px;
-  letter-spacing: 0.14em;
+  color: rgba(185, 212, 228, 0.86);
+  font-size: 13px;
+  letter-spacing: 0.085em;
+  line-height: 1.5;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .particle-loading__progress {
   display: grid;
-  gap: 7px;
-  width: min(286px, 74vw);
-  margin-top: 2px;
+  gap: 9px;
+  width: min(410px, 80vw);
+  margin-top: 4px;
 }
 
 .particle-loading__progress-head {
@@ -904,8 +907,8 @@ html:not(.panorama-high-ready):not(.panorama-upgrade-failed) .particle-enter:not
   align-items: baseline;
   justify-content: space-between;
   gap: 18px;
-  color: rgba(188, 216, 231, 0.8);
-  font-size: 10px;
+  color: rgba(198, 222, 235, 0.88);
+  font-size: 14px;
   letter-spacing: 0.055em;
   line-height: 1.45;
   text-align: left;
@@ -921,7 +924,7 @@ html:not(.panorama-high-ready):not(.panorama-upgrade-failed) .particle-enter:not
 .particle-loading__progress-head b {
   flex: 0 0 auto;
   color: rgba(196, 235, 251, 0.9);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
 }
@@ -930,7 +933,7 @@ html:not(.panorama-high-ready):not(.panorama-upgrade-failed) .particle-enter:not
   position: relative;
   display: block;
   width: 100%;
-  height: 4px;
+  height: 5px;
   overflow: hidden;
   border: 1px solid rgba(148, 211, 238, 0.14);
   border-radius: 999px;
@@ -973,8 +976,8 @@ html:not(.panorama-high-ready):not(.panorama-upgrade-failed) .particle-enter:not
 
 .particle-loading__detail {
   overflow: hidden;
-  color: rgba(137, 171, 192, 0.66);
-  font-size: 8.5px;
+  color: rgba(158, 190, 209, 0.82);
+  font-size: 11.5px;
   letter-spacing: 0.09em;
   line-height: 1.45;
   text-align: left;
@@ -1221,25 +1224,33 @@ html:not(.panorama-high-ready):not(.panorama-upgrade-failed) .particle-enter:not
   .launch-transition__copy { top: calc(43% + 82px); }
   .launch-transition__copy strong { font-size: 16px; letter-spacing: 0.045em; }
 
-  .particle-loading { gap: 11px; }
-  .particle-loading::after { width: min(330px, 88vw); }
-  .particle-loading__signal { width: 170px; height: 116px; transform: scale(0.92); }
-  .particle-loading__copy strong { font-size: 16px; letter-spacing: 0.09em; }
-  .particle-loading__copy small { font-size: 8px; letter-spacing: 0.1em; }
-  .particle-loading__progress { width: min(270px, calc(100vw - 62px)); }
-  .particle-loading__progress-head { font-size: 9.5px; }
-  .particle-loading__progress-head b { font-size: 9.5px; }
-  .particle-loading__detail { font-size: 8.25px; }
+  .particle-loading { gap: 13px; }
+  .particle-loading::after { width: min(350px, 92vw); }
+  .particle-loading__signal { width: 184px; height: 126px; transform: scale(1); }
+  .particle-loading__copy strong { font-size: 22px; letter-spacing: 0.08em; }
+  .particle-loading__copy small { font-size: 10.5px; letter-spacing: 0.065em; }
+  .particle-loading__progress { width: min(288px, calc(100vw - 40px)); }
+  .particle-loading__progress-head { font-size: 11.5px; }
+  .particle-loading__progress-head b { font-size: 11.5px; }
+  .particle-loading__detail { font-size: 9.5px; }
 }
 
 @media (max-height: 620px) and (orientation: landscape) {
   .particle-loading {
     top: 44%;
-    gap: 7px;
+    gap: 6px;
   }
 
   .particle-loading__kicker { display: none; }
-  .particle-loading__signal { height: 88px; transform: scale(0.78); }
+  .particle-loading__signal { height: 78px; transform: scale(0.72); }
+  .particle-loading__copy { gap: 5px; }
+  .particle-loading__copy strong { font-size: 20px; }
+  .particle-loading__copy small { font-size: 9px; }
+  .particle-loading__progress { gap: 5px; width: min(320px, 62vw); margin-top: 1px; }
+  .particle-loading__progress-head,
+  .particle-loading__progress-head b { font-size: 10px; }
+  .particle-loading__track { height: 4px; }
+  .particle-loading__detail { font-size: 8.5px; }
   .particle-loading::after { top: 7px; height: 214px; }
 }
 
