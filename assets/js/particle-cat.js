@@ -7,7 +7,6 @@
 
   var musicWarmup = document.querySelector("[data-music-warmup]");
   var musicWarmupStarted = false;
-  var musicNavigationAudible = false;
 
   var MUSIC_SESSION_TIME = "aurora-music-time";
   var MUSIC_SESSION_PLAYING = "aurora-music-playing";
@@ -40,23 +39,6 @@
     } catch (error) {}
   }
 
-  function bufferedMusicAhead() {
-    if (!musicWarmup || !musicWarmup.buffered) return 0;
-    var current = isFinite(musicWarmup.currentTime) ? musicWarmup.currentTime : 0;
-    for (var i = 0; i < musicWarmup.buffered.length; i += 1) {
-      var start = 0;
-      var end = 0;
-      try {
-        start = musicWarmup.buffered.start(i);
-        end = musicWarmup.buffered.end(i);
-      } catch (error) {
-        continue;
-      }
-      if (current + 0.08 >= start && current <= end + 0.08) return Math.max(0, end - current);
-    }
-    return 0;
-  }
-
   function rememberMusicNavigationIntent(time) {
     try {
       sessionStorage.setItem(MUSIC_SESSION_TIME, String(Math.max(0, time || 0)));
@@ -66,39 +48,14 @@
     } catch (error) {}
   }
 
-  function authorizeMusicForNavigation() {
+  function prepareMusicForNavigation() {
     startMusicWarmup();
     rememberMusicNavigationIntent(0);
-    if (!musicWarmup || !musicWarmup.getAttribute("src")) return;
-
-    var desiredVolume = 0.72;
-    try {
-      var savedVolume = parseFloat(localStorage.getItem("aurora-music-volume"));
-      if (isFinite(savedVolume)) desiredVolume = Math.max(0, Math.min(1, savedVolume));
-    } catch (error) {}
-
-    var reserve = bufferedMusicAhead();
-    musicNavigationAudible = musicWarmup.readyState >= 4 || reserve >= 12;
-    musicWarmup.loop = false;
-    musicWarmup.muted = false;
-    musicWarmup.volume = musicNavigationAudible ? desiredVolume : 0;
-
-    var playPromise;
-    try { playPromise = musicWarmup.play(); }
-    catch (error) { return; }
-    if (playPromise && playPromise.catch) {
-      playPromise.catch(function () {
-        musicNavigationAudible = false;
-      });
-    }
   }
 
-  function persistMusicNavigationPlayback() {
+  function persistMusicNavigationIntent() {
     rememberMusicWarmup();
-    var time = musicNavigationAudible && musicWarmup && !musicWarmup.paused
-      ? musicWarmup.currentTime
-      : 0;
-    rememberMusicNavigationIntent(time);
+    rememberMusicNavigationIntent(0);
   }
 
   if ("requestIdleCallback" in window) {
@@ -888,14 +845,14 @@
       startMusicWarmup();
       var isModified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
       if (isModified || event.button !== 0) return;
-      authorizeMusicForNavigation();
+      prepareMusicForNavigation();
       if (reducedMotionQuery.matches) return;
       event.preventDefault();
       if (entryLink.classList.contains("is-launching")) return;
       entryLink.classList.add("is-launching");
       var transitionDuration = startLaunchTransition();
       window.setTimeout(function () {
-        persistMusicNavigationPlayback();
+        persistMusicNavigationIntent();
         window.location.assign(entryLink.href);
       }, transitionDuration);
     });

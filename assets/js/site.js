@@ -1349,8 +1349,8 @@
     }
 
     // The universe page has already warmed the browser's HTTP media cache when
-    // possible. The blog attaches the same URL immediately, but waits for an
-    // adaptive safety buffer before allowing any audible playback.
+    // possible. After the full document load gate, the blog attaches the same
+    // URL and still waits for an adaptive safety buffer before audible playback.
     audio.pause();
     audio.loop = false;
     audio.preload = "auto";
@@ -1647,14 +1647,9 @@
     syncMute();
     initDockDragging();
     if (resumeAfterNavigation || shouldAutoplayOnHome) {
-      playAudio(resumeAfterNavigation, shouldAutoplayOnHome && !resumeAfterNavigation);
+      scheduleInitialPlaybackAfterPageLoad();
     } else if (audio.readyState >= 1) {
       metadataReady();
-    }
-    if (resumeAfterNavigation) {
-      window.setTimeout(function () {
-        if (audio.readyState === 0 && !resumeAttempted) retryAudioLoad();
-      }, 320);
     }
 
     function initEmbeddedVideoPause() {
@@ -1838,6 +1833,41 @@
     function isBlogHomePage() {
       var path = location.pathname.replace(/\/index\.html$/i, "/");
       return path === "/blog" || path === "/blog/";
+    }
+
+    function scheduleInitialPlaybackAfterPageLoad() {
+      var start = function () {
+        window.requestAnimationFrame(function () {
+          window.requestAnimationFrame(function () {
+            if (isPageLeaving || safePlaybackRequested || !audio.paused) return;
+
+            var userPaused = false;
+            var continuationAllowed = resumeAfterNavigation;
+            try {
+              userPaused = sessionStorage.getItem(SESSION_USER_PAUSED) === "1";
+              if (resumeAfterNavigation) {
+                continuationAllowed = sessionStorage.getItem(SESSION_PLAYING) === "1";
+              }
+            } catch (error) {}
+
+            if (userPaused || (resumeAfterNavigation && !continuationAllowed)) {
+              resumeAfterNavigation = false;
+              return;
+            }
+
+            var continuation = resumeAfterNavigation;
+            playAudio(continuation, shouldAutoplayOnHome && !continuation);
+            if (continuation) {
+              window.setTimeout(function () {
+                if (audio.readyState === 0 && !resumeAttempted) retryAudioLoad();
+              }, 320);
+            }
+          });
+        });
+      };
+
+      if (doc.readyState === "complete") start();
+      else window.addEventListener("load", start, { once: true });
     }
 
     function playAudio(isContinuation, isAutoplayAttempt) {
@@ -2359,17 +2389,21 @@
     }
 
     function syncDockExpansionForCurrentPage() {
-      setCollapsed(true);
+      setCollapsed(false);
     }
 
     function syncDockForCurrentPage() {
-      syncDockExpansionForCurrentPage();
       if (restoreDockPosition()) return;
       window.requestAnimationFrame(placeDefaultDockAwayFromContent);
     }
 
     function placeDefaultDockAwayFromContent() {
       if (!isDockDragEnabled()) {
+        isAutoDocked = false;
+        resetDockPosition(false);
+        return;
+      }
+      if (!dock.classList.contains("is-collapsed")) {
         isAutoDocked = false;
         resetDockPosition(false);
         return;

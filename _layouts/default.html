@@ -173,7 +173,7 @@
     </dialog>
 
     {% assign first_music_track = site.music_tracks | first %}
-    <section class="music-dock is-collapsed" data-music-player aria-label="xueyuan 音乐播放器" data-track-title="{{ first_music_track.title }}" data-track-artist="{{ site.music_artist }}">
+    <section class="music-dock" data-music-player aria-label="xueyuan 音乐播放器" data-track-title="{{ first_music_track.title }}" data-track-artist="{{ site.music_artist }}">
         <audio data-music-audio preload="auto"></audio>
         <canvas class="music-dock__visualizer" data-music-visualizer width="720" height="220" aria-hidden="true"></canvas>
         <div class="music-dock__glow" aria-hidden="true"></div>
