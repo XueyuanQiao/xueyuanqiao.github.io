@@ -1247,11 +1247,12 @@
   var doc = document;
   var STORE_VOLUME = "aurora-music-volume";
   var STORE_DOCK_POSITION = "aurora-music-dock-position-v5";
-  var EDGE_SNAP_DISTANCE = 96;
   var SESSION_TIME = "aurora-music-time";
   var SESSION_PLAYING = "aurora-music-playing";
   var SESSION_TRACK = "aurora-music-track";
   var SESSION_USER_PAUSED = "aurora-music-user-paused";
+  var SESSION_EXPAND_ON_ARRIVAL = "aurora-music-expand-on-arrival";
+  var UNIVERSE_ARRIVAL_MAX_AGE = 120000;
 
   function ready(fn) {
     if (doc.readyState !== "loading") fn();
@@ -1337,6 +1338,7 @@
     var embeddedVideoPauseBound = false;
     var videoPauseStatusTimer = 0;
     var shouldAutoplayOnHome = false;
+    var expandOnUniverseArrival = false;
     var safePlaybackRequested = false;
     var safePlaybackContinuation = false;
     var safePlaybackAutoplay = false;
@@ -1379,6 +1381,7 @@
     } catch (e) {
       shouldAutoplayOnHome = isBlogHomePage();
     }
+    expandOnUniverseArrival = consumeUniverseArrivalIntent();
 
     // The universe page has already warmed the browser's HTTP media cache when
     // possible. After the full document load gate, the blog attaches the same
@@ -1395,7 +1398,9 @@
     initMusicCache();
     initEmbeddedVideoPause();
     doc.addEventListener("aurora:page-ready", initEmbeddedVideoPause);
-    doc.addEventListener("aurora:page-ready", syncDockForCurrentPage);
+    doc.addEventListener("aurora:page-ready", function () {
+      syncDockForCurrentPage(false);
+    });
     syncDockExpansionForCurrentPage();
 
     toggle.addEventListener("click", function () {
@@ -1875,6 +1880,16 @@
     function isBlogHomePage() {
       var path = location.pathname.replace(/\/index\.html$/i, "/");
       return path === "/blog" || path === "/blog/";
+    }
+
+    function consumeUniverseArrivalIntent() {
+      var requestedAt = 0;
+      try {
+        requestedAt = parseInt(sessionStorage.getItem(SESSION_EXPAND_ON_ARRIVAL), 10);
+        sessionStorage.removeItem(SESSION_EXPAND_ON_ARRIVAL);
+      } catch (e) {}
+      var age = Date.now() - requestedAt;
+      return isBlogHomePage() && requestedAt > 0 && age >= 0 && age <= UNIVERSE_ARRIVAL_MAX_AGE;
     }
 
     function scheduleInitialPlaybackAfterPageLoad() {
@@ -2594,6 +2609,9 @@
           height: rect.height,
           nextLeft: rect.left,
           nextTop: rect.top,
+          rawNextTop: rect.top,
+          lastPointerX: event.clientX,
+          lastPointerY: event.clientY,
           started: false,
           edge: edgeDrag,
           side: dock.classList.contains("is-edge-left") ? "left" : "right",
@@ -2601,18 +2619,53 @@
           interactiveTarget: edgeDrag ? interactiveTarget : null,
           captureTarget: interactiveTarget || dragHandle,
           edgeBounds: edgeDrag ? getEdgeViewportBounds(rect.width, rect.height) : null,
-          positionBounds: edgeDrag ? null : getPositionedViewportBounds(rect.width, rect.height),
-          wasPositioned: dock.classList.contains("is-positioned"),
-          wasAutoDocked: isAutoDocked,
-          originalLeft: dock.style.left,
-          originalTop: dock.style.top,
-          originalRight: dock.style.right,
-          originalBottom: dock.style.bottom
+          positionBounds: edgeDrag ? null : getPositionedViewportBounds(rect.width, rect.height)
         };
 
         if (!interactiveTarget) event.preventDefault();
         try { dragStart.captureTarget.setPointerCapture(event.pointerId); } catch (e) {}
       });
+
+      var beginDrag = function (state) {
+        state.started = true;
+        isAutoDocked = false;
+        dock.classList.add("is-positioned", "is-dragging");
+        if (state.edge) {
+          applyCollapsedState(true);
+          dock.classList.add("is-edge-dragging");
+        }
+        dock.style.left = state.left.toFixed(1) + "px";
+        dock.style.top = state.top.toFixed(1) + "px";
+        dock.style.right = "auto";
+        dock.style.bottom = "auto";
+      };
+
+      var updateDragTarget = function (state, clientX, clientY) {
+        if (!isFinite(clientX) || !isFinite(clientY)) return;
+        state.lastPointerX = clientX;
+        state.lastPointerY = clientY;
+        var deltaX = clientX - state.pointerX;
+        var deltaY = clientY - state.pointerY;
+        state.rawNextTop = state.top + deltaY;
+        if (state.edge) {
+          state.nextTop = clamp(state.rawNextTop, state.edgeBounds.minTop, state.edgeBounds.maxTop);
+          var inwardDistance = state.side === "left" ? deltaX : -deltaX;
+          if (!state.crossing && inwardDistance >= Math.max(42, Math.abs(deltaY) * 0.55)) {
+            state.crossing = true;
+          }
+          state.nextLeft = state.crossing
+            ? clamp(state.left + deltaX, state.edgeBounds.minLeft, state.edgeBounds.maxLeft)
+            : (state.side === "left" ? state.edgeBounds.minLeft : state.edgeBounds.maxLeft);
+          if (state.crossing) {
+            var previewSide = state.nextLeft + state.width / 2 <= state.edgeBounds.centerX ? "left" : "right";
+            dock.classList.toggle("is-edge-left", previewSide === "left");
+            dock.classList.toggle("is-edge-right", previewSide === "right");
+          }
+          return;
+        }
+        state.nextLeft = clamp(state.left + deltaX, state.positionBounds.minLeft, state.positionBounds.maxLeft);
+        state.nextTop = clamp(state.rawNextTop, state.positionBounds.minTop, state.positionBounds.maxTop);
+      };
 
       var moveDrag = function (event) {
         if (!dragStart || event.pointerId !== dragPointerId) return;
@@ -2621,36 +2674,9 @@
         var deltaY = event.clientY - dragStart.pointerY;
         if (!dragStart.started) {
           if (Math.hypot(deltaX, deltaY) < (dragStart.edge ? 6 : 3)) return;
-          dragStart.started = true;
-          isAutoDocked = false;
-          dock.classList.add("is-positioned", "is-dragging");
-          if (dragStart.edge) {
-            applyCollapsedState(true);
-            dock.classList.add("is-edge-dragging");
-          }
-          dock.style.left = dragStart.left.toFixed(1) + "px";
-          dock.style.top = dragStart.top.toFixed(1) + "px";
-          dock.style.right = "auto";
-          dock.style.bottom = "auto";
+          beginDrag(dragStart);
         }
-        if (dragStart.edge) {
-          dragStart.nextTop = clamp(dragStart.top + deltaY, dragStart.edgeBounds.minTop, dragStart.edgeBounds.maxTop);
-          var inwardDistance = dragStart.side === "left" ? deltaX : -deltaX;
-          if (!dragStart.crossing && inwardDistance >= Math.max(42, Math.abs(deltaY) * 0.55)) {
-            dragStart.crossing = true;
-          }
-          dragStart.nextLeft = dragStart.crossing
-            ? clamp(dragStart.left + deltaX, dragStart.edgeBounds.minLeft, dragStart.edgeBounds.maxLeft)
-            : (dragStart.side === "left" ? dragStart.edgeBounds.minLeft : dragStart.edgeBounds.maxLeft);
-          if (dragStart.crossing) {
-            var previewSide = dragStart.nextLeft + dragStart.width / 2 <= dragStart.edgeBounds.centerX ? "left" : "right";
-            dock.classList.toggle("is-edge-left", previewSide === "left");
-            dock.classList.toggle("is-edge-right", previewSide === "right");
-          }
-        } else {
-          dragStart.nextLeft = clamp(dragStart.left + deltaX, dragStart.positionBounds.minLeft, dragStart.positionBounds.maxLeft);
-          dragStart.nextTop = clamp(dragStart.top + deltaY, dragStart.positionBounds.minTop, dragStart.positionBounds.maxTop);
-        }
+        updateDragTarget(dragStart, event.clientX, event.clientY);
         if (dragFrameId) return;
         dragFrameId = window.requestAnimationFrame(function () {
           dragFrameId = 0;
@@ -2659,35 +2685,23 @@
         });
       };
 
-      var finishDrag = function (event, commit) {
+      var finishDrag = function (event, useEventPosition) {
         if (!dragStart || event.pointerId !== dragPointerId) return;
         var completedDrag = dragStart;
         var pointerId = dragPointerId;
+        if (useEventPosition && isFinite(event.clientX) && isFinite(event.clientY)) {
+          if (!completedDrag.started && Math.hypot(
+            event.clientX - completedDrag.pointerX,
+            event.clientY - completedDrag.pointerY
+          ) >= (completedDrag.edge ? 6 : 3)) {
+            beginDrag(completedDrag);
+          }
+          if (completedDrag.started) updateDragTarget(completedDrag, event.clientX, event.clientY);
+        }
         dragPointerId = null;
         dragStart = null;
         try { completedDrag.captureTarget.releasePointerCapture(pointerId); } catch (e) {}
         if (!completedDrag.started) return;
-        if (!commit) {
-          if (dragFrameId) {
-            window.cancelAnimationFrame(dragFrameId);
-            dragFrameId = 0;
-          }
-          isAutoDocked = completedDrag.wasAutoDocked;
-          dock.style.removeProperty("transform");
-          dock.classList.remove("is-dragging", "is-edge-dragging");
-          dock.classList.toggle("is-positioned", completedDrag.wasPositioned);
-          dock.style.left = completedDrag.originalLeft;
-          dock.style.top = completedDrag.originalTop;
-          dock.style.right = completedDrag.originalRight;
-          dock.style.bottom = completedDrag.originalBottom;
-          if (completedDrag.edge) {
-            dock.classList.add("is-collapsed", "is-edge-docked");
-            dock.classList.toggle("is-edge-left", completedDrag.side === "left");
-            dock.classList.toggle("is-edge-right", completedDrag.side === "right");
-            syncEdgeToggle(true);
-          }
-          return;
-        }
         if (completedDrag.edge && completedDrag.interactiveTarget) {
           suppressedEdgeDragControl = completedDrag.interactiveTarget;
           window.clearTimeout(suppressEdgeDragClickTimer);
@@ -2702,13 +2716,16 @@
         }
         dock.style.left = completedDrag.nextLeft.toFixed(1) + "px";
         dock.style.top = completedDrag.nextTop.toFixed(1) + "px";
+        dock.style.right = "auto";
+        dock.style.bottom = "auto";
         dock.style.removeProperty("transform");
+        void dock.offsetWidth;
         dock.classList.remove("is-dragging", "is-edge-dragging");
         if (completedDrag.edge) {
           settleEdgeDockAfterDrag(completedDrag);
           return;
         }
-        settleDockAfterDrag();
+        settleDockAfterDrag(completedDrag);
       };
 
       window.addEventListener("pointermove", moveDrag, { passive: false });
@@ -2723,7 +2740,10 @@
       var scheduleDockViewportSync = function () {
         window.clearTimeout(dockResizeTimer);
         dockResizeTimer = window.setTimeout(function () {
-          if (dragStart) return;
+          if (dragStart || dock.classList.contains("is-layout-transitioning")) {
+            scheduleDockViewportSync();
+            return;
+          }
           if (dock.classList.contains("is-edge-docked")) {
             clampEdgeDockPosition();
             if (isAutoDocked) placeDefaultDockAwayFromContent();
@@ -2743,15 +2763,35 @@
         window.visualViewport.addEventListener("scroll", scheduleDockViewportSync, { passive: true });
       }
 
-      window.requestAnimationFrame(syncDockForCurrentPage);
+      window.requestAnimationFrame(function () {
+        syncDockForCurrentPage(true);
+      });
     }
 
     function syncDockExpansionForCurrentPage() {
       setCollapsed(false);
     }
 
-    function syncDockForCurrentPage() {
-      if (restoreDockPosition()) return;
+    function syncDockForCurrentPage(restoreStoredPosition) {
+      if (restoreStoredPosition) {
+        if (expandOnUniverseArrival) {
+          expandOnUniverseArrival = false;
+          resetDockPosition(false);
+          applyCollapsedState(false);
+          return;
+        }
+        expandOnUniverseArrival = false;
+        if (restoreDockPosition()) return;
+      }
+      if (dock.classList.contains("is-edge-docked")) {
+        clampEdgeDockPosition();
+        if (isAutoDocked) window.requestAnimationFrame(placeDefaultDockAwayFromContent);
+        return;
+      }
+      if (dock.classList.contains("is-positioned") && isDockDragEnabled()) {
+        clampDockPosition();
+        return;
+      }
       window.requestAnimationFrame(placeDefaultDockAwayFromContent);
     }
 
@@ -2889,50 +2929,42 @@
       dockToEdge(side, rect.top, true);
     }
 
-    function settleDockAfterDrag() {
-      var rect = dock.getBoundingClientRect();
-      var edgeBounds = getEdgeViewportBounds(rect.width, rect.height);
-      var leftGap = Math.max(0, rect.left - edgeBounds.minLeft);
-      var rightGap = Math.max(0, edgeBounds.maxLeft - rect.left);
-      var nearestGap = Math.min(leftGap, rightGap);
-
-      if (nearestGap <= EDGE_SNAP_DISTANCE) {
-        dockToEdge(leftGap <= rightGap ? "left" : "right", rect.top, true);
-        return;
-      }
-
-      dock.classList.remove("is-edge-docked", "is-edge-left", "is-edge-right");
-      syncEdgeToggle(false);
-      setCollapsed(false);
+    function settleDockAfterDrag(completedDrag) {
+      settleEdgeDockAfterDrag(completedDrag);
     }
 
     function settleEdgeDockAfterDrag(completedDrag, requestedSide) {
-      var edgeBounds = getEdgeViewportBounds(completedDrag.width, completedDrag.height);
+      var rect = dock.getBoundingClientRect();
+      var edgeBounds = getEdgeViewportBounds(rect.width, rect.height);
+      var viewport = getDockViewportMetrics();
       var side = requestedSide === "left" || requestedSide === "right"
         ? requestedSide
-        : (completedDrag.nextLeft + completedDrag.width / 2 <= edgeBounds.centerX ? "left" : "right");
-      var top = clamp(completedDrag.nextTop, edgeBounds.minTop, edgeBounds.maxTop);
+        : (completedDrag.lastPointerX <= viewport.left + viewport.width / 2 ? "left" : "right");
       var targetLeft = side === "left" ? edgeBounds.minLeft : edgeBounds.maxLeft;
-      var snapDistance = Math.abs(completedDrag.nextLeft - targetLeft);
+      var snapDistance = Math.abs(rect.left - targetLeft);
       var applyEdgePosition = function () {
         applyCollapsedState(true);
         dock.classList.add("is-positioned", "is-edge-docked");
         dock.classList.toggle("is-edge-left", side === "left");
         dock.classList.toggle("is-edge-right", side === "right");
+        var edgeRect = dock.getBoundingClientRect();
+        var finalBounds = getEdgeViewportBounds(edgeRect.width, edgeRect.height);
+        var requestedTop = isFinite(completedDrag.rawNextTop) ? completedDrag.rawNextTop : completedDrag.nextTop;
+        var top = clamp(requestedTop, finalBounds.minTop, finalBounds.maxTop);
         dock.style.top = top.toFixed(1) + "px";
         dock.style.bottom = "auto";
         if (side === "left") {
-          dock.style.left = edgeBounds.minLeft.toFixed(1) + "px";
+          dock.style.left = finalBounds.minLeft.toFixed(1) + "px";
           dock.style.right = "auto";
         } else {
-          dock.style.left = edgeBounds.maxLeft.toFixed(1) + "px";
+          dock.style.left = finalBounds.maxLeft.toFixed(1) + "px";
           dock.style.right = "auto";
         }
         syncEdgeToggle(true);
-        announceDockPosition(side, top, completedDrag.width, completedDrag.height);
+        announceDockPosition(side, top, edgeRect.width, edgeRect.height);
       };
 
-      if (snapDistance < 0.5) {
+      if (completedDrag.edge !== false && snapDistance < 0.5) {
         applyEdgePosition();
         settleDockLayout(true, true);
         return;

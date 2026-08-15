@@ -17,7 +17,6 @@ permalink: /
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="image" type="image/webp" fetchpriority="high" href="{{ '/images/space-panorama-360-preview.webp' | relative_url }}">
-    <link rel="preload" as="image" type="image/webp" fetchpriority="high" href="{{ '/images/space-panorama-360.webp' | relative_url }}">
     <link rel="prefetch" href="{{ '/blog/' | relative_url }}" as="document">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="{{ '/assets/css/particle-cat.css' | relative_url }}?v={{ asset_version }}">
@@ -93,7 +92,7 @@ permalink: /
 
     <p class="space-credit">360° 全天星空影像：ESO / S. Brunier</p>
 
-    <div class="particle-loading" role="status" aria-live="polite">
+    <div class="particle-loading is-indeterminate" data-panorama-loading data-loading-state="connecting">
         <span class="particle-loading__kicker" aria-hidden="true">
             <i></i>
             DEEP SPACE SIGNAL · α CENTAURI
@@ -108,7 +107,23 @@ permalink: /
             <strong>正在接收三体信号</strong>
             <small>4.37 光年外 · 深空载波译码中</small>
         </span>
-        <span class="particle-loading__track" aria-hidden="true"><i></i></span>
+        <span class="particle-loading__progress">
+            <span class="particle-loading__progress-head" aria-hidden="true">
+                <span data-panorama-loading-phase>正在建立高清宇宙星象图链路</span>
+                <b data-panorama-loading-percent>连接中</b>
+            </span>
+            <span
+                class="particle-loading__track"
+                data-panorama-loading-progress
+                role="progressbar"
+                aria-label="高清宇宙星象图加载进度"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuetext="正在建立高清宇宙星象图链路"
+            ><i aria-hidden="true"></i></span>
+            <small class="particle-loading__detail" data-panorama-loading-detail aria-hidden="true">6000 × 3000 · 6.8 MB 高清全天星图</small>
+        </span>
+        <span class="particle-sr-only" role="status" aria-live="polite" aria-atomic="true" data-panorama-loading-announcement>正在接收三体信号，正在建立高清宇宙星象图链路。</span>
     </div>
 
     <div class="particle-fallback" role="status">
@@ -124,7 +139,7 @@ permalink: /
     <audio
         data-music-warmup
         data-music-src="{{ warmup_music_track.file | relative_url }}"
-        preload="auto"
+        preload="none"
         hidden
         aria-hidden="true"
     ></audio>

@@ -7,11 +7,13 @@
 
   var musicWarmup = document.querySelector("[data-music-warmup]");
   var musicWarmupStarted = false;
+  var musicWarmupScheduled = false;
 
   var MUSIC_SESSION_TIME = "aurora-music-time";
   var MUSIC_SESSION_PLAYING = "aurora-music-playing";
   var MUSIC_SESSION_TRACK = "aurora-music-track";
   var MUSIC_SESSION_USER_PAUSED = "aurora-music-user-paused";
+  var MUSIC_SESSION_EXPAND_ON_ARRIVAL = "aurora-music-expand-on-arrival";
 
   function rememberMusicWarmup() {
     if (!musicWarmup || !musicWarmup.buffered || !musicWarmup.buffered.length) return;
@@ -39,6 +41,16 @@
     } catch (error) {}
   }
 
+  function scheduleMusicWarmup() {
+    if (musicWarmupScheduled || musicWarmupStarted) return;
+    musicWarmupScheduled = true;
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(startMusicWarmup, { timeout: 1200 });
+    } else {
+      window.setTimeout(startMusicWarmup, 720);
+    }
+  }
+
   function rememberMusicNavigationIntent(time) {
     try {
       sessionStorage.setItem(MUSIC_SESSION_TIME, String(Math.max(0, time || 0)));
@@ -48,20 +60,22 @@
     } catch (error) {}
   }
 
+  function rememberUniverseArrivalIntent() {
+    try {
+      sessionStorage.setItem(MUSIC_SESSION_EXPAND_ON_ARRIVAL, String(Date.now()));
+    } catch (error) {}
+  }
+
   function prepareMusicForNavigation() {
     startMusicWarmup();
     rememberMusicNavigationIntent(0);
+    rememberUniverseArrivalIntent();
   }
 
   function persistMusicNavigationIntent() {
     rememberMusicWarmup();
     rememberMusicNavigationIntent(0);
-  }
-
-  if ("requestIdleCallback" in window) {
-    window.requestIdleCallback(startMusicWarmup, { timeout: 1200 });
-  } else {
-    window.setTimeout(startMusicWarmup, 720);
+    rememberUniverseArrivalIntent();
   }
 
   var gl = panoramaCanvas.getContext("webgl", {
@@ -75,12 +89,19 @@
 
   if (!gl || !particleContext) {
     document.documentElement.classList.add("no-particle-canvas");
+    scheduleMusicWarmup();
     return;
   }
 
   var root = document.documentElement;
   var resetButton = document.querySelector("[data-particle-reset]");
   var entryLink = document.querySelector(".particle-enter");
+  var panoramaLoading = document.querySelector("[data-panorama-loading]");
+  var panoramaLoadingPhase = document.querySelector("[data-panorama-loading-phase]");
+  var panoramaLoadingPercent = document.querySelector("[data-panorama-loading-percent]");
+  var panoramaLoadingProgress = document.querySelector("[data-panorama-loading-progress]");
+  var panoramaLoadingDetail = document.querySelector("[data-panorama-loading-detail]");
+  var panoramaLoadingAnnouncement = document.querySelector("[data-panorama-loading-announcement]");
   var launchTransition = document.querySelector("[data-launch-transition]");
   var launchCanvas = launchTransition && launchTransition.querySelector(".launch-transition__canvas");
   var launchContext = launchCanvas && launchCanvas.getContext("2d", { alpha: true, desynchronized: true });
@@ -118,6 +139,17 @@
   var glowAmount = 1;
   var firstInteraction = false;
   var pointer = { x: -9999, y: -9999, active: false, strength: 0 };
+  var panoramaLoadingState = "connecting";
+  var panoramaPreviewReady = false;
+  var panoramaTransferLoaded = 0;
+  var panoramaTransferTotal = 0;
+  var panoramaTransferKnown = false;
+  var panoramaTransferSlow = false;
+  var panoramaProgressAnnounced = -1;
+  var panoramaProgressUpdatedAt = 0;
+  var panoramaSlowTimer = 0;
+  var panoramaDismissTimer = 0;
+  var panoramaTarget = null;
 
   function clamp(value, minimum, maximum) {
     return Math.max(minimum, Math.min(maximum, value));
@@ -136,6 +168,205 @@
     return value < 0.5
       ? 4 * value * value * value
       : 1 - Math.pow(-2 * value + 2, 3) / 2;
+  }
+
+  function formatMegabytes(bytes) {
+    if (bytes === null || typeof bytes === "undefined" || !isFinite(bytes)) return "";
+    if (bytes <= 0) return "0 MB";
+    var megabytes = bytes / 1048576;
+    if (megabytes < 0.1) return "<0.1 MB";
+    return megabytes.toFixed(bytes >= 10485760 ? 0 : 1) + " MB";
+  }
+
+  function panoramaTargetSpecification() {
+    if (!panoramaTarget) return "高清全天星图";
+    return panoramaTarget.width + " × " + panoramaTarget.height + " · " + formatMegabytes(panoramaTarget.expectedBytes);
+  }
+
+  function setPanoramaLoadingAnnouncement(message) {
+    if (!panoramaLoadingAnnouncement || !message) return;
+    panoramaLoadingAnnouncement.textContent = message;
+  }
+
+  function setPanoramaLoadingProgress(value, valueText, updateAria) {
+    var progress = clamp(value || 0, 0, 1);
+    if (panoramaLoading) {
+      panoramaLoading.style.setProperty("--panorama-progress", progress.toFixed(4));
+    }
+    if (!panoramaLoadingProgress || updateAria === false) return;
+    panoramaLoadingProgress.setAttribute("aria-valuenow", String(Math.round(progress * 100)));
+    panoramaLoadingProgress.setAttribute("aria-valuetext", valueText || (Math.round(progress * 100) + "%"));
+  }
+
+  function setPanoramaLoadingIndeterminate(indeterminate) {
+    if (panoramaLoading) panoramaLoading.classList.toggle("is-indeterminate", Boolean(indeterminate));
+    if (!panoramaLoadingProgress) return;
+    if (indeterminate) panoramaLoadingProgress.removeAttribute("aria-valuenow");
+  }
+
+  function setPanoramaLoadingCopy(state, phase, percent, detail, announcement) {
+    panoramaLoadingState = state;
+    if (panoramaLoading) panoramaLoading.setAttribute("data-loading-state", state);
+    if (panoramaLoadingPhase) panoramaLoadingPhase.textContent = phase;
+    if (panoramaLoadingPercent) panoramaLoadingPercent.textContent = percent;
+    if (panoramaLoadingDetail) panoramaLoadingDetail.textContent = detail;
+    if (announcement) setPanoramaLoadingAnnouncement(announcement);
+  }
+
+  function panoramaTransferPhase() {
+    if (panoramaTransferSlow) return "信号较远 · 高清宇宙星象图仍在接收";
+    if (panoramaPreviewReady) return "预览已可拖曳 · 高清宇宙星象图正在加载";
+    return "高清宇宙星象图正在加载";
+  }
+
+  function updatePanoramaTransfer(loaded, total, force) {
+    panoramaTransferLoaded = Math.max(0, loaded || 0);
+    panoramaTransferTotal = Math.max(0, total || panoramaTransferTotal || 0);
+    panoramaTransferKnown = panoramaTransferTotal > 0;
+    if (panoramaTransferKnown && panoramaTarget) panoramaTarget.expectedBytes = panoramaTransferTotal;
+
+    var now = performance.now();
+    if (!force && now - panoramaProgressUpdatedAt < 80) return;
+    panoramaProgressUpdatedAt = now;
+
+    var phase = panoramaTransferPhase();
+    var specification = panoramaTargetSpecification();
+    if (panoramaTransferKnown) {
+      var progress = clamp(panoramaTransferLoaded / panoramaTransferTotal, 0, 1);
+      var percent = Math.round(progress * 100);
+      var announcementStep = Math.floor(percent / 25) * 25;
+      var progressStateChanged = panoramaLoadingState !== "receiving";
+      var progressBecameKnown = panoramaLoadingProgress && !panoramaLoadingProgress.hasAttribute("aria-valuenow");
+      var progressMilestoneChanged = announcementStep >= 25 && announcementStep > panoramaProgressAnnounced;
+      setPanoramaLoadingIndeterminate(false);
+      setPanoramaLoadingProgress(
+        progress,
+        phase + "，" + percent + "%",
+        progressStateChanged || progressBecameKnown || progressMilestoneChanged
+      );
+      setPanoramaLoadingCopy(
+        "receiving",
+        phase,
+        percent + "%",
+        specification + " · " + formatMegabytes(panoramaTransferLoaded) + " / " + formatMegabytes(panoramaTransferTotal) + " 已接收"
+      );
+
+      if (progressMilestoneChanged) {
+        panoramaProgressAnnounced = announcementStep;
+        setPanoramaLoadingAnnouncement("正在接收三体信号，高清宇宙星象图已加载 " + announcementStep + "% 。");
+      }
+      return;
+    }
+
+    var receivingStarted = panoramaLoadingState !== "receiving";
+    setPanoramaLoadingIndeterminate(true);
+    if (receivingStarted && panoramaLoadingProgress) {
+      panoramaLoadingProgress.setAttribute("aria-valuetext", phase + "，接收中");
+    }
+    setPanoramaLoadingCopy(
+      "receiving",
+      phase,
+      "接收中",
+      specification + (panoramaTransferLoaded ? " · 已接收 " + formatMegabytes(panoramaTransferLoaded) : "")
+    );
+  }
+
+  function markPanoramaPreviewReady() {
+    panoramaPreviewReady = true;
+    if (panoramaLoadingState === "receiving") {
+      updatePanoramaTransfer(panoramaTransferLoaded, panoramaTransferTotal, true);
+      setPanoramaLoadingAnnouncement(
+        "预览星图已经可以拖曳，高清宇宙星象图仍在接收。"
+      );
+      return;
+    }
+    if (panoramaLoadingState !== "connecting") return;
+    setPanoramaLoadingCopy(
+      "connecting",
+      "预览已可拖曳 · 正在建立高清星图链路",
+      "连接中",
+      panoramaTargetSpecification() + " 高清全天星图",
+      "预览星图已经可以拖曳，高清宇宙星象图正在建立接收链路。"
+    );
+  }
+
+  function markPanoramaTransferSlow() {
+    if (panoramaLoadingState !== "connecting" && panoramaLoadingState !== "receiving") return;
+    panoramaTransferSlow = true;
+    if (panoramaLoadingState === "receiving") {
+      updatePanoramaTransfer(panoramaTransferLoaded, panoramaTransferTotal, true);
+      setPanoramaLoadingAnnouncement(
+        "三体信号较远，高清宇宙星象图仍在接收，预览星图可以继续拖曳。"
+      );
+      return;
+    }
+    setPanoramaLoadingCopy(
+      "connecting",
+      "信号较远 · 高清宇宙星象图仍在建立链路",
+      "连接中",
+      panoramaTargetSpecification() + " · 抵达后自动显影",
+      "三体信号较远，高清宇宙星象图仍在建立接收链路。"
+    );
+  }
+
+  function markPanoramaDecoding(blobSize) {
+    window.clearTimeout(panoramaSlowTimer);
+    scheduleMusicWarmup();
+    setPanoramaLoadingIndeterminate(false);
+    setPanoramaLoadingProgress(1, "星图接收完成，正在解析高清细节");
+    setPanoramaLoadingCopy(
+      "decoding",
+      "星图已接收 · 正在解析 " + panoramaTarget.width + " × " + panoramaTarget.height + " 星域",
+      "100%",
+      formatMegabytes(blobSize || panoramaTarget.expectedBytes) + " 深空母版 · 正在解码",
+      "三体信号已经接收完成，正在解析高清宇宙星象图。"
+    );
+  }
+
+  function markPanoramaCalibrating() {
+    setPanoramaLoadingProgress(1, "正在完成高清星图校准");
+    setPanoramaLoadingCopy(
+      "calibrating",
+      "深空细节已解析 · 正在完成星图校准",
+      "显影中",
+      "高清纹理写入中 · 当前探索视角保持不变"
+    );
+  }
+
+  function dismissPanoramaLoading(delay) {
+    window.clearTimeout(panoramaDismissTimer);
+    panoramaDismissTimer = window.setTimeout(function () {
+      root.classList.add("panorama-loading-dismissed");
+    }, delay);
+  }
+
+  function markPanoramaComplete() {
+    setPanoramaLoadingProgress(1, "高清宇宙星象图已经就绪");
+    setPanoramaLoadingCopy(
+      "complete",
+      "高清星海已就绪 · 拖曳探索 360°",
+      "已完成",
+      panoramaTargetSpecification() + " 高清全天星图已显影",
+      "高清宇宙星象图已经就绪，可以拖曳探索三百六十度星空。"
+    );
+    dismissPanoramaLoading(reducedMotionQuery.matches ? 280 : 520);
+  }
+
+  function markPanoramaUpgradeFailed() {
+    window.clearTimeout(panoramaSlowTimer);
+    setPanoramaLoadingIndeterminate(false);
+    setPanoramaLoadingProgress(
+      panoramaTransferKnown ? clamp(panoramaTransferLoaded / panoramaTransferTotal, 0, 1) : 0,
+      "高清宇宙星象图接收中断"
+    );
+    setPanoramaLoadingCopy(
+      "failed",
+      "预览已保留 · 高清星图接收中断",
+      "预览模式",
+      "当前仍可拖曳探索 · 稍后刷新可重新接收",
+      "高清宇宙星象图接收中断，当前保留可拖曳的预览星图。"
+    );
+    dismissPanoramaLoading(reducedMotionQuery.matches ? 900 : 1700);
   }
 
   function cancelViewReset() {
@@ -266,6 +497,7 @@
   } catch (error) {
     console.error(error);
     root.classList.add("no-particle-canvas");
+    scheduleMusicWarmup();
     return;
   }
 
@@ -273,7 +505,20 @@
     var maximumTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 4096;
     var originalSource = panoramaCanvas.getAttribute("data-panorama-src");
     var compatibilitySource = panoramaCanvas.getAttribute("data-panorama-mobile-src");
-    return maximumTextureSize >= 6000 ? originalSource : (compatibilitySource || originalSource);
+    if (maximumTextureSize >= 6000 || !compatibilitySource) {
+      return {
+        source: originalSource,
+        width: 6000,
+        height: 3000,
+        expectedBytes: 7143010
+      };
+    }
+    return {
+      source: compatibilitySource,
+      width: 4096,
+      height: 2048,
+      expectedBytes: 2251044
+    };
   }
 
   function loadImage(source, priority) {
@@ -284,6 +529,17 @@
       image.onload = function () { resolve(image); };
       image.onerror = function () { reject(new Error("360° 全景影像载入失败")); };
       image.src = source;
+    });
+  }
+
+  function loadBlobImage(blob) {
+    var objectUrl = URL.createObjectURL(blob);
+    return loadImage(objectUrl, "auto").then(function (image) {
+      URL.revokeObjectURL(objectUrl);
+      return image;
+    }, function (error) {
+      URL.revokeObjectURL(objectUrl);
+      throw error;
     });
   }
 
@@ -316,7 +572,44 @@
   }
 
   function loadOriginalPanorama() {
-    return loadImage(choosePanoramaSource(), "high");
+    if (!("XMLHttpRequest" in window)) {
+      panoramaSlowTimer = window.setTimeout(markPanoramaTransferSlow, 6500);
+      return loadImage(panoramaTarget.source, "high").then(function (image) {
+        markPanoramaDecoding(panoramaTarget.expectedBytes);
+        return image;
+      });
+    }
+
+    return new Promise(function (resolve, reject) {
+      var xhr = new XMLHttpRequest();
+      panoramaSlowTimer = window.setTimeout(markPanoramaTransferSlow, 6500);
+      xhr.open("GET", panoramaTarget.source, true);
+      xhr.responseType = "blob";
+      xhr.onprogress = function (event) {
+        updatePanoramaTransfer(event.loaded, event.lengthComputable ? event.total : 0, false);
+      };
+      xhr.onerror = function () {
+        reject(new Error("360° 高清全景影像接收失败"));
+      };
+      xhr.onabort = function () {
+        reject(new Error("360° 高清全景影像接收已中断"));
+      };
+      xhr.onload = function () {
+        if ((xhr.status < 200 || xhr.status >= 300) && xhr.status !== 0) {
+          reject(new Error("360° 高清全景影像接收失败（" + xhr.status + "）"));
+          return;
+        }
+        var blob = xhr.response;
+        if (!blob || !blob.size) {
+          reject(new Error("360° 高清全景影像内容为空"));
+          return;
+        }
+        updatePanoramaTransfer(blob.size, panoramaTransferTotal || blob.size, true);
+        markPanoramaDecoding(blob.size);
+        loadBlobImage(blob).then(resolve, reject);
+      };
+      xhr.send();
+    });
   }
 
   function startRendering() {
@@ -868,14 +1161,39 @@
 
   resize();
   buildStars();
+  panoramaTarget = choosePanoramaSource();
+  setPanoramaLoadingCopy(
+    "connecting",
+    "正在建立高清宇宙星象图链路",
+    "连接中",
+    panoramaTargetSpecification() + " 高清全天星图",
+    "正在接收三体信号，正在建立高清宇宙星象图链路。"
+  );
 
   var originalPanoramaPromise = loadOriginalPanorama()
     .then(function (image) {
-      showPanorama(image, 2, "panorama-high-ready");
-      startRendering();
-      return true;
+      panoramaTarget.width = image.naturalWidth || panoramaTarget.width;
+      panoramaTarget.height = image.naturalHeight || panoramaTarget.height;
+      markPanoramaCalibrating();
+      return new Promise(function (resolve, reject) {
+        requestAnimationFrame(function () {
+          try {
+            showPanorama(image, 2, "panorama-high-ready");
+            startRendering();
+          } catch (error) {
+            reject(error);
+            return;
+          }
+          requestAnimationFrame(function () {
+            markPanoramaComplete();
+            resolve(true);
+          });
+        });
+      });
     })
     .catch(function (error) {
+      window.clearTimeout(panoramaSlowTimer);
+      scheduleMusicWarmup();
       console.warn(error.message);
       return false;
     });
@@ -884,6 +1202,7 @@
     .then(function (image) {
       showPanorama(image, 1, "panorama-preview-ready");
       startRendering();
+      markPanoramaPreviewReady();
       return true;
     })
     .catch(function (error) {
@@ -893,12 +1212,13 @@
 
   Promise.all([previewPanoramaPromise, originalPanoramaPromise])
     .then(function (results) {
-      if (results[1] || !results[0]) return;
-      root.classList.add("panorama-upgrade-failed");
-    })
-    .then(function () {
-      if (panoramaTexture) return;
-      root.classList.add("no-particle-canvas");
-      cancelAnimationFrame(animationFrame);
+      if (!results[1] && results[0]) {
+        root.classList.add("panorama-upgrade-failed");
+        markPanoramaUpgradeFailed();
+      }
+      if (!panoramaTexture) {
+        root.classList.add("no-particle-canvas");
+        cancelAnimationFrame(animationFrame);
+      }
     });
 })();

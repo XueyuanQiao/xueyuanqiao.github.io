@@ -87,7 +87,7 @@
 
 站点根路径 `/` 是独立的 WebGL 宇宙入口，原有博客位于 `/blog/`。两部分使用独立的页面、样式和脚本，修改宇宙首页不应触碰 Aurora 博客的布局与资源。
 
-首页通过 Preview → Final 渐进替换全景纹理：第一张 5.6 KB 预览完成后立即开放 360° 拖曳，原始高清资源同时继续后台加载；完成后直接升级为桌面 6000 × 3000 或兼容设备 4096 × 2048 的高清纹理，不重置用户视角，也不降低最终画质。
+首页通过 Preview → Final 渐进替换全景纹理：第一张 5.6 KB 预览完成后立即开放 360° 拖曳，原始高清资源按 GPU 能力选择并在后台显示真实接收进度；完成后直接升级为桌面 6000 × 3000 或兼容设备 4096 × 2048 的高清纹理，不重置用户视角，也不降低最终画质。
 
 完整的文件职责、资源规格、交互状态、入口文案、性能边界和验证清单见 [`doc/space-landing.md`](./doc/space-landing.md)。
 
@@ -311,7 +311,7 @@ bundle exec jekyll serve  # 本地走查
 - [ ] Frontmatter 不使用引号，`categories` 用空格分隔
 - [ ] 发文时间避开北京凌晨 0:00–8:00（或确认时区偏移效果）
 - [ ] 重大改动前用 DevTools 切到 iPhone / Pixel 验证移动端
-- [ ] 修改宇宙首页后验证 Preview → Medium → Final 纹理升级、拖曳连续性和 `/blog/` 跳转
+- [ ] 修改宇宙首页后验证 Preview → Final 真实加载进度、纹理升级、拖曳连续性和 `/blog/` 跳转
 - [ ] 宇宙首页 HTML、CSS、JS、资源或文案变化后同步更新 `doc/space-landing.md`
 - [ ] 升级依赖：`bundle update` 后本地 `bundle exec jekyll serve` 走查一遍
 

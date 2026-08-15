@@ -8831,6 +8831,7 @@ html:not([data-theme="light"]) .theme-switch__icon--moon {
     max-width: 420px;
   }
   .music-dock.is-collapsed { width: min(230px, calc(100vw - 24px)); }
+  .music-dock.is-collapsed.is-edge-docked { width: 64px; }
   .main,
   .is-landing .main { padding-bottom: max(122px, calc(env(safe-area-inset-bottom) + 110px)); }
   .music-dock.is-collapsed ~ .fab,
