@@ -1276,6 +1276,7 @@
     var statusEl = dock.querySelector("[data-music-status]");
     var titleEl = dock.querySelector("[data-music-title]");
     var cacheStatusEl = dock.querySelector("[data-music-cache-status]");
+    var dockStatusEl = dock.querySelector("[data-music-dock-status]");
     var mute = dock.querySelector("[data-music-mute]");
     var volume = dock.querySelector("[data-music-volume]");
     var canvas = dock.querySelector("[data-music-visualizer]");
@@ -1300,11 +1301,24 @@
     var analyser = null;
     var frequencyData = null;
     var canvasContext = canvas && canvas.getContext ? canvas.getContext("2d") : null;
-    var reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var reducedMotionQuery = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+    var reducedMotion = Boolean(reducedMotionQuery && reducedMotionQuery.matches);
     var dragPointerId = null;
     var dragStart = null;
+    var dragFrameId = 0;
+    var suppressedEdgeDragControl = null;
+    var suppressEdgeDragClickTimer = 0;
     var isAutoDocked = false;
     var dockResizeTimer = 0;
+    var dockMotionAnimation = null;
+    var dockHeadAnimation = null;
+    var dockDetailsAnimation = null;
+    var dockMotionGeneration = 0;
+    var visualizerResizeTimer = 0;
+    var visualizerWidth = 0;
+    var visualizerHeight = 0;
+    var lastProgressPaint = 0;
+    var lastVisualizerPaint = 0;
     var isPageLeaving = false;
     var leavingPlaybackIntent = null;
     var resumeAfterNavigation = false;
@@ -1340,6 +1354,24 @@
     var primeFinishTimer = 0;
     var lastNativePlayAttemptAt = 0;
     var desiredMuted = false;
+
+    if (reducedMotionQuery) {
+      var syncReducedMotion = function (event) {
+        reducedMotion = Boolean(event.matches);
+        if (reducedMotion) {
+          cancelDockMotion();
+          settleDockLayout(false, true);
+          drawIdleVisualizer();
+        } else {
+          scheduleVisualizerResize(0);
+        }
+      };
+      if (typeof reducedMotionQuery.addEventListener === "function") {
+        reducedMotionQuery.addEventListener("change", syncReducedMotion);
+      } else if (typeof reducedMotionQuery.addListener === "function") {
+        reducedMotionQuery.addListener(syncReducedMotion);
+      }
+    }
 
     try {
       resumeAfterNavigation = sessionStorage.getItem(SESSION_PLAYING) === "1";
@@ -1411,6 +1443,12 @@
       edgeToggle.addEventListener("click", function () {
         if (dock.classList.contains("is-edge-docked")) releaseDockFromEdge();
         else dockToNearestEdge();
+      });
+      edgeToggle.addEventListener("keydown", function (event) {
+        if (!dock.classList.contains("is-edge-docked")) return;
+        if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"].indexOf(event.key) === -1) return;
+        event.preventDefault();
+        moveEdgeDockWithKeyboard(event.key, event.shiftKey);
       });
     }
 
@@ -1545,6 +1583,7 @@
 
     function markAudiblePlaybackStarted() {
       if (isSilentPriming || audio.paused) return;
+      if (!isPageLeaving) leavingPlaybackIntent = null;
       resumeAfterNavigation = false;
       resumeAttempted = true;
       autoplayBlocked = false;
@@ -1579,7 +1618,15 @@
       if (!isTrackSwitching) savePosition();
     });
     audio.addEventListener("ended", function () {
-      switchTrack((currentTrackIndex + 1) % tracks.length, true);
+      if (isSilentPriming) {
+        finishSilentPriming();
+        return;
+      }
+      if (currentTrackIndex < tracks.length - 1) {
+        switchTrack(currentTrackIndex + 1, true);
+        return;
+      }
+      finishPlaylistPlayback();
     });
     audio.addEventListener("waiting", function () {
       if (isSilentPriming) {
@@ -1602,6 +1649,7 @@
         retryAudioLoad();
         return;
       }
+      isTrackSwitching = false;
       dock.classList.add("is-error");
       toggle.setAttribute("aria-label", "音频加载失败，请稍后重试");
       setPlaybackIntent(false);
@@ -1609,7 +1657,8 @@
 
     window.addEventListener("pagehide", function () {
       isPageLeaving = true;
-      if (leavingPlaybackIntent === null) leavingPlaybackIntent = !audio.paused && !audio.ended;
+      var currentIntent = hasPlaybackIntent();
+      if (leavingPlaybackIntent === null || currentIntent) leavingPlaybackIntent = currentIntent;
       persistPlaybackSession(leavingPlaybackIntent);
     });
 
@@ -1624,22 +1673,15 @@
       if (next.origin !== location.origin) return;
       if (next.pathname === location.pathname && next.search === location.search && next.hash) return;
       isPageLeaving = true;
-      leavingPlaybackIntent = !audio.paused && !audio.ended;
+      leavingPlaybackIntent = hasPlaybackIntent();
       persistPlaybackSession(leavingPlaybackIntent);
     }, true);
 
     if (canvas && canvasContext) {
-      var resize = function () {
-        var rect = canvas.getBoundingClientRect();
-        var ratio = Math.min(2, window.devicePixelRatio || 1);
-        canvas.width = Math.max(1, Math.round(rect.width * ratio));
-        canvas.height = Math.max(1, Math.round(rect.height * ratio));
-        canvasContext.setTransform(ratio, 0, 0, ratio, 0, 0);
-        drawIdleVisualizer();
-      };
-      if ("ResizeObserver" in window) new ResizeObserver(resize).observe(canvas);
-      else window.addEventListener("resize", resize, { passive: true });
-      resize();
+      resizeVisualizer();
+      window.addEventListener("resize", function () {
+        scheduleVisualizerResize(120);
+      }, { passive: true });
     }
 
     updateProgress(true);
@@ -1871,6 +1913,10 @@
     }
 
     function playAudio(isContinuation, isAutoplayAttempt) {
+      if (audio.ended && currentTrackIndex === tracks.length - 1) {
+        try { audio.currentTime = 0; } catch (error) {}
+        updateProgress(true);
+      }
       safePlaybackRequested = true;
       safePlaybackContinuation = Boolean(isContinuation);
       safePlaybackAutoplay = Boolean(isAutoplayAttempt);
@@ -2246,6 +2292,33 @@
       }
     }
 
+    function finishPlaylistPlayback() {
+      pendingTrackAutoplay = false;
+      resumeAfterNavigation = false;
+      leavingPlaybackIntent = false;
+      setUserPaused(true);
+      setPlaybackIntent(false);
+      if (currentTrackIndex !== 0) {
+        switchTrack(0, false);
+      } else {
+        syncTrackUI();
+      }
+      try { audio.currentTime = 0; } catch (error) {}
+      try {
+        sessionStorage.setItem(SESSION_TRACK, "0");
+        sessionStorage.setItem(SESSION_TIME, "0");
+      } catch (error) {}
+      dock.classList.remove("is-playing", "is-buffering", "is-resume-pending");
+      if (statusEl) statusEl.textContent = defaultStatusText();
+      toggle.setAttribute("aria-label", "播放背景音乐");
+      toggle.setAttribute("aria-pressed", "false");
+      updateProgress(true);
+      if (navigator.mediaSession) navigator.mediaSession.playbackState = "paused";
+      if (frameId) cancelAnimationFrame(frameId);
+      frameId = 0;
+      drawIdleVisualizer();
+    }
+
     function syncTrackUI() {
       var track = tracks[currentTrackIndex];
       if (!track) return;
@@ -2262,20 +2335,26 @@
     }
 
     function defaultStatusText() {
-      return pad2(currentTrackIndex + 1) + " / " + pad2(tracks.length) + " · AI MUSIC";
+      return dock.getAttribute("data-track-artist") || "xueyuan";
     }
 
-    function setQueueOpen(open) {
+    function applyQueueState(open) {
       dock.classList.toggle("is-queue-open", open);
       if (queueToggle) {
         queueToggle.setAttribute("aria-expanded", open ? "true" : "false");
         queueToggle.setAttribute("aria-label", open ? "收起播放列表" : "展开播放列表");
       }
-      window.setTimeout(function () {
-        if (!dock.classList.contains("is-positioned")) return;
-        clampDockPosition();
-        saveDockPosition();
-      }, reducedMotion ? 0 : 360);
+    }
+
+    function setQueueOpen(open, options) {
+      open = Boolean(open);
+      if (dock.classList.contains("is-queue-open") === open && !dockMotionAnimation) {
+        applyQueueState(open);
+        return;
+      }
+      animateDockMutation(function () {
+        applyQueueState(open);
+      }, "is-queue-transitioning", 250, options);
     }
 
     function retryAudioLoad() {
@@ -2299,78 +2378,352 @@
       }, audioLoadRetries * 180);
     }
 
-    function setCollapsed(collapsed) {
+    function applyCollapsedState(collapsed) {
       dock.classList.toggle("is-collapsed", collapsed);
-      if (collapsed) setQueueOpen(false);
-      if (!collapse) return;
-      collapse.setAttribute("aria-expanded", collapsed ? "false" : "true");
-      collapse.setAttribute("aria-label", collapsed ? "展开播放器" : "收起播放器");
-      collapse.setAttribute("title", collapsed ? "展开播放器" : "最小化播放器");
-      window.setTimeout(function () {
-        if (!dock.classList.contains("is-positioned")) return;
-        if (dock.classList.contains("is-edge-docked")) clampEdgeDockPosition();
-        else clampDockPosition();
-        saveDockPosition();
-      }, reducedMotion ? 0 : 440);
+      if (collapsed) applyQueueState(false);
+      if (collapse) {
+        collapse.setAttribute("aria-expanded", collapsed ? "false" : "true");
+        collapse.setAttribute("aria-label", collapsed ? "展开播放器" : "收起播放器");
+        collapse.setAttribute("title", collapsed ? "展开播放器" : "最小化播放器");
+      }
+    }
+
+    function setCollapsed(collapsed, options) {
+      collapsed = Boolean(collapsed);
+      if (dock.classList.contains("is-collapsed") === collapsed && !dockMotionAnimation) {
+        applyCollapsedState(collapsed);
+        settleDockLayout(options && options.persist, true);
+        return;
+      }
+      animateDockMutation(function () {
+        applyCollapsedState(collapsed);
+      }, collapsed ? "is-collapsing" : "is-expanding", 280, options);
+    }
+
+    function cancelDockMotion() {
+      dockMotionGeneration += 1;
+      if (dockMotionAnimation) {
+        dockMotionAnimation.onfinish = null;
+        dockMotionAnimation.oncancel = null;
+        try { dockMotionAnimation.cancel(); } catch (e) {}
+        dockMotionAnimation = null;
+      }
+      if (dockHeadAnimation) {
+        try { dockHeadAnimation.cancel(); } catch (e) {}
+        dockHeadAnimation = null;
+      }
+      if (dockDetailsAnimation) {
+        try { dockDetailsAnimation.cancel(); } catch (e) {}
+        dockDetailsAnimation = null;
+      }
+      dock.classList.remove("is-layout-transitioning", "is-collapsing", "is-expanding", "is-queue-transitioning", "is-edge-transitioning", "is-edge-drag-settling");
+    }
+
+    function buildQueueScaleCompensation(element, initialScaleY) {
+      var keyframes = [];
+      var offsetTop = element.offsetTop;
+      var steps = 12;
+      for (var index = 0; index <= steps; index += 1) {
+        var offset = index / steps;
+        var parentScaleY = initialScaleY + (1 - initialScaleY) * offset;
+        var inverseScaleY = Math.abs(parentScaleY) > 0.001 ? 1 / parentScaleY : 1;
+        var offsetY = offsetTop * (inverseScaleY - 1);
+        keyframes.push({
+          offset: offset,
+          transformOrigin: "top left",
+          transform: "translateY(" + offsetY.toFixed(2) + "px) scaleY(" + inverseScaleY.toFixed(4) + ")"
+        });
+      }
+      return keyframes;
+    }
+
+    function animateDockMutation(mutate, motionClass, duration, options) {
+      options = options || {};
+      var firstRect = dock.getBoundingClientRect();
+      cancelDockMotion();
+
+      if (options.instant || reducedMotion || typeof dock.animate !== "function") {
+        mutate();
+        settleDockLayout(options.persist, true);
+        return;
+      }
+
+      var generation = ++dockMotionGeneration;
+      dock.classList.add("is-layout-transitioning", motionClass);
+      mutate();
+      clampDockForCurrentState();
+      var lastRect = dock.getBoundingClientRect();
+      var scaleX = lastRect.width > 0 ? firstRect.width / lastRect.width : 1;
+      var scaleY = lastRect.height > 0 ? firstRect.height / lastRect.height : 1;
+      var translateX = firstRect.left - lastRect.left;
+      var translateY = firstRect.top - lastRect.top;
+
+      if (!isFinite(scaleX) || !isFinite(scaleY)) {
+        finishDockMotion(generation, options.persist);
+        return;
+      }
+
+      dockMotionAnimation = dock.animate([
+        {
+          transformOrigin: "top left",
+          transform: "translate(" + translateX.toFixed(2) + "px, " + translateY.toFixed(2) + "px) scale(" + scaleX.toFixed(4) + ", " + scaleY.toFixed(4) + ")",
+          opacity: 0.985
+        },
+        {
+          transformOrigin: "top left",
+          transform: "translate(0, 0) scale(1, 1)",
+          opacity: 1
+        }
+      ], {
+        duration: duration,
+        easing: "cubic-bezier(0.22, 1, 0.36, 1)"
+      });
+      dockMotionAnimation.onfinish = function () {
+        finishDockMotion(generation, options.persist);
+      };
+      dockMotionAnimation.oncancel = function () {};
+
+      var head = dock.querySelector(".music-dock__head");
+      var details = dock.querySelector("[data-music-details]");
+      if (motionClass === "is-queue-transitioning") {
+        if (head && typeof head.animate === "function") {
+          dockHeadAnimation = head.animate(buildQueueScaleCompensation(head, scaleY), {
+            duration: duration,
+            easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+            fill: "both"
+          });
+        }
+        if (details && typeof details.animate === "function") {
+          dockDetailsAnimation = details.animate(buildQueueScaleCompensation(details, scaleY), {
+            duration: duration,
+            easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+            fill: "both"
+          });
+        }
+      } else if (head && typeof head.animate === "function") {
+          dockHeadAnimation = head.animate([
+            { opacity: 0, offset: 0 },
+            { opacity: 0, offset: 0.34 },
+            { opacity: 1, offset: 1 }
+          ], {
+            duration: duration,
+            easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+            fill: "both"
+          });
+      }
+
+      if (motionClass === "is-expanding") {
+        if (details && typeof details.animate === "function") {
+          dockDetailsAnimation = details.animate([
+            { opacity: 0, offset: 0 },
+            { opacity: 0, offset: 0.56 },
+            { opacity: 1, offset: 1 }
+          ], {
+            duration: duration,
+            easing: "ease-out",
+            fill: "both"
+          });
+        }
+      }
+    }
+
+    function finishDockMotion(generation, persist) {
+      if (generation !== dockMotionGeneration) return;
+      if (dockMotionAnimation) {
+        dockMotionAnimation.onfinish = null;
+        dockMotionAnimation.oncancel = null;
+      }
+      dockMotionAnimation = null;
+      if (dockHeadAnimation) {
+        try { dockHeadAnimation.cancel(); } catch (e) {}
+        dockHeadAnimation = null;
+      }
+      if (dockDetailsAnimation) {
+        try { dockDetailsAnimation.cancel(); } catch (e) {}
+        dockDetailsAnimation = null;
+      }
+      dock.classList.remove("is-layout-transitioning", "is-collapsing", "is-expanding", "is-queue-transitioning", "is-edge-transitioning", "is-edge-drag-settling");
+      settleDockLayout(persist, false);
+    }
+
+    function clampDockForCurrentState() {
+      if (!dock.classList.contains("is-positioned")) return;
+      if (dock.classList.contains("is-edge-docked")) clampEdgeDockPosition();
+      else clampDockPosition();
+    }
+
+    function settleDockLayout(persist, shouldClamp) {
+      window.clearTimeout(visualizerResizeTimer);
+      visualizerResizeTimer = 0;
+      resizeVisualizer();
+      if (!dock.classList.contains("is-positioned")) return;
+      if (shouldClamp) clampDockForCurrentState();
+      if (persist !== false) saveDockPosition();
     }
 
     function initDockDragging() {
       if (!dragHandle || !("PointerEvent" in window)) return;
 
+      dock.addEventListener("click", function (event) {
+        if (!suppressedEdgeDragControl || event.detail === 0) return;
+        if (event.target !== suppressedEdgeDragControl && !suppressedEdgeDragControl.contains(event.target)) return;
+        suppressedEdgeDragControl = null;
+        window.clearTimeout(suppressEdgeDragClickTimer);
+        suppressEdgeDragClickTimer = 0;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }, true);
+
       dragHandle.addEventListener("pointerdown", function (event) {
-        if (!isDockDragEnabled() || event.button !== 0 || event.isPrimary === false) return;
-        if (event.target.closest("button, a, input, label")) return;
+        if (dragStart) return;
+        var edgeDrag = dock.classList.contains("is-edge-docked");
+        var interactiveTarget = event.target.closest("button, a, input, label");
+        if ((!edgeDrag && !isDockDragEnabled()) || event.button !== 0 || event.isPrimary === false) return;
+        if (!edgeDrag && interactiveTarget) return;
+        if (dock.classList.contains("is-layout-transitioning")) return;
 
         var rect = dock.getBoundingClientRect();
+        cancelDockMotion();
         dragPointerId = event.pointerId;
         dragStart = {
           pointerX: event.clientX,
           pointerY: event.clientY,
           left: rect.left,
-          top: rect.top
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
+          nextLeft: rect.left,
+          nextTop: rect.top,
+          started: false,
+          edge: edgeDrag,
+          side: dock.classList.contains("is-edge-left") ? "left" : "right",
+          crossing: false,
+          interactiveTarget: edgeDrag ? interactiveTarget : null,
+          captureTarget: interactiveTarget || dragHandle,
+          edgeBounds: edgeDrag ? getEdgeViewportBounds(rect.width, rect.height) : null,
+          positionBounds: edgeDrag ? null : getPositionedViewportBounds(rect.width, rect.height),
+          wasPositioned: dock.classList.contains("is-positioned"),
+          wasAutoDocked: isAutoDocked,
+          originalLeft: dock.style.left,
+          originalTop: dock.style.top,
+          originalRight: dock.style.right,
+          originalBottom: dock.style.bottom
         };
 
-        event.preventDefault();
-        isAutoDocked = false;
-        dock.classList.add("is-positioned", "is-dragging");
-        dock.style.left = rect.left.toFixed(1) + "px";
-        dock.style.top = rect.top.toFixed(1) + "px";
-        dock.style.right = "auto";
-        dock.style.bottom = "auto";
-        try { dragHandle.setPointerCapture(event.pointerId); } catch (e) {}
+        if (!interactiveTarget) event.preventDefault();
+        try { dragStart.captureTarget.setPointerCapture(event.pointerId); } catch (e) {}
       });
 
       var moveDrag = function (event) {
-        if (!dragStart) return;
+        if (!dragStart || event.pointerId !== dragPointerId) return;
         event.preventDefault();
-        positionDock(
-          dragStart.left + event.clientX - dragStart.pointerX,
-          dragStart.top + event.clientY - dragStart.pointerY
-        );
+        var deltaX = event.clientX - dragStart.pointerX;
+        var deltaY = event.clientY - dragStart.pointerY;
+        if (!dragStart.started) {
+          if (Math.hypot(deltaX, deltaY) < (dragStart.edge ? 6 : 3)) return;
+          dragStart.started = true;
+          isAutoDocked = false;
+          dock.classList.add("is-positioned", "is-dragging");
+          if (dragStart.edge) {
+            applyCollapsedState(true);
+            dock.classList.add("is-edge-dragging");
+          }
+          dock.style.left = dragStart.left.toFixed(1) + "px";
+          dock.style.top = dragStart.top.toFixed(1) + "px";
+          dock.style.right = "auto";
+          dock.style.bottom = "auto";
+        }
+        if (dragStart.edge) {
+          dragStart.nextTop = clamp(dragStart.top + deltaY, dragStart.edgeBounds.minTop, dragStart.edgeBounds.maxTop);
+          var inwardDistance = dragStart.side === "left" ? deltaX : -deltaX;
+          if (!dragStart.crossing && inwardDistance >= Math.max(42, Math.abs(deltaY) * 0.55)) {
+            dragStart.crossing = true;
+          }
+          dragStart.nextLeft = dragStart.crossing
+            ? clamp(dragStart.left + deltaX, dragStart.edgeBounds.minLeft, dragStart.edgeBounds.maxLeft)
+            : (dragStart.side === "left" ? dragStart.edgeBounds.minLeft : dragStart.edgeBounds.maxLeft);
+          if (dragStart.crossing) {
+            var previewSide = dragStart.nextLeft + dragStart.width / 2 <= dragStart.edgeBounds.centerX ? "left" : "right";
+            dock.classList.toggle("is-edge-left", previewSide === "left");
+            dock.classList.toggle("is-edge-right", previewSide === "right");
+          }
+        } else {
+          dragStart.nextLeft = clamp(dragStart.left + deltaX, dragStart.positionBounds.minLeft, dragStart.positionBounds.maxLeft);
+          dragStart.nextTop = clamp(dragStart.top + deltaY, dragStart.positionBounds.minTop, dragStart.positionBounds.maxTop);
+        }
+        if (dragFrameId) return;
+        dragFrameId = window.requestAnimationFrame(function () {
+          dragFrameId = 0;
+          if (!dragStart) return;
+          dock.style.transform = "translate3d(" + (dragStart.nextLeft - dragStart.left).toFixed(1) + "px, " + (dragStart.nextTop - dragStart.top).toFixed(1) + "px, 0)";
+        });
       };
 
-      var finishDrag = function (event) {
-        if (!dragStart) return;
+      var finishDrag = function (event, commit) {
+        if (!dragStart || event.pointerId !== dragPointerId) return;
+        var completedDrag = dragStart;
         var pointerId = dragPointerId;
         dragPointerId = null;
         dragStart = null;
-        try { dragHandle.releasePointerCapture(pointerId); } catch (e) {}
-        dock.classList.remove("is-dragging");
+        try { completedDrag.captureTarget.releasePointerCapture(pointerId); } catch (e) {}
+        if (!completedDrag.started) return;
+        if (!commit) {
+          if (dragFrameId) {
+            window.cancelAnimationFrame(dragFrameId);
+            dragFrameId = 0;
+          }
+          isAutoDocked = completedDrag.wasAutoDocked;
+          dock.style.removeProperty("transform");
+          dock.classList.remove("is-dragging", "is-edge-dragging");
+          dock.classList.toggle("is-positioned", completedDrag.wasPositioned);
+          dock.style.left = completedDrag.originalLeft;
+          dock.style.top = completedDrag.originalTop;
+          dock.style.right = completedDrag.originalRight;
+          dock.style.bottom = completedDrag.originalBottom;
+          if (completedDrag.edge) {
+            dock.classList.add("is-collapsed", "is-edge-docked");
+            dock.classList.toggle("is-edge-left", completedDrag.side === "left");
+            dock.classList.toggle("is-edge-right", completedDrag.side === "right");
+            syncEdgeToggle(true);
+          }
+          return;
+        }
+        if (completedDrag.edge && completedDrag.interactiveTarget) {
+          suppressedEdgeDragControl = completedDrag.interactiveTarget;
+          window.clearTimeout(suppressEdgeDragClickTimer);
+          suppressEdgeDragClickTimer = window.setTimeout(function () {
+            suppressedEdgeDragControl = null;
+            suppressEdgeDragClickTimer = 0;
+          }, 100);
+        }
+        if (dragFrameId) {
+          window.cancelAnimationFrame(dragFrameId);
+          dragFrameId = 0;
+        }
+        dock.style.left = completedDrag.nextLeft.toFixed(1) + "px";
+        dock.style.top = completedDrag.nextTop.toFixed(1) + "px";
+        dock.style.removeProperty("transform");
+        dock.classList.remove("is-dragging", "is-edge-dragging");
+        if (completedDrag.edge) {
+          settleEdgeDockAfterDrag(completedDrag);
+          return;
+        }
         settleDockAfterDrag();
       };
 
       window.addEventListener("pointermove", moveDrag, { passive: false });
-      window.addEventListener("pointerup", finishDrag);
-      window.addEventListener("pointercancel", finishDrag);
-      dragHandle.addEventListener("lostpointercapture", finishDrag);
+      window.addEventListener("pointerup", function (event) { finishDrag(event, true); });
+      window.addEventListener("pointercancel", function (event) { finishDrag(event, false); });
+      dock.addEventListener("lostpointercapture", function (event) { finishDrag(event, false); }, true);
       dragHandle.addEventListener("dblclick", function (event) {
         if (event.target.closest("button, a, input, label")) return;
         resetDockPosition(true);
       });
 
-      window.addEventListener("resize", function () {
+      var scheduleDockViewportSync = function () {
         window.clearTimeout(dockResizeTimer);
         dockResizeTimer = window.setTimeout(function () {
+          if (dragStart) return;
           if (dock.classList.contains("is-edge-docked")) {
             clampEdgeDockPosition();
             if (isAutoDocked) placeDefaultDockAwayFromContent();
@@ -2383,7 +2736,12 @@
             placeDefaultDockAwayFromContent();
           }
         }, 120);
-      }, { passive: true });
+      };
+      window.addEventListener("resize", scheduleDockViewportSync, { passive: true });
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", scheduleDockViewportSync, { passive: true });
+        window.visualViewport.addEventListener("scroll", scheduleDockViewportSync, { passive: true });
+      }
 
       window.requestAnimationFrame(syncDockForCurrentPage);
     }
@@ -2417,7 +2775,7 @@
         : dockRect.width;
       if (rightGutter < restingDockWidth + 10) {
         isAutoDocked = true;
-        dockToEdge("right", Math.max(12, window.innerHeight - 92), false);
+        dockToEdge("right", Math.max(12, window.innerHeight - 92), false, false);
       } else {
         isAutoDocked = false;
         resetDockPosition(false);
@@ -2429,12 +2787,10 @@
     }
 
     function positionDock(left, top) {
-      var margin = 12;
       var rect = dock.getBoundingClientRect();
-      var maxLeft = Math.max(margin, window.innerWidth - rect.width - margin);
-      var maxTop = Math.max(margin, window.innerHeight - rect.height - margin);
-      dock.style.left = clamp(left, margin, maxLeft).toFixed(1) + "px";
-      dock.style.top = clamp(top, margin, maxTop).toFixed(1) + "px";
+      var bounds = getPositionedViewportBounds(rect.width, rect.height);
+      dock.style.left = clamp(left, bounds.minLeft, bounds.maxLeft).toFixed(1) + "px";
+      dock.style.top = clamp(top, bounds.minTop, bounds.maxTop).toFixed(1) + "px";
       dock.style.right = "auto";
       dock.style.bottom = "auto";
     }
@@ -2447,25 +2803,29 @@
 
     function saveDockPosition() {
       if (isAutoDocked || !dock.classList.contains("is-positioned")) return;
-      var margin = 12;
       var rect = dock.getBoundingClientRect();
       if (dock.classList.contains("is-edge-docked")) {
-        var edgeAvailableY = Math.max(1, window.innerHeight - rect.height - margin * 2);
+        var edgeBounds = getEdgeViewportBounds(rect.width, rect.height);
+        var edgeAvailableY = Math.max(1, edgeBounds.maxTop - edgeBounds.minTop);
         var edgeState = {
           edge: true,
           side: dock.classList.contains("is-edge-left") ? "left" : "right",
-          y: clamp((rect.top - margin) / edgeAvailableY, 0, 1)
+          y: clamp((rect.top - edgeBounds.minTop) / edgeAvailableY, 0, 1)
         };
         try { localStorage.setItem(STORE_DOCK_POSITION, JSON.stringify(edgeState)); } catch (e) {}
         return;
       }
-      if (!isDockDragEnabled()) return;
-      var availableX = Math.max(1, window.innerWidth - rect.width - margin * 2);
-      var availableY = Math.max(1, window.innerHeight - rect.height - margin * 2);
+      if (!isDockDragEnabled()) {
+        try { localStorage.removeItem(STORE_DOCK_POSITION); } catch (e) {}
+        return;
+      }
+      var positionBounds = getPositionedViewportBounds(rect.width, rect.height);
+      var availableX = Math.max(1, positionBounds.maxLeft - positionBounds.minLeft);
+      var availableY = Math.max(1, positionBounds.maxTop - positionBounds.minTop);
       var state = {
         edge: false,
-        x: clamp((rect.left - margin) / availableX, 0, 1),
-        y: clamp((rect.top - margin) / availableY, 0, 1)
+        x: clamp((rect.left - positionBounds.minLeft) / availableX, 0, 1),
+        y: clamp((rect.top - positionBounds.minTop) / availableY, 0, 1)
       };
       try { localStorage.setItem(STORE_DOCK_POSITION, JSON.stringify(state)); } catch (e) {}
     }
@@ -2475,10 +2835,7 @@
       try { state = JSON.parse(localStorage.getItem(STORE_DOCK_POSITION) || "null"); } catch (e) {}
       if (state && state.edge === true && (state.side === "left" || state.side === "right")) {
         isAutoDocked = false;
-        var edgeMargin = 12;
-        var edgeRect = dock.getBoundingClientRect();
-        var edgeAvailableY = Math.max(0, window.innerHeight - edgeRect.height - edgeMargin * 2);
-        dockToEdge(state.side, edgeMargin + clamp(state.y, 0, 1) * edgeAvailableY, false);
+        dockToEdge(state.side, 0, false, false, clamp(state.y, 0, 1));
         return true;
       }
       if (!isDockDragEnabled()) {
@@ -2487,28 +2844,37 @@
       }
       if (!state || !isFinite(state.x) || !isFinite(state.y)) return false;
 
-      var margin = 12;
       var rect = dock.getBoundingClientRect();
-      var availableX = Math.max(0, window.innerWidth - rect.width - margin * 2);
-      var availableY = Math.max(0, window.innerHeight - rect.height - margin * 2);
+      var positionBounds = getPositionedViewportBounds(rect.width, rect.height);
+      var availableX = Math.max(0, positionBounds.maxLeft - positionBounds.minLeft);
+      var availableY = Math.max(0, positionBounds.maxTop - positionBounds.minTop);
       isAutoDocked = false;
       dock.classList.add("is-positioned");
       positionDock(
-        margin + clamp(state.x, 0, 1) * availableX,
-        margin + clamp(state.y, 0, 1) * availableY
+        positionBounds.minLeft + clamp(state.x, 0, 1) * availableX,
+        positionBounds.minTop + clamp(state.y, 0, 1) * availableY
       );
       return true;
     }
 
     function resetDockPosition(removeStoredPosition) {
+      cancelDockMotion();
+      if (dragFrameId) {
+        window.cancelAnimationFrame(dragFrameId);
+        dragFrameId = 0;
+      }
       dragPointerId = null;
       dragStart = null;
+      suppressedEdgeDragControl = null;
+      window.clearTimeout(suppressEdgeDragClickTimer);
+      suppressEdgeDragClickTimer = 0;
       isAutoDocked = false;
-      dock.classList.remove("is-positioned", "is-dragging", "is-edge-docked", "is-edge-left", "is-edge-right");
+      dock.classList.remove("is-positioned", "is-dragging", "is-edge-dragging", "is-edge-drag-settling", "is-edge-docked", "is-edge-left", "is-edge-right");
       dock.style.removeProperty("left");
       dock.style.removeProperty("top");
       dock.style.removeProperty("right");
       dock.style.removeProperty("bottom");
+      dock.style.removeProperty("transform");
       syncEdgeToggle(false);
       if (removeStoredPosition) {
         try { localStorage.removeItem(STORE_DOCK_POSITION); } catch (e) {}
@@ -2518,14 +2884,16 @@
     function dockToNearestEdge() {
       isAutoDocked = false;
       var rect = dock.getBoundingClientRect();
-      var side = rect.left + rect.width / 2 <= window.innerWidth / 2 ? "left" : "right";
+      var edgeBounds = getEdgeViewportBounds(rect.width, rect.height);
+      var side = rect.left + rect.width / 2 <= edgeBounds.centerX ? "left" : "right";
       dockToEdge(side, rect.top, true);
     }
 
     function settleDockAfterDrag() {
       var rect = dock.getBoundingClientRect();
-      var leftGap = Math.max(0, rect.left);
-      var rightGap = Math.max(0, window.innerWidth - rect.right);
+      var edgeBounds = getEdgeViewportBounds(rect.width, rect.height);
+      var leftGap = Math.max(0, rect.left - edgeBounds.minLeft);
+      var rightGap = Math.max(0, edgeBounds.maxLeft - rect.left);
       var nearestGap = Math.min(leftGap, rightGap);
 
       if (nearestGap <= EDGE_SNAP_DISTANCE) {
@@ -2536,46 +2904,167 @@
       dock.classList.remove("is-edge-docked", "is-edge-left", "is-edge-right");
       syncEdgeToggle(false);
       setCollapsed(false);
-      clampDockPosition();
-      saveDockPosition();
     }
 
-    function dockToEdge(side, top, persist) {
-      side = side === "left" ? "left" : "right";
-      setCollapsed(true);
-      dock.classList.add("is-positioned", "is-edge-docked");
-      dock.classList.toggle("is-edge-left", side === "left");
-      dock.classList.toggle("is-edge-right", side === "right");
-      dock.style.top = (isFinite(top) ? top : 12).toFixed(1) + "px";
-      dock.style.bottom = "auto";
-      if (side === "left") {
-        dock.style.left = "0px";
-        dock.style.right = "auto";
-      } else {
-        dock.style.left = "auto";
-        dock.style.right = "0px";
+    function settleEdgeDockAfterDrag(completedDrag, requestedSide) {
+      var edgeBounds = getEdgeViewportBounds(completedDrag.width, completedDrag.height);
+      var side = requestedSide === "left" || requestedSide === "right"
+        ? requestedSide
+        : (completedDrag.nextLeft + completedDrag.width / 2 <= edgeBounds.centerX ? "left" : "right");
+      var top = clamp(completedDrag.nextTop, edgeBounds.minTop, edgeBounds.maxTop);
+      var targetLeft = side === "left" ? edgeBounds.minLeft : edgeBounds.maxLeft;
+      var snapDistance = Math.abs(completedDrag.nextLeft - targetLeft);
+      var applyEdgePosition = function () {
+        applyCollapsedState(true);
+        dock.classList.add("is-positioned", "is-edge-docked");
+        dock.classList.toggle("is-edge-left", side === "left");
+        dock.classList.toggle("is-edge-right", side === "right");
+        dock.style.top = top.toFixed(1) + "px";
+        dock.style.bottom = "auto";
+        if (side === "left") {
+          dock.style.left = edgeBounds.minLeft.toFixed(1) + "px";
+          dock.style.right = "auto";
+        } else {
+          dock.style.left = edgeBounds.maxLeft.toFixed(1) + "px";
+          dock.style.right = "auto";
+        }
+        syncEdgeToggle(true);
+        announceDockPosition(side, top, completedDrag.width, completedDrag.height);
+      };
+
+      if (snapDistance < 0.5) {
+        applyEdgePosition();
+        settleDockLayout(true, true);
+        return;
       }
-      syncEdgeToggle(true);
-      window.requestAnimationFrame(function () {
-        clampEdgeDockPosition();
-        if (persist !== false) saveDockPosition();
-      });
+
+      animateDockMutation(
+        applyEdgePosition,
+        "is-edge-drag-settling",
+        Math.min(260, Math.max(160, 150 + snapDistance * 0.12)),
+        { persist: true }
+      );
+    }
+
+    function moveEdgeDockWithKeyboard(key, largeStep) {
+      var rect = dock.getBoundingClientRect();
+      var edgeBounds = getEdgeViewportBounds(rect.width, rect.height);
+      var step = largeStep ? 64 : 24;
+      var side = dock.classList.contains("is-edge-left") ? "left" : "right";
+      var nextSide = side;
+      var nextTop = rect.top;
+
+      if (key === "ArrowUp") nextTop = clamp(rect.top - step, edgeBounds.minTop, edgeBounds.maxTop);
+      else if (key === "ArrowDown") nextTop = clamp(rect.top + step, edgeBounds.minTop, edgeBounds.maxTop);
+      else if (key === "Home") nextTop = edgeBounds.minTop;
+      else if (key === "End") nextTop = edgeBounds.maxTop;
+      else if (key === "ArrowLeft") nextSide = "left";
+      else if (key === "ArrowRight") nextSide = "right";
+
+      settleEdgeDockAfterDrag({
+        nextLeft: rect.left,
+        nextTop: nextTop,
+        width: rect.width,
+        height: rect.height
+      }, nextSide);
+    }
+
+    function announceDockPosition(side, top, width, height) {
+      if (!dockStatusEl) return;
+      var edgeBounds = getEdgeViewportBounds(width, height);
+      var availableY = Math.max(1, edgeBounds.maxTop - edgeBounds.minTop);
+      var ratio = clamp((top - edgeBounds.minTop) / availableY, 0, 1);
+      var verticalLabel = ratio < 0.34 ? "上方" : (ratio > 0.66 ? "下方" : "中部");
+      dockStatusEl.textContent = "播放器已移到" + (side === "left" ? "左侧" : "右侧") + verticalLabel;
+    }
+
+    function dockToEdge(side, top, persist, animate, normalizedY) {
+      side = side === "left" ? "left" : "right";
+      animateDockMutation(function () {
+        applyCollapsedState(true);
+        dock.classList.add("is-positioned", "is-edge-docked");
+        dock.classList.toggle("is-edge-left", side === "left");
+        dock.classList.toggle("is-edge-right", side === "right");
+        var edgeRect = dock.getBoundingClientRect();
+        var edgeBounds = getEdgeViewportBounds(edgeRect.width, edgeRect.height);
+        var edgeTop = isFinite(top) ? clamp(top, edgeBounds.minTop, edgeBounds.maxTop) : edgeBounds.minTop;
+        if (isFinite(normalizedY)) {
+          edgeTop = edgeBounds.minTop + clamp(normalizedY, 0, 1) * Math.max(0, edgeBounds.maxTop - edgeBounds.minTop);
+        }
+        dock.style.top = edgeTop.toFixed(1) + "px";
+        dock.style.bottom = "auto";
+        if (side === "left") {
+          dock.style.left = edgeBounds.minLeft.toFixed(1) + "px";
+          dock.style.right = "auto";
+        } else {
+          dock.style.left = edgeBounds.maxLeft.toFixed(1) + "px";
+          dock.style.right = "auto";
+        }
+        syncEdgeToggle(true);
+      }, "is-edge-transitioning", 260, { instant: animate === false, persist: persist });
     }
 
     function clampEdgeDockPosition() {
       if (!dock.classList.contains("is-edge-docked")) return;
-      var margin = 12;
       var rect = dock.getBoundingClientRect();
-      var maxTop = Math.max(margin, window.innerHeight - rect.height - margin);
-      dock.style.top = clamp(rect.top, margin, maxTop).toFixed(1) + "px";
+      var edgeBounds = getEdgeViewportBounds(rect.width, rect.height);
+      dock.style.top = clamp(rect.top, edgeBounds.minTop, edgeBounds.maxTop).toFixed(1) + "px";
       dock.style.bottom = "auto";
       if (dock.classList.contains("is-edge-left")) {
-        dock.style.left = "0px";
+        dock.style.left = edgeBounds.minLeft.toFixed(1) + "px";
         dock.style.right = "auto";
       } else {
-        dock.style.left = "auto";
-        dock.style.right = "0px";
+        dock.style.left = edgeBounds.maxLeft.toFixed(1) + "px";
+        dock.style.right = "auto";
       }
+    }
+
+    function getEdgeViewportBounds(width, height) {
+      var viewport = getDockViewportMetrics();
+      var minLeft = viewport.left + viewport.safeLeft;
+      var maxLeft = Math.max(minLeft, viewport.left + viewport.width - viewport.safeRight - width);
+      var minTop = viewport.top + viewport.safeTop + 12;
+      var maxTop = Math.max(minTop, viewport.top + viewport.height - viewport.safeBottom - height - 12);
+      return {
+        minLeft: minLeft,
+        maxLeft: maxLeft,
+        minTop: minTop,
+        maxTop: maxTop,
+        centerX: viewport.left + viewport.width / 2
+      };
+    }
+
+    function getPositionedViewportBounds(width, height) {
+      var viewport = getDockViewportMetrics();
+      var margin = 12;
+      var minLeft = viewport.left + viewport.safeLeft + margin;
+      var maxLeft = Math.max(minLeft, viewport.left + viewport.width - viewport.safeRight - width - margin);
+      var minTop = viewport.top + viewport.safeTop + margin;
+      var maxTop = Math.max(minTop, viewport.top + viewport.height - viewport.safeBottom - height - margin);
+      return { minLeft: minLeft, maxLeft: maxLeft, minTop: minTop, maxTop: maxTop };
+    }
+
+    function getDockViewportMetrics() {
+      var styles = window.getComputedStyle(dock);
+      var safeTop = parseFloat(styles.getPropertyValue("--music-safe-top")) || 0;
+      var safeBottom = parseFloat(styles.getPropertyValue("--music-safe-bottom")) || 0;
+      var safeLeft = parseFloat(styles.getPropertyValue("--music-safe-left")) || 0;
+      var safeRight = parseFloat(styles.getPropertyValue("--music-safe-right")) || 0;
+      var viewport = window.visualViewport;
+      var viewportLeft = viewport ? viewport.offsetLeft : 0;
+      var viewportTop = viewport ? viewport.offsetTop : 0;
+      var viewportWidth = viewport ? viewport.width : window.innerWidth;
+      var viewportHeight = viewport ? viewport.height : window.innerHeight;
+      return {
+        left: viewportLeft,
+        top: viewportTop,
+        width: viewportWidth,
+        height: viewportHeight,
+        safeTop: safeTop,
+        safeBottom: safeBottom,
+        safeLeft: safeLeft,
+        safeRight: safeRight
+      };
     }
 
     function releaseDockFromEdge() {
@@ -2583,32 +3072,32 @@
       isAutoDocked = false;
       var side = dock.classList.contains("is-edge-left") ? "left" : "right";
       var rect = dock.getBoundingClientRect();
-      var margin = 12;
-
-      dock.classList.remove("is-edge-docked", "is-edge-left", "is-edge-right");
-      syncEdgeToggle(false);
-      setCollapsed(false);
-
-      dock.style.top = rect.top.toFixed(1) + "px";
-      dock.style.bottom = "auto";
-      if (side === "left") {
-        dock.style.left = margin + "px";
-        dock.style.right = "auto";
-      } else {
-        dock.style.left = "auto";
-        dock.style.right = margin + "px";
+      var persistExpandedPosition = isDockDragEnabled();
+      if (!persistExpandedPosition) {
+        try { localStorage.removeItem(STORE_DOCK_POSITION); } catch (e) {}
       }
-      window.requestAnimationFrame(function () {
-        clampDockPosition();
-        saveDockPosition();
-      });
+
+      animateDockMutation(function () {
+        dock.classList.remove("is-edge-docked", "is-edge-left", "is-edge-right");
+        syncEdgeToggle(false);
+        applyCollapsedState(false);
+        var expandedRect = dock.getBoundingClientRect();
+        var bounds = getPositionedViewportBounds(expandedRect.width, expandedRect.height);
+        dock.style.top = clamp(rect.top, bounds.minTop, bounds.maxTop).toFixed(1) + "px";
+        dock.style.bottom = "auto";
+        dock.style.left = (side === "left" ? bounds.minLeft : bounds.maxLeft).toFixed(1) + "px";
+        dock.style.right = "auto";
+      }, "is-edge-transitioning", 280, { persist: persistExpandedPosition });
     }
 
     function syncEdgeToggle(docked) {
       if (!edgeToggle) return;
       edgeToggle.setAttribute("aria-pressed", docked ? "true" : "false");
       edgeToggle.setAttribute("aria-label", docked ? "展开播放器" : "贴边收起播放器");
-      edgeToggle.setAttribute("title", docked ? "展开播放器" : "贴边收起");
+      edgeToggle.setAttribute("title", docked ? "展开播放器 · 方向键可移动" : "贴边收起");
+      if (docked) edgeToggle.setAttribute("aria-keyshortcuts", "ArrowUp ArrowDown ArrowLeft ArrowRight Home End");
+      else edgeToggle.removeAttribute("aria-keyshortcuts");
+      if (dragHandle) dragHandle.setAttribute("title", docked ? "上下拖曳或拖到另一侧" : "拖曳移动播放器 · 双击归位");
     }
 
     function seekToRange() {
@@ -2656,8 +3145,9 @@
 
     function savePosition() {
       if (!isFinite(audio.currentTime)) return;
+      var savedTime = audio.ended && currentTrackIndex === tracks.length - 1 ? 0 : audio.currentTime;
       try {
-        sessionStorage.setItem(SESSION_TIME, String(audio.currentTime));
+        sessionStorage.setItem(SESSION_TIME, String(savedTime));
         sessionStorage.setItem(SESSION_TRACK, String(currentTrackIndex));
       } catch (e) {}
     }
@@ -2672,18 +3162,74 @@
 
     function persistPlaybackSession(playing) {
       savePosition();
-      setPlaybackIntent(typeof playing === "boolean" ? playing : (!audio.paused && !audio.ended));
+      setPlaybackIntent(typeof playing === "boolean" ? playing : hasPlaybackIntent());
+    }
+
+    function hasPlaybackIntent() {
+      return pendingTrackAutoplay || safePlaybackRequested || (!audio.paused && !audio.ended);
+    }
+
+    function scheduleVisualizerResize(delay) {
+      window.clearTimeout(visualizerResizeTimer);
+      visualizerResizeTimer = window.setTimeout(function resizeWhenStable() {
+        if (dock.classList.contains("is-layout-transitioning")) {
+          visualizerResizeTimer = window.setTimeout(resizeWhenStable, 80);
+          return;
+        }
+        visualizerResizeTimer = 0;
+        resizeVisualizer();
+      }, Math.max(0, delay || 0));
+    }
+
+    function resizeVisualizer() {
+      if (!canvasContext || !canvas) return;
+      if (dock.classList.contains("is-layout-transitioning")) {
+        scheduleVisualizerResize(80);
+        return;
+      }
+      var rect = canvas.getBoundingClientRect();
+      var width = Math.max(1, Math.round(rect.width));
+      var height = Math.max(1, Math.round(rect.height));
+      var ratio = Math.min(2, window.devicePixelRatio || 1);
+      var pixelWidth = Math.max(1, Math.round(width * ratio));
+      var pixelHeight = Math.max(1, Math.round(height * ratio));
+
+      visualizerWidth = width;
+      visualizerHeight = height;
+      if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+        canvas.width = pixelWidth;
+        canvas.height = pixelHeight;
+        canvasContext.setTransform(ratio, 0, 0, ratio, 0, 0);
+      }
+      drawIdleVisualizer();
     }
 
     function startRenderLoop() {
       if (frameId) cancelAnimationFrame(frameId);
-      var render = function () {
+      lastProgressPaint = 0;
+      lastVisualizerPaint = 0;
+      var render = function (timestamp) {
         if (audio.paused || audio.ended) {
           frameId = 0;
           return;
         }
-        if (!seeking) updateProgress(false);
-        drawActiveVisualizer();
+        if (!seeking && timestamp - lastProgressPaint >= 80) {
+          updateProgress(false);
+          lastProgressPaint = timestamp;
+        }
+        if (
+          analyser &&
+          frequencyData &&
+          !reducedMotion &&
+          doc.visibilityState !== "hidden" &&
+          !dock.classList.contains("is-layout-transitioning") &&
+          !dock.classList.contains("is-collapsed") &&
+          !dock.classList.contains("is-edge-docked") &&
+          timestamp - lastVisualizerPaint >= 33
+        ) {
+          drawActiveVisualizer();
+          lastVisualizerPaint = timestamp;
+        }
         frameId = requestAnimationFrame(render);
       };
       frameId = requestAnimationFrame(render);
@@ -2734,9 +3280,9 @@
     }
 
     function drawIdleVisualizer() {
-      if (!canvasContext || !canvas) return;
-      var width = canvas.getBoundingClientRect().width;
-      var height = canvas.getBoundingClientRect().height;
+      if (!canvasContext || !canvas || !visualizerWidth || !visualizerHeight) return;
+      var width = visualizerWidth;
+      var height = visualizerHeight;
       canvasContext.clearRect(0, 0, width, height);
       var gradient = canvasContext.createLinearGradient(0, height, width, 0);
       gradient.addColorStop(0, "rgba(141,124,255,0.02)");
@@ -2754,14 +3300,10 @@
     }
 
     function drawActiveVisualizer() {
-      if (!canvasContext || !canvas) return;
-      if (!analyser || !frequencyData || reducedMotion) {
-        drawIdleVisualizer();
-        return;
-      }
+      if (!canvasContext || !canvas || !analyser || !frequencyData || reducedMotion || !visualizerWidth || !visualizerHeight) return;
       analyser.getByteFrequencyData(frequencyData);
-      var width = canvas.getBoundingClientRect().width;
-      var height = canvas.getBoundingClientRect().height;
+      var width = visualizerWidth;
+      var height = visualizerHeight;
       canvasContext.clearRect(0, 0, width, height);
       var gradient = canvasContext.createLinearGradient(width * 0.25, height, width, 0);
       gradient.addColorStop(0, "rgba(141,124,255,0.08)");
@@ -2847,10 +3389,6 @@
     var minutes = Math.floor(whole / 60);
     var remainder = whole % 60;
     return minutes + ":" + (remainder < 10 ? "0" : "") + remainder;
-  }
-
-  function pad2(value) {
-    return value < 10 ? "0" + value : String(value);
   }
 
   function clamp(value, min, max) {
