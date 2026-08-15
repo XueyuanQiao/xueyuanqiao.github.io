@@ -12,15 +12,15 @@ hide_header: true
 
     <div class="hero-stats">
         <div class="stat">
-            <span class="num" data-counter="226">0</span>
+            <span class="num" data-counter="235">0</span>
             <span class="label">Curated</span>
         </div>
         <div class="stat">
-            <span class="num" data-counter="19">0</span>
+            <span class="num" data-counter="21">0</span>
             <span class="label">Topics</span>
         </div>
         <div class="stat">
-            <span class="num">2026.08</span>
+            <span class="num">2026.08.15</span>
             <span class="label">Reviewed</span>
         </div>
     </div>
@@ -84,6 +84,19 @@ hide_header: true
   </ul>
 </div>
 
+<!-- ====================== AI 浏览器与网页自动化 ====================== -->
+<div class="link-category">
+  <h2><span class="link-cate-emoji">🌐</span>AI 浏览器与网页自动化</h2>
+  <ul>
+    <li><a href="https://www.perplexity.ai/comet" target="_blank" rel="noopener"><span class="link-name">Comet</span><span class="link-desc">Perplexity 推出的检索、研究与任务执行 AI 浏览器</span></a></li>
+    <li><a href="https://www.browserbase.com" target="_blank" rel="noopener"><span class="link-name">Browserbase</span><span class="link-desc">面向生产环境的云浏览器、会话与网页 Agent 基础设施</span></a></li>
+    <li><a href="https://github.com/microsoft/playwright-mcp" target="_blank" rel="noopener"><span class="link-name">Playwright MCP</span><span class="link-desc">微软官方浏览器 MCP 服务器，让 Agent 直接驱动页面</span></a></li>
+    <li><a href="https://stagehand.dev" target="_blank" rel="noopener"><span class="link-name">Stagehand</span><span class="link-desc">结合自然语言动作与代码控制的 AI 浏览器自动化框架</span></a></li>
+    <li><a href="https://midscenejs.com" target="_blank" rel="noopener"><span class="link-name">Midscene.js</span><span class="link-desc">用自然语言驱动 Web、移动端与桌面端 UI 自动化</span></a></li>
+    <li><a href="https://browser-use.com" target="_blank" rel="noopener"><span class="link-name">browser-use</span><span class="link-desc">让 Agent 读取并操作网页的开源浏览器自动化框架</span></a></li>
+  </ul>
+</div>
+
 <!-- ====================== AI 搜索与研究 ====================== -->
 <div class="link-category">
   <h2><span class="link-cate-emoji">🔎</span>AI 搜索与研究</h2>
@@ -109,6 +122,7 @@ hide_header: true
     <li><a href="https://ideogram.ai" target="_blank" rel="noopener"><span class="link-name">Ideogram</span><span class="link-desc">侧重文字渲染、海报设计和品牌视觉的图像平台</span></a></li>
     <li><a href="https://www.recraft.ai" target="_blank" rel="noopener"><span class="link-name">Recraft</span><span class="link-desc">支持矢量图、品牌风格和设计资产生成的创作工具</span></a></li>
     <li><a href="https://www.krea.ai" target="_blank" rel="noopener"><span class="link-name">Krea</span><span class="link-desc">提供实时画布、图像生成、增强与视频创作工作流</span></a></li>
+    <li><a href="https://comfy.org" target="_blank" rel="noopener"><span class="link-name">Comfy</span><span class="link-desc">面向视觉 AI 工作流的节点式创作引擎，可精细控制模型与参数</span></a></li>
     <li><a href="https://www.canva.com/magic-studio/" target="_blank" rel="noopener"><span class="link-name">Canva Magic Studio</span><span class="link-desc">覆盖设计、营销内容、图像与视频生成的创作套件</span></a></li>
     <li><a href="https://stability.ai" target="_blank" rel="noopener"><span class="link-name">Stability AI</span><span class="link-desc">Stable Diffusion 与 Stable Audio 等开放权重模型入口</span></a></li>
   </ul>
@@ -139,7 +153,7 @@ hide_header: true
   <ul>
     <li><a href="https://elevenlabs.io" target="_blank" rel="noopener"><span class="link-name">ElevenLabs</span><span class="link-desc">提供语音合成、克隆、配音、音效与语音 Agent</span></a></li>
     <li><a href="https://suno.com" target="_blank" rel="noopener"><span class="link-name">Suno</span><span class="link-desc">通过文本生成、编辑和续写完整音乐作品</span></a></li>
-    <li><a href="https://www.udio.com" target="_blank" rel="noopener"><span class="link-name">Udio</span><span class="link-desc">已获多家唱片公司授权的音乐生成与混音平台</span></a></li>
+    <li><a href="https://www.udio.com" target="_blank" rel="noopener"><span class="link-name">Udio</span><span class="link-desc">面向歌曲生成、延展、重混与分享的 AI 音乐平台</span></a></li>
     <li><a href="https://deepgram.com" target="_blank" rel="noopener"><span class="link-name">Deepgram</span><span class="link-desc">面向实时转写、理解与语音 Agent 的语音 API</span></a></li>
     <li><a href="https://www.assemblyai.com" target="_blank" rel="noopener"><span class="link-name">AssemblyAI</span><span class="link-desc">提供转写、说话人分离与音频理解模型的开发平台</span></a></li>
   </ul>
@@ -162,6 +176,7 @@ hide_header: true
     <li><a href="https://www.baseten.co" target="_blank" rel="noopener"><span class="link-name">Baseten</span><span class="link-desc">面向生产负载的模型部署、推理优化与弹性伸缩</span></a></li>
     <li><a href="https://modal.com" target="_blank" rel="noopener"><span class="link-name">Modal</span><span class="link-desc">以 Python 定义 Serverless CPU / GPU 任务和模型服务</span></a></li>
     <li><a href="https://docs.vllm.ai" target="_blank" rel="noopener"><span class="link-name">vLLM</span><span class="link-desc">高吞吐、低显存开销的开源大模型推理与服务引擎</span></a></li>
+    <li><a href="https://docs.sglang.io" target="_blank" rel="noopener"><span class="link-name">SGLang</span><span class="link-desc">面向大语言与多模态模型的高性能推理与服务框架</span></a></li>
     <li><a href="https://ollama.com" target="_blank" rel="noopener"><span class="link-name">Ollama</span><span class="link-desc">在本地下载、运行与管理开放权重模型</span></a></li>
     <li><a href="https://lmstudio.ai" target="_blank" rel="noopener"><span class="link-name">LM Studio</span><span class="link-desc">用桌面 GUI 运行本地模型，并对外提供兼容 API</span></a></li>
   </ul>
@@ -174,6 +189,7 @@ hide_header: true
     <li><a href="https://docs.langchain.com" target="_blank" rel="noopener"><span class="link-name">LangChain</span><span class="link-desc">构建模型应用、Agent、检索与工具调用的框架生态</span></a></li>
     <li><a href="https://www.langchain.com/langgraph" target="_blank" rel="noopener"><span class="link-name">LangGraph</span><span class="link-desc">面向长流程、有状态和可恢复 Agent 的编排框架</span></a></li>
     <li><a href="https://developers.llamaindex.ai/python/framework/" target="_blank" rel="noopener"><span class="link-name">LlamaIndex</span><span class="link-desc">连接企业数据、检索系统与 Agent 工作流的数据框架</span></a></li>
+    <li><a href="https://ragflow.io" target="_blank" rel="noopener"><span class="link-name">RAGFlow</span><span class="link-desc">以文档理解与检索为核心的开源 RAG 引擎和 Agent 平台</span></a></li>
     <li><a href="https://ai-sdk.dev" target="_blank" rel="noopener"><span class="link-name">Vercel AI SDK</span><span class="link-desc">面向 TypeScript 的模型调用、流式 UI 与 Agent 工具集</span></a></li>
     <li><a href="https://developers.openai.com/api/docs/guides/agents" target="_blank" rel="noopener"><span class="link-name">OpenAI Agents SDK</span><span class="link-desc">用于工具调用、交接、护栏、追踪与多 Agent 编排</span></a></li>
     <li><a href="https://code.claude.com/docs/en/agent-sdk/overview" target="_blank" rel="noopener"><span class="link-name">Claude Agent SDK</span><span class="link-desc">复用 Claude Code 运行时构建自定义 Agent 的开发套件</span></a></li>
@@ -224,10 +240,6 @@ hide_header: true
   <h2><span class="link-cate-emoji">🧪</span>软件测试与质量工程</h2>
   <ul>
     <li><a href="https://playwright.dev" target="_blank" rel="noopener"><span class="link-name">Playwright</span><span class="link-desc">跨 Chromium、Firefox 和 WebKit 的端到端测试框架</span></a></li>
-    <li><a href="https://github.com/microsoft/playwright-mcp" target="_blank" rel="noopener"><span class="link-name">Playwright MCP</span><span class="link-desc">微软官方浏览器 MCP 服务器，让 Agent 直接驱动页面</span></a></li>
-    <li><a href="https://stagehand.dev" target="_blank" rel="noopener"><span class="link-name">Stagehand</span><span class="link-desc">结合自然语言动作与代码控制的浏览器自动化框架</span></a></li>
-    <li><a href="https://midscenejs.com" target="_blank" rel="noopener"><span class="link-name">Midscene.js</span><span class="link-desc">用自然语言驱动 Web、移动与桌面 UI 自动化</span></a></li>
-    <li><a href="https://browser-use.com" target="_blank" rel="noopener"><span class="link-name">browser-use</span><span class="link-desc">让 Agent 直接操作浏览器完成任务的开源框架</span></a></li>
     <li><a href="https://www.cypress.io" target="_blank" rel="noopener"><span class="link-name">Cypress</span><span class="link-desc">提供浏览器内调试、组件测试与端到端测试</span></a></li>
     <li><a href="https://vitest.dev" target="_blank" rel="noopener"><span class="link-name">Vitest</span><span class="link-desc">与 Vite 配套的测试框架，含浏览器模式与视觉回归</span></a></li>
     <li><a href="https://docs.pytest.org/en/stable/" target="_blank" rel="noopener"><span class="link-name">Pytest</span><span class="link-desc">以 fixture、参数化和插件生态组织 Python 测试</span></a></li>
@@ -302,9 +314,9 @@ hide_header: true
   </ul>
 </div>
 
-<!-- ====================== 数据库与数据基础设施 ====================== -->
+<!-- ====================== 数据库、向量检索与 ORM ====================== -->
 <div class="link-category">
-  <h2><span class="link-cate-emoji">🗄️</span>数据库与数据基础设施</h2>
+  <h2><span class="link-cate-emoji">🗄️</span>数据库、向量检索与 ORM</h2>
   <ul>
     <li><a href="https://www.postgresql.org/docs/" target="_blank" rel="noopener"><span class="link-name">PostgreSQL</span><span class="link-desc">关系数据库官方文档、版本说明与扩展入口</span></a></li>
     <li><a href="https://dev.mysql.com/doc/" target="_blank" rel="noopener"><span class="link-name">MySQL</span><span class="link-desc">MySQL Server、SQL、复制和运维官方文档</span></a></li>
@@ -323,6 +335,19 @@ hide_header: true
     <li><a href="https://docs.pinecone.io" target="_blank" rel="noopener"><span class="link-name">Pinecone</span><span class="link-desc">全托管向量数据库与检索基础设施</span></a></li>
     <li><a href="https://www.prisma.io" target="_blank" rel="noopener"><span class="link-name">Prisma</span><span class="link-desc">面向 TypeScript 的 ORM、迁移与托管数据平台</span></a></li>
     <li><a href="https://orm.drizzle.team" target="_blank" rel="noopener"><span class="link-name">Drizzle ORM</span><span class="link-desc">贴近 SQL 语义的轻量 TypeScript ORM 与迁移工具</span></a></li>
+  </ul>
+</div>
+
+<!-- ====================== 数据工程与流处理 ====================== -->
+<div class="link-category">
+  <h2><span class="link-cate-emoji">🌊</span>数据工程与流处理</h2>
+  <ul>
+    <li><a href="https://kafka.apache.org/documentation/" target="_blank" rel="noopener"><span class="link-name">Apache Kafka</span><span class="link-desc">用于构建实时数据管道与事件驱动系统的分布式流平台</span></a></li>
+    <li><a href="https://spark.apache.org/docs/latest/" target="_blank" rel="noopener"><span class="link-name">Apache Spark</span><span class="link-desc">面向批处理、流计算、SQL 与机器学习的分布式分析引擎</span></a></li>
+    <li><a href="https://nightlies.apache.org/flink/flink-docs-stable/" target="_blank" rel="noopener"><span class="link-name">Apache Flink</span><span class="link-desc">面向有界与无界数据流的有状态分布式计算引擎</span></a></li>
+    <li><a href="https://airflow.apache.org/docs/" target="_blank" rel="noopener"><span class="link-name">Apache Airflow</span><span class="link-desc">以代码定义、调度和监控批处理工作流的平台</span></a></li>
+    <li><a href="https://docs.getdbt.com/" target="_blank" rel="noopener"><span class="link-name">dbt</span><span class="link-desc">在数据仓库中组织 SQL 转换、测试、文档与血缘关系</span></a></li>
+    <li><a href="https://iceberg.apache.org/docs/latest/" target="_blank" rel="noopener"><span class="link-name">Apache Iceberg</span><span class="link-desc">面向大规模分析数据集的开放表格式，支持多引擎读写</span></a></li>
   </ul>
 </div>
 
@@ -354,7 +379,6 @@ hide_header: true
   <ul>
     <li><a href="https://arxiv.org" target="_blank" rel="noopener"><span class="link-name">arXiv</span><span class="link-desc">计算机科学、数学和 AI 论文预印本开放平台</span></a></li>
     <li><a href="https://huggingface.co/papers/trending" target="_blank" rel="noopener"><span class="link-name">Hugging Face Papers</span><span class="link-desc">汇集每日论文、社区讨论、作者页面与相关资源</span></a></li>
-    <li><a href="https://paperswithcode.co" target="_blank" rel="noopener"><span class="link-name">Papers with Code</span><span class="link-desc">把论文与开源实现、榜单关联起来的社区索引</span></a></li>
     <li><a href="https://www.deeplearning.ai" target="_blank" rel="noopener"><span class="link-name">DeepLearning.AI</span><span class="link-desc">提供生成式 AI、机器学习与工程实践课程</span></a></li>
     <li><a href="https://simonwillison.net" target="_blank" rel="noopener"><span class="link-name">Simon Willison's Weblog</span><span class="link-desc">高频记录模型发布、工具实测与 LLM 工程细节</span></a></li>
     <li><a href="https://lilianweng.github.io" target="_blank" rel="noopener"><span class="link-name">Lil'Log</span><span class="link-desc">深入解释 Agent、生成模型与机器学习研究主题</span></a></li>
@@ -377,8 +401,7 @@ hide_header: true
     <li><a href="https://www.tldraw.com" target="_blank" rel="noopener"><span class="link-name">tldraw</span><span class="link-desc">无限画布白板，并提供可嵌入应用的商用 SDK</span></a></li>
     <li><a href="https://www.raycast.com" target="_blank" rel="noopener"><span class="link-name">Raycast</span><span class="link-desc">整合启动器、扩展、自动化与 AI 的跨平台效率工作台</span></a></li>
     <li><a href="https://ghostty.org" target="_blank" rel="noopener"><span class="link-name">Ghostty</span><span class="link-desc">原生界面、GPU 加速的跨平台开源终端模拟器</span></a></li>
-    <li><a href="https://www.diabrowser.com" target="_blank" rel="noopener"><span class="link-name">Dia Browser</span><span class="link-desc">Atlassian 旗下的上下文感知 AI 浏览器</span></a></li>
-    <li><a href="https://www.perplexity.ai/comet" target="_blank" rel="noopener"><span class="link-name">Comet</span><span class="link-desc">Perplexity 推出的检索、研究和任务自动化 AI 浏览器</span></a></li>
+    <li><a href="https://docs.astral.sh/uv/" target="_blank" rel="noopener"><span class="link-name">uv</span><span class="link-desc">以 Rust 编写的高速 Python 包与项目管理器</span></a></li>
     <li><a href="https://codepen.io" target="_blank" rel="noopener"><span class="link-name">CodePen</span><span class="link-desc">在线编写、展示和分享前端示例与可部署片段</span></a></li>
     <li><a href="https://stackblitz.com" target="_blank" rel="noopener"><span class="link-name">StackBlitz</span><span class="link-desc">基于 WebContainers 的浏览器开发环境与应用平台</span></a></li>
     <li><a href="https://regex101.com" target="_blank" rel="noopener"><span class="link-name">regex101</span><span class="link-desc">支持多种引擎、解释和测试用例的正则调试器</span></a></li>
