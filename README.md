@@ -156,6 +156,40 @@ open http://localhost:4000
 - 取消热门：删除 `featured` 字段或设为 `false` 即可。
 - 无需运行任何脚本，保存重新构建即可生效。
 
+## 站内短链接
+
+需要在签名、名片或聊天中分享文章时，使用站内 `/go/` 短链，避免依赖第三方短链平台。
+
+当前示例：
+
+```text
+https://xueyuanqiao.github.io/go/ai
+```
+
+新增短链时，在 `_shortlinks/` 中创建一个 Markdown 文件，文件名就是短链名称：
+
+```yaml
+---
+title: 跳转页标题
+redirect_to: /目标页面路径.html
+---
+```
+
+例如 `_shortlinks/agent.md` 会生成 `/go/agent/`。短链名称只使用小写字母、数字和连字符；`redirect_to` 只允许本站绝对路径，不写域名、查询参数或锚点。
+
+短链页具备以下行为：
+
+- JavaScript 即时跳转，并保留短链上的查询参数和锚点。
+- 浏览器原生跳转和手动点击双重兜底。
+- `noindex` 与 canonical 标记，避免搜索引擎重复收录。
+- 默认不进入 sitemap。
+
+构建后执行校验：
+
+```bash
+python3 scripts/validate_shortlinks.py --site _site
+```
+
 ## 分类系统
 
 ### 工作原理

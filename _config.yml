@@ -44,6 +44,20 @@ plugins:
   - jekyll-sitemap
   - jekyll-seo-tag
 
+# 站内短链：在 `_shortlinks/` 中新增同名文件，即可生成 `/go/<name>/`。
+collections:
+  shortlinks:
+    output: true
+    permalink: /go/:name/
+
+defaults:
+  - scope:
+      path: ""
+      type: shortlinks
+    values:
+      layout: redirect
+      sitemap: false
+
 excerpt_separator: "<!-- more -->"
 
 # 允许构建未来日期的文章（避免按本地时区写作时被 Jekyll 过滤）
