@@ -244,6 +244,10 @@
       if (revealItems.indexOf(el) === -1) revealItems.push(el);
       el.classList.add("reflection-reveal");
     });
+    doc.querySelectorAll(".article-theme-ai-native .article-content > h2, .article-theme-ai-native .ai-native-context, .article-theme-ai-native .ai-native-verdict, .article-theme-ai-native .ai-native-checks, .article-theme-ai-native .ai-native-timeline, .article-theme-ai-native .ai-native-stats, .article-theme-ai-native .ai-native-curve, .article-theme-ai-native .ai-native-flow, .article-theme-ai-native .ai-native-thesis, .article-theme-ai-native .ai-native-irony").forEach(function (el) {
+      if (revealItems.indexOf(el) === -1) revealItems.push(el);
+      el.classList.add("ai-native-reveal");
+    });
     revealItems.forEach(function (el) { el.classList.add("reveal"); });
     if (!("IntersectionObserver" in window)) {
       revealItems.forEach(function (el) { el.classList.add("is-in"); });
