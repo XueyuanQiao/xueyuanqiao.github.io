@@ -35,6 +35,9 @@
 - **首页着陆区**：动态打字效果、统计计数器、3D Tilt 卡片、霓虹滚动 marquee
 - **热门文章置顶**：`featured` 标记把重要文章永久透出到首页热门区
 - **PDF 内嵌阅读**：文章内可用 PDF.js 懒加载分页渲染长文档，支持在线翻阅 / 新窗口打开 / 下载
+- **站内音乐播放器**：常驻玻璃拟态播放器，跨页 PJAX 续播，自适应安全缓冲 + Service Worker 缓存，详见 [`doc/音乐播放器.md`](./doc/音乐播放器.md)
+- **命令面板搜索**：`⌘ K` / `Ctrl K` / `/` 唤起，读取 `category/category.json` 前端检索标题、摘要与分类
+- **站内短链**：`_shortlinks/` 生成 `/go/<name>/` 短链用于分享，避免依赖第三方短链平台
 - **SEO 友好**：内置 `jekyll-seo-tag` 与 `jekyll-sitemap`
 - **触屏优化**：自动禁用 hover 残留态、3D Tilt、神经网络背景，节省电量与 GPU
 - **无障碍**：尊重 `prefers-reduced-motion`、键盘可达、菜单 Esc 关闭
@@ -56,6 +59,7 @@
 │   ├── css/code.css         代码块样式
 │   ├── js/site.js           主题交互逻辑（零依赖）
 │   ├── js/particle-cat.js   WebGL 全景与粒子交互（历史文件名）
+│   ├── audio/               站内音乐播放器的音频文件
 │   └── pdf/                 文章内嵌 / 可下载的 PDF 原件
 ├── category/
 │   ├── index.html           动态分类页（按 ?tag= 过滤）
@@ -64,12 +68,16 @@
 ├── images/                  图片资源
 ├── doc/                     工程文档（不参与构建）
 │   ├── README.md            文档索引
-│   ├── new-post.md          发文流程
-│   ├── frontmatter.md       Frontmatter 字段说明
-│   ├── markdown-cheatsheet.md  Markdown 速查
-│   ├── music-player.md      音乐预热、自动播放与安全缓冲策略
-│   ├── space-landing.md     360° 宇宙首页维护文档
-│   └── troubleshooting.md   常见问题排查
+│   ├── 新增文章.md          发文流程
+│   ├── Frontmatter字段速查.md  Frontmatter 字段说明
+│   ├── Markdown速查.md      Markdown 速查
+│   ├── 音乐播放器.md        音乐预热、自动播放与安全缓冲策略
+│   ├── 宇宙首页.md          360° 宇宙首页维护文档
+│   ├── 故障排查.md          常见问题排查
+│   └── 博客优化.md          性能优化方案（以"用户无感"为前提）
+├── _shortlinks/             站内 /go/ 短链集合
+├── scripts/
+│   └── validate_shortlinks.py  短链构建后校验脚本
 ├── 404.html                 自定义 404 页
 ├── about.markdown           关于
 ├── cate.html                按主题归档
@@ -77,9 +85,9 @@
 ├── home.html                文章存档
 ├── particle-cat.html        根路径 360° 宇宙首页（历史文件名）
 ├── index.html               `/blog/` Aurora 博客首页
+├── service-worker.js        音频缓存 Service Worker（跨页续播）
 ├── spring-doc.html          Spring 框架参考文档（静态存档页）
 ├── generate-category-json.sh  分类索引生成脚本
-├── CNAME                    自定义域名配置
 └── Gemfile                  Ruby 依赖
 ```
 
@@ -89,7 +97,7 @@
 
 首页通过 Preview → Final 渐进替换全景纹理：第一张 5.6 KB 预览完成后立即开放 360° 拖曳，原始高清资源按 GPU 能力选择并在后台显示真实接收进度；完成后直接升级为桌面 6000 × 3000 或兼容设备 4096 × 2048 的高清纹理，不重置用户视角，也不降低最终画质。
 
-完整的文件职责、资源规格、交互状态、入口文案、性能边界和验证清单见 [`doc/space-landing.md`](./doc/space-landing.md)。
+完整的文件职责、资源规格、交互状态、入口文案、性能边界和验证清单见 [`doc/宇宙首页.md`](./doc/宇宙首页.md)。
 
 ## 本地预览
 
@@ -292,14 +300,14 @@ GitHub Pages 在 UTC 时区下生成 URL。例如 `2026-02-21 03:22:04 +0800`（
 ```yaml
 title: Xueyuan's Tech Blog
 email: 1336582921@qq.com
-description: Xueyuan's Blog · 分享编程技术与思考
+description: Xueyuan's Blog · AI 全栈开发、质量工程与 AI 音乐创作
 url: https://xueyuanqiao.github.io
 github_username: XueyuanQiao
 ```
 
 ### 宇宙首页文案
 
-根路径入口文案在 `particle-cat.html` 的 `.particle-enter__copy` 中维护。修改前同时检查桌面和 320px–390px 窄屏，并同步更新 [`doc/space-landing.md`](./doc/space-landing.md)。
+根路径入口文案在 `particle-cat.html` 的 `.particle-enter__copy` 中维护。修改前同时检查桌面和 320px–390px 窄屏，并同步更新 [`doc/宇宙首页.md`](./doc/宇宙首页.md)。
 
 ## 部署
 
@@ -311,7 +319,7 @@ git commit -m "feat: ..."
 git push origin master
 ```
 
-自定义域名通过仓库根目录的 `CNAME` 文件配置。
+当前站点直接使用 GitHub Pages 默认域名 `xueyuanqiao.github.io`，仓库未配置自定义域名。若之后需要绑定自定义域名，在仓库根目录新增 `CNAME` 文件即可。
 
 ## 依赖与安全
 
@@ -346,7 +354,7 @@ bundle exec jekyll serve  # 本地走查
 - [ ] 发文时间避开北京凌晨 0:00–8:00（或确认时区偏移效果）
 - [ ] 重大改动前用 DevTools 切到 iPhone / Pixel 验证移动端
 - [ ] 修改宇宙首页后验证 Preview → Final 真实加载进度、纹理升级、拖曳连续性和 `/blog/` 跳转
-- [ ] 宇宙首页 HTML、CSS、JS、资源或文案变化后同步更新 `doc/space-landing.md`
+- [ ] 宇宙首页 HTML、CSS、JS、资源或文案变化后同步更新 `doc/宇宙首页.md`
 - [ ] 升级依赖：`bundle update` 后本地 `bundle exec jekyll serve` 走查一遍
 
-更细的工程问题排查见 [`doc/troubleshooting.md`](./doc/troubleshooting.md)。
+更细的工程问题排查见 [`doc/故障排查.md`](./doc/故障排查.md)。
