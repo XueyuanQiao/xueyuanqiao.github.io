@@ -17,7 +17,7 @@ title: Xueyuan's Tech Blog
 email: 1336582921@qq.com
 lang: zh_CN
 description: > # this means to ignore newlines until "baseurl:"
-  Xueyuan's Blog · AI 全栈开发、质量工程与 AI 音乐创作
+  Xueyuan's Blog · 全栈开发与大模型工程化，十年质量工程做底座，兼 AI 音乐创作
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://xueyuanqiao.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb

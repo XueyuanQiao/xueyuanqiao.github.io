@@ -1,25 +1,30 @@
 ---
 layout: post
-title: 个人概述
+title: 个人概述（测开时期 · 2016—2026）
 date: 2026-02-22 03:22:04 +0800
-excerpt: AI 全栈业务开发与平台交付，现负责 L4 无人配送车端到端质量
+excerpt: 质量工程与测试开发阶段的完整履历留档；我当前的岗位是全栈开发，最新定位见「关于」页
 categories: 生活随笔
 permalink: /about/2026/02/22/intro.html
 toc_collapsed: true
 ---
 
+<div class="profile-panel" markdown="0" style="--accent: 148,163,184; --action-purple: #64748b">
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5l3 2"/></svg></span> ARCHIVED · 2016—2026</div>
+  <p>旧文。写的是我做测试开发和质量工程那十年，放这儿不删。现在的主线是全栈开发、企业信息化和大模型网关，跟这篇不是一回事，看 <a href="{{ '/about.html' | relative_url }}">关于页</a>。</p>
+</div>
+
 <div class="profile-hero" markdown="0">
-  <span class="pf-badge"><span class="pf-led"></span> 个人概述 · 2026.08 更新</span>
-  <div class="pf-name">乔雪源 · <span class="pf-grad">Quality Engineer &amp; AI Full-Stack Developer</span></div>
+  <span class="pf-badge"><span class="pf-led"></span> 归档 · 测开时期 2016—2026</span>
+  <div class="pf-name">乔雪源 · <span class="pf-grad">Quality Engineering Era → Full-Stack</span></div>
   <div class="pf-roles">
-    <span class="pf-role">AI 全栈业务交付</span>
-    <span class="pf-role">L4 无人配送车质量</span>
-    <span class="pf-role">质量平台开发</span>
+    <span class="pf-role">测试开发 / 质量工程</span>
     <span class="pf-role">压测与稳定性</span>
+    <span class="pf-role">平台开发</span>
     <span class="pf-role">AI 评测</span>
+    <span class="pf-role">全栈交付（转型期）</span>
     <span class="pf-role">Python / Java / TypeScript</span>
   </div>
-  <p class="pf-desc">我从事质量工程和测试开发约十年，经历过 SaaS 客服系统、百度搜索、支付宝基金与个人养老金、AI Phone，目前在九识负责 L4 无人配送车端到端质量。现在的工作覆盖需求梳理、产品设计、前后端开发、数据和部署，已经落地多个业务开发和平台开发项目，单月代码量超过 20 万行。无人车质量中台是其中一个由我独立完成从需求到上线闭环的项目。</p>
+  <p class="pf-desc">这十年我做的是质量工程和测试开发，场景换过几轮：SaaS 客服系统、百度核心搜索、支付宝基金与个人养老金、ASR / 翻译 / TTS 实时语音，最后是 L4 无人配送车。到后期，我的活儿已经从「验证别人写的东西」变成需求梳理、界面交互、前后端、数据和部署自己一路做完，其中一套内部平台由我独立从需求做到上线。再往后就是正式转岗全栈。</p>
   <div class="profile-stats">
     <div class="pf-stat"><span class="pf-num"><span data-counter="10">0</span></span><span class="pf-lbl">质量工程年限</span></div>
     <div class="pf-stat"><span class="pf-num"><span data-counter="4">0</span></span><span class="pf-lbl">主要业务领域</span></div>
@@ -28,17 +33,17 @@ toc_collapsed: true
   </div>
 </div>
 
-## 当前工作与开发成果
+## 该阶段的工作与开发成果
 
 <div class="profile-panel" markdown="0" style="--accent: 124,140,255">
-  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span> 当前工作 · 九识无人车</div>
-  <p>负责 L4 无人配送车端到端质量。质量判断覆盖车端软件、云端服务、车云通信和数据链路，并延伸到 OTA、仿真与路测。除了验证单点功能，还要沿着任务下发、车辆执行、状态回传和异常处理检查整条链路，判断一次变更会不会在真实运行中引入连锁问题。</p>
-  <p>我的重点是把分散的测试活动变成可重复的工程流程：根据业务风险确定测试范围，把高频检查沉淀为自动化，将执行和质量数据收进平台，再通过趋势与失败分布找到优先问题。这样既能让问题更早暴露，也能让版本是否具备发布条件有据可查。</p>
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span> 该阶段工作 · 九识智能（转型前）</div>
+  <p>当时负责 L4 无人配送车业务的端到端质量。质量判断覆盖车端软件、云端服务、通信与数据链路，并延伸到 OTA、仿真与路测。除了验证单点功能，还要沿着任务下发、执行、状态回传和异常处理检查整条链路，判断一次变更会不会在真实运行中引入连锁问题。</p>
+  <p>我的重点是把分散的测试活动变成可重复的工程流程：根据业务风险确定范围，把高频检查沉淀为自动化，将执行和质量数据收进平台，再通过趋势与失败分布找到优先问题。这样既能让问题更早暴露，也能让版本是否具备发布条件有据可查。</p>
 </div>
 
 <div class="profile-panel" markdown="0" style="--accent: 124,255,180">
-  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/><path d="M14 4h-4M14 20h-4"/></svg></span> 当前定位 · AI 全栈开发</div>
-  <p>我现在以 AI 全栈方式开展业务开发与平台开发，把质量工程中积累的风险判断、自动化和稳定性经验带入需求分析、交互设计、前端、后端、数据与部署。AI 会参与方案比较、编码、调试和结果分析，但所有产出仍要经过正常的审查、测试和发布流程，并以真实业务中的使用效果作为完成标准。</p>
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/><path d="M14 4h-4M14 20h-4"/></svg></span> 转型起点 · 全栈开发（后已正式转岗）</div>
+  <p>在这一阶段后期，我已经以全栈方式开展业务开发与平台开发，把质量工程中积累的风险判断、自动化和稳定性经验带入需求分析、交互设计、前端、后端、数据与部署。AI 会参与方案比较、编码、调试和结果分析，但所有产出仍要经过正常的审查、测试和发布流程，并以真实业务中的使用效果作为完成标准。<strong>这条线后来成为我的主职</strong>——我已正式从测试开发转为全栈开发工程师。</p>
 </div>
 
 <div class="profile-panel" markdown="0" style="--accent: 89,227,255">
@@ -51,16 +56,16 @@ toc_collapsed: true
 <ol class="profile-timeline" markdown="0">
   <li class="pf-item">
     <div class="pf-card" data-tilt>
-      <div class="pf-meta"><span class="pf-year">2026 — Now</span><span class="pf-tag">菜鸟无人车 → 九识</span></div>
-      <h4>L4 无人配送车质量</h4>
-      <p>负责端到端质量方案与关键版本验证，覆盖车云协同、OTA、仿真和路测。围绕测试执行、质量度量与结果分析，独立开发无人车质量中台，从需求、界面、登录鉴权、前后端和数据库，一直完成到 CI/CD 与部署。</p>
+      <div class="pf-meta"><span class="pf-year">2026 上半年</span><span class="pf-tag">九识智能 · L4</span></div>
+      <h4>L4 无人配送车质量与平台自研</h4>
+      <p>负责端到端质量方案与关键版本验证，覆盖车云协同、OTA、仿真和路测。同期独立开发一套内部质量平台，从需求、界面、登录鉴权、前后端和数据库，一直完成到 CI/CD 与部署。</p>
       <div class="pf-chips"><span>车云链路</span><span>仿真 / 路测</span><span>OTA</span><span>FastAPI</span><span>React</span><span>云效 / SAE</span></div>
     </div>
   </li>
   <li class="pf-item">
     <div class="pf-card" data-tilt>
-      <div class="pf-meta"><span class="pf-year">2025 — 2026</span><span class="pf-tag">腾展 · AI Phone</span></div>
-      <h4>App 与服务端测试负责人</h4>
+      <div class="pf-meta"><span class="pf-year">2025 — 2026</span><span class="pf-tag">腾展 · ASR / 翻译 / TTS</span></div>
+      <h4>App 与服务端测试负责人 / AI 评测基建</h4>
       <p>负责 VOIP / ASR / 翻译 / TTS 全链路质量。为同声传译建立 WER 自动化评估和翻译基准集，使用 LLM-as-a-Judge 做批量验证；推动接口测试从 JUnit 迁移到 Pytest，测试覆盖率提升 <strong>70%</strong>。</p>
       <div class="pf-chips"><span>VOIP</span><span>ASR</span><span>TTS</span><span>WER</span><span>LLM-as-a-Judge</span><span>Pytest</span></div>
     </div>
@@ -91,27 +96,27 @@ toc_collapsed: true
   </li>
 </ol>
 
-## 业务交付 · 无人车质量中台
+## 平台交付 · 内部质量平台
 
-这是我以 AI 全栈方式落地的业务项目之一。围绕测试执行、质量度量和结果分析，我独立完成需求梳理、信息架构、界面交互、登录鉴权、前后端、数据存储、联调、CI/CD 和部署。平台将执行记录、质量数据和分析结果集中到同一处，减少在不同工具之间来回整理信息的成本。
+这是我以全栈方式独立落地的项目之一，也是我转型全栈最完整的一次验证。围绕测试执行、质量度量和结果分析，我独立完成需求梳理、信息架构、界面交互、登录鉴权、前后端、数据存储、联调、CI/CD 和部署。平台将执行记录、质量数据和分析结果集中到同一处，减少在不同工具之间来回整理信息的成本。
 
 <div class="post-gallery" markdown="0">
   <figure>
-    <video muted loop playsinline controls preload="none" poster="/images/20260713-140418-poster.webp" width="960" height="482" aria-label="无人车质量中台登录页演示">
+    <video muted loop playsinline controls preload="none" poster="/images/20260713-140418-poster.webp" width="960" height="482" aria-label="内部质量平台登录页演示">
       <source src="/images/20260713-140418.mp4" type="video/mp4">
       浏览器不支持视频播放，可<a href="/images/20260713-140418.gif">查看原始动图</a>。
     </video>
     <figcaption>① 登录页 · 登录鉴权与前端实现</figcaption>
   </figure>
   <figure>
-    <video muted loop playsinline controls preload="none" data-autoplay-in-view poster="/images/20260720-main-feature-poster.jpg" width="1280" height="702" aria-label="无人车质量中台主功能演示">
+    <video muted loop playsinline controls preload="none" data-autoplay-in-view poster="/images/20260720-main-feature-poster.jpg" width="1280" height="702" aria-label="内部质量平台主功能演示">
       <source data-src="/images/20260720-main-feature.mp4" type="video/mp4">
       浏览器不支持视频播放，可<a href="/images/20260720-main-feature.gif">查看原始动图</a>。
     </video>
     <figcaption>② 仪表盘 · 质量度量与测试执行总览</figcaption>
   </figure>
 </div>
-<p class="post-figure-caption">无人车质量中台 · FastAPI + React / TypeScript + MySQL / Tair + Docker + 云效 / SAE</p>
+<p class="post-figure-caption">内部质量平台 · FastAPI + React / TypeScript + MySQL / Tair + Docker + 云效 / SAE</p>
 
 <div class="profile-cards" markdown="0">
   <div class="profile-card" data-tilt style="--accent: 89,227,255">
@@ -135,25 +140,25 @@ AI 已经进入评测、开发、调试和结果分析这些具体工作；是�
 <div class="profile-layers" markdown="0">
   <div class="pf-layer">
     <span class="pf-idx">01</span>
-    <div class="pf-body"><b>同声传译效果评测</b><p>在 AI Phone 业务中，用 <strong>WER、翻译基准集和 LLM-as-a-Judge</strong> 对 ASR、翻译与 TTS 链路做批量验证和回归。指标用来发现变化，具体样本仍会回到人工复核。</p></div>
+    <div class="pf-body"><b>同声传译效果评测</b><p>在实时语音通话业务中，用 <strong>WER、翻译基准集和 LLM-as-a-Judge</strong> 对 ASR、翻译与 TTS 链路做批量验证和回归。指标用来发现变化，具体样本仍会回到人工复核。</p></div>
   </div>
   <div class="pf-layer">
     <span class="pf-idx">02</span>
-    <div class="pf-body"><b>AI 全栈业务交付</b><p>在实际项目中使用编程 Agent 辅助拆解需求、比较方案、开发前后端、调试和排查问题。生成内容进入正常的代码审查、自动化测试和发布流程，由我对最终结果负责。</p></div>
+    <div class="pf-body"><b>全栈业务交付</b><p>在实际项目中使用编程 Agent 辅助拆解需求、比较方案、开发前后端、调试和排查问题。生成内容进入正常的代码审查、自动化测试和发布流程，由我对最终结果负责。这条线后来成为我的主职方向。</p></div>
   </div>
   <div class="pf-layer">
     <span class="pf-idx">03</span>
-    <div class="pf-body"><b>质量结果分析</b><p>在无人车质量中台中，让 AI 根据执行数据归纳失败模式、标记可疑项并给出排查方向，同时回链原始记录，方便测试人员快速确认或推翻它的判断。</p></div>
+    <div class="pf-body"><b>质量结果分析</b><p>在内部质量平台中，让 AI 根据执行数据归纳失败模式、标记可疑项并给出排查方向，同时回链原始记录，方便测试人员快速确认或推翻它的判断。</p></div>
   </div>
   <div class="pf-layer">
     <span class="pf-idx">04</span>
-    <div class="pf-body"><b>多个业务项目落地</b><p>目前已经在多个实际业务项目中使用这套工作方式。无人车质量中台是链路较完整的一项，从需求、开发到部署由我独立完成，项目以真实业务中的使用效果作为完成标准。</p></div>
+    <div class="pf-body"><b>多个业务项目落地</b><p>目前已经在多个实际业务项目中使用这套工作方式。内部质量平台是链路较完整的一项，从需求、开发到部署由我独立完成，项目以真实业务中的使用效果作为完成标准。</p></div>
   </div>
 </div>
 
 <div class="profile-panel" markdown="0" style="--accent: 251,191,36">
-  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span> 当前重点</div>
-  <p>我现在更关心三件事：AI 给出的判断能不能回到原始数据，生成的代码能不能进入正常的审查、测试和发布流程，做出来的工具能不能被团队持续使用。需要的新知识跟着业务问题补，不再单独罗列框架清单。</p>
+  <div class="pf-h"><span class="pf-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span> 该阶段的重点</div>
+  <p>那段时间我更关心三件事：AI 给出的判断能不能回到原始数据，生成的代码能不能进入正常的审查、测试和发布流程，做出来的工具能不能被团队持续使用。需要的新知识跟着业务问题补，不单独罗列框架清单。这三条到今天仍然成立。</p>
 </div>
 
 ## 常用技术
@@ -224,5 +229,5 @@ AI 已经进入评测、开发、调试和结果分析这些具体工作；是�
 ## 一句话说明
 
 <div class="profile-quote" markdown="0">
-  <p>我从事 AI 全栈业务开发与平台交付；当前负责 L4 无人配送车端到端质量，也独立开发质量平台，把测试执行、数据和结果分析连成闭环。工程之外，我以 xueyuan 的名字创作 AI 音乐。</p>
+  <p>这一阶段（2016—2026）我做的是质量工程与测试开发，后期已经用全栈方式独立交付平台与业务系统。<strong>现在我的岗位是全栈开发工程师</strong>，方向是企业信息化与大模型工程化，最新定位见 <a href="{{ '/about.html' | relative_url }}">「关于」页</a>。工程之外，我以 xueyuan 的名字创作 AI 音乐。</p>
 </div>

@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 工具导航
-excerpt: 2026 年 AI、开发、测试、数据与云原生工具导航
+excerpt: 2026 年 AI、大模型工程化、全栈开发、中间件与云原生工具导航
 permalink: /doc.html
 hide_header: true
 ---
@@ -12,37 +12,50 @@ hide_header: true
 
     <div class="hero-stats">
         <div class="stat">
-            <span class="num" data-counter="235">0</span>
+            <span class="num" data-counter="280">0</span>
             <span class="label">Curated</span>
         </div>
         <div class="stat">
-            <span class="num" data-counter="21">0</span>
+            <span class="num" data-counter="24">0</span>
             <span class="label">Topics</span>
         </div>
         <div class="stat">
-            <span class="num">2026.08.15</span>
+            <span class="num">2026.09.05</span>
             <span class="label">Reviewed</span>
         </div>
     </div>
 </section>
 
-<!-- ====================== 通用 AI 助手 ====================== -->
+<!-- ====================== AI 工程方法与前沿 ====================== -->
 <div class="link-category">
-  <h2><span class="link-cate-emoji">💬</span>通用 AI 助手</h2>
+  <h2><span class="link-cate-emoji">🧭</span>AI 工程方法与前沿</h2>
   <ul>
-    <li><a href="https://chatgpt.com" target="_blank" rel="noopener"><span class="link-name">ChatGPT</span><span class="link-desc">集对话、搜索、文件分析、图像与 Agent 能力于一体</span></a></li>
-    <li><a href="https://claude.ai" target="_blank" rel="noopener"><span class="link-name">Claude</span><span class="link-desc">面向知识工作、写作、研究与代码协作的 AI 助手</span></a></li>
-    <li><a href="https://gemini.google.com" target="_blank" rel="noopener"><span class="link-name">Gemini</span><span class="link-desc">连接 Google 生态的多模态研究与创作助手</span></a></li>
-    <li><a href="https://grok.com" target="_blank" rel="noopener"><span class="link-name">Grok</span><span class="link-desc">结合实时信息检索、推理与内容生成的 xAI 助手</span></a></li>
-    <li><a href="https://copilot.microsoft.com" target="_blank" rel="noopener"><span class="link-name">Microsoft Copilot</span><span class="link-desc">贯通 Windows、Office 与浏览器的微软 AI 助手</span></a></li>
-    <li><a href="https://chat.deepseek.com" target="_blank" rel="noopener"><span class="link-name">DeepSeek</span><span class="link-desc">提供推理、代码与通用对话能力的开放权重模型助手</span></a></li>
-    <li><a href="https://www.kimi.com" target="_blank" rel="noopener"><span class="link-name">Kimi</span><span class="link-desc">面向长文档、深度搜索与办公任务的 AI 助手</span></a></li>
-    <li><a href="https://chat.qwen.ai" target="_blank" rel="noopener"><span class="link-name">Qwen Studio</span><span class="link-desc">通义系列开源与闭源模型的统一入口，原 Qwen Chat</span></a></li>
-    <li><a href="https://www.doubao.com" target="_blank" rel="noopener"><span class="link-name">豆包</span><span class="link-desc">覆盖对话、搜索、创作与多媒体生成的字节系助手</span></a></li>
-    <li><a href="https://chat.z.ai" target="_blank" rel="noopener"><span class="link-name">Z.ai</span><span class="link-desc">智谱 GLM 系列模型的对话、推理与 Agent 入口</span></a></li>
-    <li><a href="https://yuanbao.tencent.com" target="_blank" rel="noopener"><span class="link-name">腾讯元宝</span><span class="link-desc">依托混元模型与腾讯生态内容的中文 AI 助手</span></a></li>
-    <li><a href="https://chat.mistral.ai" target="_blank" rel="noopener"><span class="link-name">Mistral Vibe</span><span class="link-desc">Mistral 打通办公与编码的统一 Agent，原 Le Chat</span></a></li>
-    <li><a href="https://manus.im" target="_blank" rel="noopener"><span class="link-name">Manus</span><span class="link-desc">自主拆解并执行多步骤任务的通用 Agent</span></a></li>
+    <li><a href="https://mitchellh.com/writing/my-ai-adoption-journey" target="_blank" rel="noopener"><span class="link-name">Agent = Model + Harness</span><span class="link-desc">Mitchell Hashimoto 提出 harness engineering 的原始一篇</span></a></li>
+    <li><a href="https://martinfowler.com/articles/harness-engineering.html" target="_blank" rel="noopener"><span class="link-name">Harness Engineering</span><span class="link-desc">Martin Fowler 对 harness 的分类拆解与编码 Agent 实践</span></a></li>
+    <li><a href="https://www.anthropic.com/engineering/harness-design-long-running-apps" target="_blank" rel="noopener"><span class="link-name">Harness Design</span><span class="link-desc">Anthropic 讲长周期应用开发的 harness 设计与跨会话交接</span></a></li>
+    <li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener"><span class="link-name">Context Engineering</span><span class="link-desc">把提示工程推进到上下文预算、压缩与检索的系统方法</span></a></li>
+    <li><a href="https://www.anthropic.com/engineering/writing-tools-for-agents" target="_blank" rel="noopener"><span class="link-name">Writing Tools for Agents</span><span class="link-desc">工具定义、返回值设计与工具自身的评测方法</span></a></li>
+    <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener"><span class="link-name">Building Effective Agents</span><span class="link-desc">从工作流到 Agent 的经典分级，先问要不要上 Agent</span></a></li>
+    <li><a href="https://www.anthropic.com/engineering/managed-agents" target="_blank" rel="noopener"><span class="link-name">Managed Agents</span><span class="link-desc">把模型与执行层解耦，让接口在 harness 演进时保持稳定</span></a></li>
+    <li><a href="https://www.anthropic.com/engineering" target="_blank" rel="noopener"><span class="link-name">Anthropic Engineering</span><span class="link-desc">一手工程博客，harness、上下文、工具与技能的持续更新</span></a></li>
+    <li><a href="https://github.com/humanlayer/12-factor-agents" target="_blank" rel="noopener"><span class="link-name">12-Factor Agents</span><span class="link-desc">让 Agent 达到生产可用的十二条工程原则</span></a></li>
+    <li><a href="https://github.com/github/spec-kit" target="_blank" rel="noopener"><span class="link-name">Spec Kit</span><span class="link-desc">GitHub 的规范驱动开发工具链，先定规格再让 Agent 实现</span></a></li>
+    <li><a href="https://github.com/AutoJunjie/awesome-agent-harness" target="_blank" rel="noopener"><span class="link-name">Awesome Agent Harness</span><span class="link-desc">会话管理、工具设计、失败恢复与人工介入的资源聚合</span></a></li>
+    <li><a href="https://cookbook.openai.com" target="_blank" rel="noopener"><span class="link-name">OpenAI Cookbook</span><span class="link-desc">可运行的模型与 Agent 实践示例集</span></a></li>
+  </ul>
+</div>
+
+<!-- ====================== Agent 协议与开放标准 ====================== -->
+<div class="link-category">
+  <h2><span class="link-cate-emoji">🔌</span>Agent 协议与开放标准</h2>
+  <ul>
+    <li><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener"><span class="link-name">Model Context Protocol</span><span class="link-desc">标准化 AI 应用连接数据源、工具和外部服务</span></a></li>
+    <li><a href="https://a2a-protocol.org" target="_blank" rel="noopener"><span class="link-name">A2A Protocol</span><span class="link-desc">跨厂商 Agent 之间发现能力并协作的互操作协议</span></a></li>
+    <li><a href="https://docs.ag-ui.com" target="_blank" rel="noopener"><span class="link-name">AG-UI</span><span class="link-desc">把 Agent 运行过程以事件流同步到前端界面的协议</span></a></li>
+    <li><a href="https://zed.dev/acp" target="_blank" rel="noopener"><span class="link-name">Agent Client Protocol</span><span class="link-desc">让编辑器与编码 Agent 解耦对接的开放协议</span></a></li>
+    <li><a href="https://agents.md" target="_blank" rel="noopener"><span class="link-name">AGENTS.md</span><span class="link-desc">在仓库中向编码 Agent 交代约定与流程的约定文件</span></a></li>
+    <li><a href="https://agentskills.io" target="_blank" rel="noopener"><span class="link-name">Agent Skills</span><span class="link-desc">以 SKILL.md 渐进披露方式打包 Agent 能力的开放格式</span></a></li>
+    <li><a href="https://registry.modelcontextprotocol.io" target="_blank" rel="noopener"><span class="link-name">MCP Registry</span><span class="link-desc">MCP 官方服务器注册表，用于发现与治理可用工具源</span></a></li>
   </ul>
 </div>
 
@@ -68,6 +81,107 @@ hide_header: true
     <li><a href="https://www.trae.ai" target="_blank" rel="noopener"><span class="link-name">Trae</span><span class="link-desc">字节跳动的 AI 原生 IDE，含 SOLO 自主开发模式</span></a></li>
     <li><a href="https://factory.ai" target="_blank" rel="noopener"><span class="link-name">Factory</span><span class="link-desc">面向企业全生命周期的自主开发 Agent 平台</span></a></li>
     <li><a href="https://openclaw.ai" target="_blank" rel="noopener"><span class="link-name">OpenClaw</span><span class="link-desc">自托管网关，把常用聊天软件接到本地编码 Agent</span></a></li>
+  </ul>
+</div>
+
+<!-- ====================== Agent 与 AI 应用框架 ====================== -->
+<div class="link-category">
+  <h2><span class="link-cate-emoji">🧩</span>Agent 与 AI 应用框架</h2>
+  <ul>
+    <li><a href="https://docs.langchain.com" target="_blank" rel="noopener"><span class="link-name">LangChain</span><span class="link-desc">构建模型应用、Agent、检索与工具调用的框架生态</span></a></li>
+    <li><a href="https://www.langchain.com/langgraph" target="_blank" rel="noopener"><span class="link-name">LangGraph</span><span class="link-desc">面向长流程、有状态和可恢复 Agent 的编排框架</span></a></li>
+    <li><a href="https://developers.llamaindex.ai/python/framework/" target="_blank" rel="noopener"><span class="link-name">LlamaIndex</span><span class="link-desc">连接企业数据、检索系统与 Agent 工作流的数据框架</span></a></li>
+    <li><a href="https://ragflow.io" target="_blank" rel="noopener"><span class="link-name">RAGFlow</span><span class="link-desc">以文档理解与检索为核心的开源 RAG 引擎和 Agent 平台</span></a></li>
+    <li><a href="https://ai-sdk.dev" target="_blank" rel="noopener"><span class="link-name">Vercel AI SDK</span><span class="link-desc">面向 TypeScript 的模型调用、流式 UI 与 Agent 工具集</span></a></li>
+    <li><a href="https://developers.openai.com/api/docs/guides/agents" target="_blank" rel="noopener"><span class="link-name">OpenAI Agents SDK</span><span class="link-desc">用于工具调用、交接、护栏、追踪与多 Agent 编排</span></a></li>
+    <li><a href="https://code.claude.com/docs/en/agent-sdk/overview" target="_blank" rel="noopener"><span class="link-name">Claude Agent SDK</span><span class="link-desc">复用 Claude Code 运行时构建自定义 Agent 的开发套件</span></a></li>
+    <li><a href="https://learn.microsoft.com/en-us/agent-framework/" target="_blank" rel="noopener"><span class="link-name">Microsoft Agent Framework</span><span class="link-desc">微软统一的 .NET / Python Agent 框架，接替 AutoGen 与 SK</span></a></li>
+    <li><a href="https://adk.dev" target="_blank" rel="noopener"><span class="link-name">Google ADK</span><span class="link-desc">Google 开源的模型无关 Agent 开发、评测与部署框架</span></a></li>
+    <li><a href="https://strandsagents.com" target="_blank" rel="noopener"><span class="link-name">Strands Agents</span><span class="link-desc">AWS 开源的模型驱动 Agent SDK，少量代码即可上线</span></a></li>
+    <li><a href="https://docs.crewai.com" target="_blank" rel="noopener"><span class="link-name">CrewAI</span><span class="link-desc">以角色、任务和流程组织多 Agent 协作</span></a></li>
+    <li><a href="https://pydantic.dev/docs/ai/overview/" target="_blank" rel="noopener"><span class="link-name">Pydantic AI</span><span class="link-desc">以类型安全、依赖注入和结构化输出构建 Agent</span></a></li>
+    <li><a href="https://mastra.ai" target="_blank" rel="noopener"><span class="link-name">Mastra</span><span class="link-desc">面向 TypeScript 的 Agent、工作流、RAG 与评测工具集</span></a></li>
+    <li><a href="https://docs.agno.com" target="_blank" rel="noopener"><span class="link-name">Agno</span><span class="link-desc">轻量高性能的多模态多 Agent 运行时与团队编排</span></a></li>
+    <li><a href="https://dspy.ai" target="_blank" rel="noopener"><span class="link-name">DSPy</span><span class="link-desc">通过声明式模块和优化器编程、评测并改进模型流程</span></a></li>
+  </ul>
+</div>
+
+<!-- ====================== LLM 网关与调用治理 ====================== -->
+<div class="link-category">
+  <h2><span class="link-cate-emoji">🚦</span>LLM 网关与调用治理</h2>
+  <ul>
+    <li><a href="https://docs.litellm.ai" target="_blank" rel="noopener"><span class="link-name">LiteLLM</span><span class="link-desc">自托管 LLM 代理的事实标准；2026 年 3 月发生过 PyPI 投毒，务必锁版本并校验</span></a></li>
+    <li><a href="https://aigateway.envoyproxy.io" target="_blank" rel="noopener"><span class="link-name">Envoy AI Gateway</span><span class="link-desc">基于 Envoy 的 CNCF AI 网关，含推理网关与 MCP 网关</span></a></li>
+    <li><a href="https://portkey.ai/docs" target="_blank" rel="noopener"><span class="link-name">Portkey</span><span class="link-desc">面向治理场景：虚拟密钥、预算上限、护栏与调用审计</span></a></li>
+    <li><a href="https://developer.konghq.com/ai-gateway/" target="_blank" rel="noopener"><span class="link-name">Kong AI Gateway</span><span class="link-desc">在 API 网关上叠加多模型路由、限流、RBAC 与审计日志</span></a></li>
+    <li><a href="https://apisix.apache.org" target="_blank" rel="noopener"><span class="link-name">Apache APISIX</span><span class="link-desc">高性能开源网关，提供 AI 代理、限流与插件化治理能力</span></a></li>
+    <li><a href="https://higress.cn" target="_blank" rel="noopener"><span class="link-name">Higress</span><span class="link-desc">阿里开源的云原生 AI 网关，含多模型代理与 token 限流</span></a></li>
+    <li><a href="https://github.com/maximhq/bifrost" target="_blank" rel="noopener"><span class="link-name">Bifrost</span><span class="link-desc">以 Go 编写的高性能开源 LLM 网关，主打低开销转发</span></a></li>
+    <li><a href="https://github.com/QuantumNous/new-api" target="_blank" rel="noopener"><span class="link-name">New API</span><span class="link-desc">开源模型分发与计费系统，支持多渠道、令牌额度与日志</span></a></li>
+    <li><a href="https://github.com/songquanpeng/one-api" target="_blank" rel="noopener"><span class="link-name">One API</span><span class="link-desc">用统一 OpenAI 协议聚合多家模型并做密钥与配额管理</span></a></li>
+    <li><a href="https://developers.cloudflare.com/ai-gateway/" target="_blank" rel="noopener"><span class="link-name">Cloudflare AI Gateway</span><span class="link-desc">在边缘做模型调用的缓存、限速、重试与用量分析</span></a></li>
+    <li><a href="https://vercel.com/docs/ai-gateway" target="_blank" rel="noopener"><span class="link-name">Vercel AI Gateway</span><span class="link-desc">单一端点接入多家模型，自带故障转移与用量归属</span></a></li>
+  </ul>
+</div>
+
+<!-- ====================== AI 评测、安全与可观测性 ====================== -->
+<div class="link-category">
+  <h2><span class="link-cate-emoji">📊</span>AI 评测、安全与可观测性</h2>
+  <ul>
+    <li><a href="https://arena.ai" target="_blank" rel="noopener"><span class="link-name">Arena</span><span class="link-desc">用匿名双盲对战收集偏好并排名模型，原 LMArena</span></a></li>
+    <li><a href="https://artificialanalysis.ai" target="_blank" rel="noopener"><span class="link-name">Artificial Analysis</span><span class="link-desc">比较模型质量、速度、上下文、价格与供应商</span></a></li>
+    <li><a href="https://www.swebench.com" target="_blank" rel="noopener"><span class="link-name">SWE-bench</span><span class="link-desc">用真实 GitHub Issue 衡量模型解决工程问题的能力</span></a></li>
+    <li><a href="https://www.langchain.com/langsmith/observability" target="_blank" rel="noopener"><span class="link-name">LangSmith</span><span class="link-desc">提供 Agent 追踪、数据集、评测、提示和部署监控</span></a></li>
+    <li><a href="https://langfuse.com" target="_blank" rel="noopener"><span class="link-name">Langfuse</span><span class="link-desc">开源的 LLM 追踪、提示管理、指标与评测平台</span></a></li>
+    <li><a href="https://www.helicone.ai" target="_blank" rel="noopener"><span class="link-name">Helicone</span><span class="link-desc">通过网关与 SDK 记录模型请求、成本、缓存和评测</span></a></li>
+    <li><a href="https://arize.com/docs/phoenix" target="_blank" rel="noopener"><span class="link-name">Arize Phoenix</span><span class="link-desc">基于 OpenTelemetry 的开源追踪、实验与 AI 评测平台</span></a></li>
+    <li><a href="https://www.braintrust.dev" target="_blank" rel="noopener"><span class="link-name">Braintrust</span><span class="link-desc">围绕数据集、实验、评分器和生产日志管理 AI 质量</span></a></li>
+    <li><a href="https://www.promptfoo.dev/" target="_blank" rel="noopener"><span class="link-name">Promptfoo</span><span class="link-desc">开源的提示 / Agent 回归评测、安全扫描与红队工具</span></a></li>
+    <li><a href="https://docs.ragas.io/en/stable/" target="_blank" rel="noopener"><span class="link-name">Ragas</span><span class="link-desc">为 RAG 和 Agent 提供指标、测试集与实验评测</span></a></li>
+    <li><a href="https://inspect.aisi.org.uk/" target="_blank" rel="noopener"><span class="link-name">Inspect AI</span><span class="link-desc">用于模型能力与安全评估的开源 Python 框架</span></a></li>
+  </ul>
+</div>
+
+<!-- ====================== 通用 AI 助手 ====================== -->
+<div class="link-category">
+  <h2><span class="link-cate-emoji">💬</span>通用 AI 助手</h2>
+  <ul>
+    <li><a href="https://chatgpt.com" target="_blank" rel="noopener"><span class="link-name">ChatGPT</span><span class="link-desc">集对话、搜索、文件分析、图像与 Agent 能力于一体</span></a></li>
+    <li><a href="https://claude.ai" target="_blank" rel="noopener"><span class="link-name">Claude</span><span class="link-desc">面向知识工作、写作、研究与代码协作的 AI 助手</span></a></li>
+    <li><a href="https://gemini.google.com" target="_blank" rel="noopener"><span class="link-name">Gemini</span><span class="link-desc">连接 Google 生态的多模态研究与创作助手</span></a></li>
+    <li><a href="https://grok.com" target="_blank" rel="noopener"><span class="link-name">Grok</span><span class="link-desc">结合实时信息检索、推理与内容生成的 xAI 助手</span></a></li>
+    <li><a href="https://copilot.microsoft.com" target="_blank" rel="noopener"><span class="link-name">Microsoft Copilot</span><span class="link-desc">贯通 Windows、Office 与浏览器的微软 AI 助手</span></a></li>
+    <li><a href="https://chat.deepseek.com" target="_blank" rel="noopener"><span class="link-name">DeepSeek</span><span class="link-desc">提供推理、代码与通用对话能力的开放权重模型助手</span></a></li>
+    <li><a href="https://www.kimi.com" target="_blank" rel="noopener"><span class="link-name">Kimi</span><span class="link-desc">面向长文档、深度搜索与办公任务的 AI 助手</span></a></li>
+    <li><a href="https://chat.qwen.ai" target="_blank" rel="noopener"><span class="link-name">Qwen Studio</span><span class="link-desc">通义系列开源与闭源模型的统一入口，原 Qwen Chat</span></a></li>
+    <li><a href="https://www.doubao.com" target="_blank" rel="noopener"><span class="link-name">豆包</span><span class="link-desc">覆盖对话、搜索、创作与多媒体生成的字节系助手</span></a></li>
+    <li><a href="https://chat.z.ai" target="_blank" rel="noopener"><span class="link-name">Z.ai</span><span class="link-desc">智谱 GLM 系列模型的对话、推理与 Agent 入口</span></a></li>
+    <li><a href="https://yuanbao.tencent.com" target="_blank" rel="noopener"><span class="link-name">腾讯元宝</span><span class="link-desc">依托混元模型与腾讯生态内容的中文 AI 助手</span></a></li>
+    <li><a href="https://chat.mistral.ai" target="_blank" rel="noopener"><span class="link-name">Mistral Vibe</span><span class="link-desc">Mistral 打通办公与编码的统一 Agent，原 Le Chat</span></a></li>
+    <li><a href="https://manus.im" target="_blank" rel="noopener"><span class="link-name">Manus</span><span class="link-desc">自主拆解并执行多步骤任务的通用 Agent</span></a></li>
+  </ul>
+</div>
+
+<!-- ====================== 模型 API 与推理平台 ====================== -->
+<div class="link-category">
+  <h2><span class="link-cate-emoji">🧠</span>模型 API 与推理平台</h2>
+  <ul>
+    <li><a href="https://platform.openai.com" target="_blank" rel="noopener"><span class="link-name">OpenAI Platform</span><span class="link-desc">OpenAI 模型、Responses API 与 Agent 开发控制台</span></a></li>
+    <li><a href="https://platform.claude.com" target="_blank" rel="noopener"><span class="link-name">Claude Platform</span><span class="link-desc">Claude 模型 API、提示测试、批处理与用量管理</span></a></li>
+    <li><a href="https://aistudio.google.com" target="_blank" rel="noopener"><span class="link-name">Google AI Studio</span><span class="link-desc">用于试验 Gemini 模型、提示和多模态 API</span></a></li>
+    <li><a href="https://huggingface.co" target="_blank" rel="noopener"><span class="link-name">Hugging Face</span><span class="link-desc">开放模型、数据集、应用托管与推理服务社区</span></a></li>
+    <li><a href="https://openrouter.ai" target="_blank" rel="noopener"><span class="link-name">OpenRouter</span><span class="link-desc">通过统一 API、路由与计费接入多家模型</span></a></li>
+    <li><a href="https://replicate.com" target="_blank" rel="noopener"><span class="link-name">Replicate</span><span class="link-desc">以 API 运行和部署开源及商业生成模型</span></a></li>
+    <li><a href="https://console.groq.com" target="_blank" rel="noopener"><span class="link-name">Groq</span><span class="link-desc">基于 LPU 的低延迟模型推理与开发平台</span></a></li>
+    <li><a href="https://www.cerebras.ai" target="_blank" rel="noopener"><span class="link-name">Cerebras</span><span class="link-desc">基于晶圆级芯片的高吞吐模型推理与训练服务</span></a></li>
+    <li><a href="https://www.together.ai" target="_blank" rel="noopener"><span class="link-name">Together AI</span><span class="link-desc">开放模型推理、微调、训练和专用端点平台</span></a></li>
+    <li><a href="https://fireworks.ai" target="_blank" rel="noopener"><span class="link-name">Fireworks AI</span><span class="link-desc">面向生成式 AI 的模型推理、微调和部署平台</span></a></li>
+    <li><a href="https://www.baseten.co" target="_blank" rel="noopener"><span class="link-name">Baseten</span><span class="link-desc">面向生产负载的模型部署、推理优化与弹性伸缩</span></a></li>
+    <li><a href="https://modal.com" target="_blank" rel="noopener"><span class="link-name">Modal</span><span class="link-desc">以 Python 定义 Serverless CPU / GPU 任务和模型服务</span></a></li>
+    <li><a href="https://docs.vllm.ai" target="_blank" rel="noopener"><span class="link-name">vLLM</span><span class="link-desc">高吞吐、低显存开销的开源大模型推理与服务引擎</span></a></li>
+    <li><a href="https://docs.sglang.io" target="_blank" rel="noopener"><span class="link-name">SGLang</span><span class="link-desc">面向大语言与多模态模型的高性能推理与服务框架</span></a></li>
+    <li><a href="https://ollama.com" target="_blank" rel="noopener"><span class="link-name">Ollama</span><span class="link-desc">在本地下载、运行与管理开放权重模型</span></a></li>
+    <li><a href="https://lmstudio.ai" target="_blank" rel="noopener"><span class="link-name">LM Studio</span><span class="link-desc">用桌面 GUI 运行本地模型，并对外提供兼容 API</span></a></li>
   </ul>
 </div>
 
@@ -159,101 +273,6 @@ hide_header: true
   </ul>
 </div>
 
-<!-- ====================== 模型 API 与推理平台 ====================== -->
-<div class="link-category">
-  <h2><span class="link-cate-emoji">🧠</span>模型 API 与推理平台</h2>
-  <ul>
-    <li><a href="https://platform.openai.com" target="_blank" rel="noopener"><span class="link-name">OpenAI Platform</span><span class="link-desc">OpenAI 模型、Responses API 与 Agent 开发控制台</span></a></li>
-    <li><a href="https://platform.claude.com" target="_blank" rel="noopener"><span class="link-name">Claude Platform</span><span class="link-desc">Claude 模型 API、提示测试、批处理与用量管理</span></a></li>
-    <li><a href="https://aistudio.google.com" target="_blank" rel="noopener"><span class="link-name">Google AI Studio</span><span class="link-desc">用于试验 Gemini 模型、提示和多模态 API</span></a></li>
-    <li><a href="https://huggingface.co" target="_blank" rel="noopener"><span class="link-name">Hugging Face</span><span class="link-desc">开放模型、数据集、应用托管与推理服务社区</span></a></li>
-    <li><a href="https://openrouter.ai" target="_blank" rel="noopener"><span class="link-name">OpenRouter</span><span class="link-desc">通过统一 API、路由与计费接入多家模型</span></a></li>
-    <li><a href="https://replicate.com" target="_blank" rel="noopener"><span class="link-name">Replicate</span><span class="link-desc">以 API 运行和部署开源及商业生成模型</span></a></li>
-    <li><a href="https://console.groq.com" target="_blank" rel="noopener"><span class="link-name">Groq</span><span class="link-desc">基于 LPU 的低延迟模型推理与开发平台</span></a></li>
-    <li><a href="https://www.cerebras.ai" target="_blank" rel="noopener"><span class="link-name">Cerebras</span><span class="link-desc">基于晶圆级芯片的高吞吐模型推理与训练服务</span></a></li>
-    <li><a href="https://www.together.ai" target="_blank" rel="noopener"><span class="link-name">Together AI</span><span class="link-desc">开放模型推理、微调、训练和专用端点平台</span></a></li>
-    <li><a href="https://fireworks.ai" target="_blank" rel="noopener"><span class="link-name">Fireworks AI</span><span class="link-desc">面向生成式 AI 的模型推理、微调和部署平台</span></a></li>
-    <li><a href="https://www.baseten.co" target="_blank" rel="noopener"><span class="link-name">Baseten</span><span class="link-desc">面向生产负载的模型部署、推理优化与弹性伸缩</span></a></li>
-    <li><a href="https://modal.com" target="_blank" rel="noopener"><span class="link-name">Modal</span><span class="link-desc">以 Python 定义 Serverless CPU / GPU 任务和模型服务</span></a></li>
-    <li><a href="https://docs.vllm.ai" target="_blank" rel="noopener"><span class="link-name">vLLM</span><span class="link-desc">高吞吐、低显存开销的开源大模型推理与服务引擎</span></a></li>
-    <li><a href="https://docs.sglang.io" target="_blank" rel="noopener"><span class="link-name">SGLang</span><span class="link-desc">面向大语言与多模态模型的高性能推理与服务框架</span></a></li>
-    <li><a href="https://ollama.com" target="_blank" rel="noopener"><span class="link-name">Ollama</span><span class="link-desc">在本地下载、运行与管理开放权重模型</span></a></li>
-    <li><a href="https://lmstudio.ai" target="_blank" rel="noopener"><span class="link-name">LM Studio</span><span class="link-desc">用桌面 GUI 运行本地模型，并对外提供兼容 API</span></a></li>
-  </ul>
-</div>
-
-<!-- ====================== Agent 与 AI 应用框架 ====================== -->
-<div class="link-category">
-  <h2><span class="link-cate-emoji">🧩</span>Agent 与 AI 应用框架</h2>
-  <ul>
-    <li><a href="https://docs.langchain.com" target="_blank" rel="noopener"><span class="link-name">LangChain</span><span class="link-desc">构建模型应用、Agent、检索与工具调用的框架生态</span></a></li>
-    <li><a href="https://www.langchain.com/langgraph" target="_blank" rel="noopener"><span class="link-name">LangGraph</span><span class="link-desc">面向长流程、有状态和可恢复 Agent 的编排框架</span></a></li>
-    <li><a href="https://developers.llamaindex.ai/python/framework/" target="_blank" rel="noopener"><span class="link-name">LlamaIndex</span><span class="link-desc">连接企业数据、检索系统与 Agent 工作流的数据框架</span></a></li>
-    <li><a href="https://ragflow.io" target="_blank" rel="noopener"><span class="link-name">RAGFlow</span><span class="link-desc">以文档理解与检索为核心的开源 RAG 引擎和 Agent 平台</span></a></li>
-    <li><a href="https://ai-sdk.dev" target="_blank" rel="noopener"><span class="link-name">Vercel AI SDK</span><span class="link-desc">面向 TypeScript 的模型调用、流式 UI 与 Agent 工具集</span></a></li>
-    <li><a href="https://developers.openai.com/api/docs/guides/agents" target="_blank" rel="noopener"><span class="link-name">OpenAI Agents SDK</span><span class="link-desc">用于工具调用、交接、护栏、追踪与多 Agent 编排</span></a></li>
-    <li><a href="https://code.claude.com/docs/en/agent-sdk/overview" target="_blank" rel="noopener"><span class="link-name">Claude Agent SDK</span><span class="link-desc">复用 Claude Code 运行时构建自定义 Agent 的开发套件</span></a></li>
-    <li><a href="https://learn.microsoft.com/en-us/agent-framework/" target="_blank" rel="noopener"><span class="link-name">Microsoft Agent Framework</span><span class="link-desc">微软统一的 .NET / Python Agent 框架，接替 AutoGen 与 SK</span></a></li>
-    <li><a href="https://adk.dev" target="_blank" rel="noopener"><span class="link-name">Google ADK</span><span class="link-desc">Google 开源的模型无关 Agent 开发、评测与部署框架</span></a></li>
-    <li><a href="https://strandsagents.com" target="_blank" rel="noopener"><span class="link-name">Strands Agents</span><span class="link-desc">AWS 开源的模型驱动 Agent SDK，少量代码即可上线</span></a></li>
-    <li><a href="https://docs.crewai.com" target="_blank" rel="noopener"><span class="link-name">CrewAI</span><span class="link-desc">以角色、任务和流程组织多 Agent 协作</span></a></li>
-    <li><a href="https://pydantic.dev/docs/ai/overview/" target="_blank" rel="noopener"><span class="link-name">Pydantic AI</span><span class="link-desc">以类型安全、依赖注入和结构化输出构建 Agent</span></a></li>
-    <li><a href="https://mastra.ai" target="_blank" rel="noopener"><span class="link-name">Mastra</span><span class="link-desc">面向 TypeScript 的 Agent、工作流、RAG 与评测工具集</span></a></li>
-    <li><a href="https://docs.agno.com" target="_blank" rel="noopener"><span class="link-name">Agno</span><span class="link-desc">轻量高性能的多模态多 Agent 运行时与团队编排</span></a></li>
-    <li><a href="https://dspy.ai" target="_blank" rel="noopener"><span class="link-name">DSPy</span><span class="link-desc">通过声明式模块和优化器编程、评测并改进模型流程</span></a></li>
-  </ul>
-</div>
-
-<!-- ====================== Agent 协议与开放标准 ====================== -->
-<div class="link-category">
-  <h2><span class="link-cate-emoji">🔌</span>Agent 协议与开放标准</h2>
-  <ul>
-    <li><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener"><span class="link-name">Model Context Protocol</span><span class="link-desc">标准化 AI 应用连接数据源、工具和外部服务</span></a></li>
-    <li><a href="https://a2a-protocol.org" target="_blank" rel="noopener"><span class="link-name">A2A Protocol</span><span class="link-desc">跨厂商 Agent 之间发现能力并协作的互操作协议</span></a></li>
-    <li><a href="https://docs.ag-ui.com" target="_blank" rel="noopener"><span class="link-name">AG-UI</span><span class="link-desc">把 Agent 运行过程以事件流同步到前端界面的协议</span></a></li>
-    <li><a href="https://zed.dev/acp" target="_blank" rel="noopener"><span class="link-name">Agent Client Protocol</span><span class="link-desc">让编辑器与编码 Agent 解耦对接的开放协议</span></a></li>
-    <li><a href="https://agents.md" target="_blank" rel="noopener"><span class="link-name">AGENTS.md</span><span class="link-desc">在仓库中向编码 Agent 交代约定与流程的约定文件</span></a></li>
-    <li><a href="https://agentskills.io" target="_blank" rel="noopener"><span class="link-name">Agent Skills</span><span class="link-desc">以 SKILL.md 渐进披露方式打包 Agent 能力的开放格式</span></a></li>
-  </ul>
-</div>
-
-<!-- ====================== AI 评测、安全与可观测性 ====================== -->
-<div class="link-category">
-  <h2><span class="link-cate-emoji">📊</span>AI 评测、安全与可观测性</h2>
-  <ul>
-    <li><a href="https://arena.ai" target="_blank" rel="noopener"><span class="link-name">Arena</span><span class="link-desc">用匿名双盲对战收集偏好并排名模型，原 LMArena</span></a></li>
-    <li><a href="https://artificialanalysis.ai" target="_blank" rel="noopener"><span class="link-name">Artificial Analysis</span><span class="link-desc">比较模型质量、速度、上下文、价格与供应商</span></a></li>
-    <li><a href="https://www.swebench.com" target="_blank" rel="noopener"><span class="link-name">SWE-bench</span><span class="link-desc">用真实 GitHub Issue 衡量模型解决工程问题的能力</span></a></li>
-    <li><a href="https://www.langchain.com/langsmith/observability" target="_blank" rel="noopener"><span class="link-name">LangSmith</span><span class="link-desc">提供 Agent 追踪、数据集、评测、提示和部署监控</span></a></li>
-    <li><a href="https://langfuse.com" target="_blank" rel="noopener"><span class="link-name">Langfuse</span><span class="link-desc">开源的 LLM 追踪、提示管理、指标与评测平台</span></a></li>
-    <li><a href="https://www.helicone.ai" target="_blank" rel="noopener"><span class="link-name">Helicone</span><span class="link-desc">通过网关与 SDK 记录模型请求、成本、缓存和评测</span></a></li>
-    <li><a href="https://arize.com/docs/phoenix" target="_blank" rel="noopener"><span class="link-name">Arize Phoenix</span><span class="link-desc">基于 OpenTelemetry 的开源追踪、实验与 AI 评测平台</span></a></li>
-    <li><a href="https://www.braintrust.dev" target="_blank" rel="noopener"><span class="link-name">Braintrust</span><span class="link-desc">围绕数据集、实验、评分器和生产日志管理 AI 质量</span></a></li>
-    <li><a href="https://www.promptfoo.dev/" target="_blank" rel="noopener"><span class="link-name">Promptfoo</span><span class="link-desc">开源的提示 / Agent 回归评测、安全扫描与红队工具</span></a></li>
-    <li><a href="https://docs.ragas.io/en/stable/" target="_blank" rel="noopener"><span class="link-name">Ragas</span><span class="link-desc">为 RAG 和 Agent 提供指标、测试集与实验评测</span></a></li>
-    <li><a href="https://inspect.aisi.org.uk/" target="_blank" rel="noopener"><span class="link-name">Inspect AI</span><span class="link-desc">用于模型能力与安全评估的开源 Python 框架</span></a></li>
-  </ul>
-</div>
-
-<!-- ====================== 软件测试与质量工程 ====================== -->
-<div class="link-category">
-  <h2><span class="link-cate-emoji">🧪</span>软件测试与质量工程</h2>
-  <ul>
-    <li><a href="https://playwright.dev" target="_blank" rel="noopener"><span class="link-name">Playwright</span><span class="link-desc">跨 Chromium、Firefox 和 WebKit 的端到端测试框架</span></a></li>
-    <li><a href="https://www.cypress.io" target="_blank" rel="noopener"><span class="link-name">Cypress</span><span class="link-desc">提供浏览器内调试、组件测试与端到端测试</span></a></li>
-    <li><a href="https://vitest.dev" target="_blank" rel="noopener"><span class="link-name">Vitest</span><span class="link-desc">与 Vite 配套的测试框架，含浏览器模式与视觉回归</span></a></li>
-    <li><a href="https://docs.pytest.org/en/stable/" target="_blank" rel="noopener"><span class="link-name">Pytest</span><span class="link-desc">以 fixture、参数化和插件生态组织 Python 测试</span></a></li>
-    <li><a href="https://www.selenium.dev" target="_blank" rel="noopener"><span class="link-name">Selenium</span><span class="link-desc">基于 WebDriver 与 BiDi 的跨浏览器自动化生态</span></a></li>
-    <li><a href="https://testing-library.com" target="_blank" rel="noopener"><span class="link-name">Testing Library</span><span class="link-desc">以可访问性查询和用户行为驱动 UI 测试</span></a></li>
-    <li><a href="https://grafana.com/docs/k6/latest/" target="_blank" rel="noopener"><span class="link-name">k6</span><span class="link-desc">使用 JavaScript 编写负载、性能与可靠性测试</span></a></li>
-    <li><a href="https://locust.io" target="_blank" rel="noopener"><span class="link-name">Locust</span><span class="link-desc">使用 Python 定义并分布式运行负载测试</span></a></li>
-    <li><a href="https://www.postman.com" target="_blank" rel="noopener"><span class="link-name">Postman</span><span class="link-desc">覆盖 API 设计、调试、自动化测试与团队协作</span></a></li>
-    <li><a href="https://www.usebruno.com" target="_blank" rel="noopener"><span class="link-name">Bruno</span><span class="link-desc">将 API 集合保存在本地文件并纳入 Git 管理</span></a></li>
-    <li><a href="https://httpie.io" target="_blank" rel="noopener"><span class="link-name">HTTPie</span><span class="link-desc">提供易读语法的命令行与桌面 HTTP 客户端</span></a></li>
-    <li><a href="https://mswjs.io" target="_blank" rel="noopener"><span class="link-name">MSW</span><span class="link-desc">在浏览器和 Node.js 中拦截网络请求进行 API Mock</span></a></li>
-  </ul>
-</div>
-
 <!-- ====================== 编程语言与标准文档 ====================== -->
 <div class="link-category">
   <h2><span class="link-cate-emoji">📚</span>编程语言与标准文档</h2>
@@ -289,6 +308,10 @@ hide_header: true
     <li><a href="https://ui.shadcn.com" target="_blank" rel="noopener"><span class="link-name">shadcn/ui</span><span class="link-desc">可复制进项目、可自由修改的组件与设计系统</span></a></li>
     <li><a href="https://base-ui.com" target="_blank" rel="noopener"><span class="link-name">Base UI</span><span class="link-desc">无样式、可访问的 React 组件原语，shadcn 默认底层</span></a></li>
     <li><a href="https://www.radix-ui.com" target="_blank" rel="noopener"><span class="link-name">Radix UI</span><span class="link-desc">成熟稳定的无样式、可访问 React 基础组件</span></a></li>
+    <li><a href="https://ant.design" target="_blank" rel="noopener"><span class="link-name">Ant Design</span><span class="link-desc">面向中后台的 React 组件库与企业级设计体系</span></a></li>
+    <li><a href="https://tanstack.com/query" target="_blank" rel="noopener"><span class="link-name">TanStack Query</span><span class="link-desc">管理服务端状态的请求缓存、失效与同步</span></a></li>
+    <li><a href="https://zustand.docs.pmnd.rs" target="_blank" rel="noopener"><span class="link-name">Zustand</span><span class="link-desc">基于 Hook 的极简 React 状态管理库</span></a></li>
+    <li><a href="https://threejs.org" target="_blank" rel="noopener"><span class="link-name">Three.js</span><span class="link-desc">基于 WebGL / WebGPU 的浏览器端 3D 图形库</span></a></li>
     <li><a href="https://motion.dev" target="_blank" rel="noopener"><span class="link-name">Motion</span><span class="link-desc">支持 React、JavaScript 和 Vue 的 Web 动画库</span></a></li>
     <li><a href="https://vite.dev" target="_blank" rel="noopener"><span class="link-name">Vite</span><span class="link-desc">现代 Web 项目的开发服务器与构建工具，内置 Rolldown</span></a></li>
     <li><a href="https://biomejs.dev" target="_blank" rel="noopener"><span class="link-name">Biome</span><span class="link-desc">一体化的前端格式化、Lint 与导入整理工具链</span></a></li>
@@ -310,6 +333,7 @@ hide_header: true
     <li><a href="https://fastapi.tiangolo.com" target="_blank" rel="noopener"><span class="link-name">FastAPI</span><span class="link-desc">基于类型提示和 OpenAPI 的 Python API 框架</span></a></li>
     <li><a href="https://www.djangoproject.com" target="_blank" rel="noopener"><span class="link-name">Django</span><span class="link-desc">内置 ORM、管理后台与安全机制的 Python Web 框架</span></a></li>
     <li><a href="https://spring.io" target="_blank" rel="noopener"><span class="link-name">Spring</span><span class="link-desc">Java 企业应用、微服务和云原生开发生态</span></a></li>
+    <li><a href="https://spring.io/projects/spring-boot" target="_blank" rel="noopener"><span class="link-name">Spring Boot</span><span class="link-desc">以自动配置和起步依赖快速构建可独立运行的 Java 服务</span></a></li>
     <li><a href="https://rubyonrails.org" target="_blank" rel="noopener"><span class="link-name">Ruby on Rails</span><span class="link-desc">强调约定优于配置的 Ruby 全栈 Web 框架</span></a></li>
   </ul>
 </div>
@@ -335,6 +359,28 @@ hide_header: true
     <li><a href="https://docs.pinecone.io" target="_blank" rel="noopener"><span class="link-name">Pinecone</span><span class="link-desc">全托管向量数据库与检索基础设施</span></a></li>
     <li><a href="https://www.prisma.io" target="_blank" rel="noopener"><span class="link-name">Prisma</span><span class="link-desc">面向 TypeScript 的 ORM、迁移与托管数据平台</span></a></li>
     <li><a href="https://orm.drizzle.team" target="_blank" rel="noopener"><span class="link-name">Drizzle ORM</span><span class="link-desc">贴近 SQL 语义的轻量 TypeScript ORM 与迁移工具</span></a></li>
+    <li><a href="https://www.oceanbase.com/docs" target="_blank" rel="noopener"><span class="link-name">OceanBase</span><span class="link-desc">兼容 MySQL 的分布式数据库，面向高可用与水平扩展</span></a></li>
+    <li><a href="https://www.sqlalchemy.org" target="_blank" rel="noopener"><span class="link-name">SQLAlchemy</span><span class="link-desc">Python 的 SQL 工具包与 ORM，含异步与连接池支持</span></a></li>
+    <li><a href="https://alembic.sqlalchemy.org" target="_blank" rel="noopener"><span class="link-name">Alembic</span><span class="link-desc">配套 SQLAlchemy 的数据库结构版本管理与迁移工具</span></a></li>
+    <li><a href="https://mybatis.org/mybatis-3/" target="_blank" rel="noopener"><span class="link-name">MyBatis</span><span class="link-desc">以 XML 或注解映射 SQL 与 Java 对象的持久层框架</span></a></li>
+  </ul>
+</div>
+
+<!-- ====================== 消息、配置中心与任务调度 ====================== -->
+<div class="link-category">
+  <h2><span class="link-cate-emoji">📬</span>消息、配置中心与任务调度</h2>
+  <ul>
+    <li><a href="https://rocketmq.apache.org" target="_blank" rel="noopener"><span class="link-name">Apache RocketMQ</span><span class="link-desc">面向金融级场景的消息中间件，支持事务消息与顺序消息</span></a></li>
+    <li><a href="https://pulsar.apache.org" target="_blank" rel="noopener"><span class="link-name">Apache Pulsar</span><span class="link-desc">存算分离的分布式消息与流平台，支持多租户与地理复制</span></a></li>
+    <li><a href="https://www.rabbitmq.com" target="_blank" rel="noopener"><span class="link-name">RabbitMQ</span><span class="link-desc">成熟的多协议消息代理，覆盖路由、确认与死信机制</span></a></li>
+    <li><a href="https://www.emqx.io" target="_blank" rel="noopener"><span class="link-name">EMQX</span><span class="link-desc">面向物联网与车联网的大规模 MQTT 消息代理</span></a></li>
+    <li><a href="https://nats.io" target="_blank" rel="noopener"><span class="link-name">NATS</span><span class="link-desc">轻量高性能的消息系统，含 JetStream 持久化与 KV 存储</span></a></li>
+    <li><a href="https://nacos.io" target="_blank" rel="noopener"><span class="link-name">Nacos</span><span class="link-desc">动态配置管理、服务发现与服务元数据治理平台</span></a></li>
+    <li><a href="https://www.apolloconfig.com" target="_blank" rel="noopener"><span class="link-name">Apollo</span><span class="link-desc">支持多环境、灰度发布与配置变更审计的配置中心</span></a></li>
+    <li><a href="https://dubbo.apache.org" target="_blank" rel="noopener"><span class="link-name">Apache Dubbo</span><span class="link-desc">面向微服务的 RPC 框架，含服务治理与多语言支持</span></a></li>
+    <li><a href="https://sentinelguard.io" target="_blank" rel="noopener"><span class="link-name">Sentinel</span><span class="link-desc">面向流量控制、熔断降级与系统自适应保护的组件</span></a></li>
+    <li><a href="https://www.xuxueli.com/xxl-job/" target="_blank" rel="noopener"><span class="link-name">XXL-JOB</span><span class="link-desc">带调度中心与执行器的分布式定时任务平台</span></a></li>
+    <li><a href="https://temporal.io" target="_blank" rel="noopener"><span class="link-name">Temporal</span><span class="link-desc">以代码编排长事务与可恢复工作流的持久执行引擎</span></a></li>
   </ul>
 </div>
 
@@ -361,6 +407,7 @@ hide_header: true
     <li><a href="https://docs.railway.com/" target="_blank" rel="noopener"><span class="link-name">Railway</span><span class="link-desc">从代码仓库部署应用、数据库与后台服务</span></a></li>
     <li><a href="https://fly.io/docs/" target="_blank" rel="noopener"><span class="link-name">Fly.io</span><span class="link-desc">在多区域运行应用、Machines、容器与持久卷</span></a></li>
     <li><a href="https://docs.aws.amazon.com/" target="_blank" rel="noopener"><span class="link-name">AWS</span><span class="link-desc">覆盖计算、存储、数据库、AI 与全球基础设施的公有云</span></a></li>
+    <li><a href="https://help.aliyun.com" target="_blank" rel="noopener"><span class="link-name">阿里云文档</span><span class="link-desc">覆盖 SAE、ACK、RDS、Tair 与云效流水线的产品文档</span></a></li>
     <li><a href="https://docs.docker.com/" target="_blank" rel="noopener"><span class="link-name">Docker</span><span class="link-desc">容器镜像、开发环境、构建与分发工具链</span></a></li>
     <li><a href="https://kubernetes.io/docs/" target="_blank" rel="noopener"><span class="link-name">Kubernetes</span><span class="link-desc">用于部署、扩缩和管理容器工作负载的编排系统</span></a></li>
     <li><a href="https://developer.hashicorp.com/terraform" target="_blank" rel="noopener"><span class="link-name">Terraform</span><span class="link-desc">使用声明式配置管理多云基础设施</span></a></li>
@@ -370,6 +417,25 @@ hide_header: true
     <li><a href="https://dagger.io" target="_blank" rel="noopener"><span class="link-name">Dagger</span><span class="link-desc">以代码定义、可本地复现的容器化 CI 引擎</span></a></li>
     <li><a href="https://opentelemetry.io" target="_blank" rel="noopener"><span class="link-name">OpenTelemetry</span><span class="link-desc">统一采集指标、日志、链路与 GenAI 遥测的开放标准</span></a></li>
     <li><a href="https://grafana.com" target="_blank" rel="noopener"><span class="link-name">Grafana</span><span class="link-desc">覆盖仪表盘、日志、链路与负载测试的可观测性栈</span></a></li>
+  </ul>
+</div>
+
+<!-- ====================== 软件测试与质量工程 ====================== -->
+<div class="link-category">
+  <h2><span class="link-cate-emoji">🧪</span>软件测试与质量工程</h2>
+  <ul>
+    <li><a href="https://playwright.dev" target="_blank" rel="noopener"><span class="link-name">Playwright</span><span class="link-desc">跨 Chromium、Firefox 和 WebKit 的端到端测试框架</span></a></li>
+    <li><a href="https://www.cypress.io" target="_blank" rel="noopener"><span class="link-name">Cypress</span><span class="link-desc">提供浏览器内调试、组件测试与端到端测试</span></a></li>
+    <li><a href="https://vitest.dev" target="_blank" rel="noopener"><span class="link-name">Vitest</span><span class="link-desc">与 Vite 配套的测试框架，含浏览器模式与视觉回归</span></a></li>
+    <li><a href="https://docs.pytest.org/en/stable/" target="_blank" rel="noopener"><span class="link-name">Pytest</span><span class="link-desc">以 fixture、参数化和插件生态组织 Python 测试</span></a></li>
+    <li><a href="https://www.selenium.dev" target="_blank" rel="noopener"><span class="link-name">Selenium</span><span class="link-desc">基于 WebDriver 与 BiDi 的跨浏览器自动化生态</span></a></li>
+    <li><a href="https://testing-library.com" target="_blank" rel="noopener"><span class="link-name">Testing Library</span><span class="link-desc">以可访问性查询和用户行为驱动 UI 测试</span></a></li>
+    <li><a href="https://grafana.com/docs/k6/latest/" target="_blank" rel="noopener"><span class="link-name">k6</span><span class="link-desc">使用 JavaScript 编写负载、性能与可靠性测试</span></a></li>
+    <li><a href="https://locust.io" target="_blank" rel="noopener"><span class="link-name">Locust</span><span class="link-desc">使用 Python 定义并分布式运行负载测试</span></a></li>
+    <li><a href="https://www.postman.com" target="_blank" rel="noopener"><span class="link-name">Postman</span><span class="link-desc">覆盖 API 设计、调试、自动化测试与团队协作</span></a></li>
+    <li><a href="https://www.usebruno.com" target="_blank" rel="noopener"><span class="link-name">Bruno</span><span class="link-desc">将 API 集合保存在本地文件并纳入 Git 管理</span></a></li>
+    <li><a href="https://httpie.io" target="_blank" rel="noopener"><span class="link-name">HTTPie</span><span class="link-desc">提供易读语法的命令行与桌面 HTTP 客户端</span></a></li>
+    <li><a href="https://mswjs.io" target="_blank" rel="noopener"><span class="link-name">MSW</span><span class="link-desc">在浏览器和 Node.js 中拦截网络请求进行 API Mock</span></a></li>
   </ul>
 </div>
 

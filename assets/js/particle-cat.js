@@ -9,10 +9,6 @@
   var musicWarmupStarted = false;
   var musicWarmupScheduled = false;
 
-  var MUSIC_SESSION_TIME = "aurora-music-time";
-  var MUSIC_SESSION_PLAYING = "aurora-music-playing";
-  var MUSIC_SESSION_TRACK = "aurora-music-track";
-  var MUSIC_SESSION_USER_PAUSED = "aurora-music-user-paused";
   var MUSIC_SESSION_EXPAND_ON_ARRIVAL = "aurora-music-expand-on-arrival";
 
   function rememberMusicWarmup() {
@@ -51,30 +47,20 @@
     }
   }
 
-  function rememberMusicNavigationIntent(time) {
-    try {
-      sessionStorage.setItem(MUSIC_SESSION_TIME, String(Math.max(0, time || 0)));
-      sessionStorage.setItem(MUSIC_SESSION_PLAYING, "1");
-      sessionStorage.setItem(MUSIC_SESSION_TRACK, "0");
-      sessionStorage.setItem(MUSIC_SESSION_USER_PAUSED, "0");
-    } catch (error) {}
-  }
-
   function rememberUniverseArrivalIntent() {
     try {
       sessionStorage.setItem(MUSIC_SESSION_EXPAND_ON_ARRIVAL, String(Date.now()));
     } catch (error) {}
   }
 
+  // 只预热音频并让播放器到站后展开，不写播放意图，避免从宇宙页进入博客时自动出声。
   function prepareMusicForNavigation() {
     startMusicWarmup();
-    rememberMusicNavigationIntent(0);
     rememberUniverseArrivalIntent();
   }
 
   function persistMusicNavigationIntent() {
     rememberMusicWarmup();
-    rememberMusicNavigationIntent(0);
     rememberUniverseArrivalIntent();
   }
 

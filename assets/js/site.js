@@ -1393,11 +1393,12 @@
       }
     }
 
+    // 默认不自动播放：只在用户此前已经点过播放、且是同一次会话内跳页时续播。
+    // shouldAutoplayOnHome 恒为 false，保留变量以便日后需要时重新开启首页自动播放。
     try {
       resumeAfterNavigation = sessionStorage.getItem(SESSION_PLAYING) === "1";
-      shouldAutoplayOnHome = isBlogHomePage() && sessionStorage.getItem(SESSION_USER_PAUSED) !== "1";
     } catch (e) {
-      shouldAutoplayOnHome = isBlogHomePage();
+      resumeAfterNavigation = false;
     }
     expandOnUniverseArrival = consumeUniverseArrivalIntent();
 
@@ -3967,12 +3968,14 @@
     while (aboutCleanups.length) {
       try { aboutCleanups.pop()(); } catch (e) {}
     }
+    // 时间轴组件不只用于「关于」页，首页成长路线也复用它，因此先于 about 门禁初始化
+    addCleanup(initTimeline());
+
     if (!doc.querySelector("[data-about-hero]")) return;
 
     addCleanup(initHoloRain());
     addCleanup(initUptime());
     addCleanup(initRadar());
-    addCleanup(initTimeline());
     initManifestoSpotlight();
     initSnapshot();
   }
